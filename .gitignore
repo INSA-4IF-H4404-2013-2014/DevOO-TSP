@@ -35,6 +35,7 @@
 *.acr
 *.alg
 *.ist
+*.synctex.gz
 
 
 #OpenOffice lock files
