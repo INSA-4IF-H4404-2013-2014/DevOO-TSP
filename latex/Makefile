@@ -16,6 +16,11 @@ endif
 TEX_NAME = $(PDF_NAME:%.pdf=%.tex)
 TEX_BUILD_FLAGS= -interaction=nonstopmode -file-line-error
 
+COLOR_END = \033[0m
+COLOR_WHITE = \033[1;37m
+BGCOLOR_GREEN = \033[42m
+BGCOLOR_RED = \033[41m
+
 CLEAN_CMD=rm -f
 CLEAN_CMD+= *.backup *.aux *.toc *.ind *.idx *.ilg *.blg *.log *.out *.bbl *.dvi
 CLEAN_CMD+= *.nav *.pyg *.snm *.lof *.glg *.glo *.gls *.acn *.acr *.alg *.ist
@@ -27,7 +32,7 @@ update: $(PDF_NAME)
 	@$(CLEAN_CMD)
 
 clean:
-	@printf "%13-s <$(PDF_NAME)>" "Cleaning..."
+	@printf "%-13s <$(PDF_NAME)>" "Cleaning..."
 	@$(CLEAN_CMD)
 	@rm -f $(PDF_NAME)
 
@@ -57,10 +62,13 @@ view:
 		OK=$$? ;\
 	fi;\
 	if [ $$OK -eq 0 ]; then\
-		echo "BUILD SUCCESSFUL" ;\
+		echo; \
+		echo "$(BGCOLOR_GREEN)$(COLOR_WHITE)BUILD SUCCESSFUL$(COLOR_END)" ;\
 	else\
 		cat $@.stdout ;\
 		rm -f $@ ;\
+		echo; \
+		echo "$(BGCOLOR_RED)$(COLOR_WHITE)BUILD FAILED$(COLOR_END)" ;\
 	fi;\
 	rm -f $@.stdout $@.stderr ;
 	@$(CLEAN_CMD)
