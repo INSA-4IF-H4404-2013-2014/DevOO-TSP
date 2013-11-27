@@ -14,6 +14,7 @@ endif
 endif
 
 TEX_NAME = $(PDF_NAME:%.pdf=%.tex)
+TEX_STYLE_NAME = rapport.sty
 TEX_BUILD_FLAGS= -interaction=nonstopmode -file-line-error
 
 COLOR_END = \033[0m
@@ -41,7 +42,7 @@ all: clean update
 view:
 	@$(PDFVIEWER) $(PDF_NAME) > /dev/null 2>&1 &
 
-%.pdf: %.tex $(wildcard *.tex) $(THIS)
+%.pdf: %.tex $(wildcard *.tex) $(TEX_STYLE_NAME) $(THIS)
 	@$(CLEAN_CMD)
 	@printf "%-18s <$@>...\n" "Building stage 1" ;\
 	pdflatex $(TEX_BUILD_FLAGS) "$<" > $@.stdout 2> $@.stderr ;\
