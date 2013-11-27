@@ -32,7 +32,7 @@ update: $(PDF_NAME)
 	@$(CLEAN_CMD)
 
 clean:
-	@printf "%-13s <$(PDF_NAME)>" "Cleaning..."
+	@printf "%-18s <$(PDF_NAME)>...\n" "Cleaning"
 	@$(CLEAN_CMD)
 	@rm -f $(PDF_NAME)
 
