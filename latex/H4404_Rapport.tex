@@ -1,0 +1,55 @@
+
+\documentclass[a4paper,11pt,final,oneside,openright]{book}
+\usepackage{rapport}
+
+\newcommand{\reporttitle}{Développement Orienté Objet}
+\newcommand{\enseignants}{Christine~\textsc{Solnon}\\ Elöd~\textsc{Egyed-Zsigmond}}
+\newcommand{\reportauthor}{Guillaume~\textsc{Abadie}\\ Nicolas~\textsc{Buisson}\\ Louise~\textsc{Crépet}\\ Rémi~\textsc{Domingues}\\ Aline~\textsc{Martin}\\ Martin~\textsc{Wetterwald}}
+\newcommand{\hexanome}{H4404}
+\newcommand{\reportsubject}{Livrable de projet}
+\newcommand{\dateperiod}{du 27 novembre au 20 décembre 2013}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\setlength{\parskip}{1ex} % Espace entre les paragraphes
+
+\hypersetup{
+    pdftitle={\reporttitle},%
+    pdfauthor={\reportauthor},%
+    pdfsubject={\reportsubject},%
+    pdfkeywords={INSA Lyon} {mot1} {mot2} {mot3}
+}
+
+\title{\reporttitle}
+\author{\reportauthor}
+
+%\setcounter{tocdepth}{4}
+\begin{document}
+    \renewcommand{\chaptername}{} %\renewcommand{\thechapter}{}
+    \renewcommand{\contentsname}{Sommaire}
+
+	\glsaddall
+	\renewcommand{\chaptername}{}
+	\renewcommand{\glossaryname}{Glossaire}
+
+    \pagestyle{empty}
+    \pagenumbering{Roman}
+    \input{title}
+    \sloppy          % Justification moins stricte : des mots ne dépasseront pas des paragraphes
+
+    \frontmatter
+    \pagestyle{empty}
+    \tableofcontents
+    \addtocontents{toc}{\protect\thispagestyle{empty}}
+
+    \mainmatter
+    \pagestyle{headings}
+    \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\chaptername\ \thechapter.\ #1}}{}}
+    \renewcommand{\sectionmark}[1]{\markright{\thesection{} #1}}
+
+    \include{test}
+
+    \backmatter
+	\phantomsection
+	\addcontentsline{toc}{chapter}{\protect\numberline{\thesection}\glossaryname}
+	\printglossary[title=\glossaryname]
+
+\end{document}
