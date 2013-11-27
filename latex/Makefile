@@ -38,19 +38,21 @@ view:
 
 %.pdf: %.tex $(wildcard *.tex) $(THIS)
 	@$(CLEAN_CMD)
-	printf "%-18s <$@>...\n" "Building stage1" ;\
+	@printf "%-18s <$@>...\n" "Building stage 1" ;\
 	pdflatex $(TEX_BUILD_FLAGS) "$<" > $@.stdout 2> $@.stderr ;\
 	OK=$$? ;\
-	printf "%-18s <$@>...\n" "Building glossary" ;\
-	makeglossaries $(<:.tex=) > $@.stdout 2> $@.stderr ;\
-	OK=$$? ;\
+	if [ $$OK -eq 0 ]; then \
+		printf "%-18s <$@>...\n" "Building glossary" ;\
+		makeglossaries $(<:.tex=) > $@.stdout 2> $@.stderr ;\
+		OK=$$? ;\
+	fi; \
 	if [ $$OK -eq 0 ]; then\
-		printf "%-18s <$@>...\n" "Building stage2" ;\
+		printf "%-18s <$@>...\n" "Building stage 2" ;\
 		pdflatex $(TEX_BUILD_FLAGS) "$<" > $@.stdout 2> $@.stderr ;\
 		OK=$$? ;\
 	fi;\
 	if [ $$OK -eq 0 ]; then\
-		printf "%-18s <$@>...\n" "Building stage3" ;\
+		printf "%-18s <$@>...\n" "Building stage 3" ;\
 		pdflatex $(TEX_BUILD_FLAGS) "$<" > $@.stdout 2> $@.stderr ;\
 		OK=$$? ;\
 	fi;\
