@@ -42,14 +42,22 @@
 
     \mainmatter
     \pagestyle{headings}
+	\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{#1}}{}}
+	\renewcommand{\sectionmark}[1]{\markright{#1}}
+	\include{introduction}
+
     \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\chaptername\ \thechapter.\ #1}}{}}
     \renewcommand{\sectionmark}[1]{\markright{\thesection{} #1}}
 
-    \include{test}
+    %\include{test}
+
+	\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{#1}}{}}
+	\renewcommand{\sectionmark}[1]{\markright{#1}}
+	\include{conclusion}
 
     \backmatter
 	\phantomsection
-	\addcontentsline{toc}{chapter}{\protect\numberline{\thesection}\glossaryname}
+	\addcontentsline{toc}{chapter}{\glossaryname}
 	\printglossary[title=\glossaryname]
 
 \end{document}
