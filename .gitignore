@@ -7,6 +7,9 @@
 #VIM backup files
 *~
 
+#JAVA
+*.class
+*.jar
 
 
 #LaTeX files!
