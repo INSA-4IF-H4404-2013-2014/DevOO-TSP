@@ -1,4 +1,4 @@
-package City;
+package Model.City;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,6 +38,7 @@ public class Arc {
         to = to;
 
         // TODO: DO WE FULLY TRUST THE LENGTH PARAMETER ????
+        // QUESTION FOR SOLNON : SHALL WE CHECK THE LENGTH IS POSSIBLE ACCORDING TO THE NODE COORDINATES ?
 
         from.getOutgoing().add(this);
         to.getIncoming().add(this);

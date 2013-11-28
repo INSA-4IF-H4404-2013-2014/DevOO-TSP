@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="DevOO" company="H4404" webLink="" view-date="2013-11-28" view-index="0" gantt-divider-location="838" resource-divider-location="441" version="2.0" locale="fr">
+<?xml version="1.0" encoding="UTF-8"?><project name="DevOO" company="H4404" webLink="" view-date="2013-11-24" view-index="0" gantt-divider-location="838" resource-divider-location="441" version="2.0" locale="fr">
     <description/>
     <view zooming-state="default:2" id="gantt-chart">
         <field id="tpd3" name="Nom" width="67" order="0"/>
@@ -8,8 +8,8 @@
         <option id="taskLabelRight" value=""/>
     </view>
     <view id="resource-table">
-        <field id="0" name="Nom" width="48" order="0"/>
-        <field id="1" name="Rôle par défaut" width="51" order="1"/>
+        <field id="0" name="Nom" width="49" order="0"/>
+        <field id="1" name="Rôle par défaut" width="50" order="1"/>
     </view>
     <!-- -->
     <calendars>
@@ -46,10 +46,11 @@
             <task id="9" name="Diagramme de cas d'utilisation" color="#8cb6ce" meeting="false" start="2013-11-27" duration="1" complete="0" expand="true"/>
             <task id="16" name="Description abrégée des cas d'utilisation" color="#8cb6ce" meeting="false" start="2013-11-27" duration="1" complete="0" expand="true"/>
             <task id="17" name="Description détaillée des cas d'utilisation" color="#8cb6ce" meeting="false" start="2013-11-27" duration="5" complete="0" expand="true"/>
+            <task id="94" name="Diagramme de classes : Modèle" color="#8cb6ce" meeting="false" start="2013-11-28" duration="4" complete="0" expand="true"/>
         </task>
         <task id="75" name="Conception détaillée" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true">
             <task id="79" name="Revue du travail effectué" color="#8cb6ce" meeting="false" start="2013-12-02" duration="1" complete="0" expand="true"/>
-            <task id="18" name="Diagramme de packages et  classes" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
+            <task id="18" name="Diagramme de classes : Contrôleur et Vues" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
             <task id="20" name="Diagramme de séquence Superviseur : Saisir une livraison" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
             <task id="21" name="Diagramme de séquence : Calculer la feuille de route" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
             <task id="85" name="Ébauche de l'IHM" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
