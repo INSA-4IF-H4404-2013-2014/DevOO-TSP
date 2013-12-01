@@ -1,62 +1,90 @@
 \newglossaryentry{superviseur}
 {
-	name={Superviseur},
+	name={superviseur},
 	description={Employé supervisant la bonne conduite des livraisons},
 	sort={superviseur}
 }
 
 \newglossaryentry{livraison}
 {
-	name={Effectuer une livraison},
+	name={livraison (Effectuer une)},
 	description={Acte d'effectuer un trajet dont l'aboutissement est la livraison d'un colis et le remplissage d'un reçu, ou bien une notification de non-livraison},
 	sort={livraison}
 }
 
 \newglossaryentry{client}
 {
-	name={Client},
+	name={client},
 	description={Personne morale ou physique qui envoie ou reçoit des articles via la société de transport},
 	sort={client}
 }
 
-\newglossaryentry{Itineraire}
+\newglossaryentry{itineraire}
 {
-	name={Itinéraire},
-	description={Ensemble ordonné de directions à suivre afin d'effectuer une livraison},
+	name={itinéraire},
+	description={Ensemble ordonné de tronçons à suivre afin d'effectuer une tournée. Commence et finit par un nœud étant soit l'adresse de l'entrepôt, soit l'adresse d'une livraison. Soit $I_{t_k}$ le $k^\text{ème}$ nœud du tronçon t appartenant à l'itinéraire $I$, alors $I_{{(t+1)}_{1}} = I_{{t}_{card(t)}}$ est vérifiée},
 	sort={itineraire}
-}
-
-\newglossaryentry{tournee}
-{
-	name={Tournée},
-	description={Ensemble de livraisons ordonnées et réparties dans le temps à effectuer dans le cadre d'une journée de travail},
-	sort={tournee}
-}
-
-\newglossaryentry{reseau}
-{
-	name={Réseau},
-	description={Ensemble de noeuds ceux-ci étant reliés par des tronçons. Un réseau est assimilable à une ville},
-	sort={reseau}
 }
 
 \newglossaryentry{rue}
 {
-	name={Rue},
-	description={Ensemble de tronçons ayant un nom de rue identique. Celle-ci relie plusieurs noeuds},
+	name={rue},
+	description={Ensemble de tronçons ayant un nom de rue identique. Celle-ci relie plusieurs nœuds},
 	sort={rue}
 }
 
 \newglossaryentry{troncon}
 {
-	name={Tronçon},
-	description={Portion d'une rue reliant deux noeuds},
+	name={tronçon},
+	description={Portion unidirectionnelle d'une rue reliant deux nœuds},
 	sort={troncon}
 }
 
-\newglossaryentry{Noeud}
+\newglossaryentry{noeud}
 {
-	name={noeud},
-	description={Point de jonction duquel arrivent ou partent un ou plusieurs tronçons},
+	name={nœud},
+	description={Point de jonction duquel arrivent ou partent un ou plusieurs tronçons. Adresse d'un entrepôt ou d'une livraison},
 	sort={noeud}
+}
+
+\newglossaryentry{reseau}
+{
+	name={réseau},
+	description={Ensemble de nœuds reliés par des tronçons. Un réseau est assimilable à une ville},
+	sort={reseau}
+}
+
+\newglossaryentry{entrepot}
+{
+	name={entrepôt},
+	description={Lieu de départ d'une tournée, lié à la journée en cours (l'entrepôt peut changer d'une journée à l'autre)},
+	sort={entrepot}
+}
+
+\newglossaryentry{journee}
+{
+	name={journée},
+	description={Intervalle de temps séparant le lever du soleil à son coucher},
+	sort={journee}
+}
+
+\newglossaryentry{plageHoraire}
+{
+	name={plage horaire},
+	description={Durée, sous-ensemble d'une journée, définie par une heure de début et de fin},
+	sort={plage}
+}
+
+\newglossaryentry{tournee}
+{
+	name={tournée},
+	description={ensemble ordonné et réparti dans le temps des itinéraires à parcourir dans une journée de travail par un livreur dans le but d'effectuer des livraisons},
+	sort={tournee}
+}
+
+\newglossaryentry{livreur}
+{
+	name={livreur},
+	description={Employé de l'entreprise disposant d'un véhicule et assigné à une ou plusieurs tournées dans une journée de travail dont la mission est d'en effectuer les livraisons},
+	sort={livreur}
 }
