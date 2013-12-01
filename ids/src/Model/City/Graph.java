@@ -2,6 +2,8 @@ package Model.City;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +18,7 @@ public class Graph {
     List<Street> streets;
 
     /** the graph's nodes */
-    List<Node> nodes;
+    Map<Integer,Node> nodes;
 
 
     /**
@@ -24,7 +26,7 @@ public class Graph {
      */
     public Graph() {
         this.streets = new LinkedList<Street>();
-        this.nodes = new LinkedList<Node>();
+        this.nodes = new HashMap<Integer,Node>();
     }
 
     /**
@@ -39,7 +41,7 @@ public class Graph {
      * Gets all nodes
      * @return nodes list
      */
-    public List<Node> getNodes() {
+    public Map<Integer,Node> getNodes() {
         return nodes;
     }
 
@@ -65,13 +67,7 @@ public class Graph {
      *  - the node that has the given id
      */
     public Node findNode(int id) {
-        for (Node i : this.nodes) {
-            if (id == i.getId()) {
-                return i;
-            }
-        }
-
-        return null;
+        return this.nodes.get(id);
     }
 
     /**
@@ -105,7 +101,7 @@ public class Graph {
 
         Node node = new Node(id, x, y);
 
-        this.nodes.add(node);
+        this.nodes.put(id, node);
 
         return node;
     }
