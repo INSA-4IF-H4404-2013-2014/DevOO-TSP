@@ -10,7 +10,7 @@
 #JAVA
 *.class
 *.jar
-
+*.idea
 
 #LaTeX files!
 *.log
