@@ -39,7 +39,7 @@ clean:
 
 all: clean update
 
-view:
+view: update
 	@$(PDFVIEWER) $(PDF_NAME) > /dev/null 2>&1 &
 
 %.pdf: %.tex $(wildcard *.tex) $(TEX_STYLE_NAME) $(THIS)
