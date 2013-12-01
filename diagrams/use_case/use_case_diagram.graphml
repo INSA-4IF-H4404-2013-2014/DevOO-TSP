@@ -164,7 +164,7 @@
             <y:FreeNodeLabelModel type="layoutAnchored" x="169.32657005092233" y="10.917569089674089" angle="0">
               <y:ModelState type="FreeNodeLabelModel"/>
             </y:FreeNodeLabelModel>
-            <y:Text>ISL</y:Text>
+            <y:Text>IDS</y:Text>
             <y:PreferredSize width="41.1" height="31.25"/>
           </y:Label>
         </y:Labels>
