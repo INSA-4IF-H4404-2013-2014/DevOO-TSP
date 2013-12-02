@@ -10,7 +10,7 @@ import java.util.List;
  * Time: 08:50
  * To change this template use File | Settings | File Templates.
  */
-public class Map extends JPanel {
+public class MapPanel extends JPanel {
 
     private List<Node> nodes;
     private List<Arc> arcs;
