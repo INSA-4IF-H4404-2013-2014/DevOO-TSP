@@ -20,7 +20,7 @@ public class Node {
      * @param mapPanel the parent map panel
      * @param modelNode the model node
      */
-    public Node(MapPanel mapPanel, Model.City.Node modelNode) {
+    protected Node(MapPanel mapPanel, Model.City.Node modelNode) {
         this.mapPanel = mapPanel;
         this.modelNode = modelNode;
     }
@@ -29,7 +29,7 @@ public class Node {
      * Gets associated model node
      * @return the associated model node
      */
-    public Model.City.Node getModelNode() {
+    protected Model.City.Node getModelNode() {
         return modelNode;
     }
 
@@ -37,7 +37,7 @@ public class Node {
      * Gets the parent map panel
      * @return the parent map panel
      */
-    public MapPanel getMapPanel() {
+    protected MapPanel getMapPanel() {
         return mapPanel;
     }
 }
