@@ -1,5 +1,7 @@
 package Model.City;
 
+import Utils.Utils;
+import Utils.UtilsException;
 import org.w3c.dom.Element;
 
 import java.util.List;
@@ -90,10 +92,10 @@ public class Node {
      *  - null if failed
      *  - the node that has just been created
      */
-    public static Node createFromXml(Element xmlElement){
-        int id = Integer.parseInt(xmlElement.getAttribute("id"));
-        int x = Integer.parseInt(xmlElement.getAttribute("x"));
-        int y = Integer.parseInt(xmlElement.getAttribute("y"));
+    public static Node createFromXml(Element xmlElement) throws UtilsException {
+        int id = Utils.parseUIntFromXmlAttribute(xmlElement, "id");
+        int x = Utils.parseUIntFromXmlAttribute(xmlElement, "x");
+        int y = Utils.parseUIntFromXmlAttribute(xmlElement, "y");
 
         return new Node(id, x, y);
     }

@@ -106,7 +106,7 @@ public class Graph {
      * @param y the y position
      * @throws UnsupportedOperationException if node with the given id already exists
      */
-    public Node createNode(int id, int x, int y) throws UnsupportedOperationException{
+    public Node createNode(int id, int x, int y) throws UnsupportedOperationException {
         if (this.findNode(id) != null) {
             throw new UnsupportedOperationException();
         }
@@ -125,15 +125,19 @@ public class Graph {
      *  - null if failed
      *  - the node that has just been created
      */
-    private Node createNode(Element xmlElement) {
-        Node node = Node.createFromXml(xmlElement);
+    private Node createNode(Element xmlElement) throws UtilsException {
+        Node node;
 
-        if (node == null) {
-            return null;
+        try {
+            node = Node.createFromXml(xmlElement);
+
+            if (this.findNode(node.getId()) != null) {
+                throw new UtilsException("node '" + node.getId() + "' already exists");
+            }
         }
-
-        if (this.findNode(node.getId()) != null) {
-            return null;
+        catch (UtilsException e) {
+            throw new UtilsException("failed to parse " + xmlElement.getNodeName() + " id=\"" + 0 + "\": " + e);
+            //TODO: better error message
         }
 
         this.nodes.put(node.getId(), node);
@@ -206,16 +210,13 @@ public class Graph {
      *  - false if failed
      *  - true if succeed
      */
-    private boolean loadXmlNetwork(Element xmlElement)
-    {
+    private boolean loadXmlNetwork(Element xmlElement) throws UtilsException {
         NodeList xmlNodeList = xmlElement.getElementsByTagName("Noeud");
 
         for (int i = 0; i < xmlNodeList.getLength(); i++) {
             Element xmlNode = (Element) xmlNodeList.item(i);
 
-            if (this.createNode(xmlNode) == null) {
-                return false;
-            }
+            this.createNode(xmlNode);
         }
 
         for (int i = 0; i < xmlNodeList.getLength(); i++) {
@@ -246,8 +247,7 @@ public class Graph {
      *  - null if failed
      *  - the graph that has just been created
      */
-    public static Graph createFromXml(String xmlPath)
-    {
+    public static Graph createFromXml(String xmlPath) throws UtilsException {
         File fileXml = new File(xmlPath);
 
         Element root;
@@ -287,7 +287,14 @@ public class Graph {
 
     public static void main(String [ ] args)
     {
-        Graph graph = createFromXml("../sujet/plan10x10.xml");
+        try {
+            Graph graph = createFromXml("../sujet/plan10x10.xml");
+        }
+        catch (UtilsException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("OK");
     }
 
 }
