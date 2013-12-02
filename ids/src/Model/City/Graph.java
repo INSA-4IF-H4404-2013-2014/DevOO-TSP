@@ -217,12 +217,10 @@ public class Graph {
     /**
      * Load a network from a given XML element
      * @param xmlElement the network's element
-     * @return
-     *  - true if succeed
      * @throws
      *  - UtilsException if failed with the reason why it has failed in it
      */
-    private boolean loadNetworkFromXml(Element xmlElement) throws UtilsException {
+    private void loadNetworkFromXml(Element xmlElement) throws UtilsException {
         NodeList xmlNodeList = xmlElement.getElementsByTagName("Noeud");
 
         for (int i = 0; i < xmlNodeList.getLength(); i++) {
