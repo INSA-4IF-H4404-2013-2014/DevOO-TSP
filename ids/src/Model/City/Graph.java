@@ -5,6 +5,15 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: gabadie
@@ -107,6 +116,29 @@ public class Graph {
     }
 
     /**
+     * Creates a node from a given XML element
+     * @param xmlElement the node's element
+     * @return
+     *  - null if failed
+     *  - the node that has just been created
+     */
+    private Node createNode(Element xmlElement) {
+        Node node = Node.createFromXml(xmlElement);
+
+        if (node == null) {
+            return null;
+        }
+
+        if (this.findNode(node.getId()) != null) {
+            return null;
+        }
+
+        this.nodes.put(node.getId(), node);
+
+        return node;
+    }
+
+    /**
      * Creates a street with a given name if not already existing, and returns it
      * @param name the street's name
      * @return the street that has the given name
@@ -124,4 +156,72 @@ public class Graph {
 
         return street;
     }
+
+    /**
+     * Load a network from a given XML element
+     * @param xmlElement the network's element
+     * @return
+     *  - false if failed
+     *  - true if succeed
+     */
+    private boolean loadXmlNetwork(Element xmlElement)
+    {
+        NodeList xmlNodeList = xmlElement.getElementsByTagName("Noeud");
+
+        for (int i = 0; i < xmlNodeList.getLength(); i++) {
+            Element xmlNode = (Element) xmlNodeList.item(i);
+
+            if (this.createNode(xmlNode) == null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Creates a Graph from a given XML file
+     * @param xmlPath the xml file 's path
+     * @return
+     *  - null if failed
+     *  - the graph that has just been created
+     */
+    public static Graph createFromXml(String xmlPath)
+    {
+        File fileXml = new File(xmlPath);
+
+        Element root;
+        Document document;
+        DocumentBuilder factory;
+
+        try {
+            factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            document = factory.parse(fileXml);
+
+            root = document.getDocumentElement();
+
+            if (!root.getNodeName().equals("Reseau")) {
+                return null;
+            }
+        } catch (ParserConfigurationException pce) {
+            System.out.println("DOM parsor configuration exception");
+            return null;
+        } catch (SAXException se) {
+            System.out.println("Xml parse error");
+            return null;
+        } catch (IOException ioe) {
+            System.out.println("I/O error");
+            return null;
+        }
+
+        Graph graph = new Graph();
+
+        if (!graph.loadXmlNetwork(root)) {
+            return null;
+        }
+
+        return graph;
+    }
+
 }

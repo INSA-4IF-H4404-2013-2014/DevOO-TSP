@@ -1,5 +1,7 @@
 package Model.City;
 
+import org.w3c.dom.Element;
+
 import java.util.List;
 import java.util.LinkedList;
 
@@ -79,5 +81,20 @@ public class Node {
      */
     public List<Arc> getOutgoing() {
         return outgoing;
+    }
+
+    /**
+     * Creates a Node from a given XML element
+     * @param xmlElement the node's element
+     * @return
+     *  - null if failed
+     *  - the node that has just been created
+     */
+    public static Node createFromXml(Element xmlElement){
+        int id = Integer.parseInt(xmlElement.getAttribute("id"));
+        int x = Integer.parseInt(xmlElement.getAttribute("x"));
+        int y = Integer.parseInt(xmlElement.getAttribute("y"));
+
+        return new Node(id, x, y);
     }
 }
