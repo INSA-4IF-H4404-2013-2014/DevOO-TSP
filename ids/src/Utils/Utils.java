@@ -12,6 +12,16 @@ import org.w3c.dom.*;
  */
 public class Utils {
 
+    public static String stringFromXmlAttribute(Element xmlElement, String attribute) throws UtilsException {
+        String value = xmlElement.getAttribute(attribute);
+
+        if (value == null) {
+            throw new UtilsException("missing attribute '" +  attribute + "'");
+        }
+
+        return value;
+    }
+
     public static float parsePositiveFloat(String string) throws UtilsException {
         int stringLength = string.length();
         float value = 0.0f;
@@ -40,11 +50,7 @@ public class Utils {
     }
 
     public static float parsePositiveFloatFromXmlAttribute(Element xmlElement, String attribute) throws UtilsException {
-        String value = xmlElement.getAttribute(attribute);
-
-        if (value == null) {
-            throw new UtilsException("missing attribute '" +  attribute + "'");
-        }
+        String value = Utils.stringFromXmlAttribute(xmlElement, attribute);
 
         return Utils.parsePositiveFloat(value);
     }
@@ -72,11 +78,7 @@ public class Utils {
     }
 
     public static int parseUIntFromXmlAttribute(Element xmlElement, String attribute) throws UtilsException {
-        String value = xmlElement.getAttribute(attribute);
-
-        if (value == null) {
-            throw new UtilsException("missing attribute '" +  attribute + "'");
-        }
+        String value = Utils.stringFromXmlAttribute(xmlElement, attribute);
 
         return Utils.parseUInt(value);
     }

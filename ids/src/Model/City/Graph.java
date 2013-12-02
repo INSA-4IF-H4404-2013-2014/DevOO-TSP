@@ -14,6 +14,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
+import Utils.Utils;
+import Utils.UtilsException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: gabadie
@@ -162,51 +165,32 @@ public class Graph {
      * @param xmlElement the node's element
      * @param from the leaving node
      * @return
-     *  - null if failed
      *  - the arc that has just been created
      */
     private Arc loadArc(Element xmlElement, Node from) {
-        String streetName = xmlElement.getAttribute("nomRue");
+        String streetName;
+        float speed;
+        float length;
+        Node to;
 
-        if (streetName == null) {
-            return null;
+        try {
+            streetName = Utils.stringFromXmlAttribute(xmlElement, "nomRue");
+            speed = Utils.parsePositiveFloatFromXmlAttribute(xmlElement, "vitesse");
+            length = Utils.parsePositiveFloatFromXmlAttribute(xmlElement, "length");
+            int destinationId = Utils.parseUIntFromXmlAttribute(xmlElement, "destination");
+
+            if (speed == 0.0) {
+                throw new UtilsException("null speed");
+            }
+
+            to = this.findNode(destinationId);
+
+            if (to == null) {
+                throw new UtilsException("unknown node id");
+            }
         }
-
-        String speedString = xmlElement.getAttribute("vitesse");
-
-        if (speedString == null) {
-            return null;
-        }
-
-        float speed = Float.parseFloat(speedString);
-
-        if (speed <= 0.0) {
-            return null;
-        }
-
-        String lengthString = xmlElement.getAttribute("longueur");
-
-        if (lengthString == null) {
-            return null;
-        }
-
-        float length = Float.parseFloat(lengthString);
-
-        if (length < 0.0) {
-            return null;
-        }
-
-        String destinationString = xmlElement.getAttribute("destination");
-
-        if (destinationString == null) {
-            return null;
-        }
-
-        int destinationId = Integer.parseInt(destinationString);
-
-        Node to = this.findNode(destinationId);
-
-        if (to == null) {
+        catch (UtilsException e)
+        {
             return null;
         }
 
@@ -298,6 +282,11 @@ public class Graph {
         }
 
         return graph;
+    }
+
+    public static void main(String [ ] args)
+    {
+        Graph graph = createFromXml("../sujet/plan10x10.xml");
     }
 
 }
