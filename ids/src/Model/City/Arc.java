@@ -41,7 +41,6 @@ public class Arc {
         // QUESTION FOR SOLNON : SHALL WE CHECK THE LENGTH IS POSSIBLE ACCORDING TO THE NODE COORDINATES ?
 
         from.getOutgoing().add(this);
-        to.getIncoming().add(this);
     }
 
     /**
