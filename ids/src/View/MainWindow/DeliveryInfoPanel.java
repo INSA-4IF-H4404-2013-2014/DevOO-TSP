@@ -1,6 +1,6 @@
 package View.MainWindow;
 
-import View.Panel.TimeFramePanel;
+import View.TimeFramePanel;
 
 import javax.swing.*;
 

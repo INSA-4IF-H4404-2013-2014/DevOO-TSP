@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="DevOO" company="H4404" webLink="" view-date="2013-11-28" view-index="0" gantt-divider-location="838" resource-divider-location="441" version="2.0" locale="fr">
+<?xml version="1.0" encoding="UTF-8"?><project name="DevOO" company="H4404" webLink="" view-date="2013-11-23" view-index="0" gantt-divider-location="838" resource-divider-location="481" version="2.0" locale="fr">
     <description/>
     <view zooming-state="default:2" id="gantt-chart">
         <field id="tpd3" name="Nom" width="67" order="0"/>
@@ -8,8 +8,8 @@
         <option id="taskLabelRight" value=""/>
     </view>
     <view id="resource-table">
-        <field id="0" name="Nom" width="48" order="0"/>
-        <field id="1" name="Rôle par défaut" width="51" order="1"/>
+        <field id="0" name="Nom" width="49" order="0"/>
+        <field id="1" name="Rôle par défaut" width="50" order="1"/>
     </view>
     <!-- -->
     <calendars>
@@ -39,6 +39,7 @@
         </taskproperties>
         <task id="4" name="Gestion de projet" color="#8cb6ce" meeting="false" start="2013-11-27" duration="17" complete="0" expand="true">
             <task id="7" name="Planning prévisionnel" color="#8cb6ce" meeting="false" start="2013-11-27" duration="1" complete="0" expand="true"/>
+            <task id="98" name="Direction du projet" color="#8cb6ce" meeting="false" start="2013-11-27" duration="17" complete="0" expand="true"/>
             <task id="34" name="Mise à jour du planning effectif" color="#8cb6ce" meeting="false" start="2013-11-28" duration="16" complete="0" expand="true"/>
         </task>
         <task id="1" name="Conception préliminaire et étude des besoins" color="#8cb6ce" meeting="false" start="2013-11-27" duration="5" complete="0" expand="true">
@@ -50,13 +51,14 @@
         <task id="75" name="Conception détaillée" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true">
             <task id="79" name="Revue du travail effectué" color="#8cb6ce" meeting="false" start="2013-12-02" duration="1" complete="0" expand="true"/>
             <task id="18" name="Diagramme de packages et  classes" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
-            <task id="20" name="Diagramme de séquence Superviseur : Saisir une livraison" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
-            <task id="21" name="Diagramme de séquence : Calculer la feuille de route" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
+            <task id="20" name="Diagramme de séquence : Charger un plan" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
+            <task id="21" name="Diagramme de séquence : Ajouter / Supprimer une livraison" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
             <task id="85" name="Ébauche de l'IHM" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
+            <task id="94" name="Étude de Choco" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
         </task>
-        <task id="2" name="Implémentation" color="#8cb6ce" meeting="false" start="2013-12-04" duration="10" complete="0" expand="true">
+        <task id="2" name="Implémentation" color="#8cb6ce" meeting="false" start="2013-12-02" duration="12" complete="0" expand="true">
+            <task id="24" name="Parseur XML : Construction du graphe" color="#8cb6ce" meeting="false" start="2013-12-02" duration="2" complete="0" expand="true"/>
             <task id="80" name="Revue du travail effectué" color="#8cb6ce" meeting="false" start="2013-12-04" duration="1" complete="0" expand="true"/>
-            <task id="24" name="Parseur XML : Construction du graphe" color="#8cb6ce" meeting="false" start="2013-12-04" duration="3" complete="0" expand="true"/>
             <task id="25" name="Parseur XML : Demande de livraison" color="#8cb6ce" meeting="false" start="2013-12-04" duration="3" complete="0" expand="true"/>
             <task id="84" name="Interface graphique préliminaire" color="#8cb6ce" meeting="false" start="2013-12-04" duration="5" complete="0" expand="true"/>
             <task id="26" name="Algorithme de Dijkstra: Plus court chemin entre deux sommets" color="#8cb6ce" meeting="false" start="2013-12-04" duration="5" complete="0" expand="true"/>
@@ -87,10 +89,37 @@
         <resource id="4" name="Buisson Nicolas" function="5" contacts="nicolas.buisson@insa-lyon.fr" phone=""/>
         <resource id="3" name="Crepet Louise" function="5" contacts="louise.crepet@insa-lyon.fr" phone=""/>
         <resource id="2" name="Domingues Rémi" function="7" contacts="remi.domingues@insa-lyon.fr" phone=""/>
-        <resource id="1" name="Martin Aline" function="5" contacts="aline.martin@insa-lyon.fr" phone=""/>
+        <resource id="1" name="Martin Aline" function="8" contacts="aline.martin@insa-lyon.fr" phone=""/>
         <resource id="0" name="Wetterwald Martin" function="6" contacts="martin.wetterwald@insa-lyon.fr" phone=""/>
     </resources>
-    <allocations/>
+    <allocations>
+        <allocation task-id="8" resource-id="5" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="79" resource-id="5" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="18" resource-id="5" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="24" resource-id="5" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="9" resource-id="4" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="79" resource-id="4" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="85" resource-id="4" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="94" resource-id="4" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="9" resource-id="3" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="16" resource-id="3" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="17" resource-id="3" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="79" resource-id="3" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="20" resource-id="3" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="7" resource-id="2" function="7" responsible="true" load="100.0"/>
+        <allocation task-id="34" resource-id="2" function="7" responsible="true" load="100.0"/>
+        <allocation task-id="98" resource-id="2" function="7" responsible="true" load="100.0"/>
+        <allocation task-id="79" resource-id="2" function="7" responsible="true" load="100.0"/>
+        <allocation task-id="18" resource-id="2" function="7" responsible="false" load="100.0"/>
+        <allocation task-id="85" resource-id="2" function="7" responsible="false" load="100.0"/>
+        <allocation task-id="94" resource-id="2" function="7" responsible="false" load="100.0"/>
+        <allocation task-id="16" resource-id="1" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="17" resource-id="1" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="79" resource-id="1" function="8" responsible="false" load="100.0"/>
+        <allocation task-id="21" resource-id="1" function="8" responsible="true" load="100.0"/>
+        <allocation task-id="79" resource-id="0" function="6" responsible="false" load="100.0"/>
+        <allocation task-id="18" resource-id="0" function="6" responsible="false" load="100.0"/>
+    </allocations>
     <vacations/>
     <taskdisplaycolumns>
         <displaycolumn property-id="tpd2" order="-1" width="75" visible="false"/>
@@ -116,5 +145,6 @@
         <role id="5" name="Concepteur / Développeur"/>
         <role id="6" name="Concepteur / Développeur / Responsable Git"/>
         <role id="7" name="Chef de projet / Concepteur / Développeur"/>
+        <role id="8" name="Concepteur / Développeur / Responsable qualité"/>
     </roles>
 </project>

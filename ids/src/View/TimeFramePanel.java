@@ -1,4 +1,4 @@
-package View.Panel;
+package View;
 
 import javax.swing.*;
 

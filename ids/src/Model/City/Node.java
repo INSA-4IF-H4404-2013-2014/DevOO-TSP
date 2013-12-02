@@ -21,9 +21,6 @@ public class Node {
     /** the node's T position */
     private int y;
 
-    /** the node's incoming arcs */
-    private List<Arc> incoming;
-
     /** the node's outgoing arcs */
     private List<Arc> outgoing;
 
@@ -37,7 +34,6 @@ public class Node {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.incoming = new LinkedList<Arc>();
         this.outgoing = new LinkedList<Arc>();
     }
 
@@ -63,14 +59,6 @@ public class Node {
      */
     public int getY() {
         return y;
-    }
-
-    /**
-     * Gets node's incoming arcs
-     * @return node's incoming arcs list
-     */
-    public List<Arc> getIncoming() {
-        return incoming;
     }
 
     /**

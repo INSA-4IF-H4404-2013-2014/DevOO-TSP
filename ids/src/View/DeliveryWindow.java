@@ -1,6 +1,4 @@
-package View.DeliveryWindow;
-
-import View.Panel.TimeFramePanel;
+package View;
 
 import javax.swing.*;
 
@@ -13,9 +11,9 @@ import javax.swing.*;
  */
 public class DeliveryWindow extends JFrame {
 
-    JComboBox client;
-    JTextField clientAddress;
-    TimeFramePanel timeFrame;
-    JButton ok;
+    private JComboBox client;
+    private JTextField clientAddress;
+    private TimeFramePanel timeFrame;
+    private JButton ok;
 
 }
