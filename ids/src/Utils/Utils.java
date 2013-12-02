@@ -75,6 +75,8 @@ public class Utils {
                 if (newValue < value) {
                     throw new UtilsException("overflow");
                 }
+
+                value = newValue;
             }
             else {
                 throw new UtilsException("unexpected character '" + c + "'");
