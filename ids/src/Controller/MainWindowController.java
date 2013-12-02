@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Command.Command;
 import View.MainWindow.MainWindow;
 
 import java.awt.event.MouseEvent;
@@ -15,7 +16,8 @@ import java.util.List;
  */
 public class MainWindowController implements MouseListener {
 
-    private List<Controller.Command.Command> history;
+    private List<Controller.Command.Command> historyApplied;
+    private List<Controller.Command.Command> historyBackedOut;
     private MainWindow mainWindow;
 
     public MainWindowController(MainWindow mainWindow) {
@@ -24,6 +26,18 @@ public class MainWindowController implements MouseListener {
 
     public MainWindow getMainWindow() {
         return mainWindow;
+    }
+
+    public void historyDo(Command command){
+        //TODO: clean historyBackedOut and push back command historyApplied
+    }
+
+    public void historyRedo(){
+        //TODO: pop front of historyBackedOut and push back in historyApplied
+    }
+
+    public void historyUndo(){
+        //TODO: pop back of historyApplied and push front in historyBackedOut
     }
 
     @Override
