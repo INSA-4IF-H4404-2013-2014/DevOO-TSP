@@ -19,11 +19,11 @@ public class AddDelivery extends Command {
         this.delivery = delivery;
     }
 
-    void Apply() {
+    public void Apply() {
         //TODO: add delivery!
     }
 
-    void Reverse() {
+    public void Reverse() {
         //TODO: remove delivery!
     }
 

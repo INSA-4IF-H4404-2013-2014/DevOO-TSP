@@ -5,7 +5,9 @@ import View.MainWindow.MainWindow;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Deque;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,12 +18,14 @@ import java.util.List;
  */
 public class MainWindowController implements MouseListener {
 
-    private List<Controller.Command.Command> historyApplied;
-    private List<Controller.Command.Command> historyBackedOut;
+    private Deque<Controller.Command.Command> historyApplied;
+    private Deque<Controller.Command.Command> historyBackedOut;
     private MainWindow mainWindow;
 
     public MainWindowController(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
+        historyApplied = new LinkedList<Controller.Command.Command>();
+        historyBackedOut = new LinkedList<Controller.Command.Command>();
     }
 
     public MainWindow getMainWindow() {
@@ -29,15 +33,35 @@ public class MainWindowController implements MouseListener {
     }
 
     public void historyDo(Command command){
-        //TODO: clean historyBackedOut and push back command historyApplied
+        historyBackedOut.clear();
+
+        command.Apply();
+
+        historyApplied.addLast(command);
     }
 
     public void historyRedo(){
-        //TODO: pop front of historyBackedOut and push back in historyApplied
+        Command command = historyBackedOut.pollFirst();
+
+        if (command == null) {
+            return;
+        }
+
+        command.Apply();
+
+        historyApplied.addLast(command);
     }
 
     public void historyUndo(){
-        //TODO: pop back of historyApplied and push front in historyBackedOut
+        Command command = historyApplied.pollLast();
+
+        if (command == null) {
+            return;
+        }
+
+        command.Reverse();
+
+        historyBackedOut.addFirst(command);
     }
 
     @Override

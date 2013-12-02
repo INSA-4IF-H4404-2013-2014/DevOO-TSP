@@ -13,11 +13,11 @@ public class InverseCommand extends Command {
 
     private Command command;
 
-    void Apply() {
+    public void Apply() {
         command.Reverse();
     }
 
-    void Reverse() {
+    public void Reverse() {
         command.Apply();
     }
 
