@@ -22,16 +22,19 @@ public class MainWindow extends JFrame {
     private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
     private RoundPanel roundPanel = new RoundPanel();
     private ShortcutsPanel shortcutsPanel = new ShortcutsPanel();
-    private TopMenuBar topMenuBar = new TopMenuBar();
-    private JPanel mainPanel = new JPanel();
 
-    public MainWindow() throws HeadlessException {
+    private TopMenuBar topMenuBar = new TopMenuBar();
+    private TopToolBar topToolBar = new TopToolBar();
+
+    private JPanel mainPanel = new JPanel(new BorderLayout());
+
+    public MainWindow() {
         // Configures main panel
-        // mainPanel.add();
+        mainPanel.add(topToolBar, BorderLayout.PAGE_START);
 
         // Configures main window
         setJMenuBar(topMenuBar);
-        add(mainPanel);
+        setContentPane(mainPanel);
         setTitle(TITLE);
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setLocationRelativeTo(null);
