@@ -14,11 +14,26 @@ public class TopMenuBar extends JMenuBar{
     private JMenu view = new JMenu("Affichage");
     private JMenu help = new JMenu("?");
 
-    public TopMenuBar()
-    {
+    public TopMenuBar() {
+        createFileMenu();
+        createEditMenu();
+        createViewMenu();
+        createHelpMenu();
+    }
+
+    private void createFileMenu() {
         add(file);
+    }
+
+    private void createEditMenu() {
         add(edit);
+    }
+
+    private void createViewMenu() {
         add(view);
+    }
+
+    private void createHelpMenu() {
         add(help);
     }
 }
