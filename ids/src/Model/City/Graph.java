@@ -242,7 +242,7 @@ public class Graph {
             NodeList xmlArcList = xmlNode.getElementsByTagName("TronconSortant");
 
             for (int j = 0; j < xmlArcList.getLength(); j++) {
-                Element xmlArc = (Element) xmlNodeList.item(i);
+                Element xmlArc = (Element) xmlArcList.item(i);
 
                 if (this.loadArc(xmlArc, from) == null) {
                     return false;
