@@ -1,5 +1,9 @@
 package Model.City;
 
+import Utils.Utils;
+import Utils.UtilsException;
+import org.w3c.dom.Element;
+
 import java.util.List;
 import java.util.LinkedList;
 
@@ -21,9 +25,6 @@ public class Node {
     /** the node's T position */
     private int y;
 
-    /** the node's incoming arcs */
-    private List<Arc> incoming;
-
     /** the node's outgoing arcs */
     private List<Arc> outgoing;
 
@@ -37,7 +38,6 @@ public class Node {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.incoming = new LinkedList<Arc>();
         this.outgoing = new LinkedList<Arc>();
     }
 
@@ -66,18 +66,39 @@ public class Node {
     }
 
     /**
-     * Gets node's incoming arcs
-     * @return node's incoming arcs list
-     */
-    public List<Arc> getIncoming() {
-        return incoming;
-    }
-
-    /**
      * Gets node's outgoing arcs
      * @return node's outgoing arcs list
      */
     public List<Arc> getOutgoing() {
         return outgoing;
     }
+
+    /**
+     * Gets the outgoing arc to a given node id
+     * @param destinationId the destination node's id
+     * @return
+     *  - null if no such arc exists
+     *  - the arc going to destination node
+     */
+    public Arc findOutgoingTo(int destinationId) {
+        for(Arc outgoingArc : this.outgoing) {
+            if (outgoingArc.getTo().getId() == destinationId) {
+                return outgoingArc;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the outgoing arc to a given node
+     * @param node the destination node
+     * @return
+     *  - null if no such arc exists
+     *  - the arc going to destination node
+     */
+    public Arc findOutgoingTo(Node node) {
+        return findOutgoingTo(node.getId());
+    }
+
 }

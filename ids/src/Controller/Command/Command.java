@@ -15,9 +15,9 @@ public class Command {
 
     Controller.MainWindowController controller;
 
-    void Apply() {}
+    public void Apply() {}
 
-    void Reverse() {}
+    public void Reverse() {}
 
     Command(MainWindowController controller) {
         this.controller = controller;
