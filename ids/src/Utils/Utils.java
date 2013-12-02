@@ -1,5 +1,6 @@
 package Utils;
 
+import org.w3c.dom.*;
 
 
 /**
@@ -20,7 +21,7 @@ public class Utils {
         for(int i = 0; i < stringLength; i++) {
             char c = string.charAt(i);
 
-            if (!end && c == ',') {
+            if (!end && (c == ',' || c == '.')) {
                 end = true;
             }
             else if (c >= '0' && c <= '9') {
@@ -31,12 +32,53 @@ public class Utils {
                 value = value * 10.0f + (float)(c - '0');
             }
             else {
-                throw new UtilsException("positive parsing error");
+                throw new UtilsException("unexpected character '" + c + "'");
             }
         }
 
         return value / divisor;
     }
 
+    public static float parsePositiveFloatFromXmlAttribute(Element xmlElement, String attribute) throws UtilsException {
+        String value = xmlElement.getAttribute(attribute);
+
+        if (value == null) {
+            throw new UtilsException("missing attribute '" +  attribute + "'");
+        }
+
+        return Utils.parsePositiveFloat(value);
+    }
+
+    public static int parseUInt(String string) throws UtilsException {
+        int stringLength = string.length();
+        int value = 0;
+
+        for(int i = 0; i < stringLength; i++) {
+            char c = string.charAt(i);
+
+            if (c >= '0' && c <= '9') {
+                int newValue = value * 10 + (int)(c - '0');
+
+                if (newValue < value) {
+                    throw new UtilsException("overflow");
+                }
+            }
+            else {
+                throw new UtilsException("unexpected character '" + c + "'");
+            }
+        }
+
+        return value;
+    }
+
+    public static int parseUIntFromXmlAttribute(Element xmlElement, String attribute) throws UtilsException {
+        String value = xmlElement.getAttribute(attribute);
+
+        if (value == null) {
+            throw new UtilsException("missing attribute '" +  attribute + "'");
+        }
+
+        return Utils.parseUInt(value);
+    }
 
 }
