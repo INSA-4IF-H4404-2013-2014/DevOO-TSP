@@ -12,6 +12,8 @@
 *.jar
 *.idea
 *.iml
+*.java.orig
+*/out
 
 #LaTeX files!
 *.log
