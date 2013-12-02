@@ -154,11 +154,11 @@ public class Graph {
             int x = Utils.parseUIntFromXmlAttribute(xmlElement, "x");
             int y = Utils.parseUIntFromXmlAttribute(xmlElement, "y");
 
-            node = new Node(id, x, y);
-
-            if (this.findNode(node.getId()) != null) {
-                throw new UtilsException("node '" + node.getId() + "' already exists");
+            if (this.findNode(id) != null) {
+                throw new UtilsException("node '" + id + "' already exists");
             }
+
+            node = this.createNode(id, x, y);
         }
         catch (UtilsException e) {
             if (id != -1) {
@@ -168,8 +168,6 @@ public class Graph {
                 throw new UtilsException("failed to parse " + xmlElement.getNodeName() + ": " + e);
             }
         }
-
-        this.nodes.put(node.getId(), node);
 
         return node;
     }
