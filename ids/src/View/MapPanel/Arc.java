@@ -24,7 +24,12 @@ public class Arc {
     /** the parent map panel */
     private MapPanel mapPanel;
 
-    public Arc(MapPanel mapPanel, Model.City.Arc modelArc) {
+    /**
+     * Constructor
+     * @param mapPanel the map panel
+     * @param modelArc the associated model arc
+     */
+    protected Arc(MapPanel mapPanel, Model.City.Arc modelArc) {
         this.mapPanel = mapPanel;
 
         Model.City.Node from = modelArc.getFrom();
@@ -40,12 +45,44 @@ public class Arc {
         }
     }
 
-    public Model.City.Arc getModelArcFrom1To2() {
+    /**
+     * Gets the model arc from node 1 to 2
+     * @return
+     */
+    protected Model.City.Arc getModelArcFrom1To2() {
         return modelArcFrom1To2;
     }
 
-    public Model.City.Arc getModelArcFrom2To1() {
+    /**
+     * gets the model arc from node 2 to 1
+     * @return
+     */
+    protected Model.City.Arc getModelArcFrom2To1() {
         return modelArcFrom2To1;
+    }
+
+    /**
+     * Gets the node 1
+     * @return the node 1
+     */
+    protected Node getNode1() {
+        if (modelArcFrom1To2 != null) {
+            return mapPanel.findNode(modelArcFrom1To2.getFrom().getId());
+        }
+
+        return mapPanel.findNode(modelArcFrom2To1.getTo().getId());
+    }
+
+    /**
+     * Gets the node 2
+     * @return the node 2
+     */
+    protected Node getNode2() {
+        if (modelArcFrom2To1 != null) {
+            return mapPanel.findNode(modelArcFrom2To1.getFrom().getId());
+        }
+
+        return mapPanel.findNode(modelArcFrom1To2.getTo().getId());
     }
 
 }
