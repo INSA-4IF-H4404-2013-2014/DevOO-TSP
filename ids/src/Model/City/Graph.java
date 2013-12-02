@@ -141,8 +141,9 @@ public class Graph {
      * Loads a node from a given XML element
      * @param xmlElement the node's element
      * @return
-     *  - null if failed
      *  - the node that has just been created
+     * @throws
+     *  - UtilsException if failed with the reason why it has failed in it
      */
     private Node loadNodeFromXml(Element xmlElement) throws UtilsException {
         int id = -1;
@@ -179,6 +180,8 @@ public class Graph {
      * @param from the leaving node
      * @return
      *  - the arc that has just been created
+     * @throws
+     *  - UtilsException if failed with the reason why it has failed in it
      */
     private Arc loadArcFromXml(Element xmlElement, Node from) throws UtilsException {
         String streetName;
@@ -215,8 +218,9 @@ public class Graph {
      * Load a network from a given XML element
      * @param xmlElement the network's element
      * @return
-     *  - false if failed
      *  - true if succeed
+     * @throws
+     *  - UtilsException if failed with the reason why it has failed in it
      */
     private boolean loadNetworkFromXml(Element xmlElement) throws UtilsException {
         NodeList xmlNodeList = xmlElement.getElementsByTagName("Noeud");
@@ -250,8 +254,9 @@ public class Graph {
      * Creates a Graph from a given XML file
      * @param xmlPath the xml file 's path
      * @return
-     *  - null if failed
      *  - the graph that has just been created
+     * @throws
+     *  - UtilsException if failed with the reason why it has failed in it
      */
     public static Graph createFromXml(String xmlPath) throws UtilsException {
         File fileXml = new File(xmlPath);
