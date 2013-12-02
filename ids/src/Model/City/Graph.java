@@ -229,9 +229,7 @@ public class Graph {
             for (int j = 0; j < xmlArcList.getLength(); j++) {
                 Element xmlArc = (Element) xmlArcList.item(j);
 
-                if (this.loadArcFromXml(xmlArc, from) == null) {
-                    return false;
-                }
+                this.loadArcFromXml(xmlArc, from);
             }
 
         }
@@ -274,10 +272,7 @@ public class Graph {
             }
 
             graph = new Graph();
-
-            if (!graph.loadNetworkFromXml(root)) {
-                return null;
-            }
+            graph.loadNetworkFromXml(root);
         }
         catch (UtilsException e) {
             throw  new UtilsException("File \"" + xmlPath + "\" > " + e);
