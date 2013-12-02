@@ -13,56 +13,56 @@
         <text>Client%20%3A</text>
       </controlProperties>
     </control>
-    <control controlID="3" controlTypeID="com.balsamiq.mockups::ComboBox" x="592" y="233" w="-1" h="-1" measuredW="96" measuredH="24" zOrder="3" locked="false" isInGroup="-1">
-      <controlProperties>
-        <color>0</color>
-        <text>Mme%20Zorah</text>
-      </controlProperties>
-    </control>
-    <control controlID="4" controlTypeID="com.balsamiq.mockups::Label" x="542" y="271" w="-1" h="-1" measuredW="56" measuredH="21" zOrder="4" locked="false" isInGroup="-1">
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Label" x="542" y="271" w="-1" h="-1" measuredW="56" measuredH="21" zOrder="3" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Adresse%20%3A</text>
       </controlProperties>
     </control>
-    <control controlID="5" controlTypeID="com.balsamiq.mockups::TextInput" x="605" y="268" w="152" h="-1" measuredW="129" measuredH="27" zOrder="5" locked="false" isInGroup="-1">
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::TextInput" x="605" y="268" w="152" h="-1" measuredW="129" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
       <controlProperties>
-        <state>disabled</state>
+        <state>up</state>
         <text>60%2C%20rue%20de%20l%27espace</text>
       </controlProperties>
     </control>
-    <control controlID="6" controlTypeID="com.balsamiq.mockups::Label" x="542" y="307" w="-1" h="-1" measuredW="83" measuredH="21" zOrder="6" locked="false" isInGroup="-1">
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Label" x="542" y="307" w="-1" h="-1" measuredW="83" measuredH="21" zOrder="5" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Plage%20horaire%20%3A</text>
       </controlProperties>
     </control>
-    <control controlID="7" controlTypeID="com.balsamiq.mockups::TextInput" x="633" y="307" w="60" h="-1" measuredW="38" measuredH="27" zOrder="7" locked="false" isInGroup="-1">
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::TextInput" x="633" y="307" w="60" h="-1" measuredW="38" measuredH="27" zOrder="6" locked="false" isInGroup="-1">
       <controlProperties>
         <align>center</align>
         <state>up</state>
         <text>--%20h%20--</text>
       </controlProperties>
     </control>
-    <control controlID="8" controlTypeID="com.balsamiq.mockups::TextInput" x="730" y="307" w="60" h="-1" measuredW="38" measuredH="27" zOrder="8" locked="false" isInGroup="-1">
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::TextInput" x="730" y="307" w="60" h="-1" measuredW="38" measuredH="27" zOrder="7" locked="false" isInGroup="-1">
       <controlProperties>
         <align>center</align>
         <state>up</state>
         <text>--%20h%20--</text>
       </controlProperties>
     </control>
-    <control controlID="9" controlTypeID="com.balsamiq.mockups::Label" x="705" y="310" w="-1" h="-1" measuredW="10" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::Label" x="705" y="310" w="-1" h="-1" measuredW="10" measuredH="21" zOrder="8" locked="false" isInGroup="-1">
       <controlProperties>
         <text>%E0</text>
       </controlProperties>
     </control>
-    <control controlID="10" controlTypeID="com.balsamiq.mockups::Button" x="583" y="351" w="-1" h="-1" measuredW="81" measuredH="27" zOrder="10" locked="false" isInGroup="-1">
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Button" x="583" y="351" w="-1" h="-1" measuredW="81" measuredH="27" zOrder="9" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Confirmer</text>
       </controlProperties>
     </control>
-    <control controlID="11" controlTypeID="com.balsamiq.mockups::Button" x="679" y="351" w="77" h="27" measuredW="68" measuredH="27" zOrder="11" locked="false" isInGroup="-1">
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Button" x="679" y="351" w="77" h="27" measuredW="68" measuredH="27" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <align>center</align>
         <text>Annuler</text>
+      </controlProperties>
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::TextInput" x="605" y="232" w="152" h="-1" measuredW="80" measuredH="27" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <state>up</state>
+        <text>Mme%20Zorah</text>
       </controlProperties>
     </control>
   </controls>

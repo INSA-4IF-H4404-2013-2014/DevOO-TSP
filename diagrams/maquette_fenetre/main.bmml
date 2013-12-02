@@ -191,6 +191,7 @@
     </control>
     <control controlID="41" controlTypeID="com.balsamiq.mockups::TextArea" x="800" y="511" w="55" h="24" measuredW="200" measuredH="140" zOrder="35" locked="false" isInGroup="-1">
       <controlProperties>
+        <align>center</align>
         <text>--h--</text>
       </controlProperties>
     </control>
@@ -201,6 +202,7 @@
     </control>
     <control controlID="43" controlTypeID="com.balsamiq.mockups::TextArea" x="969" y="509" w="51" h="24" measuredW="200" measuredH="140" zOrder="37" locked="false" isInGroup="-1">
       <controlProperties>
+        <align>center</align>
         <text>--h--</text>
       </controlProperties>
     </control>
