@@ -13,15 +13,22 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public class MainWindow extends JFrame {
+    private static final int DEFAULT_WIDTH = 1024;
+    private static final int DEFAULT_HEIGHT = 768;
 
     private Round round;
 
-    DeliveryInfoPanel deliveryInfoPanel;
-    DeliveryListPanel deliveryListPanel;
-    RoundPanel roundPanel;
-    ShortcutsPanel shortcutsPanel;
+    private DeliveryInfoPanel deliveryInfoPanel;
+    private DeliveryListPanel deliveryListPanel;
+    private RoundPanel roundPanel;
+    private ShortcutsPanel shortcutsPanel;
 
     public MainWindow() throws HeadlessException {
+        setTitle("Supervision des livraisons");
+        setSize(1024,768);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
     }
 
     public Round getRound() {

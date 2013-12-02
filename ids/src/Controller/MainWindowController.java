@@ -20,8 +20,8 @@ public class MainWindowController implements MouseListener {
     private List<Controller.Command.Command> historyBackedOut;
     private MainWindow mainWindow;
 
-    public MainWindowController(MainWindow mainWindow) {
-        this.mainWindow = mainWindow;
+    public MainWindowController() {
+        this.mainWindow = new MainWindow();
     }
 
     public MainWindow getMainWindow() {
