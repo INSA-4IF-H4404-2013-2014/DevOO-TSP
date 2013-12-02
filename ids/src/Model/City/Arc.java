@@ -42,7 +42,6 @@ public class Arc {
 
         street.getArcs().add(this);
         from.getOutgoing().add(this);
-        to.getIncoming().add(this);
     }
 
     /**
