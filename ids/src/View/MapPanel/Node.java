@@ -9,6 +9,7 @@ package View.MapPanel;
  */
 public class Node {
 
+    /** the associated model node */
     private Model.City.Node cityNode;
 
 }

@@ -72,4 +72,33 @@ public class Node {
     public List<Arc> getOutgoing() {
         return outgoing;
     }
+
+    /**
+     * Gets the outgoing arc to a given node id
+     * @param destinationId the destination node's id
+     * @return
+     *  - null if no such arc exists
+     *  - the arc going to destination node
+     */
+    public Arc findOutgoingTo(int destinationId) {
+        for(Arc outgoingArc : this.outgoing) {
+            if (outgoingArc.getTo().getId() == destinationId) {
+                return outgoingArc;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the outgoing arc to a given node
+     * @param node the destination node
+     * @return
+     *  - null if no such arc exists
+     *  - the arc going to destination node
+     */
+    public Arc findOutgoingTo(Node node) {
+        return findOutgoingTo(node.getId());
+    }
+
 }
