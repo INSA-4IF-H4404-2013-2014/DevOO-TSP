@@ -221,12 +221,13 @@ public class Graph {
         for (int i = 0; i < xmlNodeList.getLength(); i++) {
             Element xmlNode = (Element) xmlNodeList.item(i);
 
-            Node from = this.findNode(Integer.parseInt(xmlNode.getAttribute("id")));
+            String nodeId = xmlNode.getAttribute("id");
+            Node from = this.findNode(Integer.parseInt(nodeId));
 
             NodeList xmlArcList = xmlNode.getElementsByTagName("TronconSortant");
 
             for (int j = 0; j < xmlArcList.getLength(); j++) {
-                Element xmlArc = (Element) xmlArcList.item(i);
+                Element xmlArc = (Element) xmlArcList.item(j);
 
                 if (this.loadArc(xmlArc, from) == null) {
                     return false;

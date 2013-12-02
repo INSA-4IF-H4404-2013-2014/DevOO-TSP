@@ -13,7 +13,14 @@ import org.w3c.dom.*;
 public class Utils {
 
     public static String stringFromXmlAttribute(Element xmlElement, String attribute) throws UtilsException {
-        String value = xmlElement.getAttribute(attribute);
+        String value;
+
+        try {
+            value = xmlElement.getAttribute(attribute);
+        }
+        catch (Exception e) {
+            throw new UtilsException("missing attribute '" +  attribute + "'");
+        }
 
         if (value == null) {
             throw new UtilsException("missing attribute '" +  attribute + "'");
