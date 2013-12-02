@@ -1,7 +1,10 @@
-package Controler;
+package Controller;
+
+import View.MainWindow.MainWindow;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +13,18 @@ import java.awt.event.MouseListener;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class DeliveryWindowControler implements MouseListener {
+public class MainWindowController implements MouseListener {
+
+    private List<Controller.Command.Command> history;
+    private MainWindow mainWindow;
+
+    public MainWindowController(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
+    }
+
+    public MainWindow getMainWindow() {
+        return mainWindow;
+    }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {

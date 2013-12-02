@@ -1,4 +1,4 @@
-package Controler;
+package Controller;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -7,10 +7,11 @@ import java.awt.event.MouseListener;
  * Created with IntelliJ IDEA.
  * User: gabadie
  * Date: 02/12/13
- * Time: 09:49
+ * Time: 09:50
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowControler implements MouseListener {
+public class MapPanelController implements MouseListener{
+
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         //To change body of implemented methods use File | Settings | File Templates.
@@ -35,4 +36,5 @@ public class MainWindowControler implements MouseListener {
     public void mouseExited(MouseEvent mouseEvent) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
 }

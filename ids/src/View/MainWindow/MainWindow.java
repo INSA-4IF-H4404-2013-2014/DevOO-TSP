@@ -1,6 +1,9 @@
 package View.MainWindow;
 
+import Model.Delivery.Round;
+
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,9 +14,17 @@ import javax.swing.*;
  */
 public class MainWindow extends JFrame {
 
+    private Round round;
+
     DeliveryInfoPanel deliveryInfoPanel;
     DeliveryListPanel deliveryListPanel;
     RoundPanel roundPanel;
     ShortcutsPanel shortcutsPanel;
 
+    public MainWindow() throws HeadlessException {
+    }
+
+    public Round getRound() {
+        return round;
+    }
 }
