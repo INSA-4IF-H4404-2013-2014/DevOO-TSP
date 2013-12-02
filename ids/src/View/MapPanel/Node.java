@@ -9,7 +9,35 @@ package View.MapPanel;
  */
 public class Node {
 
-    /** the associated model node */
-    private Model.City.Node cityNode;
+    /** the parent map panel */
+    private MapPanel mapPanel;
 
+    /** the associated model node */
+    private Model.City.Node modelNode;
+
+    /**
+     * Constructor
+     * @param mapPanel the parent map panel
+     * @param modelNode the model node
+     */
+    public Node(MapPanel mapPanel, Model.City.Node modelNode) {
+        this.mapPanel = mapPanel;
+        this.modelNode = modelNode;
+    }
+
+    /**
+     * Gets associated model node
+     * @return the associated model node
+     */
+    public Model.City.Node getModelNode() {
+        return modelNode;
+    }
+
+    /**
+     * Gets the parent map panel
+     * @return the parent map panel
+     */
+    public MapPanel getMapPanel() {
+        return mapPanel;
+    }
 }
