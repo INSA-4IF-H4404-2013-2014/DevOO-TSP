@@ -17,8 +17,6 @@ public class UtilsException extends java.lang.Exception {
 
     @Override
     public String toString() {
-        return "UtilsException{" +
-                "message='" + message + '\'' +
-                '}';
+        return message;
     }
 }

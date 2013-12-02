@@ -252,36 +252,41 @@ public class Graph {
         Element root;
         Document document;
         DocumentBuilder factory;
+        Graph graph;
 
         try {
-            factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            try {
+                factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-            document = factory.parse(fileXml);
+                document = factory.parse(fileXml);
 
-            root = document.getDocumentElement();
-        } catch (ParserConfigurationException pce) {
-            throw new UtilsException("DOM parsor configuration exception");
-        } catch (SAXException se) {
-            throw new UtilsException("XML parse stage failed");
-        } catch (IOException ioe) {
-            throw new UtilsException("Error while reading file \"" + xmlPath + "\"");
+                root = document.getDocumentElement();
+            } catch (ParserConfigurationException pce) {
+                throw new UtilsException("DOM parsor configuration exception");
+            } catch (SAXException se) {
+                throw new UtilsException("XML parse stage failed");
+            } catch (IOException ioe) {
+                throw new UtilsException("Error while reading file \"" + xmlPath + "\"");
+            }
+
+            if (!root.getNodeName().equals("Reseau")) {
+                throw new UtilsException("Unexpected XML root name \"" + root.getNodeName() + "\"");
+            }
+
+            graph = new Graph();
+
+            if (!graph.loadXmlNetwork(root)) {
+                return null;
+            }
         }
-
-        if (!root.getNodeName().equals("Reseau")) {
-            throw new UtilsException("Unexpected XML root name \"" + root.getNodeName() + "\" in \"" + xmlPath + "\"");
-        }
-
-        Graph graph = new Graph();
-
-        if (!graph.loadXmlNetwork(root)) {
-            return null;
+        catch (UtilsException e) {
+            throw  new UtilsException("File \"" + xmlPath + "\" > " + e);
         }
 
         return graph;
     }
 
-    public static void main(String [ ] args)
-    {
+    public static void main(String [ ] args) {
         try {
             Graph graph = createFromXml("../sujet/plan10x10.xml");
         }
