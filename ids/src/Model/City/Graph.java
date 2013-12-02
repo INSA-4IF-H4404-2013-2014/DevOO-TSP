@@ -119,13 +119,32 @@ public class Graph {
     }
 
     /**
-     * Creates a node from a given XML element
+     * Creates a street with a given name if not already existing, and returns it
+     * @param name the street's name
+     * @return the street that has the given name
+     */
+    public Street createStreet(String name) {
+        Street street = this.findStreet(name);
+
+        if (street != null) {
+            return street;
+        }
+
+        street = new Street(name);
+
+        this.streets.add(street);
+
+        return street;
+    }
+
+    /**
+     * Loads a node from a given XML element
      * @param xmlElement the node's element
      * @return
      *  - null if failed
      *  - the node that has just been created
      */
-    private Node createNode(Element xmlElement) throws UtilsException {
+    private Node loadNodeFromXml(Element xmlElement) throws UtilsException {
         Node node;
 
         try {
@@ -146,32 +165,13 @@ public class Graph {
     }
 
     /**
-     * Creates a street with a given name if not already existing, and returns it
-     * @param name the street's name
-     * @return the street that has the given name
-     */
-    public Street createStreet(String name) {
-        Street street = this.findStreet(name);
-
-        if (street != null) {
-            return street;
-        }
-
-        street = new Street(name);
-
-        this.streets.add(street);
-
-        return street;
-    }
-
-    /**
      * Loads an arc from a given XML element
      * @param xmlElement the node's element
      * @param from the leaving node
      * @return
      *  - the arc that has just been created
      */
-    private Arc loadArc(Element xmlElement, Node from) throws UtilsException {
+    private Arc loadArcFromXml(Element xmlElement, Node from) throws UtilsException {
         String streetName;
         float speed;
         float length;
@@ -209,13 +209,13 @@ public class Graph {
      *  - false if failed
      *  - true if succeed
      */
-    private boolean loadXmlNetwork(Element xmlElement) throws UtilsException {
+    private boolean loadNetworkFromXml(Element xmlElement) throws UtilsException {
         NodeList xmlNodeList = xmlElement.getElementsByTagName("Noeud");
 
         for (int i = 0; i < xmlNodeList.getLength(); i++) {
             Element xmlNode = (Element) xmlNodeList.item(i);
 
-            this.createNode(xmlNode);
+            this.loadNodeFromXml(xmlNode);
         }
 
         for (int i = 0; i < xmlNodeList.getLength(); i++) {
@@ -229,7 +229,7 @@ public class Graph {
             for (int j = 0; j < xmlArcList.getLength(); j++) {
                 Element xmlArc = (Element) xmlArcList.item(j);
 
-                if (this.loadArc(xmlArc, from) == null) {
+                if (this.loadArcFromXml(xmlArc, from) == null) {
                     return false;
                 }
             }
@@ -275,7 +275,7 @@ public class Graph {
 
             graph = new Graph();
 
-            if (!graph.loadXmlNetwork(root)) {
+            if (!graph.loadNetworkFromXml(root)) {
                 return null;
             }
         }
