@@ -40,6 +40,7 @@ public class Arc {
         // TODO: DO WE FULLY TRUST THE LENGTH PARAMETER ????
         // QUESTION FOR SOLNON : SHALL WE CHECK THE LENGTH IS POSSIBLE ACCORDING TO THE NODE COORDINATES ?
 
+        street.getArcs().add(this);
         from.getOutgoing().add(this);
         to.getIncoming().add(this);
     }
