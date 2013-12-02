@@ -171,7 +171,7 @@ public class Graph {
      * @return
      *  - the arc that has just been created
      */
-    private Arc loadArc(Element xmlElement, Node from) {
+    private Arc loadArc(Element xmlElement, Node from) throws UtilsException {
         String streetName;
         float speed;
         float length;
@@ -193,9 +193,8 @@ public class Graph {
                 throw new UtilsException("unknown node id");
             }
         }
-        catch (UtilsException e)
-        {
-            return null;
+        catch (UtilsException e) {
+            throw new UtilsException("failed to parse " + xmlElement.getNodeName() + " leaving node \"" + from.getId() + "\": " + e);
         }
 
         Street street = this.createStreet(streetName);
@@ -261,19 +260,15 @@ public class Graph {
 
             root = document.getDocumentElement();
         } catch (ParserConfigurationException pce) {
-            System.out.println("DOM parsor configuration exception");
-            return null;
+            throw new UtilsException("DOM parsor configuration exception");
         } catch (SAXException se) {
-            System.out.println("Xml parse error");
-            return null;
+            throw new UtilsException("XML parse stage failed");
         } catch (IOException ioe) {
-            System.out.println("I/O error");
-            return null;
+            throw new UtilsException("Error while reading file \"" + xmlPath + "\"");
         }
 
         if (!root.getNodeName().equals("Reseau")) {
-            System.out.println("Xml parse error");
-            return null;
+            throw new UtilsException("Unexpected XML root name \"" + root.getNodeName() + "\" in \"" + xmlPath + "\"");
         }
 
         Graph graph = new Graph();
