@@ -84,19 +84,4 @@ public class Node {
     public List<Arc> getOutgoing() {
         return outgoing;
     }
-
-    /**
-     * Creates a Node from a given XML element
-     * @param xmlElement the node's element
-     * @return
-     *  - null if failed
-     *  - the node that has just been created
-     */
-    public static Node createFromXml(Element xmlElement) throws UtilsException {
-        int id = Utils.parseUIntFromXmlAttribute(xmlElement, "id");
-        int x = Utils.parseUIntFromXmlAttribute(xmlElement, "x");
-        int y = Utils.parseUIntFromXmlAttribute(xmlElement, "y");
-
-        return new Node(id, x, y);
-    }
 }

@@ -145,18 +145,27 @@ public class Graph {
      *  - the node that has just been created
      */
     private Node loadNodeFromXml(Element xmlElement) throws UtilsException {
+        int id = -1;
         Node node;
 
         try {
-            node = Node.createFromXml(xmlElement);
+            id = Utils.parseUIntFromXmlAttribute(xmlElement, "id");
+            int x = Utils.parseUIntFromXmlAttribute(xmlElement, "x");
+            int y = Utils.parseUIntFromXmlAttribute(xmlElement, "y");
+
+            node = new Node(id, x, y);
 
             if (this.findNode(node.getId()) != null) {
                 throw new UtilsException("node '" + node.getId() + "' already exists");
             }
         }
         catch (UtilsException e) {
-            throw new UtilsException("failed to parse " + xmlElement.getNodeName() + " id=\"" + 0 + "\": " + e);
-            //TODO: better error message
+            if (id != -1) {
+                throw new UtilsException("failed to parse " + xmlElement.getNodeName() + " id=\"" + id + "\": " + e);
+            }
+            else {
+                throw new UtilsException("failed to parse " + xmlElement.getNodeName() + ": " + e);
+            }
         }
 
         this.nodes.put(node.getId(), node);
