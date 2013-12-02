@@ -43,12 +43,14 @@
     <control controlID="9" controlTypeID="com.balsamiq.mockups::Button" x="306" y="132" w="52" h="48" measuredW="46" measuredH="27" zOrder="6" locked="false" isInGroup="-1">
       <controlProperties>
         <icon>CircledPlusIcon%7Csmall</icon>
+        <state>disabled</state>
         <text/>
       </controlProperties>
     </control>
     <control controlID="10" controlTypeID="com.balsamiq.mockups::Button" x="352" y="132" w="52" h="48" measuredW="46" measuredH="27" zOrder="7" locked="false" isInGroup="-1">
       <controlProperties>
         <icon>CircledMinusIcon%7Csmall</icon>
+        <state>disabled</state>
         <text/>
       </controlProperties>
     </control>
