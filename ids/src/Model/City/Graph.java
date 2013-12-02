@@ -158,6 +158,64 @@ public class Graph {
     }
 
     /**
+     * Loads an arc from a given XML element
+     * @param xmlElement the node's element
+     * @param from the leaving node
+     * @return
+     *  - null if failed
+     *  - the arc that has just been created
+     */
+    private Arc loadArc(Element xmlElement, Node from) {
+        String streetName = xmlElement.getAttribute("nomRue");
+
+        if (streetName == null) {
+            return null;
+        }
+
+        String speedString = xmlElement.getAttribute("vitesse");
+
+        if (speedString == null) {
+            return null;
+        }
+
+        float speed = Float.parseFloat(speedString);
+
+        if (speed <= 0.0) {
+            return null;
+        }
+
+        String lengthString = xmlElement.getAttribute("longueur");
+
+        if (lengthString == null) {
+            return null;
+        }
+
+        float length = Float.parseFloat(lengthString);
+
+        if (length < 0.0) {
+            return null;
+        }
+
+        String destinationString = xmlElement.getAttribute("destination");
+
+        if (destinationString == null) {
+            return null;
+        }
+
+        int destinationId = Integer.parseInt(destinationString);
+
+        Node to = this.findNode(destinationId);
+
+        if (to == null) {
+            return null;
+        }
+
+        Street street = this.createStreet(streetName);
+
+        return new Arc(street, from, to, length, speed);
+    }
+
+    /**
      * Load a network from a given XML element
      * @param xmlElement the network's element
      * @return
@@ -174,6 +232,23 @@ public class Graph {
             if (this.createNode(xmlNode) == null) {
                 return false;
             }
+        }
+
+        for (int i = 0; i < xmlNodeList.getLength(); i++) {
+            Element xmlNode = (Element) xmlNodeList.item(i);
+
+            Node from = this.findNode(Integer.parseInt(xmlNode.getAttribute("id")));
+
+            NodeList xmlArcList = xmlNode.getElementsByTagName("TronconSortant");
+
+            for (int j = 0; j < xmlArcList.getLength(); j++) {
+                Element xmlArc = (Element) xmlNodeList.item(i);
+
+                if (this.loadArc(xmlArc, from) == null) {
+                    return false;
+                }
+            }
+
         }
 
         return true;
@@ -200,10 +275,6 @@ public class Graph {
             document = factory.parse(fileXml);
 
             root = document.getDocumentElement();
-
-            if (!root.getNodeName().equals("Reseau")) {
-                return null;
-            }
         } catch (ParserConfigurationException pce) {
             System.out.println("DOM parsor configuration exception");
             return null;
@@ -212,6 +283,11 @@ public class Graph {
             return null;
         } catch (IOException ioe) {
             System.out.println("I/O error");
+            return null;
+        }
+
+        if (!root.getNodeName().equals("Reseau")) {
+            System.out.println("Xml parse error");
             return null;
         }
 
