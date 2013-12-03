@@ -3,8 +3,9 @@ package View.MapPanel;
 import Model.City.Graph;
 
 import javax.swing.*;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -28,7 +29,8 @@ public class MapPanel extends JPanel {
     private Map<Integer,Map<Integer,Arc>> arcs;
 
 
-    private static Color background = new Color(0, 0, 0);
+    private static Color background = new Color(255, 255, 255);
+    private static Color node_color = new Color(255, 160, 80);
 
     /**
      * Constructor
@@ -37,6 +39,20 @@ public class MapPanel extends JPanel {
     public MapPanel() {
         this.nodes = new HashMap<Integer,Node>();
         this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
+    }
+
+    /**
+     * Sets the model
+     * @param modelGraph the model we want to set
+     */
+    public void setModel(Graph modelGraph) {
+        this.nodes.clear();
+        this.arcs.clear();
+
+        this.modelGraph = modelGraph;
+
+        this.buildView();
+        this.repaint();
     }
 
     /**
@@ -83,6 +99,16 @@ public class MapPanel extends JPanel {
         setBackground(background);
         g.setColor(background);
         g.fillRect(0, 0, (int)this.getSize().getWidth(), (int)this.getSize().getHeight());
+
+        g.setColor(node_color);
+
+        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet())
+        {
+            Model.City.Node modelNode = entry.getValue().getModelNode();
+
+            g.fillOval(modelNode.getX(), modelNode.getY(), 5, 5);
+        }
+
     }
 
     /**
@@ -93,7 +119,7 @@ public class MapPanel extends JPanel {
         for(Map.Entry<Integer,Model.City.Node> entry : modelGraph.getNodes().entrySet()) {
             Node node = new Node(this, entry.getValue());
 
-            nodes.put(entry.getValue().getId(), node);
+            this.nodes.put(entry.getValue().getId(), node);
         }
 
         for(Model.City.Arc modelArc : modelGraph.getArcs()) {

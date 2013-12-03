@@ -1,6 +1,8 @@
 package View.MainWindow;
 
+import Model.City.Graph;
 import Model.Delivery.Round;
+import Utils.UtilsException;
 import View.MapPanel.MapPanel;
 
 import javax.swing.*;
@@ -17,6 +19,7 @@ public class MainWindow extends JFrame {
     private static final int DEFAULT_HEIGHT = 768;
     private static final String TITLE = "Supervision des livraisons";
 
+    private Graph graph;
     private Round round;
 
     private DeliveryInfoPanel deliveryInfoPanel = new DeliveryInfoPanel();
@@ -44,6 +47,15 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+
+        // automatic load for map testing
+        try {
+            graph = Graph.createFromXml("../sujet/plan10x10.xml");
+            mapPanel.setModel(graph);
+        }
+        catch (UtilsException e) {
+            //TODO: prety load
+        }
     }
 
     public Round getRound() {

@@ -33,12 +33,11 @@ public class Arc {
      * @param speed the arc's speed
      */
     protected Arc(Street street, Node from, Node to, float length, float speed) {
-        street = street;
-        from = from;
-        to = to;
-
-        // TODO: DO WE FULLY TRUST THE LENGTH PARAMETER ????
-        // QUESTION FOR SOLNON : SHALL WE CHECK THE LENGTH IS POSSIBLE ACCORDING TO THE NODE COORDINATES ?
+        this.street = street;
+        this.from = from;
+        this.to = to;
+        this.length = length;
+        this.speed = speed;
 
         street.getArcs().add(this);
         from.getOutgoing().add(this);
