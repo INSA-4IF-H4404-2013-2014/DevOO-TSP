@@ -4,6 +4,7 @@ import Model.City.Graph;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -139,6 +140,10 @@ public class MapPanel extends JPanel {
             g.fillOval(x, y, nodeRadius, nodeRadius);
         }
 
+        double arcThickness = this.modelViewScaleFactor * MapPanel.arcModelThickness;
+
+        Rectangle2D.Double rect = new Rectangle2D.Double();
+
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : this.arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
                 Arc arc = entry.getValue();
@@ -156,9 +161,11 @@ public class MapPanel extends JPanel {
                 double angle = Math.atan2((double)ny, (double)nx);
                 double nl = Math.sqrt((double)(nx * nx + ny * ny));
 
+                rect.setRect(0.0, -arcThickness, nl, 2.0 * arcThickness);
+
                 g.translate(x1, y1);
                 g.rotate(angle);
-                g.fillRect(0, -MapPanel.arcModelThickness, (int)nl, 2 * MapPanel.arcModelThickness);
+                g.fill(rect);
                 g.rotate(-angle);
                 g.translate(-x1, -y1);
             }
@@ -278,5 +285,5 @@ public class MapPanel extends JPanel {
     private static Color nodeColor = new Color(255, 160, 80);
 
     /** arc width in the model's basis */
-    private static int arcModelThickness = 3;
+    private static double arcModelThickness = 2.5;
 }
