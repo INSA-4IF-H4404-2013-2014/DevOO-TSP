@@ -25,7 +25,6 @@ public class MainWindow extends JFrame {
     private DeliveryInfoPanel deliveryInfoPanel = new DeliveryInfoPanel();
     private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
     private RoundPanel roundPanel = new RoundPanel();
-    private ShortcutsPanel shortcutsPanel = new ShortcutsPanel();
 
     private MapPanel mapPanel = new MapPanel();
 
