@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.HashMap;
@@ -53,14 +55,25 @@ public class MapPanel extends JPanel {
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) {
-                MapPanel panel = (MapPanel) e.getComponent();
+            public void componentResized(ComponentEvent event) {
+                MapPanel panel = (MapPanel) event.getComponent();
 
                 double smallestScaleFactor = panel.smallestScaleFactor();
 
                 if (panel.modelViewScaleFactor < smallestScaleFactor || panel.fittedScaleFactor) {
                     fitToView();
                 }
+            }
+        });
+
+        this.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent event) {
+                MapPanel panel = (MapPanel) event.getComponent();
+
+                double newScaleFactor = panel.modelViewScaleFactor * Math.pow(0.5, (double)event.getWheelRotation());
+
+                panel.setScaleFactor(newScaleFactor);
             }
         });
     }
@@ -136,6 +149,23 @@ public class MapPanel extends JPanel {
     }
 
     /**
+     * Sets the model/view scale factor
+     * @param scaleFactor the new scale factor to set
+     */
+    public void setScaleFactor(double scaleFactor) {
+        double smallestScaleFactor = this.smallestScaleFactor();
+
+        if (scaleFactor <= smallestScaleFactor) {
+            fitToView();
+        }
+        else {
+            this.modelViewScaleFactor = Math.min(scaleFactor, maxScaleFactor);
+            this.fittedScaleFactor = false;
+            this.repaint();
+        }
+    }
+
+    /**
      * Fit the entire map in the available view.
      */
     public void fitToView() {
@@ -143,6 +173,8 @@ public class MapPanel extends JPanel {
         this.modelCenterPos.x = this.modelSize.width / 2;
         this.modelCenterPos.y = this.modelSize.height / 2;
         this.fittedScaleFactor = true;
+
+        this.repaint();
     }
 
     /**
@@ -291,6 +323,9 @@ public class MapPanel extends JPanel {
         this.fitToView();
     }
 
+
+    /** maximum scale factor */
+    private static double maxScaleFactor = 8.0;
 
     /** border padding in the view basis */
     private static int borderPadding = 50;
