@@ -67,8 +67,10 @@ public class MainWindow extends JFrame {
      */
     private JPanel createSubMainPanel() {
         JPanel subMainPanel = new JPanel(new BorderLayout());
+
         subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
         subMainPanel.add(mapPanel, BorderLayout.CENTER);
+        subMainPanel.add(deliveryInfoPanel, BorderLayout.EAST);
 
         return subMainPanel;
     }
