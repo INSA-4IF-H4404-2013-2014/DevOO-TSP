@@ -1,5 +1,7 @@
 package View.MapPanel;
 
+import java.awt.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: gabadie
@@ -14,6 +16,10 @@ public class Node {
 
     /** the associated model node */
     private Model.City.Node modelNode;
+
+    /** view coordinates */
+    private int x;
+    private int y;
 
     /**
      * Constructor
@@ -39,5 +45,35 @@ public class Node {
      */
     protected MapPanel getMapPanel() {
         return mapPanel;
+    }
+
+    /**
+     * Gets the x coordinate
+     * @return the x coordinate
+     */
+    protected int getX() {
+        return x;
+    }
+
+    /**
+     * Gets the y coordinate
+     * @return the y coordinate
+     */
+    protected int getY() {
+        return y;
+    }
+
+    /**
+     * Sets the y coordinate
+     */
+    protected void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * Sets the y coordinate
+     */
+    protected void setY(int y) {
+        this.y = y;
     }
 }

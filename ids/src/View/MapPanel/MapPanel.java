@@ -3,12 +3,10 @@ package View.MapPanel;
 import Model.City.Graph;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-
-import java.awt.Color;
-import java.awt.Graphics;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +26,13 @@ public class MapPanel extends JPanel {
     /** arcs map */
     private Map<Integer,Map<Integer,Arc>> arcs;
 
+    /** viewport's center pos in the model */
+    private Point viewportOriginPos;
 
+    /** viewport's scale factor */
+    private double viewportScaleFactor;
+
+    private static int borderPadding = 50;
     private static Color background = new Color(255, 255, 255);
     private static Color node_color = new Color(255, 160, 80);
 
@@ -39,6 +43,7 @@ public class MapPanel extends JPanel {
     public MapPanel() {
         this.nodes = new HashMap<Integer,Node>();
         this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
+        this.viewportOriginPos = new Point();
     }
 
     /**
@@ -52,6 +57,7 @@ public class MapPanel extends JPanel {
         this.modelGraph = modelGraph;
 
         this.buildView();
+
         this.repaint();
     }
 
@@ -102,13 +108,86 @@ public class MapPanel extends JPanel {
 
         g.setColor(node_color);
 
+        int xOffset = viewportOriginPos.x;
+        int yOffset = viewportOriginPos.y;
+
         for(Map.Entry<Integer, Node> entry : this.nodes.entrySet())
         {
-            Model.City.Node modelNode = entry.getValue().getModelNode();
+            Node node = entry.getValue();
 
-            g.fillOval(modelNode.getX(), modelNode.getY(), 5, 5);
+            g.fillOval(xOffset + node.getX(), yOffset + node.getY(), 5, 5);
         }
 
+    }
+
+    /**
+     * Updates viewport scale
+     */
+    public void fitToView() {
+        int xModelMin = 0x7FFFFFFF;
+        int yModelMin = 0x7FFFFFFF;
+        int xModelMax = -0x7FFFFFFF;
+        int yModelMax = -0x7FFFFFFF;
+
+        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
+            Model.City.Node node = entry.getValue().getModelNode();
+
+            int x = node.getX();
+            int y = node.getY();
+
+            if (x < xModelMin) {
+                xModelMin = x;
+            }
+            if (y < yModelMin) {
+                yModelMin = y;
+            }
+            if (x > xModelMax) {
+                xModelMax = x;
+            }
+            if (y > yModelMax) {
+                yModelMax = y;
+            }
+        }
+
+        double graphWidth = xModelMax - xModelMin + 2 * borderPadding;
+        double graphHeight = yModelMax - yModelMin + 2 * borderPadding;
+
+        double panelAspectRatio = (double)this.getWidth() / (double)this.getHeight();
+        double graphAspectRatio = graphWidth / graphHeight;
+
+        int newOriginX = 0;
+        int newOriginY = 0;
+
+        if (panelAspectRatio > graphAspectRatio) {
+            this.viewportScaleFactor = (double)this.getHeight() / graphHeight;
+            newOriginX = (int)(this.getWidth() - viewportScaleFactor * graphWidth);
+        }
+        else {
+            this.viewportScaleFactor = (double)this.getWidth() / graphWidth;
+            newOriginY = (int)(this.getHeight() - viewportScaleFactor * graphHeight);
+        }
+
+        this.viewportOriginPos.setLocation(newOriginX / 2, newOriginY / 2);
+
+        this.actualizeNodesCoordinates();
+    }
+
+    /**
+     * Actualizes nodes' coordinates
+     */
+    private void actualizeNodesCoordinates() {
+        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
+            Node node = entry.getValue();
+
+            int x = node.getModelNode().getX();
+            int y = node.getModelNode().getY();
+
+            double xRelative = this.viewportScaleFactor * (double) x;
+            double yRelative = this.viewportScaleFactor * (double) y;
+
+            node.setX((int) xRelative);
+            node.setY((int) yRelative);
+        }
     }
 
     /**
@@ -148,5 +227,6 @@ public class MapPanel extends JPanel {
             tree.put(to, arc);
         }
 
+        this.fitToView();
     }
 }
