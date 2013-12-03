@@ -1,6 +1,7 @@
 package View.MainWindow;
 
 import Model.Delivery.Round;
+import View.MapPanel.MapPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +24,8 @@ public class MainWindow extends JFrame {
     private RoundPanel roundPanel = new RoundPanel();
     private ShortcutsPanel shortcutsPanel = new ShortcutsPanel();
 
+    private MapPanel mapPanel = new MapPanel();
+
     private TopMenuBar topMenuBar = new TopMenuBar();
     private TopToolBar topToolBar = new TopToolBar();
 
@@ -31,6 +34,7 @@ public class MainWindow extends JFrame {
     public MainWindow() {
         // Configures main panel
         mainPanel.add(topToolBar, BorderLayout.PAGE_START);
+        mainPanel.add(mapPanel, BorderLayout.CENTER);
 
         // Configures main window
         setJMenuBar(topMenuBar);

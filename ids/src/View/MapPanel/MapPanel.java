@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.awt.Color;
+import java.awt.Graphics;
+
 /**
  * Created with IntelliJ IDEA.
  * User: gabadie
@@ -24,15 +27,16 @@ public class MapPanel extends JPanel {
     /** arcs map */
     private Map<Integer,Map<Integer,Arc>> arcs;
 
+
+    private static Color background = new Color(0, 0, 0);
+
     /**
      * Constructor
      * @param modelGraph the associated model graph
      */
-    public MapPanel(Graph modelGraph) {
-        this.modelGraph = modelGraph;
+    public MapPanel() {
         this.nodes = new HashMap<Integer,Node>();
         this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
-        this.buildView();
     }
 
     /**
@@ -68,6 +72,17 @@ public class MapPanel extends JPanel {
         }
 
         return tree.get(to);
+    }
+
+    /**
+     * Paints map panel event
+     * @param g the graphic context
+     */
+    @Override
+    public void paintComponent(Graphics g) {
+        setBackground(background);
+        g.setColor(background);
+        g.fillRect(0, 0, (int)this.getSize().getWidth(), (int)this.getSize().getHeight());
     }
 
     /**
