@@ -126,8 +126,7 @@ public class MapPanel extends JPanel {
         int xNodeOffset = xGlobalOffset - nodeRadius / 2;
         int yNodeOffset = yGlobalOffset - nodeRadius / 2;
 
-        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet())
-        {
+        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
             Node node = entry.getValue();
 
             int x = xNodeOffset + (int)(modelViewScaleFactor * (double)node.getX());
@@ -136,6 +135,21 @@ public class MapPanel extends JPanel {
             g.fillOval(x, y, nodeRadius, nodeRadius);
         }
 
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : this.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                Arc arc = entry.getValue();
+                Node node1 = arc.getNode1();
+                Node node2 = arc.getNode2();
+
+                int x1 = xGlobalOffset + (int)(modelViewScaleFactor * (double)node1.getX());
+                int y1 = yGlobalOffset + (int)(modelViewScaleFactor * (double)node1.getY());
+
+                int x2 = xGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getX());
+                int y2 = yGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getY());
+
+                g.drawLine(x1, y1, x2, y2);
+            }
+        }
     }
 
     /**
