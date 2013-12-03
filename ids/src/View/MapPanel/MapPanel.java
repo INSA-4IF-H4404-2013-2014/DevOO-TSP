@@ -26,19 +26,15 @@ public class MapPanel extends JPanel {
     /** arcs map */
     private Map<Integer,Map<Integer,Arc>> arcs;
 
-    /** viewport's center pos in the model */
+    /** view's center pos in the model basis */
     private Point modelCenterPos;
 
-    /** model graph size */
+    /** graph model's size in the model basis */
     private Dimension modelSize;
 
-    /** viewport's scale factor */
+    /** view/model scale factor */
     private double modelViewScaleFactor;
 
-    private static int borderPadding = 50;
-    private static Color noneground = new Color(70, 70, 70);
-    private static Color background = new Color(255, 255, 255);
-    private static Color node_color = new Color(255, 160, 80);
 
     /**
      * Constructor
@@ -113,6 +109,10 @@ public class MapPanel extends JPanel {
         g.setColor(noneground);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
+        if(this.modelGraph == null) {
+            return;
+        }
+
         {
             int viewGraphSizeWidth = (int)(modelViewScaleFactor * (double)this.modelSize.width) + 2 * borderPadding;
             int viewGraphSizeHeight = (int)(modelViewScaleFactor * (double)this.modelSize.height) + 2 * borderPadding;
@@ -121,16 +121,19 @@ public class MapPanel extends JPanel {
             g.fillRect(xGlobalOffset - borderPadding, yGlobalOffset - borderPadding, viewGraphSizeWidth, viewGraphSizeHeight);
         }
 
-        g.setColor(node_color);
+        g.setColor(nodeColor);
+        int nodeRadius = (int)(modelViewScaleFactor * (double)MapPanel.nodeModelRadius);
+        int xNodeOffset = xGlobalOffset - nodeRadius / 2;
+        int yNodeOffset = yGlobalOffset - nodeRadius / 2;
 
         for(Map.Entry<Integer, Node> entry : this.nodes.entrySet())
         {
             Node node = entry.getValue();
 
-            int x = xGlobalOffset + (int)(modelViewScaleFactor * (double)node.getX());
-            int y = yGlobalOffset + (int)(modelViewScaleFactor * (double)node.getY());
+            int x = xNodeOffset + (int)(modelViewScaleFactor * (double)node.getX());
+            int y = yNodeOffset + (int)(modelViewScaleFactor * (double)node.getY());
 
-            g.fillOval(x, y, 5, 5);
+            g.fillOval(x, y, nodeRadius, nodeRadius);
         }
 
     }
@@ -230,4 +233,20 @@ public class MapPanel extends JPanel {
 
         this.fitToView();
     }
+
+
+    /** border padding in the view basis */
+    private static int borderPadding = 50;
+
+    /** none ground color */
+    private static Color noneground = new Color(70, 70, 70);
+
+    /** background color */
+    private static Color background = new Color(255, 255, 255);
+
+    /** node radius in the model's basis */
+    private static int nodeModelRadius = 10;
+
+    /** node radius in the graph */
+    private static Color nodeColor = new Color(255, 160, 80);
 }
