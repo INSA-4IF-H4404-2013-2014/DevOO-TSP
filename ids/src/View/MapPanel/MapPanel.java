@@ -27,17 +27,16 @@ public class MapPanel extends JPanel {
     private Map<Integer,Map<Integer,Arc>> arcs;
 
     /** viewport's center pos in the model */
-    private Point viewportOriginPos;
+    private Point modelCenterPos;
 
     /** model graph size */
-    Dimension modelGraphSizes;
-
+    private Dimension modelSize;
 
     /** viewport's scale factor */
-    private double viewportScaleFactor;
+    private double modelViewScaleFactor;
 
     private static int borderPadding = 50;
-    private static Color noneground = new Color(30, 30, 30);
+    private static Color noneground = new Color(70, 70, 70);
     private static Color background = new Color(255, 255, 255);
     private static Color node_color = new Color(255, 160, 80);
 
@@ -48,8 +47,8 @@ public class MapPanel extends JPanel {
     public MapPanel() {
         this.nodes = new HashMap<Integer,Node>();
         this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
-        this.viewportOriginPos = new Point();
-        this.modelGraphSizes = new Dimension();
+        this.modelCenterPos = new Point();
+        this.modelSize = new Dimension();
     }
 
     /**
@@ -108,27 +107,30 @@ public class MapPanel extends JPanel {
      */
     @Override
     public void paintComponent(Graphics g) {
-        int viewGraphSizeWidth = (int)(viewportScaleFactor * (double)this.modelGraphSizes.width) + 2 * borderPadding;
-        int viewGraphSizeHeight = (int)(viewportScaleFactor * (double)this.modelGraphSizes.height) + 2 * borderPadding;
-
-        int xOffset = viewportOriginPos.x + (this.getWidth() - viewGraphSizeWidth) / 2;
-        int yOffset = viewportOriginPos.y + (this.getHeight() - viewGraphSizeHeight) / 2;
+        int xGlobalOffset = this.getWidth() / 2 - (int)(this.modelViewScaleFactor * (double)this.modelCenterPos.x);
+        int yGlobalOffset = this.getHeight() / 2 - (int)(this.modelViewScaleFactor * (double)this.modelCenterPos.y);
 
         g.setColor(noneground);
-        g.fillRect(0, 0, (int)this.getSize().getWidth(), (int)this.getSize().getHeight());
+        g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-        g.setColor(background);
-        g.fillRect(xOffset, yOffset, viewGraphSizeWidth, viewGraphSizeHeight);
+        {
+            int viewGraphSizeWidth = (int)(modelViewScaleFactor * (double)this.modelSize.width) + 2 * borderPadding;
+            int viewGraphSizeHeight = (int)(modelViewScaleFactor * (double)this.modelSize.height) + 2 * borderPadding;
+
+            g.setColor(background);
+            g.fillRect(xGlobalOffset - borderPadding, yGlobalOffset - borderPadding, viewGraphSizeWidth, viewGraphSizeHeight);
+        }
 
         g.setColor(node_color);
-        xOffset += borderPadding;
-        yOffset += borderPadding;
 
         for(Map.Entry<Integer, Node> entry : this.nodes.entrySet())
         {
             Node node = entry.getValue();
 
-            g.fillOval(xOffset + node.getX(), yOffset + node.getY(), 5, 5);
+            int x = xGlobalOffset + (int)(modelViewScaleFactor * (double)node.getX());
+            int y = yGlobalOffset + (int)(modelViewScaleFactor * (double)node.getY());
+
+            g.fillOval(x, y, 5, 5);
         }
 
     }
@@ -137,16 +139,40 @@ public class MapPanel extends JPanel {
      * Updates viewport scale
      */
     public void fitToView() {
+        double graphWidth = (double)(this.modelSize.width);
+        double graphHeight = (double)(this.modelSize.height);
+
+        double panelWidth = (double)(this.getWidth() - 2 * borderPadding);
+        double panelHeight = (double)(this.getHeight() - 2 * borderPadding);
+
+        double panelAspectRatio = panelWidth / panelHeight;
+        double graphAspectRatio = graphWidth / graphHeight;
+
+        if (panelAspectRatio > graphAspectRatio) {
+            this.modelViewScaleFactor = panelHeight / graphHeight;
+        }
+        else {
+            this.modelViewScaleFactor = panelWidth / graphWidth;
+        }
+
+        this.modelCenterPos.x = this.modelSize.width / 2;
+        this.modelCenterPos.y = this.modelSize.height / 2;
+    }
+
+    /**
+     * Builds view from the model graph
+     */
+    private void buildView() {
         int xModelMin = 0x7FFFFFFF;
         int yModelMin = 0x7FFFFFFF;
         int xModelMax = -0x7FFFFFFF;
         int yModelMax = -0x7FFFFFFF;
 
-        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
-            Model.City.Node node = entry.getValue().getModelNode();
+        for(Map.Entry<Integer,Model.City.Node> entry : modelGraph.getNodes().entrySet()) {
+            Model.City.Node modelNode = entry.getValue();
 
-            int x = node.getX();
-            int y = node.getY();
+            int x = modelNode.getX();
+            int y = modelNode.getY();
 
             if (x < xModelMin) {
                 xModelMin = x;
@@ -162,69 +188,16 @@ public class MapPanel extends JPanel {
             }
         }
 
-        this.modelGraphSizes.width = xModelMax - xModelMin;
-        this.modelGraphSizes.height = yModelMax - yModelMin;
-
-        double graphWidth = xModelMax - xModelMin + 2 * borderPadding;
-        double graphHeight = yModelMax - yModelMin + 2 * borderPadding;
-
-        double panelAspectRatio = (double)this.getWidth() / (double)this.getHeight();
-        double graphAspectRatio = graphWidth / graphHeight;
-
-        if (panelAspectRatio > graphAspectRatio) {
-            this.viewportScaleFactor = (double)this.getHeight() / graphHeight;
-        }
-        else {
-            this.viewportScaleFactor = (double)this.getWidth() / graphWidth;
-        }
-
-        this.viewportOriginPos.setLocation(0, 0);
-
-        this.actualizeNodesCoordinates();
-    }
-
-    /**
-     * Actualizes nodes' coordinates
-     */
-    private void actualizeNodesCoordinates() {
-        int xModelMin = 0x7FFFFFFF;
-        int yModelMin = 0x7FFFFFFF;
-
-        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
-            Model.City.Node node = entry.getValue().getModelNode();
-
-            int x = node.getX();
-            int y = node.getY();
-
-            if (x < xModelMin) {
-                xModelMin = x;
-            }
-            if (y < yModelMin) {
-                yModelMin = y;
-            }
-        }
-
-        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
-            Node node = entry.getValue();
-
-            int x = node.getModelNode().getX() - xModelMin;
-            int y = node.getModelNode().getY() - yModelMin;
-
-            double xRelative = this.viewportScaleFactor * (double) x;
-            double yRelative = this.viewportScaleFactor * (double) y;
-
-            node.setX((int) xRelative);
-            node.setY((int) yRelative);
-        }
-    }
-
-    /**
-     * Builds view from the model graph
-     */
-    private void buildView() {
+        this.modelSize.width = xModelMax - xModelMin;
+        this.modelSize.height = yModelMax - yModelMin;
 
         for(Map.Entry<Integer,Model.City.Node> entry : modelGraph.getNodes().entrySet()) {
-            Node node = new Node(this, entry.getValue());
+            Model.City.Node modelNode = entry.getValue();
+
+            int x = modelNode.getX() - xModelMin;
+            int y = this.modelSize.height - (modelNode.getY() - yModelMin);
+
+            Node node = new Node(this, modelNode, x, y);
 
             this.nodes.put(entry.getValue().getId(), node);
         }
