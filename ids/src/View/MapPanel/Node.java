@@ -17,7 +17,11 @@ public class Node {
     /** the associated model node */
     private Model.City.Node modelNode;
 
-    /** view coordinates */
+    /**
+     * normalized model coordinates
+     *
+     * caution : these are vertically flipped to keep the direct rotation.
+     * */
     private int x;
     private int y;
 
@@ -26,9 +30,11 @@ public class Node {
      * @param mapPanel the parent map panel
      * @param modelNode the model node
      */
-    protected Node(MapPanel mapPanel, Model.City.Node modelNode) {
+    protected Node(MapPanel mapPanel, Model.City.Node modelNode, int x, int y) {
         this.mapPanel = mapPanel;
         this.modelNode = modelNode;
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -61,19 +67,5 @@ public class Node {
      */
     protected int getY() {
         return y;
-    }
-
-    /**
-     * Sets the y coordinate
-     */
-    protected void setX(int x) {
-        this.x = x;
-    }
-
-    /**
-     * Sets the y coordinate
-     */
-    protected void setY(int y) {
-        this.y = y;
     }
 }
