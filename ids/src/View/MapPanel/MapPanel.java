@@ -147,7 +147,18 @@ public class MapPanel extends JPanel {
                 int x2 = xGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getX());
                 int y2 = yGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getY());
 
-                g.drawLine(x1, y1, x2, y2);
+                int nx = y1 - y2;
+                int ny = x2 - x1;
+                double nl = (double)arcModelThickness * modelViewScaleFactor / Math.sqrt((double)(nx * nx + ny * ny));
+
+                nx = (int)((double)nx * nl);
+                ny = (int)((double)ny * nl);
+
+                int xPts[] = {x1 + nx, x2 + nx, x2 - nx, x1 - nx};
+                int yPts[] = {y1 + ny, y2 + ny, y2 - ny, y1 - ny};
+
+                //g.drawLine(x1, y1, x2, y2);
+                g.fillPolygon(xPts, yPts, 4);
             }
         }
     }
@@ -263,4 +274,7 @@ public class MapPanel extends JPanel {
 
     /** node radius in the graph */
     private static Color nodeColor = new Color(255, 160, 80);
+
+    /** arc width in the model's basis */
+    private static int arcModelThickness = 3;
 }
