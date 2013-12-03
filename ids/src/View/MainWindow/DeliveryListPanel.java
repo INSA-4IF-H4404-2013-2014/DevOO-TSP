@@ -12,6 +12,7 @@ import java.awt.*;
 public class DeliveryListPanel extends JScrollPane {
 
     private JList deliveryList;
+    public static final float DEFAULT_WIDTH_RATIO = (float)0.2;
 
     public DeliveryListPanel() {
 
@@ -30,6 +31,6 @@ public class DeliveryListPanel extends JScrollPane {
         // We configure our JScrollPane
         setViewportView(deliveryList);
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
-        setPreferredSize(new Dimension(200, 0));
+        setPreferredSize(new Dimension((int)(MainWindow.DEFAULT_WIDTH*DEFAULT_WIDTH_RATIO), 0));
     }
 }
