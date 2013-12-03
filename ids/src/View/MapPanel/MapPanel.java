@@ -102,7 +102,11 @@ public class MapPanel extends JPanel {
      * @param g the graphic context
      */
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics gInt) {
+        Graphics2D g = (Graphics2D) gInt;
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         int xGlobalOffset = this.getWidth() / 2 - (int)(this.modelViewScaleFactor * (double)this.modelCenterPos.x);
         int yGlobalOffset = this.getHeight() / 2 - (int)(this.modelViewScaleFactor * (double)this.modelCenterPos.y);
 
@@ -147,18 +151,16 @@ public class MapPanel extends JPanel {
                 int x2 = xGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getX());
                 int y2 = yGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getY());
 
-                int nx = y1 - y2;
-                int ny = x2 - x1;
-                double nl = (double)arcModelThickness * modelViewScaleFactor / Math.sqrt((double)(nx * nx + ny * ny));
+                int nx = x2 - x1;
+                int ny = y2 - y1;
+                double angle = Math.atan2((double)ny, (double)nx);
+                double nl = Math.sqrt((double)(nx * nx + ny * ny));
 
-                nx = (int)((double)nx * nl);
-                ny = (int)((double)ny * nl);
-
-                int xPts[] = {x1 + nx, x2 + nx, x2 - nx, x1 - nx};
-                int yPts[] = {y1 + ny, y2 + ny, y2 - ny, y1 - ny};
-
-                //g.drawLine(x1, y1, x2, y2);
-                g.fillPolygon(xPts, yPts, 4);
+                g.translate(x1, y1);
+                g.rotate(angle);
+                g.fillRect(0, -MapPanel.arcModelThickness, (int)nl, 2 * MapPanel.arcModelThickness);
+                g.rotate(-angle);
+                g.translate(-x1, -y1);
             }
         }
     }
@@ -270,7 +272,7 @@ public class MapPanel extends JPanel {
     private static Color background = new Color(255, 255, 255);
 
     /** node radius in the model's basis */
-    private static int nodeModelRadius = 10;
+    private static int nodeModelRadius = 12;
 
     /** node radius in the graph */
     private static Color nodeColor = new Color(255, 160, 80);
