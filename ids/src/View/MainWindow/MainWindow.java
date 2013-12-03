@@ -25,7 +25,6 @@ public class MainWindow extends JFrame {
     private DeliveryInfoPanel deliveryInfoPanel = new DeliveryInfoPanel();
     private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
     private RoundPanel roundPanel = new RoundPanel();
-    private ShortcutsPanel shortcutsPanel = new ShortcutsPanel();
 
     private MapPanel mapPanel = new MapPanel();
 
@@ -37,7 +36,7 @@ public class MainWindow extends JFrame {
     public MainWindow() {
         // Configures main panel
         mainPanel.add(topToolBar, BorderLayout.PAGE_START);
-        mainPanel.add(mapPanel, BorderLayout.CENTER);
+        mainPanel.add(createSubMainPanel(), BorderLayout.CENTER);
 
         // Configures main window
         setJMenuBar(topMenuBar);
@@ -60,5 +59,17 @@ public class MainWindow extends JFrame {
 
     public Round getRound() {
         return round;
+    }
+
+    /**
+     * Creates the big panel under the two first toolbars (where most of the content of the window will be displayed)
+     * @return
+     */
+    private JPanel createSubMainPanel() {
+        JPanel subMainPanel = new JPanel(new BorderLayout());
+        subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
+        subMainPanel.add(mapPanel, BorderLayout.CENTER);
+
+        return subMainPanel;
     }
 }
