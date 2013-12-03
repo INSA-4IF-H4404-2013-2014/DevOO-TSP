@@ -37,6 +37,9 @@ public class MapPanel extends JPanel {
     /** view/model scale factor */
     private double modelViewScaleFactor;
 
+    /** save if the map is actually fitted to the panel or not */
+    private boolean fittedScaleFactor;
+
 
     /**
      * Constructor
@@ -55,10 +58,8 @@ public class MapPanel extends JPanel {
 
                 double smallestScaleFactor = panel.smallestScaleFactor();
 
-                if (panel.modelViewScaleFactor < smallestScaleFactor) {
-                    panel.modelViewScaleFactor = smallestScaleFactor;
-                    panel.modelCenterPos.x = panel.modelSize.width / 2;
-                    panel.modelCenterPos.y = panel.modelSize.height / 2;
+                if (panel.modelViewScaleFactor < smallestScaleFactor || panel.fittedScaleFactor) {
+                    fitToView();
                 }
             }
         });
@@ -141,6 +142,7 @@ public class MapPanel extends JPanel {
         this.modelViewScaleFactor = this.smallestScaleFactor();
         this.modelCenterPos.x = this.modelSize.width / 2;
         this.modelCenterPos.y = this.modelSize.height / 2;
+        this.fittedScaleFactor = true;
     }
 
     /**
