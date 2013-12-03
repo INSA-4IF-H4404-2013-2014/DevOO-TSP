@@ -13,13 +13,15 @@ import java.awt.*;
  */
 public class DeliveryInfoPanel extends JPanel {
 
-    JTextField client;
-    JTextField address;
-    JTextField deliveryDate;
-    JTextField delay;
-    TimeFramePanel timeFrame;
+    public static final float DEFAULT_WIDTH_RATIO = (float)0.3;
+
+    private JTextField client;
+    private JTextField address;
+    private JTextField deliveryDate;
+    private JTextField delay;
+    private TimeFramePanel timeFrame;
 
     public DeliveryInfoPanel() {
-        setPreferredSize(new Dimension(300, 0));
+        setPreferredSize(new Dimension((int)(MainWindow.DEFAULT_WIDTH*DEFAULT_WIDTH_RATIO), 0));
     }
 }

@@ -15,8 +15,9 @@ import java.awt.*;
  * This class is the main window (JFrame) of the application.
  */
 public class MainWindow extends JFrame {
-    private static final int DEFAULT_WIDTH = 1024;
-    private static final int DEFAULT_HEIGHT = 768;
+    public static final double DEFAULT_RATIO = 4.0/3.0;
+    public static final int DEFAULT_WIDTH = 1024;
+    public static final int DEFAULT_HEIGHT = (int)(DEFAULT_WIDTH/DEFAULT_RATIO);
     private static final String TITLE = "Supervision des livraisons";
 
     private Graph graph;
