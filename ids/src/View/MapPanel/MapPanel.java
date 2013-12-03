@@ -4,10 +4,11 @@ import Model.City.Graph;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,6 +47,21 @@ public class MapPanel extends JPanel {
         this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
         this.modelCenterPos = new Point();
         this.modelSize = new Dimension();
+
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                MapPanel panel = (MapPanel) e.getComponent();
+
+                double smallestScaleFactor = panel.smallestScaleFactor();
+
+                if (panel.modelViewScaleFactor < smallestScaleFactor) {
+                    panel.modelViewScaleFactor = smallestScaleFactor;
+                    panel.modelCenterPos.x = panel.modelSize.width / 2;
+                    panel.modelCenterPos.y = panel.modelSize.height / 2;
+                }
+            }
+        });
     }
 
     /**
@@ -96,6 +112,35 @@ public class MapPanel extends JPanel {
         }
 
         return tree.get(to);
+    }
+
+    /**
+     * Gets smallest scale factor
+     */
+    public double smallestScaleFactor() {
+        double graphWidth = (double)(this.modelSize.width);
+        double graphHeight = (double)(this.modelSize.height);
+
+        double panelWidth = (double)(this.getWidth() - 2 * borderPadding);
+        double panelHeight = (double)(this.getHeight() - 2 * borderPadding);
+
+        double panelAspectRatio = panelWidth / panelHeight;
+        double graphAspectRatio = graphWidth / graphHeight;
+
+        if (panelAspectRatio > graphAspectRatio) {
+            return panelHeight / graphHeight;
+        }
+
+        return panelWidth / graphWidth;
+    }
+
+    /**
+     * Fit the entire map in the available view.
+     */
+    public void fitToView() {
+        this.modelViewScaleFactor = this.smallestScaleFactor();
+        this.modelCenterPos.x = this.modelSize.width / 2;
+        this.modelCenterPos.y = this.modelSize.height / 2;
     }
 
     /**
@@ -170,30 +215,6 @@ public class MapPanel extends JPanel {
                 g.translate(-x1, -y1);
             }
         }
-    }
-
-    /**
-     * Updates viewport scale
-     */
-    public void fitToView() {
-        double graphWidth = (double)(this.modelSize.width);
-        double graphHeight = (double)(this.modelSize.height);
-
-        double panelWidth = (double)(this.getWidth() - 2 * borderPadding);
-        double panelHeight = (double)(this.getHeight() - 2 * borderPadding);
-
-        double panelAspectRatio = panelWidth / panelHeight;
-        double graphAspectRatio = graphWidth / graphHeight;
-
-        if (panelAspectRatio > graphAspectRatio) {
-            this.modelViewScaleFactor = panelHeight / graphHeight;
-        }
-        else {
-            this.modelViewScaleFactor = panelWidth / graphWidth;
-        }
-
-        this.modelCenterPos.x = this.modelSize.width / 2;
-        this.modelCenterPos.y = this.modelSize.height / 2;
     }
 
     /**
