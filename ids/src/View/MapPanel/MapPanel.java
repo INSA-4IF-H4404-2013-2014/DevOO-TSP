@@ -169,8 +169,11 @@ public class MapPanel extends JPanel {
         double xModelMoveVector = (double)(x - this.getWidth() / 2) / this.modelViewScaleFactor;
         double yModelMoveVector = (double)(y - this.getHeight() / 2) / this.modelViewScaleFactor;
 
-        this.modelCenterPos.x += (int)(xModelMoveVector * (1.0 - 1.0 / multiplier));
-        this.modelCenterPos.y += (int)(yModelMoveVector * (1.0 - 1.0 / multiplier));
+        modelCenterPos.x += (int)(xModelMoveVector * (1.0 - 1.0 / multiplier));
+        modelCenterPos.y += (int)(yModelMoveVector * (1.0 - 1.0 / multiplier));
+
+        modelCenterPos.x = Math.min(Math.max(modelCenterPos.x, 0), modelSize.width);
+        modelCenterPos.y = Math.min(Math.max(modelCenterPos.y, 0), modelSize.height);
 
         this.modelViewScaleFactor = scaleFactor;
         this.fittedScaleFactor = false;
