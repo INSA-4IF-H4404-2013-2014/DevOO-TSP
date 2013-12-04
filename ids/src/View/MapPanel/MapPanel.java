@@ -92,30 +92,6 @@ public class MapPanel extends JPanel {
     }
 
     /**
-     * Gets a view arc from two nodes' id
-     * @param from a node id
-     * @param to an other node id
-     * @return
-     *  - null if no arc exists between the given nodes
-     *  - the arc if found
-     */
-    public Arc findArc(int from, int to) {
-        if (to < from) {
-            int temp = to;
-            to = from;
-            from = temp;
-        }
-
-        Map<Integer,Arc> tree = arcs.get(from);
-
-        if (tree == null) {
-            return null;
-        }
-
-        return tree.get(to);
-    }
-
-    /**
      * Gets smallest scale factor
      */
     public double smallestScaleFactor() {
@@ -232,6 +208,30 @@ public class MapPanel extends JPanel {
      */
     protected Node findNode(int nodeId) {
         return nodes.get(nodeId);
+    }
+
+    /**
+     * Gets a view arc from two nodes' id
+     * @param from a node id
+     * @param to an other node id
+     * @return
+     *  - null if no arc exists between the given nodes
+     *  - the arc if found
+     */
+    protected Arc findArc(int from, int to) {
+        if (to < from) {
+            int temp = to;
+            to = from;
+            from = temp;
+        }
+
+        Map<Integer,Arc> tree = arcs.get(from);
+
+        if (tree == null) {
+            return null;
+        }
+
+        return tree.get(to);
     }
 
     /**
