@@ -26,7 +26,7 @@ public class MainWindow extends JFrame {
     /**
      * This is the padding of the "subMainWindow (the whole window but without the topMenuBar and TopToolBar)
      */
-    public static final int SUB_MAINPANEL_PADDING = 10;
+    public static final int SUB_MAINPANEL_PADDING = 8;
 
     private static final String TITLE = "Supervision des livraisons";
 
