@@ -1,0 +1,19 @@
+User->+MainWindowController: Clique sur le bouton "Demande de livraison"
+
+MainWindowController->+Round : createFromXml(String xmlPath)
+Round->"aRound : Round" : create
+
+Round->"root : Element" : create
+
+Round->+"aRound : Round": loadDeliveriesFromXml(root)
+
+"aRound : Round"->+"root : Element" : getElementsByTagName("Livraisons")
+"root : Element" -->- "aRound : Round" : DeliveryList xmlDeliveryList
+
+loop i from 0 to xmlDeliveryList.length()
+"aRound : Round"->+"xmlDeliveryLis : DeliveryList" : item(i)
+"xmlDeliveryLis : DeliveryList" -->- "aRound : Round" : Element xmlDelivery
+
+"aRound : Round" ->+ "aRound : Round" : loadDeliveryFromXml(xmlDelivery)
+
+"aRound : Round" -->- "aRound : Round" : loadDeliveryFromXml(xmlDelivery)

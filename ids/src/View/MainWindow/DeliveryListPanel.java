@@ -1,6 +1,7 @@
 package View.MainWindow;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -11,8 +12,9 @@ import java.awt.*;
  */
 public class DeliveryListPanel extends JScrollPane {
 
-    private JList deliveryList;
+    private JList deliveryList = new JList();
     public static final float DEFAULT_WIDTH_RATIO = (float)0.2;
+    public static final int PADDING = 6;
 
     public DeliveryListPanel() {
 
@@ -25,7 +27,9 @@ public class DeliveryListPanel extends JScrollPane {
         testList[3] = "Jeannine";
 
         // We bind the data structure to our JList and configure it
-        deliveryList = new JList(testList);
+        deliveryList.setListData(testList);
+        deliveryList.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
+        deliveryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 
         // We configure our JScrollPane
