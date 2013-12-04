@@ -119,7 +119,7 @@ public class RenderContext {
     private static final Color noneground = new Color(70, 70, 70);
 
     /** background color */
-    private static final Color background = new Color(255, 255, 255);
+    private static final Color background = new Color(228, 223, 211);
 
     /** node radius in the model's basis */
     private static final int nodeModelRadius = 12;
