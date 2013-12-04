@@ -111,6 +111,31 @@ public class RenderContext {
         context.translate(-x1, -y1);
     }
 
+    protected void drawGlobalView() {
+        double graphDiagonal = Math.sqrt((double)(modelSize.width * modelSize.width + modelSize.height * modelSize.height));
+        double graphViewFactor = globalViewMaxDiagonal / graphDiagonal;
+
+        int globalViewWidth = (int)((double)modelSize.width * graphViewFactor);
+        int globalViewHeight = (int)((double)modelSize.height * graphViewFactor);
+        int globalViewPosX = this.mapPanel.getWidth() - globalViewWidth - globalViewBorderOffset;
+
+        int modelMinX = (int)(graphViewFactor * (double)this.mapPanel.modelCoordinateX(0));
+        int modelMinY = (int)(graphViewFactor * (double)this.mapPanel.modelCoordinateY(0));
+
+        int modelMaxX = (int)(graphViewFactor * (double)this.mapPanel.modelCoordinateX(mapPanel.getWidth()));
+        int modelMaxY = (int)(graphViewFactor * (double)this.mapPanel.modelCoordinateY(mapPanel.getHeight()));
+
+        modelMinX = Math.min(Math.max(modelMinX, 0), globalViewWidth);
+        modelMinY = Math.min(Math.max(modelMinY, 0), globalViewHeight);
+        modelMaxX = Math.min(Math.max(modelMaxX, 0), globalViewWidth);
+        modelMaxY = Math.min(Math.max(modelMaxY, 0), globalViewHeight);
+
+        context.setColor(globalViewBackgroundColor);
+        context.fillRect(globalViewPosX, globalViewBorderOffset, globalViewWidth, globalViewHeight);
+
+        context.setColor(globalViewForegroundColor);
+        context.fillRect(globalViewPosX + modelMinX, globalViewBorderOffset + modelMinY, modelMaxX - modelMinX, modelMaxY - modelMinY);
+    }
 
     /** border padding in the view basis */
     protected static final int borderPadding = 50;
@@ -129,4 +154,10 @@ public class RenderContext {
 
     /** arc width in the model's basis */
     private static final double arcModelThickness = 2.5;
+
+    /**  */
+    private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 90);
+    private static final Color globalViewForegroundColor = new Color(55, 122, 255);
+    private static final double globalViewMaxDiagonal = 160.0;
+    private static final int globalViewBorderOffset = 10;
 }

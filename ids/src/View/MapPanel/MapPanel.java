@@ -173,6 +173,7 @@ public class MapPanel extends JPanel {
         this.modelCenterPos.y += (int)(yModelMoveVector * (1.0 - 1.0 / multiplier));
 
         this.modelViewScaleFactor = scaleFactor;
+        this.fittedScaleFactor = false;
 
         this.repaint();
     }
@@ -214,6 +215,21 @@ public class MapPanel extends JPanel {
                 renderContext.drawArc(entry.getValue());
             }
         }
+
+        if (fittedScaleFactor == false) {
+            renderContext.drawGlobalView();
+        }
+    }
+
+    /**
+     * Gets model coordinate
+     */
+    protected int modelCoordinateX(int x) {
+        return (int)((double)(x - this.getWidth() / 2) / modelViewScaleFactor + modelCenterPos.x);
+    }
+
+    protected int modelCoordinateY(int y) {
+        return (int)((double)(y - this.getHeight() / 2) / modelViewScaleFactor + modelCenterPos.y);
     }
 
     /**
