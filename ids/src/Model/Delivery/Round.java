@@ -23,6 +23,9 @@ public class Round {
     /** The warehouse which is the start and end point of the round */
     private Node warehouse;
 
+    /** The clients delivered by the round */
+    private List<Client> clients = new LinkedList<Client>();
+
     /** An ordered list of deliveries which defines the round */
     private List<Delivery> deliveries;
 
@@ -42,6 +45,27 @@ public class Round {
         this.deliveries = deliveries;
         initItineraries();
         calculateEstimatedSchedules();
+    }
+
+    public void addDelivery(String clientId, Node address, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+        Client client = null, tmpClient;
+        boolean found = false;
+        ListIterator<Client> iter = clients.listIterator();
+
+        while(iter.hasNext() && !found)
+        {
+            tmpClient = iter.next();
+            if(tmpClient.getId().equals(clientId)) {
+                found = true;
+                client = tmpClient;
+            }
+        }
+
+        if(!found) {
+            client = new Client(clientId);
+        }
+
+        deliveries.add(new Delivery(client, address, new Schedule(earliestBound, latestBound)));
     }
 
     /**
@@ -85,18 +109,37 @@ public class Round {
     }
 
     /**
+     * Returns the round's deliveries
+     * @return the round's deliveries
+     */
+    public List<Delivery> getDeliveries() {
+        return deliveries;
+    }
+
+    /**
+     * Returns the estimated arrival hour of a delivery
+     * @param delivery the specified delivery
+     * @return the estimated arrival hour of a delivery
+     */
+    public GregorianCalendar getEstimatedSchedules(Delivery delivery) {
+        return estimatedSchedules.get(delivery);
+    }
+
+    /**
      * Initializes the itinerary list by constructing an itinerary between the following nodes
      * This call includes a dijkstra calculus
      */
     private void initItineraries()
     {
+        //TODO : This method was developped without thinking about choco
+        //TODO : This one may have to be changed
         ListIterator<Delivery> iter = deliveries.listIterator();
         Node start = warehouse;
         Node end;
 
         while(iter.hasNext())
         {
-            end = iter.next().getClient().getAddress();
+            end = iter.next().getAddress();
             itineraries.add(new Itinerary(start, end));
             start = end;
         }
@@ -115,52 +158,5 @@ public class Round {
         }
 
         return estimatedSchedule.after(delivery.getSchedule().getLatestBound());
-    }
-
-    public static Round createFromXml(String xmlFilePath) throws NoSuchFieldException {
-        Round round;
-        Node warehouse;
-        List<Delivery> deliveries = new LinkedList<Delivery>();
-        File xmlFile = new File(xmlFilePath);
-
-        if(!xmlFile.exists())
-        {
-            throw new NoSuchFieldException("Fichier " + xmlFilePath + " introuvable.");
-        }
-
-        Element root;
-        Document document;
-        DocumentBuilder factory;
-
-        try {
-            try {
-                factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
-                document = factory.parse(fileXml);
-
-                root = document.getDocumentElement();
-            } catch (ParserConfigurationException pce) {
-                throw new UtilsException("DOM parsor configuration exception");
-            } catch (SAXException se) {
-                throw new UtilsException("XML parse stage failed");
-            } catch (IOException ioe) {
-                throw new UtilsException("Error while reading file \"" + xmlPath + "\"");
-            }
-
-            if (!root.getNodeName().equals("Reseau")) {
-                throw new UtilsException("Unexpected XML root name \"" + root.getNodeName() + "\"");
-            }
-
-            graph = new Graph();
-            graph.loadNetworkFromXml(root);
-        }
-        catch (UtilsException e) {
-            throw  new UtilsException("File \"" + xmlPath + "\" > " + e);
-        }
-
-        return graph;
-
-        Node warehouse = new Node();
-        Round round = new Round();
     }
 }

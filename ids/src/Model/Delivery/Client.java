@@ -2,6 +2,9 @@ package Model.Delivery;
 
 import Model.City.Node;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
  * Date: 28/11/13
@@ -10,34 +13,40 @@ import Model.City.Node;
  */
 public class Client {
     /** The client's unique ID */
-    private int id;
+    private String id;
 
-    /** The client's address, and existing node in the graph */
-    private Node address;
+    /** An ordered list of deliveries which defines the round */
+    private List<Delivery> deliveries = new LinkedList<Delivery>();
 
     /**
      * Constructor
      * @param id The client's unique ID
-     * @param address The client's address, and existing node in the graph
      */
-    public Client(int id, Node address) {
+    public Client(String id) {
         this.id = id;
-        this.address = address;
+    }
+
+    /**
+     * Adds a delivery to the client deliveries list
+     * @param delivery the delivery to add
+     */
+    public void addDelivery(Delivery delivery) {
+        deliveries.add(delivery);
     }
 
     /**
      * Returns the client's ID
      * @return the client's ID
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
     /**
-     * Returns the client's address
-     * @return the client's address
+     * Returns the client's deliveries
+     * @return the client's deliveries
      */
-    public Node getAddress() {
-        return address;
+    public List<Delivery> getDeliveries() {
+        return deliveries;
     }
 }
