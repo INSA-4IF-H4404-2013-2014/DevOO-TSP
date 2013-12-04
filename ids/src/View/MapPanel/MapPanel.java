@@ -71,9 +71,9 @@ public class MapPanel extends JPanel {
             public void mouseWheelMoved(MouseWheelEvent event) {
                 MapPanel panel = (MapPanel) event.getComponent();
 
-                double newScaleFactor = panel.modelViewScaleFactor * Math.pow(0.5, (double)event.getWheelRotation());
+                double multiplier = Math.pow(0.5, (double)event.getWheelRotation());
 
-                panel.setScaleFactor(newScaleFactor);
+                panel.multiplyScaleFactor(multiplier, event.getX(), event.getY());
             }
         });
     }
@@ -163,6 +163,35 @@ public class MapPanel extends JPanel {
             this.fittedScaleFactor = false;
             this.repaint();
         }
+    }
+
+    /**
+     * Multiplies the model/view scale factor
+     * @param multiplier the model/view scale factor multiplier
+     * @param x the X coordinate in the view of the non moving point
+     * @param y the Y coordinate in the view of the non moving point
+     */
+    public void multiplyScaleFactor(double multiplier, int x, int y) {
+        double scaleFactor = this.modelViewScaleFactor * multiplier;
+        double smallestScaleFactor = this.smallestScaleFactor();
+
+        if (scaleFactor <= smallestScaleFactor) {
+            fitToView();
+            return;
+        }
+
+        scaleFactor = Math.min(scaleFactor, maxScaleFactor);
+        multiplier = scaleFactor / this.modelViewScaleFactor;
+
+        double xModelMoveVector = (double)(x - this.getWidth() / 2) / this.modelViewScaleFactor;
+        double yModelMoveVector = (double)(y - this.getHeight() / 2) / this.modelViewScaleFactor;
+
+        this.modelCenterPos.x += (int)(xModelMoveVector * (1.0 - 1.0 / multiplier));
+        this.modelCenterPos.y += (int)(yModelMoveVector * (1.0 - 1.0 / multiplier));
+
+        this.modelViewScaleFactor = scaleFactor;
+
+        this.repaint();
     }
 
     /**
