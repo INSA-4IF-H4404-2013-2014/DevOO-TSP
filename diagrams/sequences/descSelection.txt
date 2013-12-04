@@ -1,0 +1,21 @@
+title Selection Sequence
+
+Superviseur->+MapPanel : clic on a node
+MapPanel->+MapPanelController : mouseClicked(MouseEvent mouseEvent)
+
+
+MapPanelController->+"old:Node" : deselect()
+"old:Node"-->- MapPanelController: 
+
+MapPanelController->MapPanelController : nodeByPos(int x, int y)
+
+alt node finded
+    MapPanelController->+"new:Node" : select()
+    "new:Node"-->- MapPanelController:
+end
+
+MapPanelController-->- MapPanel: 
+MapPanel-->- Superviseur: repaint
+
+
+
