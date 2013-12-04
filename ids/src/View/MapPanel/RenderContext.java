@@ -38,14 +38,14 @@ public class RenderContext {
         this.context = context;
         this.mapPanel = mapPanel;
 
-        this.modelCenterPos = mapPanel.modelCenterPos;
-        this.modelSize = mapPanel.modelSize;
-        this.modelViewScaleFactor = mapPanel.modelViewScaleFactor;
+        modelCenterPos = mapPanel.modelCenterPos;
+        modelSize = mapPanel.modelSize;
+        modelViewScaleFactor = mapPanel.modelViewScaleFactor;
 
-        this.xGlobalOffset = this.mapPanel.getWidth() / 2 - (int)(this.modelViewScaleFactor * (double)this.modelCenterPos.x);
-        this.yGlobalOffset = this.mapPanel.getHeight() / 2 - (int)(this.modelViewScaleFactor * (double)this.modelCenterPos.y);
+        xGlobalOffset = mapPanel.getWidth() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.x);
+        yGlobalOffset = mapPanel.getHeight() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.y);
 
-        this.context.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        context.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
     /**
@@ -53,7 +53,7 @@ public class RenderContext {
      */
     protected void drawBackground() {
         context.setColor(backgroundColor);
-        this.context.fillRect(0, 0, this.mapPanel.getWidth(), this.mapPanel.getHeight());
+        context.fillRect(0, 0, mapPanel.getWidth(), mapPanel.getHeight());
     }
 
     /**
@@ -88,7 +88,7 @@ public class RenderContext {
         double angle = Math.atan2((double)ny, (double)nx);
         double nl = Math.sqrt((double)(nx * nx + ny * ny));
 
-        double arcThickness = this.modelViewScaleFactor * arcModelThickness;
+        double arcThickness = modelViewScaleFactor * arcModelThickness;
 
         Rectangle2D.Double rect = new Rectangle2D.Double();
         rect.setRect(0.0, - arcThickness, nl, 2.0 * arcThickness);
@@ -110,13 +110,13 @@ public class RenderContext {
 
         int globalViewWidth = (int)((double)modelSize.width * graphViewFactor);
         int globalViewHeight = (int)((double)modelSize.height * graphViewFactor);
-        int globalViewPosX = this.mapPanel.getWidth() - globalViewWidth - globalViewBorderOffset;
+        int globalViewPosX = mapPanel.getWidth() - globalViewWidth - globalViewBorderOffset;
 
-        int modelMinX = (int)(graphViewFactor * (double)this.mapPanel.modelCoordinateX(0));
-        int modelMinY = (int)(graphViewFactor * (double)this.mapPanel.modelCoordinateY(0));
+        int modelMinX = (int)(graphViewFactor * (double)mapPanel.modelCoordinateX(0));
+        int modelMinY = (int)(graphViewFactor * (double)mapPanel.modelCoordinateY(0));
 
-        int modelMaxX = (int)(graphViewFactor * (double)this.mapPanel.modelCoordinateX(mapPanel.getWidth()));
-        int modelMaxY = (int)(graphViewFactor * (double)this.mapPanel.modelCoordinateY(mapPanel.getHeight()));
+        int modelMaxX = (int)(graphViewFactor * (double)mapPanel.modelCoordinateX(mapPanel.getWidth()));
+        int modelMaxY = (int)(graphViewFactor * (double)mapPanel.modelCoordinateY(mapPanel.getHeight()));
 
         modelMinX = Math.min(Math.max(modelMinX, 0), globalViewWidth);
         modelMinY = Math.min(Math.max(modelMinY, 0), globalViewHeight);

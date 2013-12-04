@@ -45,7 +45,6 @@ public class MapPanel extends JPanel {
 
     /**
      * Constructor
-     * @param modelGraph the associated model graph
      */
     public MapPanel() {
         this.nodes = new HashMap<Integer,Node>();
@@ -83,13 +82,12 @@ public class MapPanel extends JPanel {
      * @param modelGraph the model we want to set
      */
     public void setModel(Graph modelGraph) {
-        this.nodes.clear();
-        this.arcs.clear();
+        nodes.clear();
+        arcs.clear();
 
         this.modelGraph = modelGraph;
 
         this.buildView();
-
         this.repaint();
     }
 
@@ -101,7 +99,7 @@ public class MapPanel extends JPanel {
      *  - the view node
      */
     public Node findNode(int nodeId) {
-        return this.nodes.get(nodeId);
+        return nodes.get(nodeId);
     }
 
     /**
@@ -119,7 +117,7 @@ public class MapPanel extends JPanel {
             from = temp;
         }
 
-        Map<Integer,Arc> tree = this.arcs.get(from);
+        Map<Integer,Arc> tree = arcs.get(from);
 
         if (tree == null) {
             return null;
@@ -132,8 +130,8 @@ public class MapPanel extends JPanel {
      * Gets smallest scale factor
      */
     public double smallestScaleFactor() {
-        double graphWidth = (double)(this.modelSize.width);
-        double graphHeight = (double)(this.modelSize.height);
+        double graphWidth = (double)(modelSize.width);
+        double graphHeight = (double)(modelSize.height);
 
         double panelWidth = (double)(this.getWidth() - 2 * RenderContext.borderPadding);
         double panelHeight = (double)(this.getHeight() - 2 * RenderContext.borderPadding);
@@ -155,7 +153,7 @@ public class MapPanel extends JPanel {
      * @param y the Y coordinate in the view of the non moving point
      */
     public void multiplyScaleFactor(double multiplier, int x, int y) {
-        double scaleFactor = this.modelViewScaleFactor * multiplier;
+        double scaleFactor = modelViewScaleFactor * multiplier;
         double smallestScaleFactor = this.smallestScaleFactor();
 
         if (scaleFactor <= smallestScaleFactor) {
@@ -164,10 +162,10 @@ public class MapPanel extends JPanel {
         }
 
         scaleFactor = Math.min(scaleFactor, maxScaleFactor);
-        multiplier = scaleFactor / this.modelViewScaleFactor;
+        multiplier = scaleFactor / modelViewScaleFactor;
 
-        double xModelMoveVector = (double)(x - this.getWidth() / 2) / this.modelViewScaleFactor;
-        double yModelMoveVector = (double)(y - this.getHeight() / 2) / this.modelViewScaleFactor;
+        double xModelMoveVector = (double)(x - this.getWidth() / 2) / modelViewScaleFactor;
+        double yModelMoveVector = (double)(y - this.getHeight() / 2) / modelViewScaleFactor;
 
         modelCenterPos.x += (int)(xModelMoveVector * (1.0 - 1.0 / multiplier));
         modelCenterPos.y += (int)(yModelMoveVector * (1.0 - 1.0 / multiplier));
@@ -175,8 +173,8 @@ public class MapPanel extends JPanel {
         modelCenterPos.x = Math.min(Math.max(modelCenterPos.x, 0), modelSize.width);
         modelCenterPos.y = Math.min(Math.max(modelCenterPos.y, 0), modelSize.height);
 
-        this.modelViewScaleFactor = scaleFactor;
-        this.fittedScaleFactor = false;
+        modelViewScaleFactor = scaleFactor;
+        fittedScaleFactor = false;
 
         this.repaint();
     }
@@ -185,10 +183,10 @@ public class MapPanel extends JPanel {
      * Fit the entire map in the available view.
      */
     public void fitToView() {
-        this.modelViewScaleFactor = this.smallestScaleFactor();
-        this.modelCenterPos.x = this.modelSize.width / 2;
-        this.modelCenterPos.y = this.modelSize.height / 2;
-        this.fittedScaleFactor = true;
+        modelViewScaleFactor = this.smallestScaleFactor();
+        modelCenterPos.x = modelSize.width / 2;
+        modelCenterPos.y = modelSize.height / 2;
+        fittedScaleFactor = true;
 
         this.repaint();
     }
@@ -203,15 +201,15 @@ public class MapPanel extends JPanel {
 
         renderContext.drawBackground();
 
-        if(this.modelGraph == null) {
+        if(modelGraph == null) {
             return;
         }
 
-        for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
+        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
             renderContext.drawNode(entry.getValue());
         }
 
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : this.arcs.entrySet()) {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
                 renderContext.drawArc(entry.getValue());
             }
@@ -220,7 +218,7 @@ public class MapPanel extends JPanel {
         renderContext.drawScale();
         renderContext.drawNorthArrow();
 
-        if (fittedScaleFactor == false) {
+        if (!fittedScaleFactor) {
             renderContext.drawGlobalView();
         }
     }
@@ -265,18 +263,18 @@ public class MapPanel extends JPanel {
             }
         }
 
-        this.modelSize.width = xModelMax - xModelMin;
-        this.modelSize.height = yModelMax - yModelMin;
+        modelSize.width = xModelMax - xModelMin;
+        modelSize.height = yModelMax - yModelMin;
 
         for(Map.Entry<Integer,Model.City.Node> entry : modelGraph.getNodes().entrySet()) {
             Model.City.Node modelNode = entry.getValue();
 
             int x = modelNode.getX() - xModelMin;
-            int y = this.modelSize.height - (modelNode.getY() - yModelMin);
+            int y = modelSize.height - (modelNode.getY() - yModelMin);
 
             Node node = new Node(this, modelNode, x, y);
 
-            this.nodes.put(entry.getValue().getId(), node);
+            nodes.put(entry.getValue().getId(), node);
         }
 
         for(Model.City.Arc modelArc : modelGraph.getArcs()) {
@@ -295,11 +293,11 @@ public class MapPanel extends JPanel {
 
             Arc arc = new Arc(this, modelArc);
 
-            Map<Integer,Arc> tree = this.arcs.get(from);
+            Map<Integer,Arc> tree = arcs.get(from);
 
-            if (this.arcs.get(from) == null) {
+            if (arcs.get(from) == null) {
                 tree = new HashMap<Integer,Arc>();
-                this.arcs.put(from, tree);
+                arcs.put(from, tree);
             }
 
             tree.put(to, arc);
