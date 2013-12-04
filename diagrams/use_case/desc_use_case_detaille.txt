@@ -120,7 +120,8 @@ postcondition :
 Scénario principal :
 	ajouter :
 		1a) Le superviseur selectionne un noeud disponnible
-		2a) Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client, etc.)
+		2a) Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client)
+		    La plage horaire se decompose en deux champs chiffrés qui doivent être cohérents avec la notion de plage horaire
 		3a) Le supervieur clique sur "ok"
 		4a) La livraison est ajoutée et la tournée recalculée, le cas d'utilisation se termine par un succès.
 	enlever :
