@@ -1,25 +1,49 @@
 title Add Sequence
 
-note Left of Superviseur
+note over Superviseur
     one node already 
     been selected
 end note
 
-Superviseur->+ MainWindow: clic on "ajouter" button
-MainWindow ->+ AddController: actionPerformed(ActionEvent e)
+Superviseur->+ ":MainWindow": clic on "ajouter" button
+":MainWindow" ->+ ":AddController": actionPerformed(ActionEvent e)
 
-AddController->+ DeliveryWindow : new()
+":AddController"->+ ":DeliveryWindow" : new()
 
 loop informations ok or annulation
-DeliveryWindow -> Superviseur : ask client id, schedulerEarliestBound, schedulerLatestBound
+":DeliveryWindow" -> ":Superviseur" : ask client id, schedulerEarliestBound, schedulerLatestBound
 	opt ok
-		Superviseur -> DeliveryWindow : clic on "valider" button
-		DeliveryWindow ->+ DeliveryValidateController : actionPerformed(ActionEvent e)
-		DeliveryValidateController ->+ Delivery : new(id, earlier, latest)
-		
+		":Superviseur" -> ":DeliveryWindow" : clic on "valider" button
+		":DeliveryWindow" ->+ ":DeliveryValidateController" : actionPerformed(ActionEvent e)
+		":DeliveryValidateController" ->+ ":Round" : containsClient(int id)
+		opt true
+			":Round" --> ":DeliveryValidateController": true
+		else
+			":Round" -->- ":DeliveryValidateController": false
+			":DeliveryValidateController" ->+ ":Client" : new(id)
+			":Client" -->- ":DeliveryValidateController" : cli
+			":DeliveryValidateController" ->+ ":Round" : addClient(cli)
+			":Round" -->- ":DeliveryValidateController" :
+			
+		end
+		":DeliveryValidateController" ->+ ":Delivery" : new(id, earlier, latest)
+			":Delivery" ->+ ":Client" : addDelivery(this)
+			":Client" -->- ":Delivery" :
+			":Delivery" ->+ ":Schedule" : addDelivery(this)
+			":Schedule" -->- ":Delivery" :
+				
+		":Delivery" -->- ":DeliveryValidateController" : deliv
+		":DeliveryValidateController" ->+ ":Round" : addDelivery(deliv)
+		":Round" -->- ":DeliveryValidateController" :
+		":DeliveryValidateController" -->- ":DeliveryWindow" : 	
 	else undo
-		Superviseur -> DeliveryWindow : clic on "annuler" button
-		DeliveryWindow ->+ DeliveryUndoController : actionPerformed(ActionEvent e)
-		DeliveryUndoController -->- DeliveryWindow : 
+		":Superviseur" -> ":DeliveryWindow" : clic on "annuler" button
+		":DeliveryWindow" ->+ ":DeliveryUndoController" : actionPerformed(ActionEvent e)
+		":DeliveryUndoController" -->- ":DeliveryWindow" : 
 	end
 end
+":DeliveryWindow" -->- ":AddController" : 
+destroy ":DeliveryWindow"
+":AddController" -->- ":MainWindow" :
+":MainWindow" -->- ":Superviseur" : repaint
+
