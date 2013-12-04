@@ -1,0 +1,25 @@
+title Add Sequence
+
+note Left of Superviseur
+    one node already 
+    been selected
+end note
+
+Superviseur->+ MainWindow: clic on "ajouter" button
+MainWindow ->+ AddController: actionPerformed(ActionEvent e)
+
+AddController->+ DeliveryWindow : new()
+
+loop informations ok or annulation
+DeliveryWindow -> Superviseur : ask client id, schedulerEarliestBound, schedulerLatestBound
+	opt ok
+		Superviseur -> DeliveryWindow : clic on "valider" button
+		DeliveryWindow ->+ DeliveryValidateController : actionPerformed(ActionEvent e)
+		DeliveryValidateController ->+ Delivery : new(id, earlier, latest)
+		
+	else undo
+		Superviseur -> DeliveryWindow : clic on "annuler" button
+		DeliveryWindow ->+ DeliveryUndoController : actionPerformed(ActionEvent e)
+		DeliveryUndoController -->- DeliveryWindow : 
+	end
+end
