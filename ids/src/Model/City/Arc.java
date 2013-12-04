@@ -18,10 +18,10 @@ public class Arc {
     /** the arc's destination node */
     private Node to;
 
-    /** the arc's length */
+    /** the arc's length (in meters) */
     private float length;
 
-    /** the arc's speed */
+    /** the arc's speed (in meters per seconds) */
     private float speed;
 
     /**
