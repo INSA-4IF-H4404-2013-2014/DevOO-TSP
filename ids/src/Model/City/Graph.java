@@ -203,6 +203,12 @@ public class Graph {
             if (to == null) {
                 throw new UtilsException("unknown node id");
             }
+
+            Arc goingBackArc = to.findOutgoingTo(from);
+
+            if (goingBackArc != null && !goingBackArc.getStreet().getName().equals(streetName)) {
+                throw new UtilsException("doesn't have same street name (\"" + streetName + "\") as the arc going from " + to.getId() + " to " + from.getId() + "(\"" + streetName + "\")");
+            }
         }
         catch (UtilsException e) {
             throw new UtilsException("failed to parse " + xmlElement.getNodeName() + " leaving node \"" + from.getId() + "\": " + e);

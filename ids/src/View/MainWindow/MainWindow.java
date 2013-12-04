@@ -65,6 +65,7 @@ public class MainWindow extends JFrame {
             mapPanel.setModel(graph);
         }
         catch (UtilsException e) {
+            System.out.println(e);
             //TODO: prety load
         }
     }
