@@ -15,11 +15,28 @@ DeliveryWindow -> Superviseur : ask client id, schedulerEarliestBound, scheduler
 	opt ok
 		Superviseur -> DeliveryWindow : clic on "valider" button
 		DeliveryWindow ->+ DeliveryValidateController : actionPerformed(ActionEvent e)
+		DeliveryValidateController ->+ Round : containsClient(int id)
+		opt true
+			Round --> DeliveryValidateController: true
+		else
+			Round -->- DeliveryValidateController: false
+			DeliveryValidateController ->+ Client : new(id)
+			Client -->- DeliveryValidateController : cli
+			DeliveryValidateController ->+ Round : addClient(cli)
+			Round -->- DeliveryValidateController :
+		end
 		DeliveryValidateController ->+ Delivery : new(id, earlier, latest)
-		
+		Delivery -->- DeliveryValidateController : deliv
+		DeliveryValidateController ->+ Round : addDelivery(deliv)
+		Round -->- DeliveryValidateController :
+		DeliveryValidateController -->- DeliveryWindow : 	
 	else undo
 		Superviseur -> DeliveryWindow : clic on "annuler" button
 		DeliveryWindow ->+ DeliveryUndoController : actionPerformed(ActionEvent e)
 		DeliveryUndoController -->- DeliveryWindow : 
 	end
 end
+DeliveryWindow -->- AddController : 
+destroy DeliveryWindow
+AddController -->- MainWindow :
+MainWindow -->- Superviseur : repaint
