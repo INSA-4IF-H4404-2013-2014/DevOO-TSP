@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * Time: 09:59
  * To change this template use File | Settings | File Templates.
  */
-public class RemoveController implements ActionListener {
+public class DeleteController implements ActionListener {
     private Graph graph;
     @Override
     public void actionPerformed(ActionEvent e) {
