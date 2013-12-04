@@ -140,6 +140,30 @@ public class RenderContext {
         context.fillRect(globalViewPosX + modelMinX, globalViewBorderOffset + modelMinY, modelMaxX - modelMinX, modelMaxY - modelMinY);
     }
 
+    /**
+     * Draw  north arrow in the top left corner
+     */
+    protected void drawNorthArrow() {
+        int leftTriangleX[] = { 0, 10, 10 };
+        int rightTriangleX[] = { 20, 10, 10 };
+        int triangleY[] = { 25, 20, 0 };
+        int whiteTriangleX[] = { 2, 10, 10 };
+        int whiteTriangleY[] = { 23, 19, 2 };
+
+        context.translate(compassRoseBorderOffset, compassRoseBorderOffset);
+
+        context.setColor(compassRoseBlackColor);
+        context.fillPolygon(leftTriangleX, triangleY, 3);
+        context.fillPolygon(rightTriangleX, triangleY, 3);
+        context.drawString("N", 6, 38);
+
+        context.setColor(compassRoseWhiteColor);
+        context.fillPolygon(whiteTriangleX, whiteTriangleY, 3);
+
+        context.translate(-compassRoseBorderOffset, -compassRoseBorderOffset);
+    }
+
+
     /** border padding in the view basis */
     protected static final int borderPadding = 50;
 
@@ -163,4 +187,9 @@ public class RenderContext {
     private static final Color globalViewForegroundColor = new Color(255, 255, 255);
     private static final double globalViewMaxDiagonal = 160.0;
     private static final int globalViewBorderOffset = 10;
+
+    /** north arrow's constants */
+    private static final int compassRoseBorderOffset = 20;
+    private static final Color compassRoseWhiteColor = new Color(255, 255, 255);
+    private static final Color compassRoseBlackColor = new Color(0, 0, 0, 150);
 }
