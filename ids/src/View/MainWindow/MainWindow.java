@@ -6,6 +6,7 @@ import Utils.UtilsException;
 import View.MapPanel.MapPanel;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -15,10 +16,20 @@ import java.awt.*;
  * This class is the main window (JFrame) of the application.
  */
 public class MainWindow extends JFrame {
+    /**
+     * Default window size and ratios
+     */
     public static final double DEFAULT_RATIO = 4.0/3.0;
     public static final int DEFAULT_WIDTH = 1024;
     public static final int DEFAULT_HEIGHT = (int)(DEFAULT_WIDTH/DEFAULT_RATIO);
+
+    /**
+     * This is the padding of the "subMainWindow (the whole window but without the topMenuBar and TopToolBar)
+     */
+    public static final int SUB_MAINPANEL_PADDING = 10;
+
     private static final String TITLE = "Supervision des livraisons";
+
 
     private Graph graph;
     private Round round;
@@ -68,9 +79,9 @@ public class MainWindow extends JFrame {
      */
     private JPanel createSubMainPanel() {
         JPanel subMainPanel = new JPanel(new BorderLayout());
-
-        subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
+        subMainPanel.setBorder(new EmptyBorder(SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING));
         subMainPanel.add(mapPanel, BorderLayout.CENTER);
+        subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
         subMainPanel.add(deliveryInfoPanel, BorderLayout.EAST);
 
         return subMainPanel;
