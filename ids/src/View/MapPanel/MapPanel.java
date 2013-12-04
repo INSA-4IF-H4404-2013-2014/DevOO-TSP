@@ -92,17 +92,6 @@ public class MapPanel extends JPanel {
     }
 
     /**
-     * Get a view node from a given node's id
-     * @param nodeId the given node's id
-     * @return
-     *  - null not found
-     *  - the view node
-     */
-    public Node findNode(int nodeId) {
-        return nodes.get(nodeId);
-    }
-
-    /**
      * Gets a view arc from two nodes' id
      * @param from a node id
      * @param to an other node id
@@ -232,6 +221,17 @@ public class MapPanel extends JPanel {
 
     protected int modelCoordinateY(int y) {
         return (int)((double)(y - this.getHeight() / 2) / modelViewScaleFactor + modelCenterPos.y);
+    }
+
+    /**
+     * Get a view node from a given node's id
+     * @param nodeId the given node's id
+     * @return
+     *  - null not found
+     *  - the view node
+     */
+    protected Node findNode(int nodeId) {
+        return nodes.get(nodeId);
     }
 
     /**
