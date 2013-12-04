@@ -49,22 +49,11 @@ public class RenderContext {
     }
 
     /**
-     * Draws the none ground
-     */
-    protected void drawNoneground() {
-        this.context.setColor(noneground);
-        this.context.fillRect(0, 0, this.mapPanel.getWidth(), this.mapPanel.getHeight());
-    }
-
-    /**
      * Draws the map's background
      */
     protected void drawBackground() {
-        int viewGraphSizeWidth = (int)(this.modelViewScaleFactor * (double)this.modelSize.width) + 2 * borderPadding;
-        int viewGraphSizeHeight = (int)(this.modelViewScaleFactor * (double)this.modelSize.height) + 2 * borderPadding;
-
-        context.setColor(background);
-        context.fillRect(this.xGlobalOffset - borderPadding, this.yGlobalOffset - borderPadding, viewGraphSizeWidth, viewGraphSizeHeight);
+        context.setColor(backgroundColor);
+        this.context.fillRect(0, 0, this.mapPanel.getWidth(), this.mapPanel.getHeight());
     }
 
     /**
@@ -102,8 +91,9 @@ public class RenderContext {
         double arcThickness = this.modelViewScaleFactor * arcModelThickness;
 
         Rectangle2D.Double rect = new Rectangle2D.Double();
-        rect.setRect(0.0, -arcThickness, nl, 2.0 * arcThickness);
+        rect.setRect(0.0, - arcThickness, nl, 2.0 * arcThickness);
 
+        context.setColor(nodeColor);
         context.translate(x1, y1);
         context.rotate(angle);
         context.fill(rect);
@@ -183,20 +173,15 @@ public class RenderContext {
     /** border padding in the view basis */
     protected static final int borderPadding = 50;
 
-    /** none ground color */
-    private static final Color noneground = new Color(70, 70, 70);
-
     /** background color */
-    private static final Color background = new Color(228, 223, 211);
+    private static final Color backgroundColor = new Color(236, 232, 223);
 
     /** node radius in the model's basis */
-    private static final int nodeModelRadius = 12;
-
-    /** node radius in the graph */
-    private static final Color nodeColor = new Color(255, 160, 80);
+    private static final int nodeModelRadius = 8;
+    private static final Color nodeColor = new Color(210, 140, 100);
 
     /** arc width in the model's basis */
-    private static final double arcModelThickness = 2.5;
+    private static final double arcModelThickness = 4;
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);

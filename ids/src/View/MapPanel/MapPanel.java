@@ -201,13 +201,11 @@ public class MapPanel extends JPanel {
     public void paintComponent(Graphics g) {
         RenderContext renderContext = new RenderContext((Graphics2D) g, this);
 
-        renderContext.drawNoneground();
+        renderContext.drawBackground();
 
         if(this.modelGraph == null) {
             return;
         }
-
-        renderContext.drawBackground();
 
         for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
             renderContext.drawNode(entry.getValue());
