@@ -31,13 +31,13 @@ public class MapPanel extends JPanel {
     private Map<Integer,Map<Integer,Arc>> arcs;
 
     /** view's center pos in the model basis */
-    private Point modelCenterPos;
+    protected Point modelCenterPos;
 
     /** graph model's size in the model basis */
-    private Dimension modelSize;
+    protected Dimension modelSize;
 
     /** view/model scale factor */
-    private double modelViewScaleFactor;
+    protected double modelViewScaleFactor;
 
     /** save if the map is actually fitted to the panel or not */
     private boolean fittedScaleFactor;
@@ -71,7 +71,7 @@ public class MapPanel extends JPanel {
             public void mouseWheelMoved(MouseWheelEvent event) {
                 MapPanel panel = (MapPanel) event.getComponent();
 
-                double multiplier = Math.pow(0.5, (double)event.getWheelRotation());
+                double multiplier = Math.pow(0.5, (double) event.getWheelRotation());
 
                 panel.multiplyScaleFactor(multiplier, event.getX(), event.getY());
             }
@@ -135,8 +135,8 @@ public class MapPanel extends JPanel {
         double graphWidth = (double)(this.modelSize.width);
         double graphHeight = (double)(this.modelSize.height);
 
-        double panelWidth = (double)(this.getWidth() - 2 * borderPadding);
-        double panelHeight = (double)(this.getHeight() - 2 * borderPadding);
+        double panelWidth = (double)(this.getWidth() - 2 * RenderContext.borderPadding);
+        double panelHeight = (double)(this.getHeight() - 2 * RenderContext.borderPadding);
 
         double panelAspectRatio = panelWidth / panelHeight;
         double graphAspectRatio = graphWidth / graphHeight;
@@ -194,71 +194,24 @@ public class MapPanel extends JPanel {
      * @param g the graphic context
      */
     @Override
-    public void paintComponent(Graphics gInt) {
-        Graphics2D g = (Graphics2D) gInt;
+    public void paintComponent(Graphics g) {
+        RenderContext renderContext = new RenderContext((Graphics2D) g, this);
 
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        int xGlobalOffset = this.getWidth() / 2 - (int)(this.modelViewScaleFactor * (double)this.modelCenterPos.x);
-        int yGlobalOffset = this.getHeight() / 2 - (int)(this.modelViewScaleFactor * (double)this.modelCenterPos.y);
-
-        g.setColor(noneground);
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        renderContext.drawNoneground();
 
         if(this.modelGraph == null) {
             return;
         }
 
-        {
-            int viewGraphSizeWidth = (int)(modelViewScaleFactor * (double)this.modelSize.width) + 2 * borderPadding;
-            int viewGraphSizeHeight = (int)(modelViewScaleFactor * (double)this.modelSize.height) + 2 * borderPadding;
-
-            g.setColor(background);
-            g.fillRect(xGlobalOffset - borderPadding, yGlobalOffset - borderPadding, viewGraphSizeWidth, viewGraphSizeHeight);
-        }
-
-        g.setColor(nodeColor);
-        int nodeRadius = (int)(modelViewScaleFactor * (double)MapPanel.nodeModelRadius);
-        int xNodeOffset = xGlobalOffset - nodeRadius / 2;
-        int yNodeOffset = yGlobalOffset - nodeRadius / 2;
+        renderContext.drawBackground();
 
         for(Map.Entry<Integer, Node> entry : this.nodes.entrySet()) {
-            Node node = entry.getValue();
-
-            int x = xNodeOffset + (int)(modelViewScaleFactor * (double)node.getX());
-            int y = yNodeOffset + (int)(modelViewScaleFactor * (double)node.getY());
-
-            g.fillOval(x, y, nodeRadius, nodeRadius);
+            renderContext.drawNode(entry.getValue());
         }
-
-        double arcThickness = this.modelViewScaleFactor * MapPanel.arcModelThickness;
-
-        Rectangle2D.Double rect = new Rectangle2D.Double();
 
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : this.arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                Arc arc = entry.getValue();
-                Node node1 = arc.getNode1();
-                Node node2 = arc.getNode2();
-
-                int x1 = xGlobalOffset + (int)(modelViewScaleFactor * (double)node1.getX());
-                int y1 = yGlobalOffset + (int)(modelViewScaleFactor * (double)node1.getY());
-
-                int x2 = xGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getX());
-                int y2 = yGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getY());
-
-                int nx = x2 - x1;
-                int ny = y2 - y1;
-                double angle = Math.atan2((double)ny, (double)nx);
-                double nl = Math.sqrt((double)(nx * nx + ny * ny));
-
-                rect.setRect(0.0, -arcThickness, nl, 2.0 * arcThickness);
-
-                g.translate(x1, y1);
-                g.rotate(angle);
-                g.fill(rect);
-                g.rotate(-angle);
-                g.translate(-x1, -y1);
+                renderContext.drawArc(entry.getValue());
             }
         }
     }
@@ -337,23 +290,5 @@ public class MapPanel extends JPanel {
 
 
     /** maximum scale factor */
-    private static double maxScaleFactor = 8.0;
-
-    /** border padding in the view basis */
-    private static int borderPadding = 50;
-
-    /** none ground color */
-    private static Color noneground = new Color(70, 70, 70);
-
-    /** background color */
-    private static Color background = new Color(255, 255, 255);
-
-    /** node radius in the model's basis */
-    private static int nodeModelRadius = 12;
-
-    /** node radius in the graph */
-    private static Color nodeColor = new Color(255, 160, 80);
-
-    /** arc width in the model's basis */
-    private static double arcModelThickness = 2.5;
+    private static final double maxScaleFactor = 8.0;
 }
