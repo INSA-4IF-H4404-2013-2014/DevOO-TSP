@@ -19,10 +19,10 @@ public class Node {
     /** the node's id */
     private int id;
 
-    /** the node's X position */
+    /** the node's X position (in meters) */
     private int x;
 
-    /** the node's T position */
+    /** the node's Y position (in meters) */
     private int y;
 
     /** the node's outgoing arcs */
