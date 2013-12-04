@@ -78,12 +78,25 @@ public class RenderContext {
      * @param node the node to draw
      */
     protected void drawNode(Node node) {
-        int nodeRadius = (int)(modelViewScaleFactor * (double)nodeModelRadius);
-        int x = modelViewTransformX(node.getX()) - nodeRadius / 2;
-        int y = modelViewTransformY(node.getY()) - nodeRadius / 2;
+        int nodeRadius = (int)(modelViewScaleFactor * (double)streetThickness);
+        int x = modelViewTransformX(node.getX()) - nodeRadius;
+        int y = modelViewTransformY(node.getY()) - nodeRadius;
 
-        context.setColor(nodeColor);
-        context.fillOval(x, y, nodeRadius, nodeRadius);
+        context.setColor(streetColor);
+        context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
+    }
+
+    /**
+     * Draws a given node's borders
+     * @param node the node to draw
+     */
+    protected void drawNodeBorders(Node node) {
+        int nodeRadius = (int)(modelViewScaleFactor * (double)streetNodeRadius) + streetBorderThickness;
+        int x = modelViewTransformX(node.getX()) - nodeRadius;
+        int y = modelViewTransformY(node.getY()) - nodeRadius;
+
+        context.setColor(streetBorderColor);
+        context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
     }
 
     /**
@@ -105,12 +118,44 @@ public class RenderContext {
         double angle = Math.atan2((double)ny, (double)nx);
         double nl = Math.sqrt((double)(nx * nx + ny * ny));
 
-        double arcThickness = modelViewScaleFactor * arcModelThickness;
+        double arcThickness = modelViewScaleFactor * (double)streetThickness;
 
         Rectangle2D.Double rect = new Rectangle2D.Double();
         rect.setRect(0.0, - arcThickness, nl, 2.0 * arcThickness);
 
-        context.setColor(nodeColor);
+        context.setColor(streetColor);
+        context.translate(x1, y1);
+        context.rotate(angle);
+        context.fill(rect);
+        context.rotate(-angle);
+        context.translate(-x1, -y1);
+    }
+
+    /**
+     * Draws a given arc
+     * @param arc the arc to draw
+     */
+    protected void drawArcBorders(Arc arc) {
+        Node node1 = arc.getNode1();
+        Node node2 = arc.getNode2();
+
+        int x1 = modelViewTransformX(node1.getX());
+        int y1 = modelViewTransformY(node1.getY());
+
+        int x2 = modelViewTransformX(node2.getX());
+        int y2 = modelViewTransformY(node2.getY());
+
+        int nx = x2 - x1;
+        int ny = y2 - y1;
+        double angle = Math.atan2((double)ny, (double)nx);
+        double nl = Math.sqrt((double)(nx * nx + ny * ny));
+
+        double arcThickness = modelViewScaleFactor * (double)streetThickness + (double)streetBorderThickness;
+
+        Rectangle2D.Double rect = new Rectangle2D.Double();
+        rect.setRect(0.0, - arcThickness, nl, 2.0 * arcThickness);
+
+        context.setColor(streetBorderColor);
         context.translate(x1, y1);
         context.rotate(angle);
         context.fill(rect);
@@ -212,12 +257,15 @@ public class RenderContext {
     private static final Color backgroundColor = new Color(236, 232, 223);
     private static final Color textColor = new Color(0, 0, 0, 150);
 
-    /** node radius in the model's basis */
-    private static final int nodeModelRadius = 8;
-    private static final Color nodeColor = new Color(210, 140, 100);
+    /** street's constants */
+    private static final Color streetColor = new Color(255, 255, 255);
+    private static final Color streetBorderColor = new Color(210, 140, 100);
+    private static final int streetThickness = 4;
+    private static final int streetBorderThickness = 1;
 
-    /** arc width in the model's basis */
-    private static final double arcModelThickness = 4;
+    /** node color */
+    private static final Color streetNodeColor = new Color(210, 140, 100);
+    private static final int streetNodeRadius = 10;
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);

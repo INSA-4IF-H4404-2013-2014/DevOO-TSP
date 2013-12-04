@@ -171,14 +171,24 @@ public class MapPanel extends JPanel {
             return;
         }
 
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                renderContext.drawArcBorders(entry.getValue());
+            }
+        }
+
         for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
-            renderContext.drawNode(entry.getValue());
+            renderContext.drawNodeBorders(entry.getValue());
         }
 
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
                 renderContext.drawArc(entry.getValue());
             }
+        }
+
+        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
+            renderContext.drawNode(entry.getValue());
         }
 
         renderContext.drawScale();
