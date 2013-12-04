@@ -62,8 +62,8 @@ public class RenderContext {
      */
     protected void drawNode(Node node) {
         int nodeRadius = (int)(modelViewScaleFactor * (double)nodeModelRadius);
-        int x = xGlobalOffset - nodeRadius / 2 + (int)(modelViewScaleFactor * (double)node.getX());
-        int y = yGlobalOffset - nodeRadius / 2 + (int)(modelViewScaleFactor * (double)node.getY());
+        int x = modelViewTransformX(node.getX()) - nodeRadius / 2;
+        int y = modelViewTransformY(node.getY()) - nodeRadius / 2;
 
         context.setColor(nodeColor);
         context.fillOval(x, y, nodeRadius, nodeRadius);
@@ -77,11 +77,11 @@ public class RenderContext {
         Node node1 = arc.getNode1();
         Node node2 = arc.getNode2();
 
-        int x1 = xGlobalOffset + (int)(modelViewScaleFactor * (double)node1.getX());
-        int y1 = yGlobalOffset + (int)(modelViewScaleFactor * (double)node1.getY());
+        int x1 = modelViewTransformX(node1.getX());
+        int y1 = modelViewTransformY(node1.getY());
 
-        int x2 = xGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getX());
-        int y2 = yGlobalOffset + (int)(modelViewScaleFactor * (double)node2.getY());
+        int x2 = modelViewTransformX(node2.getX());
+        int y2 = modelViewTransformY(node2.getY());
 
         int nx = x2 - x1;
         int ny = y2 - y1;
@@ -167,6 +167,24 @@ public class RenderContext {
         context.fillRect(offsetX, offsetY - scaleEndsHight, 1, scaleEndsHight);
         context.fillRect(offsetX + scaleMaxWidth - 1, offsetY - scaleEndsHight, 1, scaleEndsHight);
         context.drawString(meters + "m", offsetX + 10, offsetY - 10);
+    }
+
+    /**
+     * Transforms a given X coordinate from the model basis to the view basis
+     * @param x the X coordinate in the model basis
+     * @return the Y coordinate in the view basis
+     */
+    private int modelViewTransformX(int x) {
+        return xGlobalOffset + (int)(modelViewScaleFactor * (double)x);
+    }
+
+    /**
+     * Transforms a given Y coordinate from the model basis to the view basis
+     * @param y the Y coordinate in the model basis
+     * @return the Y coordinate in the view basis
+     */
+    private int modelViewTransformY(int y) {
+        return yGlobalOffset + (int)(modelViewScaleFactor * (double)y);
     }
 
 
