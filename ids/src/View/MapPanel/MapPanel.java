@@ -149,23 +149,6 @@ public class MapPanel extends JPanel {
     }
 
     /**
-     * Sets the model/view scale factor
-     * @param scaleFactor the new scale factor to set
-     */
-    public void setScaleFactor(double scaleFactor) {
-        double smallestScaleFactor = this.smallestScaleFactor();
-
-        if (scaleFactor <= smallestScaleFactor) {
-            fitToView();
-        }
-        else {
-            this.modelViewScaleFactor = Math.min(scaleFactor, maxScaleFactor);
-            this.fittedScaleFactor = false;
-            this.repaint();
-        }
-    }
-
-    /**
      * Multiplies the model/view scale factor
      * @param multiplier the model/view scale factor multiplier
      * @param x the X coordinate in the view of the non moving point
