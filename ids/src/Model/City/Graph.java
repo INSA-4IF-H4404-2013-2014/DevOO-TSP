@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 import Utils.Utils;
 import Utils.UtilsException;
 
+
 /**
  * Created with IntelliJ IDEA.
  * User: gabadie
@@ -24,7 +25,7 @@ import Utils.UtilsException;
  * Time: 13:53
  * To change this template use File | Settings | File Templates.
  */
-public class Graph {
+public class Graph implements aaaaaaaaaa{
 
     /** the graph's streets */
     List<Street> streets;

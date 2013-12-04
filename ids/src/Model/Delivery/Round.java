@@ -1,7 +1,16 @@
 package Model.Delivery;
 
 import Model.City.Node;
+import Utils.UtilsException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -106,5 +115,52 @@ public class Round {
         }
 
         return estimatedSchedule.after(delivery.getSchedule().getLatestBound());
+    }
+
+    public static Round createFromXml(String xmlFilePath) throws NoSuchFieldException {
+        Round round;
+        Node warehouse;
+        List<Delivery> deliveries = new LinkedList<Delivery>();
+        File xmlFile = new File(xmlFilePath);
+
+        if(!xmlFile.exists())
+        {
+            throw new NoSuchFieldException("Fichier " + xmlFilePath + " introuvable.");
+        }
+
+        Element root;
+        Document document;
+        DocumentBuilder factory;
+
+        try {
+            try {
+                factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+                document = factory.parse(fileXml);
+
+                root = document.getDocumentElement();
+            } catch (ParserConfigurationException pce) {
+                throw new UtilsException("DOM parsor configuration exception");
+            } catch (SAXException se) {
+                throw new UtilsException("XML parse stage failed");
+            } catch (IOException ioe) {
+                throw new UtilsException("Error while reading file \"" + xmlPath + "\"");
+            }
+
+            if (!root.getNodeName().equals("Reseau")) {
+                throw new UtilsException("Unexpected XML root name \"" + root.getNodeName() + "\"");
+            }
+
+            graph = new Graph();
+            graph.loadNetworkFromXml(root);
+        }
+        catch (UtilsException e) {
+            throw  new UtilsException("File \"" + xmlPath + "\" > " + e);
+        }
+
+        return graph;
+
+        Node warehouse = new Node();
+        Round round = new Round();
     }
 }
