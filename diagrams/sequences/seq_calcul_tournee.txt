@@ -1,0 +1,17 @@
+title Calculer une tournée
+
+User->+MainWindowController: Clique sur le bouton "Calculer tournée"
+
+MainWindowController->+"aRound:Round": calculateRound()
+
+"aRound:Round"->"aGraph:Graph":Graph()
+
+"aGraph:Graph"->+"aTSP:TSP": solve(timeLimite, bound)
+
+alt NO_SOLUTION_FOUND or SOLUTION_FOUND returned
+    "aTSP:TSP"-->"aRound:Round":NO_SOLUTION_FOUND or SOLUTION_FOUND
+else INCONSISTENT returned
+    "aTSP:TSP"-->"aRound:Round":INCONSISTENT
+else OPTIMAL_SOLUTION_FOUND returned
+    "aTSP:TSP"-->-"aRound:Round":OPTIMAL_SOLUTION_FOUND
+end
