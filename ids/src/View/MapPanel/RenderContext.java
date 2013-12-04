@@ -141,7 +141,7 @@ public class RenderContext {
     }
 
     /**
-     * Draw  north arrow in the top left corner
+     * Draw north arrow in the top left corner
      */
     protected void drawNorthArrow() {
         int leftTriangleX[] = { 0, 10, 10 };
@@ -161,6 +161,22 @@ public class RenderContext {
         context.fillPolygon(whiteTriangleX, whiteTriangleY, 3);
 
         context.translate(-compassRoseBorderOffset, -compassRoseBorderOffset);
+    }
+
+    /**
+     * Draw the scale in the bottom left corner
+     */
+    protected void drawScale() {
+        int offsetX = scaleBorderOffset;
+        int offsetY = mapPanel.getHeight() - scaleBorderOffset;
+
+        int meters = (int)((double)scaleMaxWidth / modelViewScaleFactor);
+
+        context.setColor(scaleColor);
+        context.fillRect(offsetX + 1, offsetY - scaleThickness, scaleMaxWidth - 2, scaleThickness);
+        context.fillRect(offsetX, offsetY - scaleEndsHight, 1, scaleEndsHight);
+        context.fillRect(offsetX + scaleMaxWidth - 1, offsetY - scaleEndsHight, 1, scaleEndsHight);
+        context.drawString(meters + "m", offsetX + 10, offsetY - 10);
     }
 
 
@@ -192,4 +208,11 @@ public class RenderContext {
     private static final int compassRoseBorderOffset = 20;
     private static final Color compassRoseWhiteColor = new Color(255, 255, 255);
     private static final Color compassRoseBlackColor = new Color(0, 0, 0, 150);
+
+    /** scale constants */
+    private static final int scaleMaxWidth = 160;
+    private static final int scaleBorderOffset = 20;
+    private static final Color scaleColor = new Color(0, 0, 0, 150);
+    private static final int scaleThickness = 3;
+    private static final int scaleEndsHight = 5;
 }

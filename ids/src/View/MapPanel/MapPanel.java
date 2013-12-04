@@ -216,6 +216,7 @@ public class MapPanel extends JPanel {
             }
         }
 
+        renderContext.drawScale();
         renderContext.drawNorthArrow();
 
         if (fittedScaleFactor == false) {
