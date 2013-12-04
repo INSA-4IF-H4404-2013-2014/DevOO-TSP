@@ -167,6 +167,7 @@ public class MapPanel extends JPanel {
         renderContext.drawBackground();
 
         if(modelGraph == null) {
+            renderContext.drawEmptyMessage();
             return;
         }
 

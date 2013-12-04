@@ -57,6 +57,23 @@ public class RenderContext {
     }
 
     /**
+     * Draws the empty message in the center top of the map view
+     */
+    protected void drawEmptyMessage() {
+        final String message = "Aucune carte.";
+
+        context.setFont(new Font("default", Font.BOLD, 30));
+
+        int messageWidth = context.getFontMetrics().stringWidth(message);
+
+        int offsetX = (mapPanel.getWidth() - messageWidth) / 2;
+        int offsetY = mapPanel.getHeight() / 3;
+
+        context.setColor(textColor);
+        context.drawString(message, offsetX, offsetY);
+    }
+
+    /**
      * Draws a given node
      * @param node the node to draw
      */
@@ -193,6 +210,7 @@ public class RenderContext {
 
     /** background color */
     private static final Color backgroundColor = new Color(236, 232, 223);
+    private static final Color textColor = new Color(0, 0, 0, 150);
 
     /** node radius in the model's basis */
     private static final int nodeModelRadius = 8;
