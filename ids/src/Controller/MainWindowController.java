@@ -36,7 +36,6 @@ public class MainWindowController implements MouseListener {
         historyBackedOut.clear();
 
         command.Apply();
-
         historyApplied.addLast(command);
     }
 
@@ -48,7 +47,6 @@ public class MainWindowController implements MouseListener {
         }
 
         command.Apply();
-
         historyApplied.addLast(command);
     }
 
@@ -60,32 +58,22 @@ public class MainWindowController implements MouseListener {
         }
 
         command.Reverse();
-
         historyBackedOut.addFirst(command);
     }
 
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void mouseClicked(MouseEvent mouseEvent) {}
 
     @Override
-    public void mousePressed(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void mousePressed(MouseEvent mouseEvent) {}
 
     @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void mouseReleased(MouseEvent mouseEvent) {}
 
     @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void mouseEntered(MouseEvent mouseEvent) {}
 
     @Override
-    public void mouseExited(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-}
+    public void mouseExited(MouseEvent mouseEvent) {}
+} // end of class MainWindowController --------------------------------------------------------------------
+
