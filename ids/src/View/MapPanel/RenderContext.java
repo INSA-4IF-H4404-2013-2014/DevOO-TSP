@@ -111,6 +111,9 @@ public class RenderContext {
         context.translate(-x1, -y1);
     }
 
+    /**
+     * Draw the global view of the map in the top right corner
+     */
     protected void drawGlobalView() {
         double graphDiagonal = Math.sqrt((double)(modelSize.width * modelSize.width + modelSize.height * modelSize.height));
         double graphViewFactor = globalViewMaxDiagonal / graphDiagonal;
@@ -155,9 +158,9 @@ public class RenderContext {
     /** arc width in the model's basis */
     private static final double arcModelThickness = 2.5;
 
-    /**  */
-    private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 90);
-    private static final Color globalViewForegroundColor = new Color(55, 122, 255);
+    /** global view's constants */
+    private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);
+    private static final Color globalViewForegroundColor = new Color(255, 255, 255);
     private static final double globalViewMaxDiagonal = 160.0;
     private static final int globalViewBorderOffset = 10;
 }
