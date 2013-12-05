@@ -17,79 +17,59 @@ import java.util.*;
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
  * Date: 28/11/13
  * Time: 14:34
- * This class aims at managing a round defined by an ordered list of itineraries
+ * This class aims at managing a round defined by a list of schdules containing deliveries
  */
 public class Round {
     /** The warehouse which is the start and end point of the round */
     private Node warehouse;
 
-    /** The clients delivered by the round */
-    private List<Client> clients = new LinkedList<Client>();
-
-    /** An ordered list of deliveries which defines the round */
-    private List<Delivery> deliveries;
-
-    /** A dictionary linking a delivery to its estimated arrival hour at the delivery point */
-    private Dictionary<Delivery, GregorianCalendar> estimatedSchedules = new Hashtable<Delivery, GregorianCalendar>();
-
-    /** An ordered list of itineraries which defines the round */
-    private List<Itinerary> itineraries = new LinkedList<Itinerary>();
+    /** The schedules containing the deliveries */
+    private List<Schedule> schedules = new LinkedList<Schedule>();
 
     /**
      * Constructor
      * @param warehouse start and end point of the round
-     * @param deliveries ordered list of deliveries which defines the round
+     * @param schedules list of schedules containing the deliveries
      */
-    public Round(Node warehouse, List<Delivery> deliveries) {
+    public Round(Node warehouse, List<Schedule> schedules) {
         this.warehouse = warehouse;
-        this.deliveries = deliveries;
-        initItineraries();
-        calculateEstimatedSchedules();
+        this.schedules = schedules;
     }
 
     public void addDelivery(String clientId, Node address, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
-        Client client = null, tmpClient;
-        boolean found = false;
-        ListIterator<Client> iter = clients.listIterator();
+        Client client = getClient(clientId);
+        Schedule schedule = getSchedule(earliestBound, latestBound);
+        Delivery delivery = new Delivery(client, address, schedule);
+        client.addDelivery(delivery);
+        schedule.addDelivery(delivery);
+        schedules.add(schedule);
+    }
 
-        while(iter.hasNext() && !found)
+    private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
+    {
+        for(Schedule s : schedules)
         {
-            tmpClient = iter.next();
-            if(tmpClient.getId().equals(clientId)) {
-                found = true;
-                client = tmpClient;
+            if(s.getEarliestBound().equals(earliestBound) && s.getLatestBound().equals(latestBound)) {
+                return s;
             }
         }
 
-        if(!found) {
-            client = new Client(clientId);
-        }
-
-        deliveries.add(new Delivery(client, address, new Schedule(earliestBound, latestBound)));
+        return new Schedule(earliestBound, latestBound);
     }
 
-    /**
-     * Calculates the estimated schedules based on the deliveries order and the speed and length of the arcs
-     * Important : 10 minutes are required in order to deliver a package
-     */
-    private void calculateEstimatedSchedules()
+    private Client getClient(String clientId)
     {
-        //TODO : CALCULATIONS (10 minutes are required in order to deliver a package)
-    }
-
-    /**
-     * Returns the estimated delay in milliseconds of a delivery comparing to the latest bound of the schedule
-     * @param delivery The delivery for which the delay is estimated
-     * @return The estimated delay in milliseconds
-     */
-    public long getDelay(Delivery delivery)
-    {
-        if(isDelayed(delivery))
+        for(Schedule s : schedules)
         {
-            return estimatedSchedules.get(delivery).getTimeInMillis() - delivery.getSchedule().getLatestBound().getTimeInMillis();
+            for(Delivery d :  s.getDeliveries())
+            {
+                if(d.getClient().getId().equals(clientId)) {
+                    return d.getClient();
+                }
+            }
         }
 
-        return 0;
+        return new Client(clientId);
     }
 
     /**
@@ -101,62 +81,30 @@ public class Round {
     }
 
     /**
-     * Returns the ordered list of itineraries
-     * @return the ordered list of itineraries
+     * Returns the round's schedules
+     * @return the round's schedules
      */
-    public List<Itinerary> getItineraries() {
-        return itineraries;
+    public List<Schedule> getSchedules() {
+        return schedules;
     }
 
-    /**
-     * Returns the round's deliveries
-     * @return the round's deliveries
-     */
-    public List<Delivery> getDeliveries() {
-        return deliveries;
-    }
+    public static Round createFromXml(String xmlFilePath) throws NoSuchFieldException {
+        Round round = null;
+        Node warehouse;
+        List<Delivery> deliveries = new LinkedList<Delivery>();
+        File xmlFile = new File(xmlFilePath);
 
-    /**
-     * Returns the estimated arrival hour of a delivery
-     * @param delivery the specified delivery
-     * @return the estimated arrival hour of a delivery
-     */
-    public GregorianCalendar getEstimatedSchedules(Delivery delivery) {
-        return estimatedSchedules.get(delivery);
-    }
-
-    /**
-     * Initializes the itinerary list by constructing an itinerary between the following nodes
-     * This call includes a dijkstra calculus
-     */
-    private void initItineraries()
-    {
-        //TODO : This method was developped without thinking about choco
-        //TODO : This one may have to be changed
-        ListIterator<Delivery> iter = deliveries.listIterator();
-        Node start = warehouse;
-        Node end;
-
-        while(iter.hasNext())
+        if(!xmlFile.exists())
         {
-            end = iter.next().getAddress();
-            itineraries.add(new Itinerary(start, end));
-            start = end;
+            throw new NoSuchFieldException("Fichier " + xmlFilePath + " introuvable.");
         }
 
-        end = warehouse;
-        itineraries.add(new Itinerary(start, end));
-    }
+        Element root;
+        Document document;
+        DocumentBuilder factory;
 
-    public boolean isDelayed(Delivery delivery)
-    {
-        GregorianCalendar estimatedSchedule = estimatedSchedules.get(delivery);
+        //TODO ============================================================================
 
-        if(estimatedSchedule == null)
-        {
-            return false;
-        }
-
-        return estimatedSchedule.after(delivery.getSchedule().getLatestBound());
+        return round;
     }
 }

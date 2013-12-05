@@ -101,4 +101,14 @@ public class Node {
         return findOutgoingTo(node.getId());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Node)) {
+            return false;
+        }
+
+        Node n = (Node)o;
+
+        return n.getId() == id && n.getX() == x && n.getY() == y;
+    }
 }

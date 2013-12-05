@@ -1,6 +1,8 @@
 package Model.Delivery;
 
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -15,6 +17,9 @@ public class Schedule {
     /** Latest bound of the time frame - The delivery shall not be delivered after (delay) */
     private GregorianCalendar latestBound;
 
+    /** A list of deliveries */
+    private List<Delivery> deliveries = new LinkedList<Delivery>();
+
     /**
      * Constructor
      * @param earliestBound Earliest bound of the time frame
@@ -23,6 +28,22 @@ public class Schedule {
     public Schedule(GregorianCalendar earliestBound, GregorianCalendar latestBound) {
         this.earliestBound = earliestBound;
         this.latestBound = latestBound;
+    }
+
+    /**
+     * Adds a delivery to the deliveries list
+     * @param delivery the delivery to add
+     */
+    public void addDelivery(Delivery delivery) {
+        deliveries.add(delivery);
+    }
+
+    /**
+     * Returns the schedule's deliveries
+     * @return the schedule's deliveries
+     */
+    public List<Delivery> getDeliveries() {
+        return deliveries;
     }
 
     /**

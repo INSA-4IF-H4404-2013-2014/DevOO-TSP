@@ -15,7 +15,7 @@ public class Client {
     /** The client's unique ID */
     private String id;
 
-    /** An ordered list of deliveries which defines the round */
+    /** A list of deliveries */
     private List<Delivery> deliveries = new LinkedList<Delivery>();
 
     /**

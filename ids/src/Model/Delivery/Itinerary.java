@@ -18,18 +18,28 @@ public class Itinerary {
     /** The end node of the itinerary */
     private Node end;
 
-    /** The ordered arcs linking the start and end node */
+    /** The ordered list of arcs linking the start and end node */
     private List<Arc> arcs;
 
     /**
      * Constructor
      * @param start start node of the itinerary
      * @param end end node of the itinerary
+     * @param arcs arcs from start node to end node
      */
-    public Itinerary(Node start, Node end) {
+    public Itinerary(Node start, Node end, List<Arc> arcs) {
         this.start = start;
         this.end = end;
-        //arcs = Controleur.dijkstra(start, end); //TODO : change controller class name and implement dijkstra algorithm
+        this.arcs = arcs;
+    }
+
+    /**
+     * Adds and arc at the end of the itinerary
+     * @param arc the arc to add
+     */
+    public void addArc(Arc arc)
+    {
+        arcs.add(arc);
     }
 
     /**

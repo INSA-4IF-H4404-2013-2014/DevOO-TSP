@@ -51,7 +51,6 @@ public class Delivery {
         this.client = client;
         this.address = address;
         this.schedule = schedule;
-        client.addDelivery(this);
     }
 
     /**
