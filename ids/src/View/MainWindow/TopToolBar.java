@@ -1,6 +1,10 @@
 package View.MainWindow;
 
+import View.DeliveryWindow;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -42,9 +46,16 @@ public class TopToolBar extends JToolBar {
         loadMap.setEnabled(false);
         loadRound.setEnabled(false);
         saveRound.setEnabled(false);
-        add.setEnabled(false);
+        //add.setEnabled(false);
         delete.setEnabled(false);
         undo.setEnabled(false);
         redo.setEnabled(false);
+
+        add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new DeliveryWindow();
+            }
+        });
     }
 }
