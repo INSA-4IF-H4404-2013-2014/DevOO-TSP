@@ -111,4 +111,9 @@ public class Node {
 
         return n.getId() == id && n.getX() == x && n.getY() == y;
     }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

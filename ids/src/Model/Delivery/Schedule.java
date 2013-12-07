@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -43,51 +44,58 @@ public class Schedule {
      * @throws ParserConfigurationException If the parsing fails
      */
     public Schedule(Round round, Element element) throws ParserConfigurationException {
-        NodeList xmlNodeList;
         Calendar currentDate = GregorianCalendar.getInstance();
         int year = currentDate.get(Calendar.YEAR);
         int month = currentDate.get(Calendar.MONTH);
         int day = currentDate.get(Calendar.DAY_OF_MONTH);
 
-        this.earliestBound = getScheduleBoundFromXMLAttr(element.getAttribute(XMLConstants.DELIVERY_SCHEDULE_EARLIEST_ATTR), year, month, day);
-        this.latestBound = getScheduleBoundFromXMLAttr(element.getAttribute(XMLConstants.DELIVERY_SCHEDULE_LATEST_ATTR), year, month, day);
+        this.earliestBound = getScheduleBoundFromXMLAttr(element, XMLConstants.DELIVERY_SCHEDULE_EARLIEST_ATTR, year, month, day);
+        this.latestBound = getScheduleBoundFromXMLAttr(element, XMLConstants.DELIVERY_SCHEDULE_LATEST_ATTR, year, month, day);
 
-        Element eDeliveries = (Element) element.getElementsByTagName(XMLConstants.DELIVERY_DELIVERIES_ELEMENT);
-        if(eDeliveries == null) {
-            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_DELIVERIES_ELEMENT + "> est introuvable.");
+        NodeList deliveries = element.getElementsByTagName(XMLConstants.DELIVERY_DELIVERIES_ELEMENT);
+        if(deliveries == null || deliveries.getLength() == 0) {
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_DELIVERIES_ELEMENT + "> est manquant.");
         }
 
-        xmlNodeList = eDeliveries.getElementsByTagName(XMLConstants.DELIVERY_DELIVERY_ELEMENT);
-        if(xmlNodeList == null || xmlNodeList.getLength() < 1) {
-            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est introuvable ou ne contient aucune livraison.");
-        }
-
-        for (int i = 0; i < xmlNodeList.getLength(); ++i) {
-            deliveries.add(new Delivery(round, (Element) xmlNodeList.item(i)));
+        Element eDeliveries = (Element) deliveries.item(0);
+        NodeList delivery = eDeliveries.getElementsByTagName(XMLConstants.DELIVERY_DELIVERY_ELEMENT);
+        for (int i = 0; i < delivery.getLength(); ++i) {
+            this.deliveries.add(new Delivery(round, this, (Element) delivery.item(i)));
         }
     }
 
     /**
      * Returns a gregorian calendar object from a string representing a time in day (8:0:19 or 23:53:1 for example)
-     * @param attrValue The string to parse
+     * @param element The element to get the attribute from
+     * @param attributeName The attribute's name we have to parse the value
      * @param year The current year
      * @param month The current month
      * @param day The current day of month
      * @return a gregorian calendar object (@See description)
      * @throws ParserConfigurationException If the parsing fails
      */
-    private static GregorianCalendar getScheduleBoundFromXMLAttr(String attrValue, int year, int month, int day) throws ParserConfigurationException {
+    private static GregorianCalendar getScheduleBoundFromXMLAttr(Element element, String attributeName, int year, int month, int day) throws ParserConfigurationException {
         int hour, min, sec;
         String [] fields;
+        String attributeValue;
         try {
-            fields = attrValue.split(XMLConstants.DELIVERY_SCHEDULE_FIELDS_SEPARATOR);
+            attributeValue = element.getAttribute(XMLConstants.DELIVERY_SCHEDULE_EARLIEST_ATTR);
+        } catch (Exception e) {
+            throw new ParserConfigurationException("L'attribut <" + attributeName + " de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> est manquant.");
+        }
+
+        fields = attributeValue.split(XMLConstants.DELIVERY_SCHEDULE_FIELDS_SEPARATOR);
+        if(fields.length != 3) {
+            throw new ParserConfigurationException("L'attribut <" + attributeName + " de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> ne contient pas le bon nombre de champs (3 requis).");
+        }
+
+        try {
             hour = Integer.parseInt(fields[0]);
             min = Integer.parseInt(fields[1]);
             sec = Integer.parseInt(fields[2]);
             return new GregorianCalendar(year, month, day, hour, min, sec);
-        }
-        catch (Exception e) {
-            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_SCHEDULE_EARLIEST_ATTR + " de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> est manquant ou erroné (hh:mm:ss).");
+        } catch (Exception e) {
+            throw new ParserConfigurationException("Un champ de l'attribut <" + attributeName + " de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> ne contient pas un entier.");
         }
     }
 

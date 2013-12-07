@@ -1,4 +1,4 @@
-package tsp;
+package Model.ChocoSolver;
 
 import solver.ResolutionPolicy;
 import solver.Solver;

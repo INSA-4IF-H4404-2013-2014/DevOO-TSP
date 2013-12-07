@@ -1,4 +1,5 @@
-package tsp;
+package Model.ChocoSolver;
+
 import java.util.ArrayList;
 
 /**

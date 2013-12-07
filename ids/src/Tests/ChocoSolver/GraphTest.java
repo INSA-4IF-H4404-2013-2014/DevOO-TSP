@@ -1,5 +1,8 @@
-package tsp;
+package Tests.ChocoSolver;
 import static org.junit.Assert.*;
+
+import Model.ChocoSolver.Graph;
+import Model.ChocoSolver.RegularGraph;
 import org.junit.Test;
 
 
@@ -15,7 +18,7 @@ public class GraphTest {
 		int degree = 8;
 		int minArcCost = 1;
 		int maxArcCost = 10;
-		Graph g = new RegularGraph(nbVertices,degree,minArcCost,maxArcCost);	
+		Graph g = new RegularGraph(nbVertices,degree,minArcCost,maxArcCost);
 		for (int i=0; i<g.getNbVertices(); i++)
 			assertEquals(g.getNbSucc(i),degree);
 	}

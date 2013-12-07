@@ -1,6 +1,10 @@
-package tsp;
+package Tests.ChocoSolver;
 import static org.junit.Assert.*;
 
+import Model.ChocoSolver.Graph;
+import Model.ChocoSolver.RegularGraph;
+import Model.ChocoSolver.SolutionState;
+import Model.ChocoSolver.TSP;
 import org.junit.Test;
 
 

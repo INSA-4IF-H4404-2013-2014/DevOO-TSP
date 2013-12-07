@@ -1,4 +1,4 @@
-package tsp;
+package Model.ChocoSolver;
 
 /**
  * @author Christine Solnon

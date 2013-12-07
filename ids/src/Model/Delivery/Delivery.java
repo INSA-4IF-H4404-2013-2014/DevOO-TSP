@@ -60,10 +60,14 @@ public class Delivery {
     /**
      * Constructor which parses XML nodes and attributes
      * @param round Round containing every schedules
+     * @param schedule delivery's time frame
      * @param element Delivery XML element
      * @throws javax.xml.parsers.ParserConfigurationException If the parsing fails
      */
-    public Delivery(Round round, Element element) throws ParserConfigurationException {
+    public Delivery(Round round, Schedule schedule, Element element) throws ParserConfigurationException {
+        String clientId;
+        this.schedule = schedule;
+
         try {
             this.id = Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_ID_ATTR));
         } catch(Exception e) {
@@ -72,15 +76,16 @@ public class Delivery {
         }
 
         try {
-            this.client = round.getClient(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR));
+            clientId = element.getAttribute(XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR);
         } catch(Exception e) {
             throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR +
-                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est invalide ou manquant.");
+                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est manquant.");
         }
-        if(this.client.getId().length() == 0) {
+        if(clientId.length() == 0) {
             throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR +
                     "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est vide.");
         }
+        this.client = round.getClient(clientId);
 
         try {
             this.address = round.getNetwork().findNode(Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_NODE_ATTR)));
@@ -93,6 +98,13 @@ public class Delivery {
                     "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> ne référence pas un noeud existant (" +
                     Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_NODE_ATTR)) +  ").");
         }
+        if(round.isDelivered(this.address)) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_NODE_ATTR +
+                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> référence un noeud déjà desservit (" +
+                    Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_NODE_ATTR)) +  ").");
+        }
+
+        client.addDelivery(this);
     }
 
     /**
