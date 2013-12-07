@@ -5,15 +5,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: gabadie
- * Date: 02/12/13
- * Time: 09:13
- * To change this template use File | Settings | File Templates.
+ * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
+ * Date: 07/12/13
+ * Time: 21:15
+ * This class is the small dialog window which is opened when adding a delivery.
  */
 public class DeliveryWindow extends JFrame {
 
@@ -36,17 +33,28 @@ public class DeliveryWindow extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Creates the content panel of the window
+     * @return the panel
+     */
     private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
+
         JLabel title = new JLabel("Livraison");
         title.setFont(new Font("Serif", Font.BOLD, 16));
         mainPanel.add(title, BorderLayout.PAGE_START);
+
         mainPanel.add(createForm(), BorderLayout.CENTER);
+
         mainPanel.add(createFooterButtons(), BorderLayout.PAGE_END);
         return mainPanel;
     }
 
+    /**
+     * Creates the panel which will directly contain the 'form'
+     * @return the panel
+     */
     private JPanel createForm() {
         JPanel form = new JPanel(new GridLayout(3,1));
         form.add(createRow1());
@@ -78,6 +86,11 @@ public class DeliveryWindow extends JFrame {
         return row;
     }
 
+    /**
+     * Creates the panel included in the footer of this dialog.
+     * They contain the action buttons.
+     * @return the panel
+     */
     private JPanel createFooterButtons() {
         GridLayout layout = new GridLayout(1,2);
         layout.setHgap(10);
