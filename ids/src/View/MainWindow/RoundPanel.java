@@ -38,6 +38,7 @@ public class RoundPanel extends JPanel {
         roundPanelContentForm.add(createRow1());
         roundPanelContentForm.add(createRow2());
         roundPanelContentForm.add(createRow3());
+        disableAllFields();
 
         // We add this "form" to our roundPanelContent
         roundPanelContent.add(roundPanelContentForm, BorderLayout.CENTER);
@@ -66,5 +67,15 @@ public class RoundPanel extends JPanel {
         row.add(new JLabel("Longueur : "));
         row.add(distance);
         return row;
+    }
+
+    /**
+     * Disables all JTextFields.
+     */
+    private void disableAllFields() {
+        View.Utils.enableJTextField(deliveryCount, false);
+        View.Utils.enableJTextField(duration, false);
+        View.Utils.enableJTextField(delay, false);
+        View.Utils.enableJTextField(distance, false);
     }
 }

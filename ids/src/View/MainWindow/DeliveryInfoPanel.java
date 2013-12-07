@@ -44,6 +44,7 @@ public class DeliveryInfoPanel extends JPanel {
         deliveryInfoPanelContentForm.add(createRow3());
         deliveryInfoPanelContentForm.add(createRow4());
         deliveryInfoPanelContentForm.add(createRow5());
+        disableAllFields();
 
         // We add this "form" to deliveryInfoPanelContent
         deliveryInfoPanelContent.add(deliveryInfoPanelContentForm, BorderLayout.CENTER);
@@ -87,5 +88,18 @@ public class DeliveryInfoPanel extends JPanel {
         row.add(new JLabel("Retard : "));
         row.add(delay);
         return row;
+    }
+
+    /**
+     * Disables all JTextFields.
+     */
+    private void disableAllFields() {
+        View.Utils.enableJTextField(deliveryID, false);
+        View.Utils.enableJTextField(timeFrameBegin, false);
+        View.Utils.enableJTextField(timeFrameEnd, false);
+        View.Utils.enableJTextField(clientName, false);
+        View.Utils.enableJTextField(address, false);
+        View.Utils.enableJTextField(deliveryTime, false);
+        View.Utils.enableJTextField(delay, false);
     }
 }
