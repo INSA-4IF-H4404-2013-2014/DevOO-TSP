@@ -19,8 +19,8 @@ public class MainWindow extends JFrame {
     /**
      * Default window size and ratios
      */
-    public static final double DEFAULT_RATIO = 4.0/3.0;
-    public static final int DEFAULT_WIDTH = 1024;
+    public static final double DEFAULT_RATIO = 16.0/9.0;
+    public static final int DEFAULT_WIDTH = 1280;
     public static final int DEFAULT_HEIGHT = (int)(DEFAULT_WIDTH/DEFAULT_RATIO);
 
     /**
