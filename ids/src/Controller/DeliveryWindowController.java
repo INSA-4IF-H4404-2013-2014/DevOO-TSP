@@ -11,6 +11,13 @@ import java.awt.event.MouseListener;
  * To change this template use File | Settings | File Templates.
  */
 public class DeliveryWindowController implements MouseListener {
+    public void confirm() {
+
+    }
+
+    public void cancel() {
+
+    }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
