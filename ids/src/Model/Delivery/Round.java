@@ -85,7 +85,7 @@ public class Round {
     public void addDelivery(String clientId, Node address, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
         Client client = getClient(clientId);
         Schedule schedule = getSchedule(earliestBound, latestBound);
-        Delivery delivery = new Delivery(client, address, schedule);
+        Delivery delivery = new Delivery(schedule.getNextDeliveryId(), client, address, schedule);
         client.addDelivery(delivery);
         schedule.addDelivery(delivery);
         schedules.add(schedule);
@@ -196,12 +196,5 @@ public class Round {
         }
 
         return round;
-    }
-
-    public static void main(String [] args)  throws UtilsException, ParserConfigurationException {
-        Network n = Network.createFromXml("../sujet/plan10x10.xml");
-        System.out.println("Network parsed");
-        Round.createFromXml("../sujet/livraison10x10-3.xml", n);
-        System.out.println("Deliveries parsed");
     }
 }

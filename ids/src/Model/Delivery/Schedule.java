@@ -18,6 +18,9 @@ import java.util.List;
  * This class aims at managing a schedule defined by a time frame
  */
 public class Schedule {
+    /** Counter used in order to maintain id unique constraint for deliveries */
+    private int nextDeliveryId = 1;
+
     /** Earliest bound of the time frame - The delivery shall not be delivered before */
     private GregorianCalendar earliestBound;
 
@@ -52,6 +55,10 @@ public class Schedule {
         this.earliestBound = getScheduleBoundFromXMLAttr(element, XMLConstants.DELIVERY_SCHEDULE_EARLIEST_ATTR, year, month, day);
         this.latestBound = getScheduleBoundFromXMLAttr(element, XMLConstants.DELIVERY_SCHEDULE_LATEST_ATTR, year, month, day);
 
+        if(this.earliestBound.after(this.latestBound)) {
+            throw new ParserConfigurationException("L'heure de début de l'élément <" + XMLConstants.DELIVERY_DELIVERIES_ELEMENT + "> est postérieure à son heure de fin.");
+        }
+
         NodeList deliveries = element.getElementsByTagName(XMLConstants.DELIVERY_DELIVERIES_ELEMENT);
         if(deliveries == null || deliveries.getLength() == 0) {
             throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_DELIVERIES_ELEMENT + "> est manquant.");
@@ -61,6 +68,7 @@ public class Schedule {
         NodeList delivery = eDeliveries.getElementsByTagName(XMLConstants.DELIVERY_DELIVERY_ELEMENT);
         for (int i = 0; i < delivery.getLength(); ++i) {
             this.deliveries.add(new Delivery(round, this, (Element) delivery.item(i)));
+            nextDeliveryId += 1;
         }
     }
 
@@ -78,15 +86,11 @@ public class Schedule {
         int hour, min, sec;
         String [] fields;
         String attributeValue;
-        try {
-            attributeValue = element.getAttribute(XMLConstants.DELIVERY_SCHEDULE_EARLIEST_ATTR);
-        } catch (Exception e) {
-            throw new ParserConfigurationException("L'attribut <" + attributeName + " de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> est manquant.");
-        }
 
+        attributeValue = element.getAttribute(attributeName);
         fields = attributeValue.split(XMLConstants.DELIVERY_SCHEDULE_FIELDS_SEPARATOR);
         if(fields.length != 3) {
-            throw new ParserConfigurationException("L'attribut <" + attributeName + " de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> ne contient pas le bon nombre de champs (3 requis).");
+            throw new ParserConfigurationException("L'attribut <" + attributeName + "> de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> est manquant ou ne contient pas le bon nombre de champs (3 requis).");
         }
 
         try {
@@ -95,7 +99,7 @@ public class Schedule {
             sec = Integer.parseInt(fields[2]);
             return new GregorianCalendar(year, month, day, hour, min, sec);
         } catch (Exception e) {
-            throw new ParserConfigurationException("Un champ de l'attribut <" + attributeName + " de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> ne contient pas un entier.");
+            throw new ParserConfigurationException("Un champ de l'attribut <" + attributeName + "> de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> ne contient pas un entier.");
         }
     }
 
@@ -105,6 +109,7 @@ public class Schedule {
      */
     public void addDelivery(Delivery delivery) {
         deliveries.add(delivery);
+        nextDeliveryId += 1;
     }
 
     /**
@@ -129,5 +134,13 @@ public class Schedule {
      */
     public GregorianCalendar getLatestBound() {
         return latestBound;
+    }
+
+    /**
+     * Returns the next unique delivery id for this schedule
+     * @return the next unique delivery id for this schedule
+     */
+    public int getNextDeliveryId() {
+        return nextDeliveryId;
     }
 }
