@@ -1,7 +1,10 @@
 package Controller;
 
 import Controller.Command.Command;
+import Model.City.Node;
 import View.MainWindow.MainWindow;
+import View.MapPanel.MapPanel;
+import View.MapPanel.NodeListener;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -16,7 +19,7 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements MouseListener {
+public class MainWindowController implements MouseListener, NodeListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
@@ -24,6 +27,8 @@ public class MainWindowController implements MouseListener {
 
     public MainWindowController() {
         this.mainWindow = new MainWindow();
+        this.mainWindow.getMapPanel().setNodeEventListener(this);
+
         historyApplied = new LinkedList<Controller.Command.Command>();
         historyBackedOut = new LinkedList<Controller.Command.Command>();
     }
@@ -75,5 +80,10 @@ public class MainWindowController implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent mouseEvent) {}
+
+    @Override
+    public void nodeClicked(MapPanel panel, Node node) {
+        panel.setSelectedNode(node);
+    }
 } // end of class MainWindowController --------------------------------------------------------------------
 

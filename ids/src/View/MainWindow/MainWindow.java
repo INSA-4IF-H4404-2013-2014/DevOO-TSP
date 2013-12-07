@@ -86,4 +86,12 @@ public class MainWindow extends JFrame {
 
         return subMainPanel;
     }
+
+    /**
+     * Gets the main window's map panel
+     * @return the map panel
+     */
+    public MapPanel getMapPanel() {
+        return mapPanel;
+    }
 }

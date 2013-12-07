@@ -95,7 +95,16 @@ public class RenderContext {
         int x = modelViewTransformX(node.getX()) - nodeRadius;
         int y = modelViewTransformY(node.getY()) - nodeRadius;
 
-        context.setColor(streetBorderColor);
+        if(node == mapPanel.selectedNode) {
+            context.setColor(streetSelectedNodeColor);
+
+            x -= streetSelectedNodeRadiusPx;
+            y -= streetSelectedNodeRadiusPx;
+            nodeRadius += streetSelectedNodeRadiusPx;
+        } else {
+            context.setColor(streetBorderColor);
+        }
+
         context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
     }
 
@@ -264,8 +273,9 @@ public class RenderContext {
     private static final int streetBorderThickness = 1;
 
     /** node color */
-    private static final Color streetNodeColor = new Color(210, 140, 100);
-    private static final int streetNodeRadius = 10;
+    protected static final int streetNodeRadius = 10;
+    private static final Color streetSelectedNodeColor = new Color(240, 80, 80);
+    private static final int streetSelectedNodeRadiusPx = 4;
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);
