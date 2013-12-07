@@ -3,6 +3,8 @@ package View;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -28,7 +30,7 @@ public class DeliveryWindow extends JFrame {
         setContentPane(createMainPanel());
         setResizable(false);
         setAlwaysOnTop(true);
-        // setUndecorated(true);
+        setUndecorated(true);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -82,6 +84,13 @@ public class DeliveryWindow extends JFrame {
         JPanel footer = new JPanel(layout);
         footer.add(okButton);
         footer.add(cancelButton);
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
         return footer;
     }
 }
