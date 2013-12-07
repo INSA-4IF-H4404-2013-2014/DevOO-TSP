@@ -74,7 +74,7 @@ public class Round {
         Element eSchedules = (Element) xmlNodeList.item(0);
         xmlNodeList = eSchedules.getElementsByTagName(XMLConstants.DELIVERY_SCHEDULE_ELEMENT);
         if(xmlNodeList == null || xmlNodeList.getLength() < 1) {
-            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est manquant ou ne contient aucune plage horaire.");
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> ne contient aucune plage horaire.");
         }
 
         for (int i = 0; i < xmlNodeList.getLength(); ++i) {
