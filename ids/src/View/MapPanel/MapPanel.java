@@ -113,13 +113,9 @@ public class MapPanel extends JPanel {
                     return;
                 }
 
-                System.out.println("Nearest is " + nearestNode.getId() + " (" + minDistancePow + ") < " + RenderContext.streetNodeRadius * RenderContext.streetNodeRadius);
-
                 if(minDistancePow >= RenderContext.streetNodeRadius * RenderContext.streetNodeRadius) {
                     return;
                 }
-
-                System.out.println("Selected is " + nearestNode.getId());
 
                 panel.nodeEventListener.nodeClicked(panel, nearestNode);
             }
