@@ -1,4 +1,4 @@
-package tsp;
+package Tests.ChocoSolver;
 import static org.junit.Assert.*;
 
 import org.junit.Test;

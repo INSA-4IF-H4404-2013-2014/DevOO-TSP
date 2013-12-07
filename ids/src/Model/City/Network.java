@@ -35,7 +35,7 @@ public class Network {
 
 
     /**
-     * Constructs a empty graph
+     * Constructs an empty graph
      */
     public Network() {
         this.streets = new LinkedList<Street>();
@@ -295,16 +295,4 @@ public class Network {
 
         return network;
     }
-
-    public static void main(String [ ] args) {
-        try {
-            Network network = createFromXml("../sujet/plan10x10.xml");
-        }
-        catch (UtilsException e) {
-            System.out.println(e);
-        }
-
-        System.out.println("OK");
-    }
-
 }
