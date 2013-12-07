@@ -4,10 +4,7 @@ import Model.City.Network;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.*;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -41,6 +38,11 @@ public class MapPanel extends JPanel {
     /** save if the map is actually fitted to the panel or not */
     private boolean fittedScaleFactor;
 
+    /** selected node */
+    protected Node selectedNode;
+
+    /** node event listener */
+    private NodeListener nodeEventListener;
 
     /**
      * Constructor
@@ -50,6 +52,7 @@ public class MapPanel extends JPanel {
         this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
         this.modelCenterPos = new Point();
         this.modelSize = new Dimension();
+        this.nodeEventListener = null;
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -74,6 +77,69 @@ public class MapPanel extends JPanel {
                 panel.multiplyScaleFactor(multiplier, event.getX(), event.getY());
             }
         });
+
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+                if(panel.nodeEventListener == null) {
+                    return;
+                }
+
+                int x = panel.modelCoordinateX(mouseEvent.getX());
+                int y = panel.modelCoordinateY(mouseEvent.getY());
+
+                int minDistancePow = Math.max(panel.modelSize.width, panel.modelSize.height);
+                minDistancePow *= minDistancePow;
+
+                Model.City.Node nearestNode = null;
+
+                for(Map.Entry<Integer,Node> entry : panel.nodes.entrySet()) {
+                    Node node = entry.getValue();
+
+                    int dx = node.getX() - x;
+                    int dy = node.getY() - y;
+
+                    int distancePow = dx * dx + dy * dy;
+
+                    if(distancePow < minDistancePow) {
+                        minDistancePow = distancePow;
+                        nearestNode = node.getModelNode();
+                    }
+                }
+
+                if(nearestNode == null) {
+                    return;
+                }
+
+                System.out.println("Nearest is " + nearestNode.getId() + " (" + minDistancePow + ") < " + RenderContext.streetNodeRadius * RenderContext.streetNodeRadius);
+
+                if(minDistancePow >= RenderContext.streetNodeRadius * RenderContext.streetNodeRadius) {
+                    return;
+                }
+
+                System.out.println("Selected is " + nearestNode.getId());
+
+                panel.nodeEventListener.nodeClicked(panel, nearestNode);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+            }
+        });
     }
 
     /**
@@ -88,6 +154,41 @@ public class MapPanel extends JPanel {
 
         this.buildView();
         this.repaint();
+    }
+
+    /**
+     * Gets the currently selected node
+     * @return the model selected node or null if any are selected
+     */
+    public Model.City.Node getSelectedNode() {
+        return selectedNode.getModelNode();
+    }
+
+    /**
+     * Sets the currently selected node. This assumes that selectedNode is in the current model
+     */
+    public void setSelectedNode(Model.City.Node node) {
+        int nodeId = node.getId();
+
+        selectedNode = this.findNode(nodeId);
+
+        this.repaint();
+    }
+
+    /**
+     * Gets the current node event listener
+     * @return the current node event listener or null
+     */
+    public NodeListener getNodeEventListener() {
+        return nodeEventListener;
+    }
+
+    /**
+     * Sets the current node event listener
+     * @param nodeEventListener the node event listener we want to set
+     */
+    public void setNodeEventListener(NodeListener nodeEventListener) {
+        this.nodeEventListener = nodeEventListener;
     }
 
     /**
