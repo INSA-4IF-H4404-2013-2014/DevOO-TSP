@@ -12,10 +12,10 @@ import java.awt.*;
  */
 public class RoundPanel extends JPanel {
 
-    JTextField deliveryCount = new JTextField("", 4);
-    JTextField duration = new JTextField("", 4);
-    JTextField delay = new JTextField("", 4);
-    JTextField distance = new JTextField("", 4);
+    private JTextField deliveryCount = new JTextField("", 4);
+    private JTextField duration = new JTextField("", 4);
+    private JTextField delay = new JTextField("", 4);
+    private JTextField distance = new JTextField("", 4);
 
     public RoundPanel() {
         setLayout(new GridBagLayout());

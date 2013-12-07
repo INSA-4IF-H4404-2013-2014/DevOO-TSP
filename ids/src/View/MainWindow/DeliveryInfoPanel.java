@@ -45,7 +45,7 @@ public class DeliveryInfoPanel extends JPanel {
         deliveryInfoPanelContentForm.add(createRow4());
         deliveryInfoPanelContentForm.add(createRow5());
 
-        // We add this "form" to topDeliveryInfoPanelContent
+        // We add this "form" to deliveryInfoPanelContent
         deliveryInfoPanelContent.add(deliveryInfoPanelContentForm, BorderLayout.CENTER);
 
         return deliveryInfoPanelContent;
