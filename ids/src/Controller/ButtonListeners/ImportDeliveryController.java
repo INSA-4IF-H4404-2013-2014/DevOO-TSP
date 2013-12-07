@@ -1,6 +1,6 @@
 package Controller.ButtonListeners;
 
-import Model.City.Graph;
+import Model.City.Network;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
  * To change this template use File | Settings | File Templates.
  */
 public class ImportDeliveryController implements ActionListener {
-    private Graph graph;
+    private Network network;
     @Override
     public void actionPerformed(ActionEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.

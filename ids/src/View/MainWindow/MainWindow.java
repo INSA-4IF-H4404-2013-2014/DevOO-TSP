@@ -1,6 +1,6 @@
 package View.MainWindow;
 
-import Model.City.Graph;
+import Model.City.Network;
 import Model.Delivery.Round;
 import Utils.UtilsException;
 import View.MapPanel.MapPanel;
@@ -31,7 +31,7 @@ public class MainWindow extends JFrame {
     private static final String TITLE = "Supervision des livraisons";
 
 
-    private Graph graph;
+    private Network network;
     private Round round;
 
     private DeliveryInfoPanel deliveryInfoPanel = new DeliveryInfoPanel();
@@ -61,8 +61,8 @@ public class MainWindow extends JFrame {
 
         // automatic load for map testing
         try {
-            graph = Graph.createFromXml("../sujet/plan10x10.xml");
-            mapPanel.setModel(graph);
+            network = Network.createFromXml("../sujet/plan10x10.xml");
+            mapPanel.setModel(network);
         }
         catch (UtilsException e) {
             System.out.println(e);

@@ -1,6 +1,8 @@
-package Model.Delivery;
+package Model.ChocoSolver;
 
 import Model.City.Node;
+import Model.Delivery.Delivery;
+import Model.Delivery.Itinerary;
 import Utils.UtilsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

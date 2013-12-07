@@ -1,9 +1,11 @@
 package Model.Delivery;
 
+import Model.City.Network;
 import Model.City.Node;
 import Utils.UtilsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,9 +19,12 @@ import java.util.*;
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
  * Date: 28/11/13
  * Time: 14:34
- * This class aims at managing a round defined by a list of schdules containing deliveries
+ * This Singleton aims at managing a round defined by a list of schdules containing deliveries
  */
 public class Round {
+    /** The network which contains the nodes */
+    private Network network;
+
     /** The warehouse which is the start and end point of the round */
     private Node warehouse;
 
@@ -28,12 +33,57 @@ public class Round {
 
     /**
      * Constructor
+     * @param network Network containing every node
      * @param warehouse start and end point of the round
      * @param schedules list of schedules containing the deliveries
      */
-    public Round(Node warehouse, List<Schedule> schedules) {
+    private Round(Network network, Node warehouse, List<Schedule> schedules) {
+        this.network = network;
         this.warehouse = warehouse;
         this.schedules = schedules;
+    }
+
+    /**
+     * Constructor which parses XML nodes and attributes
+     * @param network Network containing every node
+     * @param root XML root element from an xml delivery file
+     */
+    private Round(Network network, Element root) throws ParserConfigurationException {
+        this.network = network;
+
+        NodeList xmlNodeList = root.getElementsByTagName(XMLConstants.DELIVERY_WAREHOUSE_ELEMENT);
+        if(xmlNodeList == null || xmlNodeList.getLength() != 1) {
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_WAREHOUSE_ELEMENT + "> est introuvable");
+        }
+
+        try {
+            warehouse = network.findNode(Integer.parseInt(xmlNodeList.item(0).getAttributes().getNamedItem(XMLConstants.DELIVERY_WAREHOUSE_NODE_ATTR).getNodeValue()));
+        } catch(Exception e) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_WAREHOUSE_NODE_ATTR + "> de l'élément <" + XMLConstants.DELIVERY_WAREHOUSE_ELEMENT + "> est invalide ou manquant (entier attendu).");
+        }
+        if(this.warehouse == null) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_WAREHOUSE_NODE_ATTR +
+                    "> de l'élément <" + XMLConstants.DELIVERY_WAREHOUSE_ELEMENT + "> ne référence pas un noeud existant.");
+        }
+
+        xmlNodeList = root.getElementsByTagName(XMLConstants.DELIVERY_SCHEDULES_ELEMENT);
+        if(xmlNodeList == null || xmlNodeList.getLength() != 1) {
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est introuvable.");
+        }
+
+        Element eSchedules = (Element) xmlNodeList.item(0);
+        if(eSchedules == null) {
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est introuvable.");
+        }
+
+        xmlNodeList = eSchedules.getElementsByTagName(XMLConstants.DELIVERY_SCHEDULE_ELEMENT);
+        if(xmlNodeList == null || xmlNodeList.getLength() < 1) {
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est introuvable ou ne contient aucune plage horaire.");
+        }
+
+        for (int i = 0; i < xmlNodeList.getLength(); ++i) {
+            schedules.add(new Schedule(this, (Element) xmlNodeList.item(i)));
+        }
     }
 
     public void addDelivery(String clientId, Node address, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
@@ -57,7 +107,7 @@ public class Round {
         return new Schedule(earliestBound, latestBound);
     }
 
-    private Client getClient(String clientId)
+    public Client getClient(String clientId)
     {
         for(Schedule s : schedules)
         {
@@ -70,6 +120,14 @@ public class Round {
         }
 
         return new Client(clientId);
+    }
+
+    /**
+     * Returns the network
+     * @return the network
+     */
+    public Network getNetwork() {
+        return network;
     }
 
     /**
@@ -88,7 +146,19 @@ public class Round {
         return schedules;
     }
 
-    public static Round createFromXml(String xmlFilePath) throws NoSuchFieldException {
+    /**
+     * Creates and returns a round from an XML file
+     * @param xmlFilePath The xml file path
+     * @param network The network containing every nodes
+     * @return a round created from the XML file
+     * @throws UtilsException If the parsing returns an exception
+     * @throws ParserConfigurationException If the XML file contains errors (missing or invalids elements or attributes)
+     */
+    public static Round createFromXml(String xmlFilePath, Network network) throws UtilsException, ParserConfigurationException {
+        Element root;
+        Document document;
+        DocumentBuilder factory;
+
         Round round = null;
         Node warehouse;
         List<Delivery> deliveries = new LinkedList<Delivery>();
@@ -96,14 +166,30 @@ public class Round {
 
         if(!xmlFile.exists())
         {
-            throw new NoSuchFieldException("Fichier " + xmlFilePath + " introuvable.");
+            throw new ParserConfigurationException("Fichier <" + xmlFilePath + "> introuvable.");
         }
 
-        Element root;
-        Document document;
-        DocumentBuilder factory;
+        try {
+            try {
+                factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                document = factory.parse(xmlFile);
+                root = document.getDocumentElement();
+            } catch (ParserConfigurationException pce) {
+                throw new UtilsException("Une erreur est survenue lors de l'importation. Merci de contacter les développeurs.");
+            } catch (SAXException se) {
+                throw new UtilsException("Une erreur est survenue lors de l'importation. Merci de contacter les développeurs.");
+            } catch (IOException ioe) {
+                throw new UtilsException("LUne erreur est survenue lors de l'ouverture du fichier " + xmlFilePath + ".");
+            }
 
-        //TODO ============================================================================
+            if (!root.getNodeName().equals(XMLConstants.DELIVERY_ROOT_ELEMENT)) {
+            }
+
+            round = new Round(network, root);
+        }
+        catch (UtilsException e) {
+            throw  new UtilsException("Fichier <" + xmlFilePath + "> invalide.");
+        }
 
         return round;
     }

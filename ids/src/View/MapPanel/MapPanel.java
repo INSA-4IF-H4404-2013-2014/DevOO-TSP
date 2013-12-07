@@ -1,6 +1,6 @@
 package View.MapPanel;
 
-import Model.City.Graph;
+import Model.City.Network;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +8,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -22,7 +21,7 @@ import java.util.HashMap;
 public class MapPanel extends JPanel {
 
     /** associated model graph */
-    private Graph modelGraph;
+    private Network modelNetwork;
 
     /** nodes map */
     private Map<Integer,Node> nodes;
@@ -79,13 +78,13 @@ public class MapPanel extends JPanel {
 
     /**
      * Sets the model
-     * @param modelGraph the model we want to set
+     * @param modelNetwork the model we want to set
      */
-    public void setModel(Graph modelGraph) {
+    public void setModel(Network modelNetwork) {
         nodes.clear();
         arcs.clear();
 
-        this.modelGraph = modelGraph;
+        this.modelNetwork = modelNetwork;
 
         this.buildView();
         this.repaint();
@@ -166,7 +165,7 @@ public class MapPanel extends JPanel {
 
         renderContext.drawBackground();
 
-        if(modelGraph == null) {
+        if(modelNetwork == null) {
             renderContext.drawEmptyMessage();
             return;
         }
@@ -254,7 +253,7 @@ public class MapPanel extends JPanel {
         int xModelMax = -0x7FFFFFFF;
         int yModelMax = -0x7FFFFFFF;
 
-        for(Map.Entry<Integer,Model.City.Node> entry : modelGraph.getNodes().entrySet()) {
+        for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
             Model.City.Node modelNode = entry.getValue();
 
             int x = modelNode.getX();
@@ -277,7 +276,7 @@ public class MapPanel extends JPanel {
         modelSize.width = xModelMax - xModelMin;
         modelSize.height = yModelMax - yModelMin;
 
-        for(Map.Entry<Integer,Model.City.Node> entry : modelGraph.getNodes().entrySet()) {
+        for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
             Model.City.Node modelNode = entry.getValue();
 
             int x = modelNode.getX() - xModelMin;
@@ -288,7 +287,7 @@ public class MapPanel extends JPanel {
             nodes.put(entry.getValue().getId(), node);
         }
 
-        for(Model.City.Arc modelArc : modelGraph.getArcs()) {
+        for(Model.City.Arc modelArc : modelNetwork.getArcs()) {
             int from = modelArc.getFrom().getId();
             int to = modelArc.getTo().getId();
 
