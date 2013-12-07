@@ -20,7 +20,7 @@ public class RoundPanel extends JPanel {
     public RoundPanel() {
         setLayout(new GridBagLayout());
         setBackground(Color.GRAY);
-        add(createTopDeliveryInfoPanelContent());
+        add(createRoundPanelContent());
     }
 
 
@@ -28,38 +28,43 @@ public class RoundPanel extends JPanel {
      * Creates the dialog of the round panel.
      * @return the JPanel
      */
-    private JPanel createTopDeliveryInfoPanelContent() {
+    private JPanel createRoundPanelContent() {
         JPanel roundPanelContent = new JPanel(new BorderLayout());
         roundPanelContent.setBorder(new EmptyBorder(10, 10, 10, 10));
         roundPanelContent.add(new JLabel("Tournée"), BorderLayout.PAGE_START);
 
         // We create here the small "form"
         JPanel roundPanelContentForm = new JPanel(new GridLayout(3, 1));
+        roundPanelContentForm.add(createRow1());
+        roundPanelContentForm.add(createRow2());
+        roundPanelContentForm.add(createRow3());
 
-        // First row
-        JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row1.add(new JLabel("Nombre de livraisons : "));
-        row1.add(new JTextField("", 4));
-
-        // Second row
-        JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row2.add(new JLabel("Durée : "));
-        row2.add(new JTextField("", 4));
-        row2.add(new JLabel("Retard cumulé :"));
-        row2.add(new JTextField("", 4));
-
-        // Third row
-        JPanel row3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row3.add(new JLabel("Longueur : "));
-        row3.add(new JTextField("", 4));
-
-        roundPanelContentForm.add(row1);
-        roundPanelContentForm.add(row2);
-        roundPanelContentForm.add(row3);
-
-        // We add this "form" to topDeliveryInfoPanelContent
+        // We add this "form" to our roundPanelContent
         roundPanelContent.add(roundPanelContentForm, BorderLayout.CENTER);
 
         return roundPanelContent;
+    }
+
+    private JPanel createRow1() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row.add(new JLabel("Nombre de livraisons : "));
+        row.add(new JTextField("", 4));
+        return row;
+    }
+
+    private JPanel createRow2() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row.add(new JLabel("Durée : "));
+        row.add(new JTextField("", 4));
+        row.add(new JLabel("Retard cumulé :"));
+        row.add(new JTextField("", 4));
+        return row;
+    }
+
+    private JPanel createRow3() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row.add(new JLabel("Longueur : "));
+        row.add(new JTextField("", 4));
+        return row;
     }
 }
