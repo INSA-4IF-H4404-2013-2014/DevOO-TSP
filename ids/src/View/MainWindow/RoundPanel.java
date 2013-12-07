@@ -12,10 +12,10 @@ import java.awt.*;
  */
 public class RoundPanel extends JPanel {
 
-    JTextField deliveryCount;
-    JTextField duration;
-    JTextField delay;
-    JTextField distance;
+    JTextField deliveryCount = new JTextField("", 4);
+    JTextField duration = new JTextField("", 4);
+    JTextField delay = new JTextField("", 4);
+    JTextField distance = new JTextField("", 4);
 
     public RoundPanel() {
         setLayout(new GridBagLayout());
@@ -48,23 +48,23 @@ public class RoundPanel extends JPanel {
     private JPanel createRow1() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Nombre de livraisons : "));
-        row.add(new JTextField("", 4));
+        row.add(deliveryCount);
         return row;
     }
 
     private JPanel createRow2() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Durée : "));
-        row.add(new JTextField("", 4));
+        row.add(duration);
         row.add(new JLabel("Retard cumulé :"));
-        row.add(new JTextField("", 4));
+        row.add(delay);
         return row;
     }
 
     private JPanel createRow3() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Longueur : "));
-        row.add(new JTextField("", 4));
+        row.add(distance);
         return row;
     }
 }

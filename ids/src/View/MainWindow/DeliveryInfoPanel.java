@@ -14,11 +14,13 @@ import java.awt.*;
  */
 public class DeliveryInfoPanel extends JPanel {
 
-    private JTextField client;
-    private JTextField address;
-    private JTextField deliveryDate;
-    private JTextField delay;
-    private TimeFramePanel timeFrame;
+    private JTextField deliveryID = new JTextField("", 4);
+    private JTextField timeFrameBegin = new JTextField("", 4);
+    private JTextField timeFrameEnd = new JTextField("", 4);
+    private JTextField clientName = new JTextField("", 10);
+    private JTextField address = new JTextField("", 14);
+    private JTextField deliveryTime = new JTextField("", 4);
+    private JTextField delay = new JTextField("", 4);
 
     public DeliveryInfoPanel() {
         setLayout(new GridBagLayout());
@@ -52,38 +54,38 @@ public class DeliveryInfoPanel extends JPanel {
     private JPanel createRow1() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("ID : "));
-        row.add(new JTextField("", 4));
+        row.add(deliveryID);
         return row;
     }
 
     private JPanel createRow2() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Plage horaire : "));
-        row.add(new JTextField("", 4));
-        row.add(new JTextField("", 4));
+        row.add(timeFrameBegin);
+        row.add(timeFrameEnd);
         return row;
     }
 
     private JPanel createRow3() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Nom du client : "));
-        row.add(new JTextField("", 6));
+        row.add(clientName);
         return row;
     }
 
     private JPanel createRow4() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Adresse : "));
-        row.add(new JTextField("", 14));
+        row.add(address);
         return row;
     }
 
     private JPanel createRow5() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Arrivée : "));
-        row.add(new JTextField("", 4));
+        row.add(deliveryTime);
         row.add(new JLabel("Retard : "));
-        row.add(new JTextField("", 4));
+        row.add(delay);
         return row;
     }
 }
