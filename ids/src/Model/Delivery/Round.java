@@ -197,4 +197,9 @@ public class Round {
 
         return round;
     }
+
+    public static void main(String [] args)  throws UtilsException, ParserConfigurationException {
+        Network n = Network.createFromXml("../sujet/plan10x10.xml");
+        Round.createFromXml("../sujet/livraison10x10-3.xml", n);
+    }
 }

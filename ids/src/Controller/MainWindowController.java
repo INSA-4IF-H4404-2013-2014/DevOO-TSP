@@ -6,6 +6,8 @@ import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
 
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.LinkedList;
@@ -19,7 +21,7 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements MouseListener, NodeListener {
+public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
@@ -35,6 +37,26 @@ public class MainWindowController implements MouseListener, NodeListener {
 
     public MainWindow getMainWindow() {
         return mainWindow;
+    }
+
+    public void loadNetwork() {
+
+    }
+
+    public void loadRound() {
+
+    }
+
+    public void exportRound() {
+
+    }
+
+    public void addDelivery() {
+
+    }
+
+    public void removeDelivery() {
+
     }
 
     public void historyDo(Command command){
@@ -84,6 +106,10 @@ public class MainWindowController implements MouseListener, NodeListener {
     @Override
     public void nodeClicked(MapPanel panel, Node node) {
         panel.setSelectedNode(node);
+    }
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 } // end of class MainWindowController --------------------------------------------------------------------
 
