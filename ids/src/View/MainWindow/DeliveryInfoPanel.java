@@ -52,13 +52,14 @@ public class DeliveryInfoPanel extends JPanel {
     private JPanel createBottomDeliveryInfoPanel() {
         JPanel bottomDeliveryInfoPanel = new JPanel(new GridBagLayout());
         bottomDeliveryInfoPanel.setBackground(Color.LIGHT_GRAY);
+        bottomDeliveryInfoPanel.add(createBottomDeliveryInfoPanelContent());
         return bottomDeliveryInfoPanel;
     }
 
 
     /**
      * Creates the dialog of the top delivery info panel.
-     * @return
+     * @return the JPanel
      */
     private JPanel createTopDeliveryInfoPanelContent() {
         JPanel topDeliveryInfoPanelContent = new JPanel(new BorderLayout());
@@ -91,6 +92,58 @@ public class DeliveryInfoPanel extends JPanel {
 
         // We add this "form" to topDeliveryInfoPanelContent
         topDeliveryInfoPanelContent.add(topDeliveryInfoPanelContentForm, BorderLayout.CENTER);
+
+        return topDeliveryInfoPanelContent;
+    }
+
+    /**
+     * Creates the dialog of the bottom delivery info panel.
+     * @return the JPanel
+     */
+    private JPanel createBottomDeliveryInfoPanelContent() {
+        JPanel topDeliveryInfoPanelContent = new JPanel(new BorderLayout());
+        topDeliveryInfoPanelContent.setBorder(new EmptyBorder(10, 10, 10, 10));
+        topDeliveryInfoPanelContent.add(new JLabel("Livraison"), BorderLayout.PAGE_START);
+
+        // We create here the small "form"
+        JPanel bottomDeliveryInfoPanelContentForm = new JPanel(new GridLayout(5, 1));
+
+        // First row
+        JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row1.add(new JLabel("ID : "));
+        row1.add(new JTextField("", 4));
+
+        // Second row
+        JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row2.add(new JLabel("Plage horaire : "));
+        row2.add(new JTextField("", 4));
+        row2.add(new JTextField("", 4));
+
+        // Third row
+        JPanel row3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row3.add(new JLabel("Nom du client : "));
+        row3.add(new JTextField("", 6));
+
+        // Fourth row
+        JPanel row4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row4.add(new JLabel("Adresse : "));
+        row4.add(new JTextField("", 14));
+
+        // Fifth row
+        JPanel row5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row5.add(new JLabel("Arrivée : "));
+        row5.add(new JTextField("", 4));
+        row5.add(new JLabel("Retard : "));
+        row5.add(new JTextField("", 4));
+
+        bottomDeliveryInfoPanelContentForm.add(row1);
+        bottomDeliveryInfoPanelContentForm.add(row2);
+        bottomDeliveryInfoPanelContentForm.add(row3);
+        bottomDeliveryInfoPanelContentForm.add(row4);
+        bottomDeliveryInfoPanelContentForm.add(row5);
+
+        // We add this "form" to topDeliveryInfoPanelContent
+        topDeliveryInfoPanelContent.add(bottomDeliveryInfoPanelContentForm, BorderLayout.CENTER);
 
         return topDeliveryInfoPanelContent;
     }
