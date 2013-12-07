@@ -52,12 +52,12 @@ public class Round {
         this.network = network;
 
         NodeList xmlNodeList = root.getElementsByTagName(XMLConstants.DELIVERY_WAREHOUSE_ELEMENT);
-        if(xmlNodeList == null || xmlNodeList.getLength() != 1) {
-            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_WAREHOUSE_ELEMENT + "> est introuvable");
+        if(xmlNodeList == null || xmlNodeList.getLength() == 0) {
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_WAREHOUSE_ELEMENT + "> est manquant");
         }
 
         try {
-            warehouse = network.findNode(Integer.parseInt(xmlNodeList.item(0).getAttributes().getNamedItem(XMLConstants.DELIVERY_WAREHOUSE_NODE_ATTR).getNodeValue()));
+            this.warehouse = network.findNode(Integer.parseInt(((Element)xmlNodeList.item(0)).getAttribute(XMLConstants.DELIVERY_WAREHOUSE_NODE_ATTR)));
         } catch(Exception e) {
             throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_WAREHOUSE_NODE_ATTR + "> de l'élément <" + XMLConstants.DELIVERY_WAREHOUSE_ELEMENT + "> est invalide ou manquant (entier attendu).");
         }
@@ -67,18 +67,14 @@ public class Round {
         }
 
         xmlNodeList = root.getElementsByTagName(XMLConstants.DELIVERY_SCHEDULES_ELEMENT);
-        if(xmlNodeList == null || xmlNodeList.getLength() != 1) {
-            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est introuvable.");
+        if(xmlNodeList == null || xmlNodeList.getLength() == 0) {
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est manquant.");
         }
 
         Element eSchedules = (Element) xmlNodeList.item(0);
-        if(eSchedules == null) {
-            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est introuvable.");
-        }
-
         xmlNodeList = eSchedules.getElementsByTagName(XMLConstants.DELIVERY_SCHEDULE_ELEMENT);
         if(xmlNodeList == null || xmlNodeList.getLength() < 1) {
-            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est introuvable ou ne contient aucune plage horaire.");
+            throw new ParserConfigurationException("L'élément <" + XMLConstants.DELIVERY_SCHEDULES_ELEMENT + "> est manquant ou ne contient aucune plage horaire.");
         }
 
         for (int i = 0; i < xmlNodeList.getLength(); ++i) {
@@ -97,8 +93,7 @@ public class Round {
 
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
     {
-        for(Schedule s : schedules)
-        {
+        for(Schedule s : schedules) {
             if(s.getEarliestBound().equals(earliestBound) && s.getLatestBound().equals(latestBound)) {
                 return s;
             }
@@ -109,10 +104,8 @@ public class Round {
 
     public Client getClient(String clientId)
     {
-        for(Schedule s : schedules)
-        {
-            for(Delivery d :  s.getDeliveries())
-            {
+        for(Schedule s : schedules) {
+            for(Delivery d :  s.getDeliveries()) {
                 if(d.getClient().getId().equals(clientId)) {
                     return d.getClient();
                 }
@@ -146,6 +139,17 @@ public class Round {
         return schedules;
     }
 
+    public boolean isDelivered(Node node) {
+        for(Schedule s : schedules) {
+            for(Delivery d :  s.getDeliveries()) {
+                if(d.getAddress().equals(node)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Creates and returns a round from an XML file
      * @param xmlFilePath The xml file path
@@ -164,9 +168,8 @@ public class Round {
         List<Delivery> deliveries = new LinkedList<Delivery>();
         File xmlFile = new File(xmlFilePath);
 
-        if(!xmlFile.exists())
-        {
-            throw new ParserConfigurationException("Fichier <" + xmlFilePath + "> introuvable.");
+        if(!xmlFile.exists()) {
+            throw new ParserConfigurationException("Fichier <" + xmlFilePath + "> manquant.");
         }
 
         try {
@@ -183,6 +186,7 @@ public class Round {
             }
 
             if (!root.getNodeName().equals(XMLConstants.DELIVERY_ROOT_ELEMENT)) {
+                throw new ParserConfigurationException("L'élément racine <"+ XMLConstants.DELIVERY_ROOT_ELEMENT + "> est manquant.");
             }
 
             round = new Round(network, root);
@@ -192,5 +196,12 @@ public class Round {
         }
 
         return round;
+    }
+
+    public static void main(String [] args)  throws UtilsException, ParserConfigurationException {
+        Network n = Network.createFromXml("../sujet/plan10x10.xml");
+        System.out.println("Network parsed");
+        Round.createFromXml("../sujet/livraison10x10-3.xml", n);
+        System.out.println("Deliveries parsed");
     }
 }
