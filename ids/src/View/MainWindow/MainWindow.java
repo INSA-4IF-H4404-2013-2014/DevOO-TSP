@@ -34,9 +34,8 @@ public class MainWindow extends JFrame {
     private Network network;
     private Round round;
 
-    private DeliveryInfoPanel deliveryInfoPanel = new DeliveryInfoPanel();
+    private RightPanel rightPanel = new RightPanel();
     private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
-    private RoundPanel roundPanel = new RoundPanel();
 
     private MapPanel mapPanel = new MapPanel();
 
@@ -83,7 +82,7 @@ public class MainWindow extends JFrame {
         subMainPanel.setBorder(new EmptyBorder(SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING));
         subMainPanel.add(mapPanel, BorderLayout.CENTER);
         subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
-        subMainPanel.add(deliveryInfoPanel, BorderLayout.EAST);
+        subMainPanel.add(rightPanel, BorderLayout.EAST);
 
         return subMainPanel;
     }
