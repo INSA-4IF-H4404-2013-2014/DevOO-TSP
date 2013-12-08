@@ -2,14 +2,22 @@ package Controller;
 
 import Controller.Command.Command;
 import Model.City.Node;
+import Model.Delivery.Round;
+import Model.Delivery.Schedule;
+import Model.Delivery.Delivery;
+import Model.Delivery.Client;
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
 
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Deque;
@@ -47,8 +55,21 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
 
     }
 
+    /**
+     * Export the current round in a HTML file choosen by user
+     */
     public void exportRound() {
+        Round round = this.mainWindow.getRound();
 
+        String htmlRound = round.roundToHtml();
+
+        try {
+            FileWriter outputWriter = new FileWriter(openExportFile("html"), false);
+            outputWriter.write(htmlRound);
+            outputWriter.close();
+        } catch (java.io.IOException e) {
+            System.out.println(e);
+        }
     }
 
     public void addDelivery() {
@@ -111,5 +132,26 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     public void valueChanged(ListSelectionEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+
+    /**
+     * Allow user to choose a file from specified type for export
+     * @param type the type of file you want the user to be able to choose
+     * @return the file the user choosed
+     */
+    private java.io.File openExportFile(String type) {
+
+        JFileChooser chooser = new JFileChooser();
+
+        FileNameExtensionFilter htmlExtension = new FileNameExtensionFilter(type.toUpperCase() + " Files (*." + type.toLowerCase() + ")", type.toLowerCase());
+        FileNameExtensionFilter allExtension = new FileNameExtensionFilter("All files (*.*)", "");
+
+        chooser.addChoosableFileFilter(allExtension);
+        chooser.addChoosableFileFilter(htmlExtension);
+        chooser.setFileFilter(htmlExtension);
+
+        return chooser.getSelectedFile();
+    }
+
 } // end of class MainWindowController --------------------------------------------------------------------
 

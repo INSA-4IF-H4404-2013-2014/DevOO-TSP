@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.assertTrue;
@@ -67,6 +68,31 @@ public class RoundTest {
             } catch(UtilsException e) {
             } catch(ParserConfigurationException e) {
             }
+        }
+    }
+
+    /**
+     * Exports the round contained in ressources/tests/valid.xml into ressources/tests/export.html
+     */
+    @Test
+    public void testHtmlParser() {
+        try {
+            Network network = Network.createFromXml("resources/tests/plan10x10.xml");
+            Round round = Round.createFromXml("resources/tests/valid.xml", network);
+
+            String html = round.roundToHtml();
+
+            java.io.File file = new java.io.File("ressources/tests/export.html");
+
+            System.out.print(html);
+
+            //java.io.FileWriter output = new FileWriter(file, false);
+
+            /*output.write(html);
+
+            output.close();*/
+        } catch(Exception e) {
+            fail();
         }
     }
 }

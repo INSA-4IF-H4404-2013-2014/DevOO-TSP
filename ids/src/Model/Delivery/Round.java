@@ -197,4 +197,78 @@ public class Round {
 
         return round;
     }
+
+
+    /**
+     * Parse the round into a html format
+     * @return the html text in a String
+     */
+    public String roundToHtml() {
+
+        String earlyText = "Heure min :";
+        String latestText = "Heure max :";
+
+        String htmlOpen = "<html>\n";
+        String htmlClose = "\n</html>";
+
+        String tableOpen = "\n<table>\n";
+        String tableClose = "\n</table>\n";
+
+        String hOpen = "\n<h4>";
+        String hClose = "</h4>\n";
+
+        String trOpen = "\n<tr>\n";
+        String trClose = "\n</tr>\n";
+
+        String tdOpen = "\n<td>";
+        String tdClose = "</td>\n";
+
+        String html = new String();
+
+        Client client;
+        String clientId;
+        String adress;
+
+        Date earliestBound;
+        Date latestBound;
+
+        int i = 0;
+
+        List<Schedule> schedulesList = this.getSchedules();
+
+        html = htmlOpen;
+
+        for(Schedule schedule:schedulesList) {
+
+            i++;
+
+            List<Delivery> deliveriesList = schedule.getDeliveries();
+
+            earliestBound = schedule.getEarliestBound().getTime();
+            latestBound = schedule.getLatestBound().getTime();
+
+            html += tableOpen;
+            html += hOpen + "Plage horaire n°" + Integer.toString(i) + hClose;
+            html += hOpen + earlyText + earliestBound + " | " + latestText + latestBound + hClose;
+
+            for(Delivery delivery:deliveriesList) {
+                client = delivery.getClient();
+                clientId = client.getId();
+                adress = Integer.toString(delivery.getAddress().getId());
+
+                html += trOpen;
+
+                html += tdOpen + clientId + tdClose;
+                html += tdOpen + adress + tdClose;
+
+                html += trClose;
+            }
+
+            html += tableClose;
+        }
+
+        html += htmlClose;
+
+        return html;
+    }
 }
