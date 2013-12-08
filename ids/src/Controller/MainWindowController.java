@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Deque;
@@ -150,7 +151,19 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         chooser.addChoosableFileFilter(htmlExtension);
         chooser.setFileFilter(htmlExtension);
 
-        return chooser.getSelectedFile();
+        File file = chooser.getSelectedFile();
+
+        if(!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch(IOException e) {
+                System.out.println(e);
+            }
+        } else {
+            //TODO: print a confirmation window to be sure that the user wants to write over an existing file
+        }
+
+        return file;
     }
 
 } // end of class MainWindowController --------------------------------------------------------------------

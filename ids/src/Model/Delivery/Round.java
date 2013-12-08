@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.*;
 
 /**
@@ -205,17 +206,17 @@ public class Round {
      */
     public String roundToHtml() {
 
-        String earlyText = "Heure min :";
-        String latestText = "Heure max :";
+        String earlyText = "Heure min : ";
+        String latestText = "Heure max : ";
 
         String htmlOpen = "<html>\n";
         String htmlClose = "\n</html>";
 
         String tableOpen = "\n<table>\n";
-        String tableClose = "\n</table>\n";
+        String tableClose = "\n</table>\n<br/>\n";
 
-        String hOpen = "\n<h4>";
-        String hClose = "</h4>\n";
+        String hOpen = "\n<h5>";
+        String hClose = "</h5>\n";
 
         String trOpen = "\n<tr>\n";
         String trClose = "\n</tr>\n";

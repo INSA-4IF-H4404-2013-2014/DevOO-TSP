@@ -9,6 +9,7 @@ import org.junit.Test;
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.assertTrue;
@@ -71,6 +72,8 @@ public class RoundTest {
         }
     }
 
+
+    //TODO: complete this test with working files
     /**
      * Exports the round contained in ressources/tests/valid.xml into ressources/tests/export.html
      */
@@ -82,15 +85,23 @@ public class RoundTest {
 
             String html = round.roundToHtml();
 
-            java.io.File file = new java.io.File("ressources/tests/export.html");
+            //java.io.File file = new java.io.File("ressources/tests/export.html");
 
-            System.out.print(html);
+            /*if(!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch(IOException e) {
+                    fail();
+                }
+            }*/
+
+            //System.out.print(html);
 
             //java.io.FileWriter output = new FileWriter(file, false);
 
-            /*output.write(html);
+            //output.write(html);
 
-            output.close();*/
+            //output.close();
         } catch(Exception e) {
             fail();
         }
