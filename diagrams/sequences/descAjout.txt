@@ -11,21 +11,13 @@ Superviseur->+ ":MainWindow": clic on "ajouter" button
 ":AddController"->+ ":DeliveryWindow" : new()
 
 loop informations ok or annulation
-":DeliveryWindow" -> ":Superviseur" : ask client id, schedulerEarliestBound, schedulerLatestBound
+":DeliveryWindow" -> Superviseur : ask client id, schedulerEarliestBound, schedulerLatestBound
 	opt ok
-		":Superviseur" -> ":DeliveryWindow" : clic on "valider" button
+		Superviseur -> ":DeliveryWindow" : clic on "valider" button
 		":DeliveryWindow" ->+ ":DeliveryValidateController" : actionPerformed(ActionEvent e)
-		":DeliveryValidateController" ->+ ":Round" : containsClient(int id)
-		opt true
-			":Round" --> ":DeliveryValidateController": true
-		else
-			":Round" -->- ":DeliveryValidateController": false
-			":DeliveryValidateController" ->+ ":Client" : new(id)
-			":Client" -->- ":DeliveryValidateController" : cli
-			":DeliveryValidateController" ->+ ":Round" : addClient(cli)
-			":Round" -->- ":DeliveryValidateController" :
-			
-		end
+		":DeliveryValidateController" ->+ ":Round" : getClient(int id)
+		":Round" -->- ":DeliveryValidateController": client
+		
 		":DeliveryValidateController" ->+ ":Delivery" : new(id, earlier, latest)
 			":Delivery" ->+ ":Client" : addDelivery(this)
 			":Client" -->- ":Delivery" :
@@ -33,11 +25,13 @@ loop informations ok or annulation
 			":Schedule" -->- ":Delivery" :
 				
 		":Delivery" -->- ":DeliveryValidateController" : deliv
-		":DeliveryValidateController" ->+ ":Round" : addDelivery(deliv)
-		":Round" -->- ":DeliveryValidateController" :
+		":DeliveryValidateController" ->+ ":AddDelivery" : new(MainWindowController controller, Delivery deliv)
+		":AddDelivery" -->- ":DeliveryValidateController" :
+		":DeliveryValidateController" ->+ ":AddDelivery" : apply()
+		":AddDelivery" -->- ":DeliveryValidateController" :
 		":DeliveryValidateController" -->- ":DeliveryWindow" : 	
 	else undo
-		":Superviseur" -> ":DeliveryWindow" : clic on "annuler" button
+		Superviseur -> ":DeliveryWindow" : clic on "annuler" button
 		":DeliveryWindow" ->+ ":DeliveryUndoController" : actionPerformed(ActionEvent e)
 		":DeliveryUndoController" -->- ":DeliveryWindow" : 
 	end
