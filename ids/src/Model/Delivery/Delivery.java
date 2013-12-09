@@ -91,11 +91,6 @@ public class Delivery {
                     "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> ne référence pas un noeud existant (" +
                     Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_NODE_ATTR)) +  ").");
         }
-        if(round.isDelivered(this.address)) {
-            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_NODE_ATTR +
-                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> référence un noeud déjà desservit (" +
-                    Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_NODE_ATTR)) +  ").");
-        }
 
         client.addDelivery(this);
     }

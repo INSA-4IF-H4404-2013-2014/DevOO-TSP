@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -27,7 +28,7 @@ public class RoundTest {
      * Checks that a complex and valid XML delivery file is correctly parsed
      */
     @Test
-    public void testValidCreate() {
+    public void testValidCreate() throws FileNotFoundException {
         try {
             Network network = Network.createFromXml("resources/tests/plan10x10.xml");
             Round round = Round.createFromXml("resources/tests/valid.xml", network);
@@ -59,12 +60,13 @@ public class RoundTest {
      * @throws UtilsException If the network parser fails
      */
     @Test
-    public void testInvalidCreate() throws UtilsException {
+    public void testInvalidCreate() throws UtilsException, FileNotFoundException {
         Network network = Network.createFromXml("resources/tests/plan10x10.xml");
 
-        for(int i = 1; i < 15; ++i) {
+        for(int i = 1; i < 16; ++i) {
             try {
-                Round.createFromXml("resources/tests/invalid" + i + ".xml", network);
+                System.out.println("Invalid test " + i);
+                Round.createFromXml("resources/tests/invalid (" + i + ").xml", network);
                 fail();
             } catch(UtilsException e) {
             } catch(ParserConfigurationException e) {
