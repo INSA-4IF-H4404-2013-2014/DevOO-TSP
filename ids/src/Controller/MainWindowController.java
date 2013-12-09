@@ -13,8 +13,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -268,21 +266,30 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         return tsp;
     }
 
-
+    /**
+     * TODO: complete
+     * @param tsp
+     * @param graph
+     * @return
+     */
     private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph graph) {
         int[] nodeList = tsp.getNext();
-        List<ChocoDelivery> deliveriesList = new ArrayList<ChocoDelivery>();
+        List<Delivery> deliveriesList = new ArrayList<Delivery>();
         List<Itinerary> itinerariesList = new ArrayList<Itinerary>();
 
-        ChocoDelivery delivery;
+        ChocoDelivery chocoDelivery;
+        Delivery delivery;
 
         for(int i = 0 ; i <= nodeList.length ; i++) {
-            delivery = graph.getDelivery(i);
+            chocoDelivery = graph.getDelivery(nodeList[i]);
+            delivery = chocoDelivery.getDelivery();
             deliveriesList.add(delivery);
 
-            //TODO: add itinerary to itinerariesList (use getItinerary() from ChocoDelivery
+            itinerariesList.add(chocoDelivery.getItinerary(delivery.getAddress().getId()));
         }
-        return null; //TODO
+
+        CalculatedRound calculatedRound = new CalculatedRound(mainWindow.getRound().getWarehouse(), deliveriesList, itinerariesList);
+        return calculatedRound;
     }
 
 } // end of class MainWindowController --------------------------------------------------------------------
