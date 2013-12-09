@@ -44,8 +44,6 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
 
         historyApplied = new LinkedList<Controller.Command.Command>();
         historyBackedOut = new LinkedList<Controller.Command.Command>();
-
-        exportRound();
     }
 
     public MainWindow getMainWindow() {
