@@ -148,13 +148,9 @@ public class MapPanel extends JPanel {
      * @param modelNetwork the model we want to set
      */
     public void setModel(Network modelNetwork) {
-        nodes.clear();
-        arcs.clear();
-
         this.modelNetwork = modelNetwork;
 
-        this.buildView();
-        this.repaint();
+        this.refreshNodeAndArcs();
     }
 
     /**
@@ -370,9 +366,9 @@ public class MapPanel extends JPanel {
     }
 
     /**
-     * Builds view from the model graph
+     * refreshes model's min/max coordinates
      */
-    private void buildView() {
+    private void refreshModelMinMax() {
         modelMinPos.x = 0x7FFFFFFF;
         modelMinPos.y = 0x7FFFFFFF;
         modelMaxPos.x = -0x7FFFFFFF;
@@ -384,19 +380,25 @@ public class MapPanel extends JPanel {
             int x = modelNode.getX();
             int y = modelNode.getY();
 
-            if (x < modelMinPos.x) {
-                modelMinPos.x = x;
-            }
-            if (y < modelMinPos.y) {
-                modelMinPos.y = y;
-            }
-            if (x > modelMaxPos.x) {
-                modelMaxPos.x = x;
-            }
-            if (y > modelMaxPos.y) {
-                modelMaxPos.y = y;
-            }
+            modelMinPos.x = Math.min(modelMinPos.x, x);
+            modelMinPos.y = Math.min(modelMinPos.y, y);
+            modelMaxPos.x = Math.max(modelMaxPos.x, x);
+            modelMaxPos.y = Math.max(modelMaxPos.y, y);
         }
+    }
+
+    /**
+     * Refreshes view nodes/arcs from the model
+     */
+    private void refreshNodeAndArcs() {
+        nodes.clear();
+        arcs.clear();
+
+        if(modelNetwork == null) {
+            return;
+        }
+
+        refreshModelMinMax();
 
         for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
             Model.City.Node modelNode = entry.getValue();
