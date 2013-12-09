@@ -69,8 +69,20 @@ public class MainWindow extends JFrame {
         }
     }
 
+    /**
+     * Get the round of the main window
+     * @return the round of the main window
+     */
     public Round getRound() {
         return round;
+    }
+
+    /**
+     * Get the network of the main window
+     * @return the network of the main window
+     */
+    public Network getNetwork() {
+        return network;
     }
 
     /**
