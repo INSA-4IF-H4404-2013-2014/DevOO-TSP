@@ -113,31 +113,11 @@ public class RenderContext {
      * @param arc the arc to draw
      */
     protected void drawArc(Arc arc) {
-        Node node1 = arc.getNode1();
-        Node node2 = arc.getNode2();
-
-        int x1 = modelViewTransformX(node1.getX());
-        int y1 = modelViewTransformY(node1.getY());
-
-        int x2 = modelViewTransformX(node2.getX());
-        int y2 = modelViewTransformY(node2.getY());
-
-        int nx = x2 - x1;
-        int ny = y2 - y1;
-        double angle = Math.atan2((double)ny, (double)nx);
-        double nl = Math.sqrt((double)(nx * nx + ny * ny));
-
-        double arcThickness = modelViewScaleFactor * (double)streetThickness;
-
-        Rectangle2D.Double rect = new Rectangle2D.Double();
-        rect.setRect(0.0, - arcThickness, nl, 2.0 * arcThickness);
+        ArcInfo arcInfo = arcInfo(arc);
 
         context.setColor(streetColor);
-        context.translate(x1, y1);
-        context.rotate(angle);
-        context.fill(rect);
-        context.rotate(-angle);
-        context.translate(-x1, -y1);
+
+        drawArcInfo(arcInfo);
     }
 
     /**
@@ -145,31 +125,13 @@ public class RenderContext {
      * @param arc the arc to draw
      */
     protected void drawArcBorders(Arc arc) {
-        Node node1 = arc.getNode1();
-        Node node2 = arc.getNode2();
+        ArcInfo arcInfo = arcInfo(arc);
 
-        int x1 = modelViewTransformX(node1.getX());
-        int y1 = modelViewTransformY(node1.getY());
-
-        int x2 = modelViewTransformX(node2.getX());
-        int y2 = modelViewTransformY(node2.getY());
-
-        int nx = x2 - x1;
-        int ny = y2 - y1;
-        double angle = Math.atan2((double)ny, (double)nx);
-        double nl = Math.sqrt((double)(nx * nx + ny * ny));
-
-        double arcThickness = modelViewScaleFactor * (double)streetThickness + (double)streetBorderThickness;
-
-        Rectangle2D.Double rect = new Rectangle2D.Double();
-        rect.setRect(0.0, - arcThickness, nl, 2.0 * arcThickness);
+        arcInfo.thickness += (double)streetBorderThickness;
 
         context.setColor(streetBorderColor);
-        context.translate(x1, y1);
-        context.rotate(angle);
-        context.fill(rect);
-        context.rotate(-angle);
-        context.translate(-x1, -y1);
+
+        drawArcInfo(arcInfo);
     }
 
     /**
@@ -256,6 +218,59 @@ public class RenderContext {
      */
     private int modelViewTransformY(int y) {
         return yGlobalOffset + (int)(modelViewScaleFactor * (double)y);
+    }
+
+    /**
+     * Generates Arc's rendering informations
+     * @param arc the given arc we want to render
+     * @return an ArcInfo structure containing all informations
+     */
+    private ArcInfo arcInfo(Arc arc) {
+        ArcInfo arcInfo = new ArcInfo();
+
+        Node node1 = arc.getNode1();
+        Node node2 = arc.getNode2();
+
+        arcInfo.x1 = modelViewTransformX(node1.getX());
+        arcInfo.y1 = modelViewTransformY(node1.getY());
+
+        int x2 = modelViewTransformX(node2.getX());
+        int y2 = modelViewTransformY(node2.getY());
+
+        int nx = x2 - arcInfo.x1;
+        int ny = y2 - arcInfo.y1;
+
+        arcInfo.angle = Math.atan2((double)ny, (double)nx);
+        arcInfo.length = Math.sqrt((double)(nx * nx + ny * ny));
+        arcInfo.thickness = modelViewScaleFactor * (double)streetThickness;
+
+        return arcInfo;
+    }
+
+    /**
+     * Draws the given arc info
+     * @param arcInfo the arc's information to draw
+     */
+    private void drawArcInfo(ArcInfo arcInfo) {
+        Rectangle2D.Double rect = new Rectangle2D.Double();
+        rect.setRect(0.0, - arcInfo.thickness, arcInfo.length, 2.0 * arcInfo.thickness);
+
+        context.translate(arcInfo.x1, arcInfo.y1);
+        context.rotate(arcInfo.angle);
+        context.fill(rect);
+        context.rotate(-arcInfo.angle);
+        context.translate(-arcInfo.x1, -arcInfo.y1);
+    }
+
+    /**
+     * ArcInformation
+     */
+    private class ArcInfo {
+        public double angle;
+        public double length;
+        public double thickness;
+        public int x1;
+        public int y1;
     }
 
 
