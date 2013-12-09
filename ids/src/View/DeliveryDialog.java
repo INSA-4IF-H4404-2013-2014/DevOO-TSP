@@ -17,6 +17,7 @@ public class DeliveryDialog extends JFrame {
     public static final int PADDING = 10;
 
     private JComboBox client = new JComboBox();
+    private JTextField newClient = new JTextField("", 10);
     private JTextField clientAddress = new JTextField("", 12);
     private JTextField timeFrameBegin = new JTextField("", 4);
     private JTextField timeFrameEnd = new JTextField("", 4);
@@ -67,6 +68,8 @@ public class DeliveryDialog extends JFrame {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Client : "));
         row.add(client);
+
+        row.add(newClient);
         return row;
     }
 
