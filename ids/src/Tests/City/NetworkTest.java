@@ -4,9 +4,14 @@ package Tests.City;
 import Model.City.Arc;
 import Model.City.Network;
 import Model.City.Node;
+import Model.Delivery.Round;
 import Utils.UtilsException;
+import org.junit.Test;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,6 +44,19 @@ public class NetworkTest {
 
         Arc a2 = a1.getStreet().getArcs().get(0);
         assertTrue(a2.getStreet().getName().equals("v0"));
+
+    }
+
+    @Test
+    public void testInvalidCreate() throws UtilsException {
+
+        for(int i = 1; i < 6; ++i) {
+            try {
+                Network.createFromXml("resources/tests/invalidNet" + i + ".xml");
+                fail();
+            } catch(UtilsException e) {
+            }
+        }
 
     }
 
