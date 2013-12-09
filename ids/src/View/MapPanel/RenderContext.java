@@ -24,12 +24,6 @@ public class RenderContext {
     /** view/model scale factor */
     private double modelViewScaleFactor;
 
-    /** global view X offset */
-    int xGlobalOffset;
-
-    /** global view Y offset */
-    int yGlobalOffset;
-
     /** the map panel being rendered */
     MapPanel mapPanel;
 
@@ -46,9 +40,6 @@ public class RenderContext {
         modelCenterPos = mapPanel.modelCenterPos;
         modelSize = mapPanel.modelSize;
         modelViewScaleFactor = mapPanel.modelViewScaleFactor;
-
-        xGlobalOffset = mapPanel.getWidth() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.x);
-        yGlobalOffset = mapPanel.getHeight() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.y);
 
         context.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -75,8 +66,8 @@ public class RenderContext {
         double m10 = 0.0;
         double m01 = 0.0;
         double m11 = modelViewScaleFactor;
-        double m02 = (double)xGlobalOffset;
-        double m12 = (double)yGlobalOffset;
+        double m02 = (double)(mapPanel.getWidth() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.x));
+        double m12 = (double)(mapPanel.getHeight() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.y));
 
         AffineTransform transform = new AffineTransform(m00, m10, m01, m11, m02, m12);
 
