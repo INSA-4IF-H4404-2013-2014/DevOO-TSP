@@ -37,6 +37,9 @@ public class NetworkTest {
         assertTrue(a1.getLength() - 602.1 < 0.000001);
         assertTrue(a1.getSpeed() - 3.9 < 0.000001);
 
+        Arc a2 = a1.getStreet().getArcs().get(0);
+        assertTrue(a2.getStreet().getName().equals("v0"));
+
     }
 
 }
