@@ -143,7 +143,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
 
 
     /**
-     * Allow user to choose a file from specified type for export
+     * Allow user to choose a file from specified type
      * @param type the type of file you want the user to be able to choose
      * @return the file the user choosed
      */
