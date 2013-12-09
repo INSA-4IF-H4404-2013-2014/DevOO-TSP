@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
  * This class is the JToolBar at the top of the main window
  */
 public class TopToolBar extends JToolBar {
-    private JButton loadMap = new JButton("Charger carte");
+    private JButton loadMap = new JButton();
     private JButton loadRound = new JButton("Charger tournée");
     private JButton saveRound = new JButton("Enregistrer tournée");
     private JButton add = new JButton("Ajouter");
@@ -25,6 +25,8 @@ public class TopToolBar extends JToolBar {
         setFloatable(false);
         //setRollover(true);
 
+        ImageIcon imgOpenMap = new ImageIcon("./src/open_map.png");
+        loadMap.setIcon(imgOpenMap);
         add(loadMap);
 
         addSeparator();

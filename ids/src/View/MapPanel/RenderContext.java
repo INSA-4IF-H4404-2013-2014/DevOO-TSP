@@ -228,6 +228,8 @@ public class RenderContext {
     private ArcInfo arcInfo(Arc arc) {
         ArcInfo arcInfo = new ArcInfo();
 
+        arcInfo.arc = arc;
+
         Node node1 = arc.getNode1();
         Node node2 = arc.getNode2();
 
@@ -253,7 +255,12 @@ public class RenderContext {
      */
     private void drawArcInfo(ArcInfo arcInfo) {
         Rectangle2D.Double rect = new Rectangle2D.Double();
-        rect.setRect(0.0, - arcInfo.thickness, arcInfo.length, 2.0 * arcInfo.thickness);
+
+        if(arcInfo.bidirectional()) {
+            rect.setRect(0.0, - arcInfo.thickness, arcInfo.length, 2.0 * arcInfo.thickness);
+        } else {
+            rect.setRect(0.0, -0.5 * arcInfo.thickness, arcInfo.length, arcInfo.thickness);
+        }
 
         context.translate(arcInfo.x1, arcInfo.y1);
         context.rotate(arcInfo.angle);
@@ -263,14 +270,36 @@ public class RenderContext {
     }
 
     /**
-     * ArcInformation
+     * Arc rendering information
      */
     private class ArcInfo {
+        /** the view arc */
+        public Arc arc;
+
+        /** the arc angle */
         public double angle;
+
+        /** the arc view length (between the two nodes) in px */
         public double length;
+
+        /** the arc's thickness in px */
         public double thickness;
+
+        /** the arc's start X position on screen in px */
         public int x1;
+
+        /** the arc's start Y position on screen in px */
         public int y1;
+
+        /**
+         * Gets the number of way
+         * @return
+         *  - true if it is a bidirectional arc
+         *  - false if it is an unidirectional arc
+         */
+        public boolean bidirectional() {
+            return (arc.getModelArcFrom1To2() != null && arc.getModelArcFrom2To1() != null);
+        }
     }
 
 
