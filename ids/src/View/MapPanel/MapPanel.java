@@ -30,8 +30,11 @@ public class MapPanel extends JPanel {
     /** view's center pos in the model basis */
     protected Point modelCenterPos;
 
-    /** graph model's size in the model basis */
-    protected Dimension modelSize;
+    /** view's center pos in the model basis */
+    protected Point modelMinPos;
+
+    /** view's center pos in the model basis */
+    protected Point modelMaxPos;
 
     /** view/model scale factor */
     protected double modelViewScaleFactor;
@@ -52,7 +55,8 @@ public class MapPanel extends JPanel {
         this.nodes = new HashMap<Integer,Node>();
         this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
         this.modelCenterPos = new Point();
-        this.modelSize = new Dimension();
+        this.modelMinPos = new Point();
+        this.modelMaxPos = new Point();
         this.nodeEventListener = null;
 
         this.addComponentListener(new ComponentAdapter() {
@@ -91,7 +95,7 @@ public class MapPanel extends JPanel {
                 int x = panel.modelCoordinateX(mouseEvent.getX());
                 int y = panel.modelCoordinateY(mouseEvent.getY());
 
-                int minDistancePow = Math.max(panel.modelSize.width, panel.modelSize.height);
+                int minDistancePow = Math.max(modelMaxPos.x - modelMinPos.x, modelMaxPos.y - modelMinPos.y);
                 minDistancePow *= minDistancePow;
 
                 Model.City.Node nearestNode = null;
@@ -192,8 +196,8 @@ public class MapPanel extends JPanel {
      * Gets smallest scale factor
      */
     public double smallestScaleFactor() {
-        double graphWidth = (double)(modelSize.width);
-        double graphHeight = (double)(modelSize.height);
+        double graphWidth = (double)(getModelDimension().width);
+        double graphHeight = (double)(getModelDimension().height);
 
         double panelWidth = (double)(this.getWidth() - 2 * RenderContext.borderPadding);
         double panelHeight = (double)(this.getHeight() - 2 * RenderContext.borderPadding);
@@ -232,8 +236,8 @@ public class MapPanel extends JPanel {
         modelCenterPos.x += (int)(xModelMoveVector * (1.0 - 1.0 / multiplier));
         modelCenterPos.y += (int)(yModelMoveVector * (1.0 - 1.0 / multiplier));
 
-        modelCenterPos.x = Math.min(Math.max(modelCenterPos.x, 0), modelSize.width);
-        modelCenterPos.y = Math.min(Math.max(modelCenterPos.y, 0), modelSize.height);
+        modelCenterPos.x = Math.min(Math.max(modelCenterPos.x, modelMinPos.x), modelMaxPos.x);
+        modelCenterPos.y = Math.min(Math.max(modelCenterPos.y, modelMinPos.y), modelMaxPos.y);
 
         modelViewScaleFactor = scaleFactor;
         fittedScaleFactor = false;
@@ -246,8 +250,8 @@ public class MapPanel extends JPanel {
      */
     public void fitToView() {
         modelViewScaleFactor = this.smallestScaleFactor();
-        modelCenterPos.x = modelSize.width / 2;
-        modelCenterPos.y = modelSize.height / 2;
+        modelCenterPos.x = (modelMinPos.x + modelMaxPos.x) / 2;
+        modelCenterPos.y = (modelMinPos.y + modelMaxPos.y) / 2;
         fittedScaleFactor = true;
 
         this.repaint();
@@ -361,14 +365,18 @@ public class MapPanel extends JPanel {
         return tree.get(to);
     }
 
+    protected Dimension getModelDimension() {
+        return new Dimension(modelMaxPos.x - modelMinPos.x, modelMaxPos.y - modelMinPos.y);
+    }
+
     /**
      * Builds view from the model graph
      */
     private void buildView() {
-        int xModelMin = 0x7FFFFFFF;
-        int yModelMin = 0x7FFFFFFF;
-        int xModelMax = -0x7FFFFFFF;
-        int yModelMax = -0x7FFFFFFF;
+        modelMinPos.x = 0x7FFFFFFF;
+        modelMinPos.y = 0x7FFFFFFF;
+        modelMaxPos.x = -0x7FFFFFFF;
+        modelMaxPos.y = -0x7FFFFFFF;
 
         for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
             Model.City.Node modelNode = entry.getValue();
@@ -376,30 +384,24 @@ public class MapPanel extends JPanel {
             int x = modelNode.getX();
             int y = modelNode.getY();
 
-            if (x < xModelMin) {
-                xModelMin = x;
+            if (x < modelMinPos.x) {
+                modelMinPos.x = x;
             }
-            if (y < yModelMin) {
-                yModelMin = y;
+            if (y < modelMinPos.y) {
+                modelMinPos.y = y;
             }
-            if (x > xModelMax) {
-                xModelMax = x;
+            if (x > modelMaxPos.x) {
+                modelMaxPos.x = x;
             }
-            if (y > yModelMax) {
-                yModelMax = y;
+            if (y > modelMaxPos.y) {
+                modelMaxPos.y = y;
             }
         }
-
-        modelSize.width = xModelMax - xModelMin;
-        modelSize.height = yModelMax - yModelMin;
 
         for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
             Model.City.Node modelNode = entry.getValue();
 
-            int x = modelNode.getX() - xModelMin;
-            int y = modelSize.height - (modelNode.getY() - yModelMin);
-
-            Node node = new Node(this, modelNode, x, y);
+            Node node = new Node(this, modelNode);
 
             nodes.put(entry.getValue().getId(), node);
         }

@@ -18,9 +18,6 @@ public class RenderContext {
     /** view's center pos in the model basis */
     private Point modelCenterPos;
 
-    /** graph model's size in the model basis */
-    private Dimension modelSize;
-
     /** view/model scale factor */
     private double modelViewScaleFactor;
 
@@ -38,7 +35,6 @@ public class RenderContext {
         this.mapPanel = mapPanel;
 
         modelCenterPos = mapPanel.modelCenterPos;
-        modelSize = mapPanel.modelSize;
         modelViewScaleFactor = mapPanel.modelViewScaleFactor;
 
         context.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -215,6 +211,8 @@ public class RenderContext {
      * Draw the global view of the map in the top right corner
      */
     protected void drawGlobalView() {
+        Dimension modelSize = mapPanel.getModelDimension();
+
         double graphDiagonal = Math.sqrt((double)(modelSize.width * modelSize.width + modelSize.height * modelSize.height));
         double graphViewFactor = globalViewMaxDiagonal / graphDiagonal;
 
