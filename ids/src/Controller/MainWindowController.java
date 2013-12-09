@@ -1,6 +1,10 @@
 package Controller;
 
 import Controller.Command.Command;
+import Model.ChocoSolver.ChocoGraph;
+import Model.ChocoSolver.Graph;
+import Model.ChocoSolver.SolutionState;
+import Model.ChocoSolver.TSP;
 import Model.City.Node;
 import Model.Delivery.Round;
 import Model.Delivery.Schedule;
@@ -117,6 +121,37 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         historyBackedOut.addFirst(command);
     }
 
+    /**
+     *
+     */
+    public void computeRound() {
+        Graph graph = new ChocoGraph(mainWindow.getNetwork(), mainWindow.getRound());
+        TSP tsp = new TSP(graph);
+
+        Boolean ok = true;
+
+        String message = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
+
+        int baseTime = 100;
+        int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
+
+        tsp.solve(baseTime, bound);
+
+        for( ; (tsp.getSolutionState() != SolutionState.OPTIMAL_SOLUTION_FOUND) && (baseTime <= 400) ; baseTime *= 2) {
+            tsp.solve(baseTime, bound);
+        }
+
+        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) && (askConfirmation(message)) ; baseTime *= 2) {
+            // Retry to find an optimal solution
+        }
+
+        if((tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) || (tsp.getSolutionState() == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
+            //TODO: get the best graph and print it
+        } else {
+            JOptionPane.showMessageDialog(mainWindow, "Aucune trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {}
 
@@ -150,34 +185,73 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
      * @param type the type of file you want the user to be able to choose
      * @return the file the user choosed
      */
-    private java.io.File openFile(String type) {
-
+    private File openFile(String type) {
         JFileChooser chooser = new JFileChooser();
 
         FileNameExtensionFilter allExtension = new FileNameExtensionFilter("All files (*.*)", "");
         chooser.addChoosableFileFilter(allExtension);
 
-        if(type.length() != 0) {
-            FileNameExtensionFilter htmlExtension = new FileNameExtensionFilter(type.toUpperCase() + " Files (*." + type.toLowerCase() + ")", type.toLowerCase());
-            chooser.addChoosableFileFilter(htmlExtension);
-            chooser.setFileFilter(htmlExtension);
-        }
+        chooser = addExtensionType(type, chooser);
 
         File file = chooser.getSelectedFile();
+
+        if(createFile(file)) {
+            return file;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Add an extension type to a JFileChooser
+     * @param type the type to add
+     * @param chooser the JFileChooser to be modified
+     * @return the modified JFileChooser
+     */
+    private JFileChooser addExtensionType(String type, JFileChooser chooser) {
+        if(type.length() != 0) {
+            FileNameExtensionFilter typeExtension = new FileNameExtensionFilter(type.toUpperCase() + " Files (*." + type.toLowerCase() + ")", type.toLowerCase());
+            chooser.addChoosableFileFilter(typeExtension);
+            chooser.setFileFilter(typeExtension);
+        }
+        return chooser;
+    }
+
+    /**
+     * Create a new file based on file or ask to user if he wants to erase it if it already exists
+     * @param file the file to be created
+     * @return true if file has been created, false otherwise
+     */
+    private Boolean createFile(File file) {
+        String message = "Êtes-vous sûr de vouloir écraser ce fichier ?";
 
         if(!file.exists()) {
             try {
                 file.createNewFile();
+                return true;
             } catch(IOException e) {
                 System.out.println(e);
+                return false;
             }
         } else {
-            //TODO: be sure that it works
-            JFrame frame = new JFrame();
-            JOptionPane confirmationWindow = new JOptionPane("Êtes-vous sûr de vouloir écraser ce fichier ?", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+            return askConfirmation(message);
         }
+    }
 
-        return file;
+    /**
+     * Print a confirmation window with a message
+     * @param message the message printed in the window
+     * @return true if YES is selected, false otherwise
+     */
+    private Boolean askConfirmation(String message) {
+        JOptionPane confirmationWindow = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+        Object value = confirmationWindow.getValue();
+
+        if(value == (Object) JOptionPane.YES_OPTION) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 } // end of class MainWindowController --------------------------------------------------------------------
