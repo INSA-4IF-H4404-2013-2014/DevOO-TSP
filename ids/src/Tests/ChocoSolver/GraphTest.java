@@ -2,7 +2,6 @@ package Tests.ChocoSolver;
 import static org.junit.Assert.*;
 
 import Model.ChocoSolver.Graph;
-import Model.ChocoSolver.RegularGraph;
 import org.junit.Test;
 
 
