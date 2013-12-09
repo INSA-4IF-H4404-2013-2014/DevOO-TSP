@@ -1,0 +1,74 @@
+package Model.ChocoSolver;
+
+import Model.Delivery.Delivery;
+import Model.Delivery.Itinerary;
+
+import java.util.List;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: nbuisson
+ * Date: 09/12/13
+ * Time: 09:25
+ * To change this template use File | Settings | File Templates.
+ */
+public class ChocoDelivery {
+    /** The delivery associatedd to the ChocoDelivery */
+    private Delivery delivery;
+
+    /** The successors node of the delivery */
+    private List<Integer> successorsNode;
+
+    /** The list of itineraries linked to the delivery */
+    private List<Itinerary> successorsItinerary;
+
+    /**
+     * Constructor
+     * @param delivery the delivery which is linked to the ChocoDelivery
+     */
+    public ChocoDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    /**
+     * Get the successors' list of the delivery
+     * @return the list successors' ID of the delivery
+     */
+    public List<Integer> getSuccessorsNode() {
+        return successorsNode;
+    }
+
+    /**
+     * Get the list of itineraries linked to the delivery
+     * @return the list of itineraries linked to the delivery
+     */
+    public List<Itinerary> getSuccessorsItinerary() {
+        return successorsItinerary;
+    }
+
+    /**
+     * Add a successor to the delivery
+     * @param nodeId the ID of the successor node
+     * @param itinerary the linked itinerary
+     */
+    public void addSuccessor(int nodeId, Itinerary itinerary) {
+        successorsNode.add(nodeId);
+        successorsItinerary.add(itinerary);
+    }
+
+    /**
+     * Get the costs of each itineraries linked to the delivery
+     * @return the costs of each itineraries linked to the delivery
+     */
+    public int[] getCosts() {
+        int[] costs = new int[successorsItinerary.size()];
+        int i = -1;
+
+        for(Itinerary itinerary:successorsItinerary) {
+            i++;
+            costs[i] = itinerary.getCost();
+        }
+
+        return costs;
+    }
+}
