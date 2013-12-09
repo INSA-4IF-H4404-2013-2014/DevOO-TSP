@@ -224,14 +224,14 @@ public class Round {
         String tdOpen = "\n<td>";
         String tdClose = "</td>\n";
 
-        String html = new String();
+        String html;
 
         Client client;
         String clientId;
         String adress;
 
-        Date earliestBound;
-        Date latestBound;
+        GregorianCalendar earliestBound;
+        GregorianCalendar latestBound;
 
         int i = 0;
 
@@ -241,31 +241,35 @@ public class Round {
 
         for(Schedule schedule:schedulesList) {
 
-            i++;
+            if(schedule.getDeliveries().size() != 0) {
 
-            List<Delivery> deliveriesList = schedule.getDeliveries();
+                i++;
 
-            earliestBound = schedule.getEarliestBound().getTime();
-            latestBound = schedule.getLatestBound().getTime();
+                List<Delivery> deliveriesList = schedule.getDeliveries();
 
-            html += tableOpen;
-            html += hOpen + "Plage horaire n°" + Integer.toString(i) + hClose;
-            html += hOpen + earlyText + earliestBound + " | " + latestText + latestBound + hClose;
+                earliestBound = schedule.getEarliestBound();
+                latestBound = schedule.getLatestBound();
 
-            for(Delivery delivery:deliveriesList) {
-                client = delivery.getClient();
-                clientId = client.getId();
-                adress = Integer.toString(delivery.getAddress().getId());
+                html += tableOpen;
+                html += hOpen + "Plage horaire n&deg;" + Integer.toString(i) + hClose;
+                html += hOpen + earlyText + earliestBound.get(Calendar.HOUR_OF_DAY) + "h" + earliestBound.get(Calendar.MINUTE);
+                html += " | " + latestText + latestBound.get(Calendar.HOUR_OF_DAY) + "h" + latestBound.get(Calendar.MINUTE) + hClose;
 
-                html += trOpen;
+                for(Delivery delivery:deliveriesList) {
+                    client = delivery.getClient();
+                    clientId = client.getId();
+                    adress = Integer.toString(delivery.getAddress().getId());
 
-                html += tdOpen + clientId + tdClose;
-                html += tdOpen + adress + tdClose;
+                    html += trOpen;
 
-                html += trClose;
+                    html += tdOpen + "Client n&deg; : " + clientId + " | " + tdClose;
+                    html += tdOpen + "Lieu n&deg; : " + adress + tdClose;
+
+                    html += trClose;
+                }
+
+                html += tableClose;
             }
-
-            html += tableClose;
         }
 
         html += htmlClose;
