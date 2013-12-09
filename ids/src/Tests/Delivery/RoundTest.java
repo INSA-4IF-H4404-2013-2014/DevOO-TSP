@@ -63,7 +63,7 @@ public class RoundTest {
     public void testInvalidCreate() throws UtilsException, FileNotFoundException {
         Network network = Network.createFromXml("resources/tests/plan10x10.xml");
 
-        for(int i = 1; i < 15; ++i) {
+        for(int i = 1; i < 16; ++i) {
             try {
                 System.out.println("Invalid test " + i);
                 Round.createFromXml("resources/tests/invalid (" + i + ").xml", network);

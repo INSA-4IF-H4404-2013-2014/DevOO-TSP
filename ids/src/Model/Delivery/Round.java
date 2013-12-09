@@ -79,7 +79,15 @@ public class Round {
         }
 
         for (int i = 0; i < xmlNodeList.getLength(); ++i) {
-            schedules.add(new Schedule(this, (Element) xmlNodeList.item(i)));
+            Schedule s = new Schedule(this, (Element) xmlNodeList.item(i));
+            schedules.add(s);
+
+            for(Delivery d : s.getDeliveries())
+                if(isTwiceDelivered(d.getAddress())) {
+                    throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_NODE_ATTR +
+                            "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> référence un noeud déjà desservi (" +
+                            d.getAddress().getId() +  ").");
+            }
         }
     }
 
@@ -122,7 +130,7 @@ public class Round {
     public Client getClient(String clientId)
     {
         for(Schedule s : schedules) {
-            for(Delivery d :  s.getDeliveries()) {
+            for(Delivery d : s.getDeliveries()) {
                 if(d.getClient().getId().equals(clientId)) {
                     return d.getClient();
                 }
@@ -173,11 +181,15 @@ public class Round {
         return null;
     }
 
-    public boolean isDelivered(Node node) {
+    public boolean isTwiceDelivered(Node node) {
+        boolean delivered = false;
         for(Schedule s : schedules) {
             for(Delivery d :  s.getDeliveries()) {
                 if(d.getAddress().equals(node)) {
-                    return true;
+                    if(delivered) {
+                        return true;
+                    }
+                    delivered = true;
                 }
             }
         }
@@ -308,5 +320,10 @@ public class Round {
         html += htmlClose;
 
         return html;
+    }
+
+    public static void main(String[] args) throws UtilsException, ParserConfigurationException {
+        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
+        Round.createFromXml("resources/tests/invalid (14).xml", network);
     }
 }
