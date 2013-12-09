@@ -1,15 +1,9 @@
 package Controller;
 
 import Controller.Command.Command;
-import Model.ChocoSolver.ChocoGraph;
-import Model.ChocoSolver.Graph;
-import Model.ChocoSolver.SolutionState;
-import Model.ChocoSolver.TSP;
+import Model.ChocoSolver.*;
 import Model.City.Node;
-import Model.Delivery.Round;
-import Model.Delivery.Schedule;
-import Model.Delivery.Delivery;
-import Model.Delivery.Client;
+import Model.Delivery.*;
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
@@ -25,6 +19,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Deque;
@@ -125,28 +120,16 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
      *
      */
     public void computeRound() {
-        Graph graph = new ChocoGraph(mainWindow.getNetwork(), mainWindow.getRound());
-        TSP tsp = new TSP(graph);
+        ChocoGraph graph = new ChocoGraph(mainWindow.getNetwork(), mainWindow.getRound());
 
         Boolean ok = true;
 
-        String message = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
+        TSP tsp = solveTsp(graph, 100);
+        SolutionState solutionState = tsp.getSolutionState();
 
-        int baseTime = 100;
-        int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
-
-        tsp.solve(baseTime, bound);
-
-        for( ; (tsp.getSolutionState() != SolutionState.OPTIMAL_SOLUTION_FOUND) && (baseTime <= 400) ; baseTime *= 2) {
-            tsp.solve(baseTime, bound);
-        }
-
-        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) && (askConfirmation(message)) ; baseTime *= 2) {
-            // Retry to find an optimal solution
-        }
-
-        if((tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) || (tsp.getSolutionState() == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
+        if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
             //TODO: get the best graph and print it
+            CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
         } else {
             JOptionPane.showMessageDialog(mainWindow, "Aucune trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
@@ -252,6 +235,53 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         } else {
             return false;
         }
+    }
+
+    /**
+     * Try to find the optimal solution for the TSP
+     * If no optimal solution is found, search time will be multiplied by two twice
+     * If a solution, which not optimal, is found, ask to the user if he wants to give more time for optimal solution search
+     * @param graph the graph on which you want to search
+     * @param baseTime the time you want to allow for the search (time will be doubled twice if no solution has been founded)
+     * @return the solved TSP
+     */
+    private TSP solveTsp(Graph graph, int baseTime) {
+        TSP tsp = new TSP(graph);
+
+        String message = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
+
+        int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
+
+        tsp.solve(baseTime, bound);
+        SolutionState solutionState = tsp.getSolutionState();
+
+        for( ; (solutionState != SolutionState.OPTIMAL_SOLUTION_FOUND) && (solutionState != SolutionState.INCONSISTENT) && (baseTime <= 400) ; baseTime *= 2) {
+            tsp.solve(baseTime, bound);
+            solutionState = tsp.getSolutionState();
+        }
+
+        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) && (askConfirmation(message)) ; baseTime *= 2) {
+            tsp.solve(baseTime, bound);
+        }
+
+        return tsp;
+    }
+
+
+    private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph graph) {
+        int[] nodeList = tsp.getNext();
+        List<ChocoDelivery> deliveriesList = new ArrayList<ChocoDelivery>();
+        List<Itinerary> itinerariesList = new ArrayList<Itinerary>();
+
+        ChocoDelivery delivery;
+
+        for(int i = 0 ; i <= nodeList.length ; i++) {
+            delivery = graph.getDelivery(i);
+            deliveriesList.add(delivery);
+
+            //TODO: add itinerary to itinerariesList (use getItinerary() from ChocoDelivery
+        }
+        return null; //TODO
     }
 
 } // end of class MainWindowController --------------------------------------------------------------------
