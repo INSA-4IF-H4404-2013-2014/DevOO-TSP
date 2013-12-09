@@ -2,6 +2,9 @@ package Controller.Command;
 
 import Controller.MainWindowController;
 import Model.Delivery.Delivery;
+import Model.Delivery.Round;
+
+import java.util.GregorianCalendar;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +15,20 @@ import Model.Delivery.Delivery;
  */
 public class RemoveDelivery extends InverseCommand {
 
-    public RemoveDelivery(MainWindowController controller, Delivery delivery) {
-        super(new AddDelivery(controller, delivery));
+    public RemoveDelivery(MainWindowController controller, String clientId, int nodeId, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+        super(new AddDelivery(controller, clientId, nodeId, earliestBound, latestBound));
     }
+
+    public static RemoveDelivery create(MainWindowController controller, int nodeId) {
+        Round round = controller.getMainWindow().getRound();
+
+        Delivery delivery = round.findDelivered(nodeId);
+
+        String clientId = delivery.getClient().getId();
+        GregorianCalendar earliestBound = delivery.getSchedule().getEarliestBound();
+        GregorianCalendar latestBound = delivery.getSchedule().getLatestBound();
+
+        return new RemoveDelivery(controller, clientId, nodeId, earliestBound, latestBound);
+    }
+
 }

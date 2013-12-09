@@ -67,7 +67,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         String htmlRound = round.roundToHtml();
 
         try {
-            FileWriter outputWriter = new FileWriter(openExportFile("html"), false);
+            FileWriter outputWriter = new FileWriter(openFile("html"), false);
             outputWriter.write(htmlRound);
             outputWriter.close();
         } catch (java.io.IOException e) {
@@ -145,16 +145,18 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
      * @param type the type of file you want the user to be able to choose
      * @return the file the user choosed
      */
-    private java.io.File openExportFile(String type) {
+    private java.io.File openFile(String type) {
 
         JFileChooser chooser = new JFileChooser();
 
-        FileNameExtensionFilter htmlExtension = new FileNameExtensionFilter(type.toUpperCase() + " Files (*." + type.toLowerCase() + ")", type.toLowerCase());
         FileNameExtensionFilter allExtension = new FileNameExtensionFilter("All files (*.*)", "");
-
         chooser.addChoosableFileFilter(allExtension);
-        chooser.addChoosableFileFilter(htmlExtension);
-        chooser.setFileFilter(htmlExtension);
+
+        if(type.length() != 0) {
+            FileNameExtensionFilter htmlExtension = new FileNameExtensionFilter(type.toUpperCase() + " Files (*." + type.toLowerCase() + ")", type.toLowerCase());
+            chooser.addChoosableFileFilter(htmlExtension);
+            chooser.setFileFilter(htmlExtension);
+        }
 
         File file = chooser.getSelectedFile();
 
