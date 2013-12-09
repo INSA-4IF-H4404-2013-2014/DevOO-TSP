@@ -82,4 +82,12 @@ public class Arc {
     public float getSpeed() {
         return speed;
     }
+
+    /**
+     * Get the arc's cost in seconds
+     * @return the arc's cost
+     */
+    public int getCost() {
+        return (int) (length / speed);
+    }
 }

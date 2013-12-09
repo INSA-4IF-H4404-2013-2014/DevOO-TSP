@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * Time: 21:15
  * This class is the small dialog window which is opened when adding a delivery.
  */
-public class DeliveryWindow extends JFrame {
+public class DeliveryDialog extends JFrame {
 
     public static final int PADDING = 10;
 
@@ -23,7 +23,7 @@ public class DeliveryWindow extends JFrame {
     private JButton okButton = new JButton("Confirmer");
     private JButton cancelButton = new JButton("Annuler");
 
-    public DeliveryWindow() {
+    public DeliveryDialog() {
         setContentPane(createMainPanel());
         setResizable(false);
         setAlwaysOnTop(true);

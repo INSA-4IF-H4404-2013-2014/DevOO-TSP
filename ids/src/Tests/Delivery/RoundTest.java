@@ -85,23 +85,24 @@ public class RoundTest {
 
             String html = round.roundToHtml();
 
-            //java.io.File file = new java.io.File("ressources/tests/export.html");
+            java.io.File file = new java.io.File("resources/tests/export.html");
 
-            /*if(!file.exists()) {
+            if(!file.exists()) {
                 try {
                     file.createNewFile();
                 } catch(IOException e) {
+                    e.printStackTrace();
                     fail();
                 }
-            }*/
+            }
 
             //System.out.print(html);
 
-            //java.io.FileWriter output = new FileWriter(file, false);
+            java.io.FileWriter output = new FileWriter(file, false);
 
-            //output.write(html);
+            output.write(html);
 
-            //output.close();
+            output.close();
         } catch(Exception e) {
             fail();
         }

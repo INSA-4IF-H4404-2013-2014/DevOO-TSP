@@ -2,6 +2,9 @@ package Controller.Command;
 
 import Controller.MainWindowController;
 import Model.Delivery.Delivery;
+import Model.Delivery.Round;
+
+import java.util.GregorianCalendar;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,19 +15,29 @@ import Model.Delivery.Delivery;
  */
 public class AddDelivery extends Command {
 
-    Delivery delivery;
+    String clientId;
+    int nodeId;
+    GregorianCalendar earliestBound;
+    GregorianCalendar latestBound;
 
-    public AddDelivery(MainWindowController controller, Delivery delivery) {
+    public AddDelivery(MainWindowController controller, String clientId, int nodeId, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
         super(controller);
-        this.delivery = delivery;
+        this.clientId = clientId;
+        this.nodeId = nodeId;
+        this.earliestBound = earliestBound;
+        this.latestBound = latestBound;
     }
 
     public void Apply() {
-        //TODO: add delivery!
+        Round round = this.getController().getMainWindow().getRound();
+
+        round.addDelivery(clientId, nodeId, earliestBound, latestBound);
     }
 
     public void Reverse() {
-        //TODO: remove delivery!
+        Round round = this.getController().getMainWindow().getRound();
+
+        round.removeDelivery(nodeId);
     }
 
 }
