@@ -272,6 +272,12 @@ public class MapPanel extends JPanel {
 
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                renderContext.drawArcStreetName(entry.getValue());
+            }
+        }
+
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
                 renderContext.drawArcBorders(entry.getValue());
             }
         }

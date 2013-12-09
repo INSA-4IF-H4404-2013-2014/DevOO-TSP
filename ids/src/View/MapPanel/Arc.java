@@ -62,6 +62,18 @@ public class Arc {
     }
 
     /**
+     * gets the model street
+     * @return the model street
+     */
+    protected Model.City.Street getModelStreet() {
+        if(modelArcFrom2To1 != null) {
+            return modelArcFrom2To1.getStreet();
+        }
+
+        return modelArcFrom1To2.getStreet();
+    }
+
+    /**
      * Gets the node 1
      * @return the node 1
      */

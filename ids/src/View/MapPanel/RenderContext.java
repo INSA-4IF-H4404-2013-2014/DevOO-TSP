@@ -159,6 +159,44 @@ public class RenderContext {
     }
 
     /**
+     * Draws a street name for a given arc
+     * @param arc the arc you want to draw the street
+     */
+    protected void drawArcStreetName(Arc arc) {
+        ArcInfo arcInfo = arcInfo(arc);
+
+        Model.City.Street street = arc.getModelStreet();
+
+        Font previousFont = context.getFont();
+
+        context.setFont(new Font("default", Font.BOLD, 4));
+
+        int streetWidth = context.getFontMetrics().stringWidth(street.getName());
+
+        int centerX = (arcInfo.x1 + arc.getNode2().getX()) / 2;
+        int centerY = (arcInfo.y1 + arc.getNode2().getY()) / 2;
+
+        double angle = arcInfo.angle;
+        int streetNameYOffset = 2 * streetThickness;
+
+        if(angle > 0.5 * Math.PI || angle < -0.5 * Math.PI) {
+            angle += Math.PI;
+        }
+
+        if(arcInfo.isBidirectional()) {
+            streetNameYOffset += streetThickness / 2;
+        }
+
+        context.setColor(textColor);
+        context.translate(centerX, centerY);
+        context.rotate(angle);
+        context.drawString(street.getName(), - streetWidth / 2, streetNameYOffset);
+        context.rotate(-angle);
+        context.translate(-centerX, -centerY);
+        context.setFont(previousFont);
+    }
+
+    /**
      * Draws a given arc
      * @param arc the arc to draw
      */
