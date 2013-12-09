@@ -244,24 +244,6 @@ public class RenderContext {
     }
 
     /**
-     * Transforms a given X coordinate from the model basis to the view basis
-     * @param x the X coordinate in the model basis
-     * @return the Y coordinate in the view basis
-     */
-    private int modelViewTransformX(int x) {
-        return xGlobalOffset + (int)(modelViewScaleFactor * (double)x);
-    }
-
-    /**
-     * Transforms a given Y coordinate from the model basis to the view basis
-     * @param y the Y coordinate in the model basis
-     * @return the Y coordinate in the view basis
-     */
-    private int modelViewTransformY(int y) {
-        return yGlobalOffset + (int)(modelViewScaleFactor * (double)y);
-    }
-
-    /**
      * Generates Arc's rendering informations
      * @param arc the given arc we want to render
      * @return an ArcInfo structure containing all informations
