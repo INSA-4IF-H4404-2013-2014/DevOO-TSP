@@ -273,9 +273,9 @@ public class RenderContext {
     /**
      * Draws the given arc info
      * @param arcInfo the arc's information to draw
-     * @param drawArrow boolean to say if you want to draw the directional arrow
+     * @param drawMarks boolean to say if you want to draw street marks
      */
-    private void drawArcInfo(ArcInfo arcInfo, boolean drawArrow) {
+    private void drawArcInfo(ArcInfo arcInfo, boolean drawMarks) {
         Rectangle2D.Double rect = new Rectangle2D.Double();
 
         if(arcInfo.isBidirectional()) {
@@ -289,8 +289,12 @@ public class RenderContext {
 
         context.fill(rect);
 
-        if(!arcInfo.isBidirectional() && drawArrow) {
+        if(arcInfo.isBidirectional() && drawMarks) {
+            rect.setRect((double)streetNodeRadius, -0.5 * streetCenterLineThickness, arcInfo.length - 2.0 * (double)streetNodeRadius, streetCenterLineThickness);
 
+            context.setColor(streetMarksColor);
+            context.fill(rect);
+        } else {
             Path2D.Double path = new Path2D.Double();
 
             path.moveTo(arcInfo.length - (double)streetNodeRadius, -0.5 * arcInfo.thickness);
@@ -300,7 +304,7 @@ public class RenderContext {
             path.lineTo(arcInfo.length - (double)streetNodeRadius + 0.5 * arcInfo.thickness, 0.0);
             path.closePath();
 
-            context.setColor(streetArrowColor);
+            context.setColor(streetMarksColor);
             context.fill(path);
         }
 
@@ -351,10 +355,11 @@ public class RenderContext {
 
     /** street's constants */
     private static final Color streetColor = new Color(255, 255, 255);
-    private static final Color streetArrowColor = new Color(200, 200, 200);
+    private static final Color streetMarksColor = new Color(200, 200, 200);
     private static final Color streetBorderColor = new Color(210, 140, 100);
     private static final int streetThickness = 4;
     private static final int streetBorderThickness = 1;
+    private static final double streetCenterLineThickness = 0.2;
 
     /** node color */
     protected static final int streetNodeRadius = 10;

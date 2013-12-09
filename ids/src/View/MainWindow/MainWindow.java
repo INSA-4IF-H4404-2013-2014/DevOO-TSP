@@ -68,7 +68,8 @@ public class MainWindow extends JFrame {
 
         // automatic load for map testing
         try {
-            network = Network.createFromXml("../sujet/planTiny.xml");
+            network = Network.createFromXml("../sujet/plan10x10.xml");
+            //network = Network.createFromXml("../sujet/planTiny.xml");
             mapPanel.setModel(network);
         }
         catch (UtilsException e) {
