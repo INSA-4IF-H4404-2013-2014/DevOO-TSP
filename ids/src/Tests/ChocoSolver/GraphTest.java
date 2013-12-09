@@ -9,6 +9,7 @@ import Utils.UtilsException;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
 
 
 public class GraphTest {
@@ -17,7 +18,7 @@ public class GraphTest {
 	 * has a cost ranging between<code>minArcCost</code> and <code>maxArcCost</code>
 	 */
 	@Test
-	public void testArcCost() throws UtilsException, ParserConfigurationException {
+	public void testArcCost() throws UtilsException, ParserConfigurationException, FileNotFoundException {
         Network network = Network.createFromXml("resources/tests/plan10x10.xml");
         Round round = Round.createFromXml("resources/tests/valid.xml", network);
 

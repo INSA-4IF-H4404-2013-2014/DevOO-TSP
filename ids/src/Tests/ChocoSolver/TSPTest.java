@@ -11,6 +11,7 @@ import Utils.UtilsException;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
 
 
 public class TSPTest {
@@ -18,7 +19,7 @@ public class TSPTest {
 	 * Checks that <code>tsp.getTotalCost()</code> is equal to the cost of the tour defined by <code>tsp.getPos()</code>
 	 */
 	@Test
-	public void testCost() throws UtilsException, ParserConfigurationException {
+	public void testCost() throws UtilsException, ParserConfigurationException, FileNotFoundException {
         Network network = Network.createFromXml("resources/tests/plan10x10.xml");
         Round round = Round.createFromXml("resources/tests/valid.xml", network);
 
@@ -43,7 +44,7 @@ public class TSPTest {
 	 * Checks (with a Branch and Bound algorithm) that <code>tsp.getTotalCost()</code> is the best solution
 	 */
 	@Test
-	public void testBestSol() throws UtilsException, ParserConfigurationException {
+	public void testBestSol() throws UtilsException, ParserConfigurationException, FileNotFoundException {
         Network network = Network.createFromXml("resources/tests/plan10x10.xml");
         Round round = Round.createFromXml("resources/tests/valid.xml", network);
 
@@ -67,7 +68,7 @@ public class TSPTest {
 	 * by increasing the CPU timeLimit after each call to <code>solve</code>
 	 */
 	@Test
-	public void testLargeGraph() throws UtilsException, ParserConfigurationException {
+	public void testLargeGraph() throws UtilsException, ParserConfigurationException, FileNotFoundException {
         Network network = Network.createFromXml("resources/tests/plan10x10.xml");
         Round round = Round.createFromXml("resources/tests/valid.xml", network);
 
@@ -101,7 +102,7 @@ public class TSPTest {
 	 * Case of a graph such that minArcCost = maxArcCost
 	 */
 	@Test
-	public void testConstantCosts() throws UtilsException, ParserConfigurationException {
+	public void testConstantCosts() throws UtilsException, ParserConfigurationException, FileNotFoundException {
         Network network = Network.createFromXml("resources/tests/plan10x10.xml");
         Round round = Round.createFromXml("resources/tests/valid.xml", network);
 
