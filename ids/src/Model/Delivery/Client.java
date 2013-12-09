@@ -35,6 +35,14 @@ public class Client {
     }
 
     /**
+     * Removes a delivery to the client deliveries list
+     * @param delivery the delivery to remove
+     */
+    public void removeDelivery(Delivery delivery) {
+        deliveries.remove(delivery);
+    }
+
+    /**
      * Returns the client's ID
      * @return the client's ID
      */
