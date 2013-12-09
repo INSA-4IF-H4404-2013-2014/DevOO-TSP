@@ -33,9 +33,6 @@ public class ChocoGraph implements Graph {
      * @param round
      */
     public ChocoGraph(Network network, Round round) {
-        class NodeInfo {
-
-        }
         List<Delivery> succ;
 
         for(Schedule s : round.getSchedules()) {
@@ -65,8 +62,13 @@ public class ChocoGraph implements Graph {
     }
 
     private void runDijkstra(Network network, Delivery delivery, List<Delivery> succ) {
-        Map<Integer, Integer> dist;
-        List<Integer> visited;
+        class NodeInfo {
+            int cost = Integer.MAX_VALUE;
+            boolean visited = false;
+            Integer previous = null;
+        }
+
+        Map<Integer, NodeInfo> dict;
     }
 
     public Delivery getDelivery(Integer nodeId) {
