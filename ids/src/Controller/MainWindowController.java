@@ -4,6 +4,7 @@ import Controller.Command.Command;
 import Model.ChocoSolver.*;
 import Model.City.Node;
 import Model.Delivery.*;
+import View.DeliveryDialog;
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
@@ -31,14 +32,14 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener, ActionListener {
+public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
     private MainWindow mainWindow;
 
     public MainWindowController() {
-        this.mainWindow = new MainWindow();
+        this.mainWindow = new MainWindow(this);
         this.mainWindow.getMapPanel().setNodeEventListener(this);
 
         historyApplied = new LinkedList<Controller.Command.Command>();
@@ -80,7 +81,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     public void addDelivery() {
-
+        DeliveryDialog dialog = new DeliveryDialog();
     }
 
     public void removeDelivery() {
@@ -114,6 +115,10 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
 
         command.Reverse();
         historyBackedOut.addFirst(command);
+    }
+
+    public void exit() {
+        System.exit(0);
     }
 
     /**
@@ -157,10 +162,6 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     @Override
     public void valueChanged(ListSelectionEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
     }
 
     /**

@@ -1,5 +1,6 @@
 package View.MainWindow;
 
+import Controller.MainWindowController;
 import Model.City.Network;
 import Model.Delivery.Round;
 import Utils.UtilsException;
@@ -44,7 +45,11 @@ public class MainWindow extends JFrame {
 
     private JPanel mainPanel = new JPanel(new BorderLayout());
 
-    public MainWindow() {
+    protected MainWindowController mainWindowController;
+
+    public MainWindow(MainWindowController mainWindowController) {
+        this.mainWindowController = mainWindowController;
+
         // Configures main panel
         mainPanel.add(topToolBar, BorderLayout.PAGE_START);
         mainPanel.add(createSubMainPanel(), BorderLayout.CENTER);
@@ -56,6 +61,9 @@ public class MainWindow extends JFrame {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        addListener();
+
         setVisible(true);
 
         // automatic load for map testing
@@ -137,5 +145,13 @@ public class MainWindow extends JFrame {
      */
     public RightPanel getRightPanel() {
         return rightPanel;
+    }
+
+    /**
+     * Adds listeners for all buttons, lists...
+     */
+    public void addListener() {
+        topMenuBar.addListener(mainWindowController);
+        topToolBar.addListener(mainWindowController);
     }
 }
