@@ -142,8 +142,6 @@ public class TopMenuBar extends JMenuBar{
         });
         saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
-
-
         file.add(openMap);
         file.add(openRound);
         file.addSeparator();
@@ -152,6 +150,7 @@ public class TopMenuBar extends JMenuBar{
         file.addSeparator();
         file.add(fileExit);
 
+        saveRound.setEnabled(false);
         add(file);
     }
 
@@ -195,14 +194,16 @@ public class TopMenuBar extends JMenuBar{
         });
         redoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 
-
-
-
         edit.add(addButton);
         edit.add(delButton);
         edit.addSeparator();
         edit.add(undoButton);
         edit.add(redoButton);
+
+        addButton.setEnabled(false);
+        delButton.setEnabled(false);
+        undoButton.setEnabled(false);
+        redoButton.setEnabled(false);
         add(edit);
     }
 
