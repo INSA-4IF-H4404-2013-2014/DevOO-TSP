@@ -120,7 +120,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     /**
-     *
+     * TODO: complete Javadoc
      */
     public void computeRound() {
         ChocoGraph graph = new ChocoGraph(mainWindow.getNetwork(), mainWindow.getRound());
@@ -131,8 +131,8 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         SolutionState solutionState = tsp.getSolutionState();
 
         if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
-            //TODO: get the best graph and print it
             CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
+            mainWindow.getMapPanel().setRound(calculatedRound);
         } else {
             JOptionPane.showMessageDialog(mainWindow, "Aucune trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
@@ -267,7 +267,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     /**
-     * TODO: complete
+     * TODO: complete Javadoc
      * @param tsp
      * @param graph
      * @return

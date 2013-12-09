@@ -1,5 +1,6 @@
 package View.MapPanel;
 
+import Model.ChocoSolver.CalculatedRound;
 import Model.City.Network;
 
 import javax.swing.*;
@@ -297,6 +298,11 @@ public class MapPanel extends JPanel {
         if (!fittedScaleFactor) {
             renderContext.drawGlobalView();
         }
+    }
+
+
+    public void setRound(CalculatedRound round) {
+        //TODO: by Guillaume
     }
 
     /**
