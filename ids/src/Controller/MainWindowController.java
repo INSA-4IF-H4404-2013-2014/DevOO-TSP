@@ -120,12 +120,10 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     /**
-     * TODO: complete Javadoc
+     * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
     public void computeRound() {
         ChocoGraph graph = new ChocoGraph(mainWindow.getNetwork(), mainWindow.getRound());
-
-        Boolean ok = true;
 
         TSP tsp = solveTsp(graph, 100);
         SolutionState solutionState = tsp.getSolutionState();
@@ -267,21 +265,24 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     /**
-     * TODO: complete Javadoc
-     * @param tsp
-     * @param graph
-     * @return
+     * Create a CalculatedRound from a TSP and a ChocoGraph
+     * @param tsp the tsp used to create the CalculatedRound
+     * @param chocoGraph the chocoGraph used to create the CalculatedRound
+     * @return the CalculatedRound
      */
-    private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph graph) {
-        int[] nodeList = tsp.getNext();
+    private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
+        int[] nodeList = tsp.getNext(); // ordered node list
         List<Delivery> deliveriesList = new ArrayList<Delivery>();
         List<Itinerary> itinerariesList = new ArrayList<Itinerary>();
 
+        // Temporary variables
         ChocoDelivery chocoDelivery;
         Delivery delivery;
 
         for(int i = 0 ; i <= nodeList.length ; i++) {
-            chocoDelivery = graph.getDelivery(nodeList[i]);
+
+            //TODO: be sure that the delivery added to deliveriesList is not erased at each iteration (Java pointers...)
+            chocoDelivery = chocoGraph.getDelivery(nodeList[i]);
             delivery = chocoDelivery.getDelivery();
             deliveriesList.add(delivery);
 
