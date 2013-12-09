@@ -35,6 +35,9 @@ public class RenderContext {
     /** the java graphic context */
     Graphics2D context;
 
+    /** parent transform */
+    private AffineTransform parentTransform;
+
     public RenderContext(Graphics2D context, MapPanel mapPanel) {
         this.context = context;
         this.mapPanel = mapPanel;
@@ -48,14 +51,14 @@ public class RenderContext {
 
         context.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        setTransformIdentity();
+        parentTransform = context.getTransform();
     }
 
     /**
      * set the transformation to the identity
      */
     protected void setTransformIdentity() {
-        context.setTransform(new AffineTransform());
+        context.setTransform(parentTransform);
     }
 
     /**
@@ -76,7 +79,8 @@ public class RenderContext {
 
         AffineTransform transform = new AffineTransform(m00, m10, m01, m11, m02, m12);
 
-        context.setTransform(transform);
+        context.setTransform(parentTransform);
+        context.transform(transform);
     }
 
     /**
