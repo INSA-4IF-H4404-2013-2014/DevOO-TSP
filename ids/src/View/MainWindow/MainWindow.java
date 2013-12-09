@@ -88,10 +88,42 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Gets the menu bar at the top of the main window
+     * @return the menu bar on the top of the main window
+     */
+    public TopMenuBar getTopMenuBar() {
+        return topMenuBar;
+    }
+
+    /**
+     * Gets the top toolbar of the main window
+     * @return the top toolbar of the main window
+     */
+    public TopToolBar getTopToolBar() {
+        return topToolBar;
+    }
+
+    /**
+     * Gets the list panel on the left of the main window
+     * @return the panel on the left
+     */
+    public DeliveryListPanel getDeliveryListPanel() {
+        return deliveryListPanel;
+    }
+
+    /**
      * Gets the main window's map panel
      * @return the map panel
      */
     public MapPanel getMapPanel() {
         return mapPanel;
+    }
+
+    /**
+     * Gets the panel on the right of the main window
+     * @return the panel on the right
+     */
+    public RightPanel getRightPanel() {
+        return rightPanel;
     }
 }
