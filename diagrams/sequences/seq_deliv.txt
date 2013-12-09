@@ -28,6 +28,8 @@ loop j from 0 to xmlDeliveryList.length()
 
 end
 
+
+xmlNodeList => create Schedule => aRound vers lui-même (add)
 end
 
 "aRound : Round" -->- "Round" : 
