@@ -2,7 +2,9 @@ package Model.ChocoSolver;
 
 import Model.Delivery.Delivery;
 import Model.Delivery.Itinerary;
+import cern.colt.list.IntArrayList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +19,7 @@ public class ChocoDelivery {
     private Delivery delivery;
 
     /** The successors node of the delivery */
-    private List<Integer> successorsNode;
+    private IntArrayList successorsNode;
 
     /** The list of itineraries linked to the delivery */
     private List<Itinerary> successorsItinerary;
@@ -28,14 +30,16 @@ public class ChocoDelivery {
      */
     public ChocoDelivery(Delivery delivery) {
         this.delivery = delivery;
+        successorsNode = new IntArrayList();
+        successorsItinerary = new ArrayList<Itinerary>();
     }
 
     /**
      * Get the successors' list of the delivery
      * @return the list successors' ID of the delivery
      */
-    public List<Integer> getSuccessorsNode() {
-        return successorsNode;
+    public int[] getSuccessorsNode() {
+        return successorsNode.elements();
     }
 
     /**
