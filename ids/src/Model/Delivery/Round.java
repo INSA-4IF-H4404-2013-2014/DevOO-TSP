@@ -83,13 +83,18 @@ public class Round {
         }
     }
 
-    public void addDelivery(String clientId, Node address, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+    public void addDelivery(String clientId, int nodeId, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+        Node node = network.findNode(nodeId);
         Client client = getClient(clientId);
         Schedule schedule = getSchedule(earliestBound, latestBound);
-        Delivery delivery = new Delivery(schedule.getNextDeliveryId(), client, address, schedule);
+        Delivery delivery = new Delivery(schedule.getNextDeliveryId(), client, node, schedule);
         client.addDelivery(delivery);
         schedule.addDelivery(delivery);
         schedules.add(schedule);
+    }
+
+    public void removeDelivery(int nodeId) {
+        //TODO: remove the delivery
     }
 
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
@@ -138,6 +143,23 @@ public class Round {
      */
     public List<Schedule> getSchedules() {
         return schedules;
+    }
+
+    /**
+     * Fins a delivery from a given node if
+     * @param nodeId the node id
+     * @return the node if found or null
+     */
+    public Delivery findDelivered(int nodeId) {
+        for(Schedule s : schedules) {
+            for(Delivery d :  s.getDeliveries()) {
+                if(d.getAddress().getId() == nodeId) {
+                    return d;
+                }
+            }
+        }
+
+        return null;
     }
 
     public boolean isDelivered(Node node) {
