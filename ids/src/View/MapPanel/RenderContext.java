@@ -164,7 +164,11 @@ public class RenderContext {
     protected void drawArcBorders(Arc arc) {
         ArcInfo arcInfo = arcInfo(arc);
 
-        arcInfo.thickness += (double)streetBorderThickness / modelViewScaleFactor;
+        if(arcInfo.isBidirectional()) {
+            arcInfo.thickness += (double)streetBorderThickness / modelViewScaleFactor;
+        } else {
+            arcInfo.thickness += 2.0 * (double)streetBorderThickness / modelViewScaleFactor;
+        }
 
         context.setColor(streetBorderColor);
 
@@ -290,7 +294,7 @@ public class RenderContext {
     private void drawArcInfo(ArcInfo arcInfo) {
         Rectangle2D.Double rect = new Rectangle2D.Double();
 
-        if(arcInfo.bidirectional()) {
+        if(arcInfo.isBidirectional()) {
             rect.setRect(0.0, - arcInfo.thickness, arcInfo.length, 2.0 * arcInfo.thickness);
         } else {
             rect.setRect(0.0, -0.5 * arcInfo.thickness, arcInfo.length, arcInfo.thickness);
@@ -326,12 +330,12 @@ public class RenderContext {
         public int y1;
 
         /**
-         * Gets the number of way
+         * Tests if the arc is a bidirectonal arc
          * @return
          *  - true if it is a bidirectional arc
          *  - false if it is an unidirectional arc
          */
-        public boolean bidirectional() {
+        public boolean isBidirectional() {
             return (arc.getModelArcFrom1To2() != null && arc.getModelArcFrom2To1() != null);
         }
     }
