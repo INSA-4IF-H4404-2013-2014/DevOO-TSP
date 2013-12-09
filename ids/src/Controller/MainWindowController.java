@@ -6,6 +6,7 @@ import Model.Delivery.Round;
 import Model.Delivery.Schedule;
 import Model.Delivery.Delivery;
 import Model.Delivery.Client;
+import View.DeliveryDialog;
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
@@ -39,7 +40,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     private MainWindow mainWindow;
 
     public MainWindowController() {
-        this.mainWindow = new MainWindow();
+        this.mainWindow = new MainWindow(this);
         this.mainWindow.getMapPanel().setNodeEventListener(this);
 
         historyApplied = new LinkedList<Controller.Command.Command>();
@@ -81,7 +82,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     public void addDelivery() {
-
+        DeliveryDialog dialog = new DeliveryDialog();
     }
 
     public void removeDelivery() {
