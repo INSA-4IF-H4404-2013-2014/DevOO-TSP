@@ -1,6 +1,7 @@
 package View.MapPanel;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
@@ -46,6 +47,36 @@ public class RenderContext {
         yGlobalOffset = mapPanel.getHeight() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.y);
 
         context.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        setTransformIdentity();
+    }
+
+    /**
+     * set the transformation to the identity
+     */
+    protected void setTransformIdentity() {
+        context.setTransform(new AffineTransform());
+    }
+
+    /**
+     * set the transformation for the network drawing
+     */
+    protected void setTransformNetwork() {
+        /*
+         *  [ x']   [  m00  m01  m02  ] [ x ]
+         *  [ y'] = [  m10  m11  m12  ] [ y ]
+         *  [ 1 ]   [   0    0    1   ] [ 1 ]
+         */
+        double m00 = modelViewScaleFactor;
+        double m10 = 0.0;
+        double m01 = 0.0;
+        double m11 = modelViewScaleFactor;
+        double m02 = (double)xGlobalOffset;
+        double m12 = (double)yGlobalOffset;
+
+        AffineTransform transform = new AffineTransform(m00, m10, m01, m11, m02, m12);
+
+        context.setTransform(transform);
     }
 
     /**
@@ -78,12 +109,11 @@ public class RenderContext {
      * @param node the node to draw
      */
     protected void drawNode(Node node) {
-        int nodeRadius = (int)(modelViewScaleFactor * (double)streetThickness);
-        int x = modelViewTransformX(node.getX()) - nodeRadius;
-        int y = modelViewTransformY(node.getY()) - nodeRadius;
+        int x = node.getX() - streetThickness;
+        int y = node.getY() - streetThickness;
 
         context.setColor(streetColor);
-        context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
+        context.fillOval(x, y, streetThickness * 2, streetThickness * 2);
     }
 
     /**
@@ -91,16 +121,19 @@ public class RenderContext {
      * @param node the node to draw
      */
     protected void drawNodeBorders(Node node) {
-        int nodeRadius = (int)(modelViewScaleFactor * (double)streetNodeRadius) + streetBorderThickness;
-        int x = modelViewTransformX(node.getX()) - nodeRadius;
-        int y = modelViewTransformY(node.getY()) - nodeRadius;
+        int nodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
+        int x = node.getX() - nodeRadius;
+        int y = node.getY() - nodeRadius;
 
         if(node == mapPanel.selectedNode) {
-            context.setColor(streetSelectedNodeColor);
+            int nodeRadiusAdd = (int)((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
 
-            x -= streetSelectedNodeRadiusPx;
-            y -= streetSelectedNodeRadiusPx;
-            nodeRadius += streetSelectedNodeRadiusPx;
+            x -= nodeRadiusAdd;
+            y -= nodeRadiusAdd;
+
+            nodeRadius += nodeRadiusAdd;
+
+            context.setColor(streetSelectedNodeColor);
         } else {
             context.setColor(streetBorderColor);
         }
@@ -127,7 +160,7 @@ public class RenderContext {
     protected void drawArcBorders(Arc arc) {
         ArcInfo arcInfo = arcInfo(arc);
 
-        arcInfo.thickness += (double)streetBorderThickness;
+        arcInfo.thickness += (double)streetBorderThickness / modelViewScaleFactor;
 
         context.setColor(streetBorderColor);
 
@@ -228,21 +261,20 @@ public class RenderContext {
     private ArcInfo arcInfo(Arc arc) {
         ArcInfo arcInfo = new ArcInfo();
 
+        arcInfo.arc = arc;
+
         Node node1 = arc.getNode1();
         Node node2 = arc.getNode2();
 
-        arcInfo.x1 = modelViewTransformX(node1.getX());
-        arcInfo.y1 = modelViewTransformY(node1.getY());
+        arcInfo.x1 = node1.getX();
+        arcInfo.y1 = node1.getY();
 
-        int x2 = modelViewTransformX(node2.getX());
-        int y2 = modelViewTransformY(node2.getY());
-
-        int nx = x2 - arcInfo.x1;
-        int ny = y2 - arcInfo.y1;
+        int nx = node2.getX() - arcInfo.x1;
+        int ny = node2.getY() - arcInfo.y1;
 
         arcInfo.angle = Math.atan2((double)ny, (double)nx);
         arcInfo.length = Math.sqrt((double)(nx * nx + ny * ny));
-        arcInfo.thickness = modelViewScaleFactor * (double)streetThickness;
+        arcInfo.thickness = (double)streetThickness;
 
         return arcInfo;
     }
@@ -253,7 +285,12 @@ public class RenderContext {
      */
     private void drawArcInfo(ArcInfo arcInfo) {
         Rectangle2D.Double rect = new Rectangle2D.Double();
-        rect.setRect(0.0, - arcInfo.thickness, arcInfo.length, 2.0 * arcInfo.thickness);
+
+        if(arcInfo.bidirectional()) {
+            rect.setRect(0.0, - arcInfo.thickness, arcInfo.length, 2.0 * arcInfo.thickness);
+        } else {
+            rect.setRect(0.0, -0.5 * arcInfo.thickness, arcInfo.length, arcInfo.thickness);
+        }
 
         context.translate(arcInfo.x1, arcInfo.y1);
         context.rotate(arcInfo.angle);
@@ -263,14 +300,36 @@ public class RenderContext {
     }
 
     /**
-     * ArcInformation
+     * Arc rendering information
      */
     private class ArcInfo {
+        /** the view arc */
+        public Arc arc;
+
+        /** the arc angle */
         public double angle;
+
+        /** the arc view length (between the two nodes) in px */
         public double length;
+
+        /** the arc's thickness in px */
         public double thickness;
+
+        /** the arc's start X position on screen in px */
         public int x1;
+
+        /** the arc's start Y position on screen in px */
         public int y1;
+
+        /**
+         * Gets the number of way
+         * @return
+         *  - true if it is a bidirectional arc
+         *  - false if it is an unidirectional arc
+         */
+        public boolean bidirectional() {
+            return (arc.getModelArcFrom1To2() != null && arc.getModelArcFrom2To1() != null);
+        }
     }
 
 
