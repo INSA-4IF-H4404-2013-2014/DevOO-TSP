@@ -1,5 +1,6 @@
 package View.MainWindow;
 
+import Controller.MainWindowController;
 import View.DeliveryDialog;
 
 import javax.swing.*;
@@ -52,11 +53,14 @@ public class TopToolBar extends JToolBar {
         delete.setEnabled(false);
         undo.setEnabled(false);
         redo.setEnabled(false);
+    }
 
+    public void addListener(final MainWindowController controller) {
+        // Add button
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DeliveryDialog();
+                controller.addDelivery();
             }
         });
     }

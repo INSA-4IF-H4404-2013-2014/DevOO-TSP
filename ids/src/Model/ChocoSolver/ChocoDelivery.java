@@ -34,6 +34,10 @@ public class ChocoDelivery {
         successorsItinerary = new ArrayList<Itinerary>();
     }
 
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
     /**
      * Get the successors' list of the delivery
      * @return the list successors' ID of the delivery
