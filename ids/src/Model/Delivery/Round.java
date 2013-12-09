@@ -189,6 +189,7 @@ public class Round {
                     if(delivered) {
                         return true;
                     }
+
                     delivered = true;
                 }
             }
@@ -320,10 +321,5 @@ public class Round {
         html += htmlClose;
 
         return html;
-    }
-
-    public static void main(String[] args) throws UtilsException, ParserConfigurationException {
-        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
-        Round.createFromXml("resources/tests/invalid (14).xml", network);
     }
 }
