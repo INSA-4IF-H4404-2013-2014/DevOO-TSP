@@ -1,5 +1,7 @@
 package View.MainWindow;
 
+import Controller.MainWindowController;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -97,49 +99,19 @@ public class TopMenuBar extends JMenuBar{
 
         // Exit button
         fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("../../door_out.png")));
-        fileExit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+        fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 
 
         openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("../../mini_open_map.png")));
-        openMap.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
         openMap.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
 
         openRound = new JMenuItem("Ouvrir une tournée");
-        openRound.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
         openRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
         computeRound = new JMenuItem("Calculer une tournée");
-        computeRound.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
         computeRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 
         saveRound = new JMenuItem("Sauvegarder une tournée");
-        saveRound.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
         saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
         file.add(openMap);
@@ -159,39 +131,15 @@ public class TopMenuBar extends JMenuBar{
         //edit.setEnabled(false);
 
         addButton = new JMenuItem("Ajouter une livraison");
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
         addButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 
         delButton = new JMenuItem("Supprimer une livraison");
-        delButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
         delButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 
-        undoButton = new JMenuItem("annuler");
-        undoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        undoButton = new JMenuItem("Annuler");
         undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 
-        redoButton = new JMenuItem("refaire");
-        redoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        redoButton = new JMenuItem("Refaire");
         redoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 
         edit.add(addButton);
@@ -217,5 +165,14 @@ public class TopMenuBar extends JMenuBar{
         JMenu help = new JMenu("?");
         help.setEnabled(false);
         add(help);
+    }
+
+    public void addListener(final MainWindowController controller) {
+        fileExit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exit();
+            }
+        });
     }
 }

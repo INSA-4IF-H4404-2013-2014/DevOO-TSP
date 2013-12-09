@@ -62,6 +62,7 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        addListener();
 
         setVisible(true);
 
@@ -132,5 +133,13 @@ public class MainWindow extends JFrame {
      */
     public RightPanel getRightPanel() {
         return rightPanel;
+    }
+
+    /**
+     * Adds listeners for all buttons, lists...
+     */
+    public void addListener() {
+        topMenuBar.addListener(mainWindowController);
+        topToolBar.addListener(mainWindowController);
     }
 }
