@@ -42,6 +42,8 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
 
         historyApplied = new LinkedList<Controller.Command.Command>();
         historyBackedOut = new LinkedList<Controller.Command.Command>();
+
+        exportRound();
     }
 
     public MainWindow getMainWindow() {
@@ -62,14 +64,19 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     public void exportRound() {
         Round round = this.mainWindow.getRound();
 
-        String htmlRound = round.roundToHtml();
+        if(round != null) {
+            String htmlRound = round.roundToHtml();
 
-        try {
-            FileWriter outputWriter = new FileWriter(openFile("html"), false);
-            outputWriter.write(htmlRound);
-            outputWriter.close();
-        } catch (java.io.IOException e) {
-            System.out.println(e);
+            try {
+                FileWriter outputWriter = new FileWriter(openFile("html"), false);
+                outputWriter.write(htmlRound);
+                outputWriter.close();
+            } catch (java.io.IOException e) {
+                System.out.println(e);
+            }
+        } else {
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "Aucune tournée n'est active", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -162,7 +169,9 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
                 System.out.println(e);
             }
         } else {
-            //TODO: print a confirmation window to be sure that the user wants to write over an existing file
+            //TODO: be sure that it works
+            JFrame frame = new JFrame();
+            JOptionPane confirmationWindow = new JOptionPane("Êtes-vous sûr de vouloir écraser ce fichier ?", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
         }
 
         return file;
