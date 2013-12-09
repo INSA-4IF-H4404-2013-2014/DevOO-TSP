@@ -154,6 +154,14 @@ public class MapPanel extends JPanel {
     }
 
     /**
+     * Sets the calculated round to show
+     * @param round the calculated round to show
+     */
+    public void setRound(CalculatedRound round) {
+        //TODO: by Guillaume
+    }
+
+    /**
      * Gets the currently selected node
      * @return the model selected node or null if any are selected
      */
@@ -310,18 +318,16 @@ public class MapPanel extends JPanel {
         }
     }
 
-
-    public void setRound(CalculatedRound round) {
-        //TODO: by Guillaume
-    }
-
     /**
-     * Gets model coordinate
+     * Gets model X coordinate
      */
     protected int modelCoordinateX(int x) {
         return (int)((double)(x - this.getWidth() / 2) / modelViewScaleFactor + modelCenterPos.x);
     }
 
+    /**
+     * Gets model Y coordinate
+     */
     protected int modelCoordinateY(int y) {
         return (int)(modelCenterPos.y - (double)(y - this.getHeight() / 2) / modelViewScaleFactor);
     }
@@ -361,6 +367,10 @@ public class MapPanel extends JPanel {
         return tree.get(to);
     }
 
+    /**
+     * Gets model's dimension
+     * @return the model dimension (modelMaxPos - modelMinPos)
+     */
     protected Dimension getModelDimension() {
         return new Dimension(modelMaxPos.x - modelMinPos.x, modelMaxPos.y - modelMinPos.y);
     }

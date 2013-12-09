@@ -22,14 +22,19 @@ public class RenderContext {
     private double modelViewScaleFactor;
 
     /** the map panel being rendered */
-    MapPanel mapPanel;
+    private MapPanel mapPanel;
 
     /** the java graphic context */
-    Graphics2D context;
+    private Graphics2D context;
 
     /** parent transform */
     private AffineTransform parentTransform;
 
+    /**
+     * Constructor
+     * @param context the swing graphic context
+     * @param mapPanel the MapPanel to draw
+     */
     public RenderContext(Graphics2D context, MapPanel mapPanel) {
         this.context = context;
         this.mapPanel = mapPanel;
