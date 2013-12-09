@@ -85,16 +85,24 @@ public class Round {
 
     public void addDelivery(String clientId, int nodeId, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
         Node node = network.findNode(nodeId);
+
         Client client = getClient(clientId);
         Schedule schedule = getSchedule(earliestBound, latestBound);
+
         Delivery delivery = new Delivery(schedule.getNextDeliveryId(), client, node, schedule);
+
         client.addDelivery(delivery);
         schedule.addDelivery(delivery);
-        schedules.add(schedule);
     }
 
     public void removeDelivery(int nodeId) {
-        //TODO: remove the delivery
+        Delivery delivery = findDelivered(nodeId);
+
+        Client client = delivery.getClient();
+        Schedule schedule = delivery.getSchedule();
+
+        client.removeDelivery(delivery);
+        schedule.removeDelivery(delivery);
     }
 
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
@@ -105,7 +113,10 @@ public class Round {
             }
         }
 
-        return new Schedule(earliestBound, latestBound);
+        Schedule schedule = new Schedule(earliestBound, latestBound);
+        schedules.add(schedule);
+
+        return schedule;
     }
 
     public Client getClient(String clientId)

@@ -113,6 +113,14 @@ public class Schedule {
     }
 
     /**
+     * Removes a delivery to the deliveries list
+     * @param delivery the delivery to remove
+     */
+    public void removeDelivery(Delivery delivery) {
+        deliveries.remove(delivery);
+    }
+
+    /**
      * Returns the schedule's deliveries
      * @return the schedule's deliveries
      */
