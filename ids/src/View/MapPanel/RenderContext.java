@@ -171,7 +171,12 @@ public class RenderContext {
 
         context.setFont(new Font("default", Font.BOLD, 4));
 
-        int streetWidth = context.getFontMetrics().stringWidth(street.getName());
+        int streetNameWidth = context.getFontMetrics().stringWidth(street.getName());
+
+        if(arcInfo.length - 2.0 * streetNodeRadius < (double)streetNameWidth) {
+            context.setFont(previousFont);
+            return;
+        }
 
         int centerX = (arcInfo.x1 + arc.getNode2().getX()) / 2;
         int centerY = (arcInfo.y1 + arc.getNode2().getY()) / 2;
@@ -190,9 +195,10 @@ public class RenderContext {
         context.setColor(textColor);
         context.translate(centerX, centerY);
         context.rotate(angle);
-        context.drawString(street.getName(), - streetWidth / 2, streetNameYOffset);
+        context.drawString(street.getName(), - streetNameWidth / 2, streetNameYOffset);
         context.rotate(-angle);
         context.translate(-centerX, -centerY);
+
         context.setFont(previousFont);
     }
 

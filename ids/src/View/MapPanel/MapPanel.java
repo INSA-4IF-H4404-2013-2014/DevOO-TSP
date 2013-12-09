@@ -286,6 +286,10 @@ public class MapPanel extends JPanel {
             renderContext.drawNodeBorders(entry.getValue());
         }
 
+        if(selectedNode != null) {
+            renderContext.drawNodeBorders(selectedNode);
+        }
+
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
                 renderContext.drawArc(entry.getValue());
