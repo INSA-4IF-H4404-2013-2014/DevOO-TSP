@@ -55,6 +55,15 @@ public class ChocoDelivery {
     }
 
     /**
+     * Get the itinerary linked to a node
+     * @param nodeId the id of the node you want the linked itinerary
+     * @return the itinerary
+     */
+    public Itinerary getItineray(int nodeId) {
+        return successorsItinerary.get(nodeId);
+    }
+
+    /**
      * Add a successor to the delivery
      * @param nodeId the ID of the successor node
      * @param itinerary the linked itinerary

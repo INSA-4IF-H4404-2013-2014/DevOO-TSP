@@ -69,8 +69,8 @@ public class ChocoGraph implements Graph {
         List<Integer> visited;
     }
 
-    public Delivery getDelivery(Integer nodeId) {
-        return deliveries.get(nodeId).getDelivery();
+    public ChocoDelivery getDelivery(Integer nodeId) {
+        return deliveries.get(nodeId);
     }
 
 	public int getMaxArcCost() {
