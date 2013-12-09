@@ -61,9 +61,9 @@ public class RenderContext {
         double m00 = modelViewScaleFactor;
         double m10 = 0.0;
         double m01 = 0.0;
-        double m11 = modelViewScaleFactor;
+        double m11 = -modelViewScaleFactor;
         double m02 = (double)(mapPanel.getWidth() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.x));
-        double m12 = (double)(mapPanel.getHeight() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.y));
+        double m12 = (double)(mapPanel.getHeight() / 2 + (int)(modelViewScaleFactor * (double)modelCenterPos.y));
 
         AffineTransform transform = new AffineTransform(m00, m10, m01, m11, m02, m12);
 
@@ -179,13 +179,16 @@ public class RenderContext {
             streetNameYOffset += streetThickness / 2;
         }
 
+        AffineTransform previousTransform = context.getTransform();
+
         context.setColor(textColor);
         context.translate(centerX, centerY);
         context.rotate(angle);
-        context.drawString(street.getName(), - streetNameWidth / 2, streetNameYOffset);
-        context.rotate(-angle);
-        context.translate(-centerX, -centerY);
+        context.scale(1.0, -1.0);
 
+        context.drawString(street.getName(), - streetNameWidth / 2, streetNameYOffset);
+
+        context.setTransform(previousTransform);
         context.setFont(previousFont);
     }
 
@@ -220,11 +223,11 @@ public class RenderContext {
         int globalViewHeight = (int)((double)modelSize.height * graphViewFactor);
         int globalViewPosX = mapPanel.getWidth() - globalViewWidth - globalViewBorderOffset;
 
-        int modelMinX = (int)(graphViewFactor * (double)mapPanel.modelCoordinateX(0));
-        int modelMinY = (int)(graphViewFactor * (double)mapPanel.modelCoordinateY(0));
+        int modelMinX = (int)(graphViewFactor * (double)(mapPanel.modelCoordinateX(0) - mapPanel.modelMinPos.x));
+        int modelMinY = globalViewHeight - (int)(graphViewFactor * (double)(mapPanel.modelCoordinateY(0) - mapPanel.modelMinPos.y));
 
-        int modelMaxX = (int)(graphViewFactor * (double)mapPanel.modelCoordinateX(mapPanel.getWidth()));
-        int modelMaxY = (int)(graphViewFactor * (double)mapPanel.modelCoordinateY(mapPanel.getHeight()));
+        int modelMaxX = (int)(graphViewFactor * (double)(mapPanel.modelCoordinateX(mapPanel.getWidth()) - mapPanel.modelMinPos.x));
+        int modelMaxY = globalViewHeight - (int)(graphViewFactor * (double)(mapPanel.modelCoordinateY(mapPanel.getHeight()) - mapPanel.modelMinPos.y));
 
         modelMinX = Math.min(Math.max(modelMinX, 0), globalViewWidth);
         modelMinY = Math.min(Math.max(modelMinY, 0), globalViewHeight);
