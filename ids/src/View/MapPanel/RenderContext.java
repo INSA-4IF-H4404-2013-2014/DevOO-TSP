@@ -2,6 +2,7 @@ package View.MapPanel;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
@@ -154,7 +155,7 @@ public class RenderContext {
 
         context.setColor(streetColor);
 
-        drawArcInfo(arcInfo);
+        drawArcInfo(arcInfo, true);
     }
 
     /**
@@ -172,7 +173,7 @@ public class RenderContext {
 
         context.setColor(streetBorderColor);
 
-        drawArcInfo(arcInfo);
+        drawArcInfo(arcInfo, false);
     }
 
     /**
@@ -272,8 +273,9 @@ public class RenderContext {
     /**
      * Draws the given arc info
      * @param arcInfo the arc's information to draw
+     * @param drawArrow boolean to say if you want to draw the directional arrow
      */
-    private void drawArcInfo(ArcInfo arcInfo) {
+    private void drawArcInfo(ArcInfo arcInfo, boolean drawArrow) {
         Rectangle2D.Double rect = new Rectangle2D.Double();
 
         if(arcInfo.isBidirectional()) {
@@ -284,7 +286,24 @@ public class RenderContext {
 
         context.translate(arcInfo.x1, arcInfo.y1);
         context.rotate(arcInfo.angle);
+
         context.fill(rect);
+
+        if(!arcInfo.isBidirectional() && drawArrow) {
+
+            Path2D.Double path = new Path2D.Double();
+
+            path.moveTo(arcInfo.length - (double)streetNodeRadius, -0.5 * arcInfo.thickness);
+            path.lineTo(arcInfo.length, -0.5 * arcInfo.thickness);
+            path.lineTo(arcInfo.length, 0.5 * arcInfo.thickness);
+            path.lineTo(arcInfo.length - (double)streetNodeRadius, 0.5 * arcInfo.thickness);
+            path.lineTo(arcInfo.length - (double)streetNodeRadius + 0.5 * arcInfo.thickness, 0.0);
+            path.closePath();
+
+            context.setColor(streetArrowColor);
+            context.fill(path);
+        }
+
         context.rotate(-arcInfo.angle);
         context.translate(-arcInfo.x1, -arcInfo.y1);
     }
@@ -332,6 +351,7 @@ public class RenderContext {
 
     /** street's constants */
     private static final Color streetColor = new Color(255, 255, 255);
+    private static final Color streetArrowColor = new Color(200, 200, 200);
     private static final Color streetBorderColor = new Color(210, 140, 100);
     private static final int streetThickness = 4;
     private static final int streetBorderThickness = 1;
