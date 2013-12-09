@@ -10,7 +10,7 @@ import java.awt.event.MouseListener;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class DeliveryWindowController implements MouseListener {
+public class DeliveryDialogController implements MouseListener {
     public void confirm() {
 
     }
