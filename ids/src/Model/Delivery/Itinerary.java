@@ -65,4 +65,18 @@ public class Itinerary {
     public List<Arc> getArcs() {
         return arcs;
     }
+
+    /**
+     * Get the cost of the itinerary in seconds
+     * @return the cost of the itinerary
+     */
+    public int getCost() {
+        int cost = 0;
+        for(Arc arc:this.arcs) {
+            cost += arc.getCost();
+        }
+
+        return cost;
+    }
 }
+

@@ -23,6 +23,37 @@ public class RoundPanel extends JPanel {
         add(createRoundPanelContent());
     }
 
+    /**
+     * Gets the delivery count field
+     * @return the delivery count field
+     */
+    public JTextField getDeliveryCount() {
+        return deliveryCount;
+    }
+
+    /**
+     * Gets the duration field
+     * @return the duration field
+     */
+    public JTextField getDuration() {
+        return duration;
+    }
+
+    /**
+     * Gets the delay field
+     * @return the delay field
+     */
+    public JTextField getDelay() {
+        return delay;
+    }
+
+    /**
+     * Gets the distance field
+     * @return the distance field
+     */
+    public JTextField getDistance() {
+        return distance;
+    }
 
     /**
      * Creates the dialog of the round panel.

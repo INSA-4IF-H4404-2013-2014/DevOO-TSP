@@ -1,6 +1,6 @@
 package View.MainWindow;
 
-import View.DeliveryWindow;
+import View.DeliveryDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -54,7 +54,7 @@ public class TopToolBar extends JToolBar {
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DeliveryWindow();
+                new DeliveryDialog();
             }
         });
     }

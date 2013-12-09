@@ -14,6 +14,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -30,7 +32,7 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener {
+public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener, ActionListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
@@ -62,14 +64,19 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     public void exportRound() {
         Round round = this.mainWindow.getRound();
 
-        String htmlRound = round.roundToHtml();
+        if(round != null) {
+            String htmlRound = round.roundToHtml();
 
-        try {
-            FileWriter outputWriter = new FileWriter(openFile("html"), false);
-            outputWriter.write(htmlRound);
-            outputWriter.close();
-        } catch (java.io.IOException e) {
-            System.out.println(e);
+            try {
+                FileWriter outputWriter = new FileWriter(openFile("html"), false);
+                outputWriter.write(htmlRound);
+                outputWriter.close();
+            } catch (java.io.IOException e) {
+                System.out.println(e);
+            }
+        } else {
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "Aucune tournée n'est active", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -134,9 +141,12 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    }
 
     /**
-     * Allow user to choose a file from specified type for export
+     * Allow user to choose a file from specified type
      * @param type the type of file you want the user to be able to choose
      * @return the file the user choosed
      */
@@ -162,7 +172,9 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
                 System.out.println(e);
             }
         } else {
-            //TODO: print a confirmation window to be sure that the user wants to write over an existing file
+            //TODO: be sure that it works
+            JFrame frame = new JFrame();
+            JOptionPane confirmationWindow = new JOptionPane("Êtes-vous sûr de vouloir écraser ce fichier ?", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
         }
 
         return file;
