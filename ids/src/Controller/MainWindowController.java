@@ -58,6 +58,11 @@ public class MainWindowController implements NodeListener {
             try {
                 Network network = Network.createFromXml(xmlFile.getAbsolutePath());
                 mainWindow.getMapPanel().setModel(network);
+
+                // Map has been successfully loaded, we enable 'load round' feature.
+                mainWindow.featureLoadRoundSetEnable(true);
+
+
             } catch (UtilsException e) {
                 JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
                         e.getMessage(), "Erreur lors du chargement de la carte", JOptionPane.ERROR_MESSAGE);

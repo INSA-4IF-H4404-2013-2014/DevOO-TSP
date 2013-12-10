@@ -17,39 +17,39 @@ public class TopMenuBar extends JMenuBar{
     /**
      * the exit option and shortcut
       */
-    private JMenuItem fileExit;
+    protected JMenuItem fileExit;
     /**
      * the import map option and shortcut
      */
-    private JMenuItem openMap;
+    protected JMenuItem openMap;
     /**
      * the import round option and shortcut
      */
-    private JMenuItem openRound;
+    protected JMenuItem openRound;
     /**
      * calculate the optimal round
      */
-    private JMenuItem computeRound;
+    protected JMenuItem computeRound;
     /**
      * save the actual round
      */
-    private JMenuItem saveRound;
+    protected JMenuItem saveRound;
     /**
      * add a delivery
      */
-    private JMenuItem addButton;
+    protected JMenuItem addButton;
     /**
      * delete a delivery
      */
-    private JMenuItem delButton;
+    protected JMenuItem delButton;
     /**
      * undo
      */
-    private JMenuItem undoButton;
+    protected JMenuItem undoButton;
     /**
      * redo
      */
-    private JMenuItem redoButton;
+    protected JMenuItem redoButton;
 
     public JMenuItem getOpenMap() {
         return openMap;

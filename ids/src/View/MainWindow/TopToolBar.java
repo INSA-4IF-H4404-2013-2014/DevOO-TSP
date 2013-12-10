@@ -14,13 +14,13 @@ import java.awt.event.ActionListener;
  * This class is the JToolBar at the top of the main window
  */
 public class TopToolBar extends JToolBar {
-    private JButton loadMap = new JButton();
-    private JButton loadRound = new JButton("Charger tournée");
-    private JButton saveRound = new JButton("Enregistrer tournée");
-    private JButton add = new JButton("Ajouter");
-    private JButton delete = new JButton("Supprimer");
-    private JButton undo = new JButton("Défaire");
-    private JButton redo = new JButton("Refaire");
+    protected JButton loadMap = new JButton();
+    protected JButton loadRound = new JButton("Charger tournée");
+    protected JButton saveRound = new JButton("Enregistrer tournée");
+    protected JButton add = new JButton("Ajouter");
+    protected JButton delete = new JButton("Supprimer");
+    protected JButton undo = new JButton("Défaire");
+    protected JButton redo = new JButton("Refaire");
 
     public TopToolBar() {
         setFloatable(false);
