@@ -2,20 +2,19 @@ package Controller;
 
 import Controller.Command.Command;
 import Model.ChocoSolver.*;
+import Model.City.Network;
 import Model.City.Node;
 import Model.Delivery.*;
+
+import Utils.UtilsException;
 import Utils.XmlFileFilter;
-import View.DeliveryDialog;
+
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -49,8 +48,20 @@ public class MainWindowController implements NodeListener {
         return mainWindow;
     }
 
+    /**
+     * Action triggered when user wants to load a map
+     */
     public void loadNetwork() {
         File xmlFile = openXMLFile();
+
+        if(xmlFile != null) {
+            try {
+                Network network = Network.createFromXml(xmlFile.getAbsolutePath());
+                mainWindow.getMapPanel().setModel(network);
+            } catch (UtilsException e) {
+                JOptionPane.showConfirmDialog(mainWindow, e.getMessage());
+            }
+        }
     }
 
     public void loadRound() {
@@ -171,6 +182,7 @@ public class MainWindowController implements NodeListener {
      */
     private File openXMLFile() {
         JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("../"));
         chooser.setFileFilter(new XmlFileFilter());
         chooser.setAcceptAllFileFilterUsed(false);
 
