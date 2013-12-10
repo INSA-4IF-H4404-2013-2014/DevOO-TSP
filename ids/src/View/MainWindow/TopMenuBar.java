@@ -123,6 +123,8 @@ public class TopMenuBar extends JMenuBar{
         file.add(fileExit);
 
         saveRound.setEnabled(false);
+        computeRound.setEnabled(false);
+
         add(file);
     }
 
