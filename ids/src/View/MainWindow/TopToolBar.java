@@ -22,6 +22,34 @@ public class TopToolBar extends JToolBar {
     private JButton undo = new JButton("Défaire");
     private JButton redo = new JButton("Refaire");
 
+    public JButton getLoadMap() {
+        return loadMap;
+    }
+
+    public JButton getLoadRound() {
+        return loadRound;
+    }
+
+    public JButton getSaveRound() {
+        return saveRound;
+    }
+
+    public JButton getAdd() {
+        return add;
+    }
+
+    public JButton getDelete() {
+        return delete;
+    }
+
+    public JButton getUndo() {
+        return undo;
+    }
+
+    public JButton getRedo() {
+        return redo;
+    }
+
     public TopToolBar() {
         setFloatable(false);
         //setRollover(true);
@@ -47,7 +75,7 @@ public class TopToolBar extends JToolBar {
 
         loadRound.setEnabled(false);
         saveRound.setEnabled(false);
-        //add.setEnabled(false);
+        add.setEnabled(false);
         delete.setEnabled(false);
         undo.setEnabled(false);
         redo.setEnabled(false);

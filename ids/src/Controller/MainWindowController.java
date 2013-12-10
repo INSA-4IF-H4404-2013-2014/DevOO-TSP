@@ -156,6 +156,19 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     @Override
     public void nodeClicked(MapPanel panel, Node node) {
         panel.setSelectedNode(node);
+        if (!(null == this.mainWindow.getRound())) {
+            if (null == this.mainWindow.getRound().findDelivered(node.getId())) {
+                //if the node doesnt contains a delivery activate the "ajouter" button
+                mainWindow.getTopToolBar().getAdd().setEnabled(true);
+                mainWindow.getTopToolBar().getDelete().setEnabled(false);
+            }
+            else
+            {
+                //if the node contains a delivery activate the "supprimer" button
+                mainWindow.getTopToolBar().getAdd().setEnabled(false);
+                mainWindow.getTopToolBar().getDelete().setEnabled(true);
+            }
+        }
     }
     @Override
     public void valueChanged(ListSelectionEvent e) {
