@@ -97,19 +97,14 @@ public class TopMenuBar extends JMenuBar{
     private void createFileMenu() {
         JMenu file = new JMenu("Fichier");
 
-        // Exit button
         fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("../../door_out.png")));
         fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 
-
         openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("../../mini_open_map.png")));
-        openMap.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
 
         openRound = new JMenuItem("Ouvrir une tournée");
-        openRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
         computeRound = new JMenuItem("Calculer une tournée");
-        computeRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 
         saveRound = new JMenuItem("Sauvegarder une tournée");
         saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
@@ -122,6 +117,8 @@ public class TopMenuBar extends JMenuBar{
         file.addSeparator();
         file.add(fileExit);
 
+        openRound.setEnabled(false);
+        computeRound.setEnabled(false);
         saveRound.setEnabled(false);
         add(file);
     }
@@ -131,13 +128,11 @@ public class TopMenuBar extends JMenuBar{
         //edit.setEnabled(false);
 
         addButton = new JMenuItem("Ajouter une livraison");
-        addButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 
         delButton = new JMenuItem("Supprimer une livraison");
-        delButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 
         undoButton = new JMenuItem("Annuler");
-        undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+        undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 
         redoButton = new JMenuItem("Refaire");
         redoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
@@ -152,6 +147,7 @@ public class TopMenuBar extends JMenuBar{
         delButton.setEnabled(false);
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
+
         add(edit);
     }
 
