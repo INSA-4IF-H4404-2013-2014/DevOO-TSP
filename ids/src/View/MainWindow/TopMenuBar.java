@@ -164,6 +164,13 @@ public class TopMenuBar extends JMenuBar{
     }
 
     public void addListener(final MainWindowController controller) {
+        openMap.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.loadNetwork();
+            }
+        });
+
         fileExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
