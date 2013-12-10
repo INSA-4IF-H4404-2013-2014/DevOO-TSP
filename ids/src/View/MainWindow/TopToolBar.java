@@ -14,13 +14,41 @@ import java.awt.event.ActionListener;
  * This class is the JToolBar at the top of the main window
  */
 public class TopToolBar extends JToolBar {
-    private JButton loadMap = new JButton();
-    private JButton loadRound = new JButton("Charger tournée");
-    private JButton saveRound = new JButton("Enregistrer tournée");
-    private JButton add = new JButton("Ajouter");
-    private JButton delete = new JButton("Supprimer");
-    private JButton undo = new JButton("Défaire");
-    private JButton redo = new JButton("Refaire");
+    protected JButton loadMap = new JButton();
+    protected JButton loadRound = new JButton();
+    protected JButton saveRound = new JButton("Enregistrer tournée");
+    protected JButton add = new JButton("Ajouter");
+    protected JButton delete = new JButton("Supprimer");
+    protected JButton undo = new JButton("Défaire");
+    protected JButton redo = new JButton("Refaire");
+
+    public JButton getLoadMap() {
+        return loadMap;
+    }
+
+    public JButton getLoadRound() {
+        return loadRound;
+    }
+
+    public JButton getSaveRound() {
+        return saveRound;
+    }
+
+    public JButton getAdd() {
+        return add;
+    }
+
+    public JButton getDelete() {
+        return delete;
+    }
+
+    public JButton getUndo() {
+        return undo;
+    }
+
+    public JButton getRedo() {
+        return redo;
+    }
 
     public TopToolBar() {
         setFloatable(false);
@@ -31,6 +59,7 @@ public class TopToolBar extends JToolBar {
 
         addSeparator();
 
+        loadRound.setIcon(new ImageIcon("./src/open_round.png"));
         add(loadRound);
         add(saveRound);
 
@@ -44,10 +73,8 @@ public class TopToolBar extends JToolBar {
         add(undo);
         add(redo);
 
-
-        loadRound.setEnabled(false);
         saveRound.setEnabled(false);
-        //add.setEnabled(false);
+        add.setEnabled(false);
         delete.setEnabled(false);
         undo.setEnabled(false);
         redo.setEnabled(false);

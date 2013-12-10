@@ -155,4 +155,13 @@ public class MainWindow extends JFrame {
         topMenuBar.addListener(mainWindowController);
         topToolBar.addListener(mainWindowController);
     }
+
+    /**
+     * Enable or disable the feature 'load a round'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureLoadRoundSetEnable(boolean b) {
+        topMenuBar.openRound.setEnabled(b);
+        topToolBar.loadRound.setEnabled(b);
+    }
 }
