@@ -30,6 +30,6 @@ public class XmlFileFilter extends FileFilter {
     }
 
     public String getDescription() {
-        return "XML files only (*.xml)";
+        return "Fichiers XML seulement (*.xml)";
     }
 }

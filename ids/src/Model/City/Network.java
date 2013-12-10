@@ -268,30 +268,25 @@ public class Network {
         Network network;
 
         try {
-            try {
-                factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-                document = factory.parse(fileXml);
+            document = factory.parse(fileXml);
 
-                root = document.getDocumentElement();
-            } catch (ParserConfigurationException pce) {
-                throw new UtilsException("DOM parsor configuration exception");
-            } catch (SAXException se) {
-                throw new UtilsException("XML parse stage failed");
-            } catch (IOException ioe) {
-                throw new UtilsException("Error while reading file \"" + xmlPath + "\"");
-            }
-
-            if (!root.getNodeName().equals("Reseau")) {
-                throw new UtilsException("Unexpected XML root name \"" + root.getNodeName() + "\"");
-            }
-
-            network = new Network();
-            network.loadNetworkFromXml(root);
+            root = document.getDocumentElement();
+        } catch (ParserConfigurationException pce) {
+            throw new UtilsException("DOM parsor configuration exception");
+        } catch (SAXException se) {
+            throw new UtilsException("L'étape de parsing XML a échoué.");
+        } catch (IOException ioe) {
+            throw new UtilsException("Erreur lors de la lecture du fichier \"" + xmlPath + "\".");
         }
-        catch (UtilsException e) {
-            throw  new UtilsException("File \"" + xmlPath + "\" > " + e);
+
+        if (!root.getNodeName().equals("Reseau")) {
+            throw new UtilsException("Nom de racine inattendu : \"" + root.getNodeName() + "\"");
         }
+
+        network = new Network();
+        network.loadNetworkFromXml(root);
 
         return network;
     }

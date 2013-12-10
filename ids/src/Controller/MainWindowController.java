@@ -2,20 +2,19 @@ package Controller;
 
 import Controller.Command.Command;
 import Model.ChocoSolver.*;
+import Model.City.Network;
 import Model.City.Node;
 import Model.Delivery.*;
+
+import Utils.UtilsException;
 import Utils.XmlFileFilter;
-import View.DeliveryDialog;
+
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,7 +30,7 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener {
+public class MainWindowController implements NodeListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
@@ -49,8 +48,26 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         return mainWindow;
     }
 
+    /**
+     * Action triggered when user wants to load a map
+     */
     public void loadNetwork() {
         File xmlFile = openXMLFile();
+
+        if(xmlFile != null) {
+            try {
+                Network network = Network.createFromXml(xmlFile.getAbsolutePath());
+                mainWindow.getMapPanel().setModel(network);
+
+                // Map has been successfully loaded, we enable 'load round' feature.
+                mainWindow.featureLoadRoundSetEnable(true);
+
+
+            } catch (UtilsException e) {
+                JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
+                        e.getMessage(), "Erreur lors du chargement de la carte", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     public void loadRound() {
@@ -139,21 +156,6 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {}
-
-    @Override
     public void nodeClicked(MapPanel panel, Node node) {
         panel.setSelectedNode(node);
         if (!(null == this.mainWindow.getRound())) {
@@ -173,10 +175,6 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
                 mainWindow.getTopMenuBar().getDelButton().setEnabled(true);
             }
         }
-    }
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**
@@ -207,6 +205,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
      */
     private File openXMLFile() {
         JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("../"));
         chooser.setFileFilter(new XmlFileFilter());
         chooser.setAcceptAllFileFilterUsed(false);
 
