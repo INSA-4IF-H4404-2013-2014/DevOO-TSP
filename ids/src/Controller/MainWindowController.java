@@ -59,7 +59,8 @@ public class MainWindowController implements NodeListener {
                 Network network = Network.createFromXml(xmlFile.getAbsolutePath());
                 mainWindow.getMapPanel().setModel(network);
             } catch (UtilsException e) {
-                JOptionPane.showConfirmDialog(mainWindow, e.getMessage());
+                JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
+                        e.getMessage(), "Erreur lors du chargement de la carte", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
