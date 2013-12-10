@@ -12,9 +12,10 @@ import java.awt.event.ActionListener;
  * Time: 21:15
  * This class is the small dialog window which is opened when adding a delivery.
  */
-public class DeliveryDialog extends JFrame {
+public class DeliveryDialog extends JDialog {
 
     public static final int PADDING = 10;
+    public static final String title = "Ajout d'une livraison";
 
     private JComboBox client = new JComboBox();
     private JTextField newClient = new JTextField("", 10);
@@ -24,11 +25,10 @@ public class DeliveryDialog extends JFrame {
     private JButton okButton = new JButton("Confirmer");
     private JButton cancelButton = new JButton("Annuler");
 
-    public DeliveryDialog() {
+    public DeliveryDialog(JFrame parent) {
+        super(parent, title, true);
         setContentPane(createMainPanel());
         setResizable(false);
-        setAlwaysOnTop(true);
-        setUndecorated(true);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);

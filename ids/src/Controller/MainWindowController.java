@@ -79,7 +79,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     public void addDelivery() {
-        DeliveryDialog dialog = new DeliveryDialog();
+        DeliveryDialog dialog = new DeliveryDialog(mainWindow);
     }
 
     public void removeDelivery() {
