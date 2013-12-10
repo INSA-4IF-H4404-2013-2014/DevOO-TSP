@@ -31,7 +31,7 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener {
+public class MainWindowController implements NodeListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
@@ -139,27 +139,8 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {}
-
-    @Override
     public void nodeClicked(MapPanel panel, Node node) {
         panel.setSelectedNode(node);
-    }
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**
