@@ -75,9 +75,8 @@ public class RoundTest {
     }
 
 
-    //TODO: complete this test with working files
     /**
-     * Exports the round contained in ressources/tests/valid.xml into ressources/tests/export.html
+     * Exports the round contained in resources/tests/valid.xml into resources/tests/export.html
      */
     @Test
     public void testHtmlParser() {

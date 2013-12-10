@@ -191,7 +191,7 @@ public class Network {
         try {
             streetName = Utils.stringFromXmlAttribute(xmlElement, "nomRue");
             speed = Utils.parsePositiveFloatFromXmlAttribute(xmlElement, "vitesse");
-            length = Utils.parsePositiveFloatFromXmlAttribute(xmlElement, "length");
+            length = Utils.parsePositiveFloatFromXmlAttribute(xmlElement, "longueur");
             int destinationId = Utils.parseUIntFromXmlAttribute(xmlElement, "destination");
 
             if (speed == 0.0) {

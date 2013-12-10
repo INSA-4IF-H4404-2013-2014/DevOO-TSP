@@ -1,5 +1,6 @@
 package View.MainWindow;
 
+import Controller.MainWindowController;
 import View.DeliveryDialog;
 
 import javax.swing.*;
@@ -25,8 +26,7 @@ public class TopToolBar extends JToolBar {
         setFloatable(false);
         //setRollover(true);
 
-        ImageIcon imgOpenMap = new ImageIcon("./src/open_map.png");
-        loadMap.setIcon(imgOpenMap);
+        loadMap.setIcon(new ImageIcon("./src/open_map.png"));
         add(loadMap);
 
         addSeparator();
@@ -45,18 +45,28 @@ public class TopToolBar extends JToolBar {
         add(redo);
 
 
-        loadMap.setEnabled(false);
         loadRound.setEnabled(false);
         saveRound.setEnabled(false);
         //add.setEnabled(false);
         delete.setEnabled(false);
         undo.setEnabled(false);
         redo.setEnabled(false);
+    }
 
+    public void addListener(final MainWindowController controller) {
+        // Add button
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DeliveryDialog();
+                controller.addDelivery();
+            }
+        });
+
+        // Load map button
+        loadMap.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.loadNetwork();
             }
         });
     }

@@ -18,23 +18,13 @@ public class Node {
     private Model.City.Node modelNode;
 
     /**
-     * normalized model coordinates
-     *
-     * caution : these are vertically flipped to keep the direct rotation.
-     * */
-    private int x;
-    private int y;
-
-    /**
      * Constructor
      * @param mapPanel the parent map panel
      * @param modelNode the model node
      */
-    protected Node(MapPanel mapPanel, Model.City.Node modelNode, int x, int y) {
+    protected Node(MapPanel mapPanel, Model.City.Node modelNode) {
         this.mapPanel = mapPanel;
         this.modelNode = modelNode;
-        this.x = x;
-        this.y = y;
     }
 
     /**
@@ -58,7 +48,7 @@ public class Node {
      * @return the x coordinate
      */
     protected int getX() {
-        return x;
+        return modelNode.getX();
     }
 
     /**
@@ -66,6 +56,6 @@ public class Node {
      * @return the y coordinate
      */
     protected int getY() {
-        return y;
+        return modelNode.getY();
     }
 }

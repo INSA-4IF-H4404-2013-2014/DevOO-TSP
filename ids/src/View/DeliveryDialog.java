@@ -1,5 +1,7 @@
 package View;
 
+import Controller.DeliveryDialogController;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -12,25 +14,30 @@ import java.awt.event.ActionListener;
  * Time: 21:15
  * This class is the small dialog window which is opened when adding a delivery.
  */
-public class DeliveryDialog extends JFrame {
+public class DeliveryDialog extends JDialog {
 
     public static final int PADDING = 10;
+    public static final String title = "Ajout d'une livraison";
+
+    private DeliveryDialogController controller;
 
     private JComboBox client = new JComboBox();
+    private JTextField newClient = new JTextField("", 10);
     private JTextField clientAddress = new JTextField("", 12);
     private JTextField timeFrameBegin = new JTextField("", 4);
     private JTextField timeFrameEnd = new JTextField("", 4);
     private JButton okButton = new JButton("Confirmer");
     private JButton cancelButton = new JButton("Annuler");
 
-    public DeliveryDialog() {
+    public DeliveryDialog(DeliveryDialogController controller, JFrame parent) {
+        super(parent, title, true);
+        this.controller = controller;
         setContentPane(createMainPanel());
         setResizable(false);
-        setAlwaysOnTop(true);
-        setUndecorated(true);
         pack();
         setLocationRelativeTo(null);
-        setVisible(true);
+
+        addListener();
     }
 
     /**
@@ -67,6 +74,8 @@ public class DeliveryDialog extends JFrame {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Client : "));
         row.add(client);
+
+        row.add(newClient);
         return row;
     }
 
@@ -98,12 +107,15 @@ public class DeliveryDialog extends JFrame {
         footer.add(okButton);
         footer.add(cancelButton);
 
+        return footer;
+    }
+
+    private void addListener() {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                controller.cancel();
             }
         });
-        return footer;
     }
 }

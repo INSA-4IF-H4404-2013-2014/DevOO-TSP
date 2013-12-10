@@ -1,15 +1,11 @@
 package Controller;
 
 import Controller.Command.Command;
-import Model.ChocoSolver.ChocoGraph;
-import Model.ChocoSolver.Graph;
-import Model.ChocoSolver.SolutionState;
-import Model.ChocoSolver.TSP;
+import Model.ChocoSolver.*;
 import Model.City.Node;
-import Model.Delivery.Round;
-import Model.Delivery.Schedule;
-import Model.Delivery.Delivery;
-import Model.Delivery.Client;
+import Model.Delivery.*;
+import Utils.XmlFileFilter;
+import View.DeliveryDialog;
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
@@ -18,13 +14,12 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Deque;
@@ -36,14 +31,14 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener, ActionListener {
+public class MainWindowController implements MouseListener, NodeListener, ListSelectionListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
     private MainWindow mainWindow;
 
     public MainWindowController() {
-        this.mainWindow = new MainWindow();
+        this.mainWindow = new MainWindow(this);
         this.mainWindow.getMapPanel().setNodeEventListener(this);
 
         historyApplied = new LinkedList<Controller.Command.Command>();
@@ -55,7 +50,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     public void loadNetwork() {
-
+        File xmlFile = openXMLFile();
     }
 
     public void loadRound() {
@@ -85,7 +80,8 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     public void addDelivery() {
-
+        DeliveryDialogController deliveryDialogController = new DeliveryDialogController(mainWindow);
+        deliveryDialogController.show();
     }
 
     public void removeDelivery() {
@@ -121,32 +117,22 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         historyBackedOut.addFirst(command);
     }
 
+    public void exit() {
+        System.exit(0);
+    }
+
     /**
-     *
+     * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
     public void computeRound() {
-        Graph graph = new ChocoGraph(mainWindow.getNetwork(), mainWindow.getRound());
-        TSP tsp = new TSP(graph);
+        ChocoGraph graph = new ChocoGraph(mainWindow.getNetwork(), mainWindow.getRound());
 
-        Boolean ok = true;
+        TSP tsp = solveTsp(graph, 100);
+        SolutionState solutionState = tsp.getSolutionState();
 
-        String message = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
-
-        int baseTime = 100;
-        int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
-
-        tsp.solve(baseTime, bound);
-
-        for( ; (tsp.getSolutionState() != SolutionState.OPTIMAL_SOLUTION_FOUND) && (baseTime <= 400) ; baseTime *= 2) {
-            tsp.solve(baseTime, bound);
-        }
-
-        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) && (askConfirmation(message)) ; baseTime *= 2) {
-            // Retry to find an optimal solution
-        }
-
-        if((tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) || (tsp.getSolutionState() == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
-            //TODO: get the best graph and print it
+        if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
+            CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
+            mainWindow.getMapPanel().setRound(calculatedRound);
         } else {
             JOptionPane.showMessageDialog(mainWindow, "Aucune trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
@@ -176,10 +162,6 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-
     /**
      * Allow user to choose a file from specified type
      * @param type the type of file you want the user to be able to choose
@@ -200,6 +182,23 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         } else {
             return null;
         }
+    }
+
+    /**
+     * Displays a JFileChooser with an XmlFileFilter only.
+     * @return the chosen XML file, or null if no valid file has been opened.
+     */
+    private File openXMLFile() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new XmlFileFilter());
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        int feedback = chooser.showOpenDialog(mainWindow);
+        if(feedback == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFile();
+        }
+
+        return null;
     }
 
     /**
@@ -252,6 +251,65 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         } else {
             return false;
         }
+    }
+
+    /**
+     * Try to find the optimal solution for the TSP
+     * If no optimal solution is found, search time will be multiplied by two twice
+     * If a solution, which not optimal, is found, ask to the user if he wants to give more time for optimal solution search
+     * @param graph the graph on which you want to search
+     * @param baseTime the time you want to allow for the search (time will be doubled twice if no solution has been founded)
+     * @return the solved TSP
+     */
+    private TSP solveTsp(Graph graph, int baseTime) {
+        TSP tsp = new TSP(graph);
+
+        String message = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
+
+        int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
+
+        tsp.solve(baseTime, bound);
+        SolutionState solutionState = tsp.getSolutionState();
+
+        for( ; (solutionState != SolutionState.OPTIMAL_SOLUTION_FOUND) && (solutionState != SolutionState.INCONSISTENT) && (baseTime <= 400) ; baseTime *= 2) {
+            tsp.solve(baseTime, bound);
+            solutionState = tsp.getSolutionState();
+        }
+
+        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) && (askConfirmation(message)) ; baseTime *= 2) {
+            tsp.solve(baseTime, bound);
+        }
+
+        return tsp;
+    }
+
+    /**
+     * Create a CalculatedRound from a TSP and a ChocoGraph
+     * @param tsp the tsp used to create the CalculatedRound
+     * @param chocoGraph the chocoGraph used to create the CalculatedRound
+     * @return the CalculatedRound
+     */
+    private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
+        int[] nodeList = tsp.getNext(); // ordered node list
+        List<Delivery> deliveriesList = new ArrayList<Delivery>();
+        List<Itinerary> itinerariesList = new ArrayList<Itinerary>();
+
+        // Temporary variables
+        ChocoDelivery chocoDelivery;
+        Delivery delivery;
+
+        for(int i = 0 ; i <= nodeList.length ; i++) {
+
+            //TODO: be sure that the delivery added to deliveriesList is not erased at each iteration (Java pointers...)
+            chocoDelivery = chocoGraph.getDelivery(nodeList[i]);
+            delivery = chocoDelivery.getDelivery();
+            deliveriesList.add(delivery);
+
+            itinerariesList.add(chocoDelivery.getItinerary(delivery.getAddress().getId()));
+        }
+
+        CalculatedRound calculatedRound = new CalculatedRound(mainWindow.getRound().getWarehouse(), deliveriesList, itinerariesList);
+        return calculatedRound;
     }
 
 } // end of class MainWindowController --------------------------------------------------------------------

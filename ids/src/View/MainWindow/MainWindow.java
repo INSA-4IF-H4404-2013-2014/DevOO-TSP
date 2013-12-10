@@ -1,5 +1,6 @@
 package View.MainWindow;
 
+import Controller.MainWindowController;
 import Model.City.Network;
 import Model.Delivery.Round;
 import Utils.UtilsException;
@@ -35,7 +36,7 @@ public class MainWindow extends JFrame {
     private Round round;
 
     private RightPanel rightPanel = new RightPanel();
-    private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
+    private RoundListPanel roundListPanel = new RoundListPanel();
 
     private MapPanel mapPanel = new MapPanel();
 
@@ -44,7 +45,11 @@ public class MainWindow extends JFrame {
 
     private JPanel mainPanel = new JPanel(new BorderLayout());
 
-    public MainWindow() {
+    protected MainWindowController mainWindowController;
+
+    public MainWindow(MainWindowController mainWindowController) {
+        this.mainWindowController = mainWindowController;
+
         // Configures main panel
         mainPanel.add(topToolBar, BorderLayout.PAGE_START);
         mainPanel.add(createSubMainPanel(), BorderLayout.CENTER);
@@ -56,11 +61,15 @@ public class MainWindow extends JFrame {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        addListener();
+
         setVisible(true);
 
         // automatic load for map testing
         try {
-            network = Network.createFromXml("../sujet/planTiny.xml");
+            network = Network.createFromXml("../sujet/plan10x10.xml");
+            //network = Network.createFromXml("../sujet/planTiny.xml");
             mapPanel.setModel(network);
         }
         catch (UtilsException e) {
@@ -93,7 +102,7 @@ public class MainWindow extends JFrame {
         JPanel subMainPanel = new JPanel(new BorderLayout());
         subMainPanel.setBorder(new EmptyBorder(SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING));
         subMainPanel.add(mapPanel, BorderLayout.CENTER);
-        subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
+        subMainPanel.add(roundListPanel, BorderLayout.WEST);
         subMainPanel.add(rightPanel, BorderLayout.EAST);
 
         return subMainPanel;
@@ -119,8 +128,8 @@ public class MainWindow extends JFrame {
      * Gets the list panel on the left of the main window
      * @return the panel on the left
      */
-    public DeliveryListPanel getDeliveryListPanel() {
-        return deliveryListPanel;
+    public RoundListPanel getRoundListPanel() {
+        return roundListPanel;
     }
 
     /**
@@ -137,5 +146,13 @@ public class MainWindow extends JFrame {
      */
     public RightPanel getRightPanel() {
         return rightPanel;
+    }
+
+    /**
+     * Adds listeners for all buttons, lists...
+     */
+    public void addListener() {
+        topMenuBar.addListener(mainWindowController);
+        topToolBar.addListener(mainWindowController);
     }
 }
