@@ -1,5 +1,7 @@
 package View;
 
+import Controller.DeliveryDialogController;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -17,6 +19,8 @@ public class DeliveryDialog extends JDialog {
     public static final int PADDING = 10;
     public static final String title = "Ajout d'une livraison";
 
+    private DeliveryDialogController controller;
+
     private JComboBox client = new JComboBox();
     private JTextField newClient = new JTextField("", 10);
     private JTextField clientAddress = new JTextField("", 12);
@@ -25,13 +29,15 @@ public class DeliveryDialog extends JDialog {
     private JButton okButton = new JButton("Confirmer");
     private JButton cancelButton = new JButton("Annuler");
 
-    public DeliveryDialog(JFrame parent) {
+    public DeliveryDialog(DeliveryDialogController controller, JFrame parent) {
         super(parent, title, true);
+        this.controller = controller;
         setContentPane(createMainPanel());
         setResizable(false);
         pack();
         setLocationRelativeTo(null);
-        setVisible(true);
+
+        addListener();
     }
 
     /**
@@ -101,12 +107,15 @@ public class DeliveryDialog extends JDialog {
         footer.add(okButton);
         footer.add(cancelButton);
 
+        return footer;
+    }
+
+    private void addListener() {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                controller.cancel();
             }
         });
-        return footer;
     }
 }

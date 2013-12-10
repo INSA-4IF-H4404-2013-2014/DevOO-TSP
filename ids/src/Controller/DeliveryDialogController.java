@@ -1,46 +1,48 @@
 package Controller;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import View.DeliveryDialog;
+
+import javax.swing.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: gabadie
- * Date: 02/12/13
- * Time: 09:49
- * To change this template use File | Settings | File Templates.
+ * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
+ * Date: 10/12/13
+ * Time: 20:14
+ * This class is the controller of the small dialog window which is opened when adding a delivery.
  */
-public class DeliveryDialogController implements MouseListener {
+public class DeliveryDialogController {
+    private DeliveryDialog dialog;
+
+    /**
+     * Creates the controller.
+     * @param mainWindow: the parent window (for the modal mode)
+     */
+    public DeliveryDialogController(JFrame mainWindow) {
+        dialog = new DeliveryDialog(this, mainWindow);
+
+    }
+
+    /**
+     * Action to be performed when the user clicks on "confirm" button
+     */
     public void confirm() {
 
     }
 
+    /**
+     * Action to be performed when the user clicks on "cancel" button
+     */
     public void cancel() {
-
+        dialog.dispose();
     }
 
-    @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    /**
+     * Sets the dialog visible.
+     *
+     * This allows the setVisible(true) to be called from another class: not from our controller.
+     * Calling setVisible(true) in our controller would cause the constructor to never finish!
+     */
+    protected void show() {
+        dialog.setVisible(true);
     }
 }
