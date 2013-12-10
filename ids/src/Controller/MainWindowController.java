@@ -4,6 +4,7 @@ import Controller.Command.Command;
 import Model.ChocoSolver.*;
 import Model.City.Node;
 import Model.Delivery.*;
+import Utils.XmlFileFilter;
 import View.DeliveryDialog;
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
@@ -49,7 +50,7 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
     }
 
     public void loadNetwork() {
-
+        File xmlFile = openXMLFile();
     }
 
     public void loadRound() {
@@ -181,6 +182,23 @@ public class MainWindowController implements MouseListener, NodeListener, ListSe
         } else {
             return null;
         }
+    }
+
+    /**
+     * Displays a JFileChooser with an XmlFileFilter only.
+     * @return the chosen XML file, or null if no valid file has been opened.
+     */
+    private File openXMLFile() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new XmlFileFilter());
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        int feedback = chooser.showOpenDialog(mainWindow);
+        if(feedback == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFile();
+        }
+
+        return null;
     }
 
     /**

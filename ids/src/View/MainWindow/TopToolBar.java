@@ -26,8 +26,7 @@ public class TopToolBar extends JToolBar {
         setFloatable(false);
         //setRollover(true);
 
-        ImageIcon imgOpenMap = new ImageIcon("./src/open_map.png");
-        loadMap.setIcon(imgOpenMap);
+        loadMap.setIcon(new ImageIcon("./src/open_map.png"));
         add(loadMap);
 
         addSeparator();
@@ -46,7 +45,6 @@ public class TopToolBar extends JToolBar {
         add(redo);
 
 
-        loadMap.setEnabled(false);
         loadRound.setEnabled(false);
         saveRound.setEnabled(false);
         //add.setEnabled(false);
@@ -61,6 +59,14 @@ public class TopToolBar extends JToolBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.addDelivery();
+            }
+        });
+
+        // Load map button
+        loadMap.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.loadNetwork();
             }
         });
     }
