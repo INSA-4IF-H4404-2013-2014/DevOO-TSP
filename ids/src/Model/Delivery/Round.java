@@ -32,6 +32,9 @@ public class Round {
     /** The schedules containing the deliveries */
     private List<Schedule> schedules = new LinkedList<Schedule>();
 
+    /** The clients delivered */
+    private List<Client> clients = new LinkedList<Client>();
+
     /**
      * Constructor
      * @param network Network containing every node
@@ -129,15 +132,15 @@ public class Round {
 
     public Client getClient(String clientId)
     {
-        for(Schedule s : schedules) {
-            for(Delivery d : s.getDeliveries()) {
-                if(d.getClient().getId().equals(clientId)) {
-                    return d.getClient();
-                }
+        for(Client c : clients) {
+            if(c.getId().equals(clientId)) {
+                return c;
             }
         }
 
-        return new Client(clientId);
+        Client c = new Client(clientId);
+        clients.add(c);
+        return c;
     }
 
     /**
@@ -162,6 +165,15 @@ public class Round {
      */
     public List<Schedule> getSchedules() {
         return schedules;
+    }
+
+
+    /**
+     * Returns the clients delivered
+     * @return the clients delivered
+     */
+    public List<Client> getClients() {
+        return clients;
     }
 
     /**

@@ -1,5 +1,6 @@
 package Model.ChocoSolver;
 
+import Model.City.Node;
 import Model.Delivery.Delivery;
 import Model.Delivery.Itinerary;
 import cern.colt.list.IntArrayList;
@@ -18,6 +19,9 @@ public class ChocoDelivery {
     /** The delivery associatedd to the ChocoDelivery */
     private Delivery delivery;
 
+    /** Address of the delivery */
+    private Node address;
+
     /** The successors node of the delivery */
     private IntArrayList successorsNode;
 
@@ -26,16 +30,31 @@ public class ChocoDelivery {
 
     /**
      * Constructor
-     * @param delivery the delivery which is linked to the ChocoDelivery
+     * @param delivery the delivery
      */
     public ChocoDelivery(Delivery delivery) {
         this.delivery = delivery;
+        this.address = delivery.getAddress();
+        successorsNode = new IntArrayList();
+        successorsItinerary = new ArrayList<Itinerary>();
+    }
+
+    /**
+     * Constructor
+     * @param address the delivery node
+     */
+    public ChocoDelivery(Node address) {
+        this.address = address;
         successorsNode = new IntArrayList();
         successorsItinerary = new ArrayList<Itinerary>();
     }
 
     public Delivery getDelivery() {
         return delivery;
+    }
+
+    public Node getAddress() {
+        return address;
     }
 
     /**

@@ -101,6 +101,17 @@ public class Network {
     }
 
     /**
+     * Returns the cost of an existing arc going from a source node to an end node
+     * Note : A call to this method with an unexisting arc will throw a null pointer exception
+     * @param source Source node
+     * @param target Target node
+     * @return The cost of an arc
+     */
+    public int getCost(int source, int target) {
+        return findNode(source).findOutgoingTo(target).getCost();
+    }
+
+    /**
      * Creates a node with given id and position (x,y)
      * @param id the node's id
      * @param x the x position
