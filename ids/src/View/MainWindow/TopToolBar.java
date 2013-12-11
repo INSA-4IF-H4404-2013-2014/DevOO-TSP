@@ -16,11 +16,11 @@ import java.awt.event.ActionListener;
 public class TopToolBar extends JToolBar {
     protected JButton loadMap = new JButton();
     protected JButton loadRound = new JButton();
-    protected JButton saveRound = new JButton("Enregistrer tournée");
-    protected JButton add = new JButton("Ajouter");
-    protected JButton delete = new JButton("Supprimer");
-    protected JButton undo = new JButton("Défaire");
-    protected JButton redo = new JButton("Refaire");
+    protected JButton saveRound = new JButton();
+    protected JButton add = new JButton();
+    protected JButton delete = new JButton();
+    protected JButton undo = new JButton();
+    protected JButton redo = new JButton();
 
     public JButton getLoadMap() {
         return loadMap;
@@ -56,21 +56,23 @@ public class TopToolBar extends JToolBar {
 
         loadMap.setIcon(new ImageIcon("./src/open_map.png"));
         add(loadMap);
-
-        addSeparator();
-
         loadRound.setIcon(new ImageIcon("./src/open_round.png"));
         add(loadRound);
+
+        addSeparator();
+        saveRound.setIcon(new ImageIcon("./src/save_round.png"));
         add(saveRound);
 
         addSeparator();
-
+        add.setIcon(new ImageIcon("./src/add.png"));
         add(add);
+        delete.setIcon(new ImageIcon("./src/delete.png"));
         add(delete);
 
         addSeparator();
-
+        undo.setIcon(new ImageIcon("./src/undo.png"));
         add(undo);
+        redo.setIcon(new ImageIcon("./src/redo.png"));
         add(redo);
 
         saveRound.setEnabled(false);
