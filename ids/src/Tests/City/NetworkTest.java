@@ -80,6 +80,15 @@ public class NetworkTest {
     }
 
     @Test
+    public void testArcDirectionAngle() {
+        assertTrue(Math.abs(CN.getDirectionAngle() - 0.0) < 0.01);
+        assertTrue(Math.abs(CH.getDirectionAngle() - 45.0) < 0.01);
+        assertTrue(Math.abs(CE.getDirectionAngle() - 90.0) < 0.01);
+        assertTrue(Math.abs(CS.getDirectionAngle() - 180.0) < 0.01);
+        assertTrue(Math.abs(CW.getDirectionAngle() - 270.0) < 0.01);
+    }
+
+    @Test
     public void testGetDirectionTo() {
 
         Arc.Direction direction1 = NC.getDirectionTo(CS);
