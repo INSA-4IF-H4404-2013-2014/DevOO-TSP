@@ -10,13 +10,13 @@ import java.awt.*;
  * Time: 20:20
  * Scrollable list of rounds on the left of the window
  */
-public class RoundListPanel extends JScrollPane {
+public class DeliveryListPanel extends JScrollPane {
 
     private JList deliveryList = new JList();
     public static final float DEFAULT_WIDTH_RATIO = (float)0.2;
     public static final int PADDING = 6;
 
-    public RoundListPanel() {
+    public DeliveryListPanel() {
 
         // This array is just test data.
         // Of course we need to load data the controller gives us (fetched in the model).

@@ -36,7 +36,7 @@ public class MainWindow extends JFrame {
     private Round round;
 
     private RightPanel rightPanel = new RightPanel();
-    private RoundListPanel roundListPanel = new RoundListPanel();
+    private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
 
     private MapPanel mapPanel = new MapPanel();
 
@@ -102,7 +102,7 @@ public class MainWindow extends JFrame {
         JPanel subMainPanel = new JPanel(new BorderLayout());
         subMainPanel.setBorder(new EmptyBorder(SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING));
         subMainPanel.add(mapPanel, BorderLayout.CENTER);
-        subMainPanel.add(roundListPanel, BorderLayout.WEST);
+        subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
         subMainPanel.add(rightPanel, BorderLayout.EAST);
 
         return subMainPanel;
@@ -128,8 +128,8 @@ public class MainWindow extends JFrame {
      * Gets the list panel on the left of the main window
      * @return the panel on the left
      */
-    public RoundListPanel getRoundListPanel() {
-        return roundListPanel;
+    public DeliveryListPanel getDeliveryListPanel() {
+        return deliveryListPanel;
     }
 
     /**
