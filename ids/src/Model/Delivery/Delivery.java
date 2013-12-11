@@ -126,4 +126,8 @@ public class Delivery {
     public Schedule getSchedule() {
         return schedule;
     }
+
+    public String toString() {
+        return String.valueOf(id) + " - " + address.getId();
+    }
 }
