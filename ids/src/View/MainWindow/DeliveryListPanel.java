@@ -1,5 +1,6 @@
 package View.MainWindow;
 
+import Model.Delivery.Delivery;
 import View.Utils;
 
 import javax.swing.*;
@@ -33,7 +34,7 @@ public class DeliveryListPanel extends JScrollPane {
      * Asks the view to display the given list
      * @param list to display
      */
-    public void setModel(Vector<String> list) {
+    public void setModel(Vector<Delivery> list) {
         deliveryList.setListData(list);
         Utils.enableJList(deliveryList, true);
     }

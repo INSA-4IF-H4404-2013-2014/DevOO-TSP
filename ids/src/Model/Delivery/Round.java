@@ -134,19 +134,19 @@ public class Round {
     }
 
     /**
-     * Gets a list of strings for all deliveries.
+     * Gets a list of deliveries for all deliveries.
      * This is for the view which will call this to fill its list on the left.
      * @return a vector of strings
      */
-    public Vector<String> getDeliveryDisplayableList() {
-        Vector<String> displayableDeliveryList = new Vector<String>();
+    public Vector<Delivery> getDeliveryList() {
+        Vector<Delivery> deliveryList = new Vector<Delivery>();
         for(Schedule sched : schedules) {
             for(Delivery deliver : sched.getDeliveries()) {
-                displayableDeliveryList.add(deliver.toString());
+                deliveryList.add(deliver);
             }
         }
 
-        return displayableDeliveryList;
+        return deliveryList;
     }
 
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)

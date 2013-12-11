@@ -122,7 +122,7 @@ public class MainWindow extends JFrame {
      */
     public void setRound(Round round) {
         this.round = round;
-        deliveryListPanel.setModel(round.getDeliveryDisplayableList());
+        deliveryListPanel.setModel(round.getDeliveryList());
     }
 
     /**

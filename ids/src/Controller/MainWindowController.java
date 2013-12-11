@@ -72,14 +72,15 @@ public class MainWindowController implements NodeListener {
         }
     }
 
+    /**
+     * Action triggered when user wants to load a round
+     */
     public void loadRound() {
         File xmlFile = openXMLFile();
 
         if(xmlFile != null) {
-            Round round = null;
             try {
-                round = Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork());
-                mainWindow.setRound(round);
+                mainWindow.setRound(Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork()));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la tournée.\n" +
                         e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
