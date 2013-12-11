@@ -32,9 +32,9 @@ public class ChocoGraphTest {
 
         ChocoGraph chocograph = new ChocoGraph(network, round);
 
-        assertTrue(chocograph.getMaxArcCost() == 9);
-        assertTrue(chocograph.getMinArcCost() == 1);
         assertTrue(chocograph.getNbVertices() == 7);
+        assertTrue(chocograph.getMinArcCost() == 1);
+        assertTrue(chocograph.getMaxArcCost() == 9);
 
         int[][] testCost = chocograph.getCost();
         assertTrue(testCost[3][7] == 4);
@@ -50,8 +50,5 @@ public class ChocoGraphTest {
         assertTrue(testSucc[0] == 5 || testSucc[0] == 7);
         testSucc = chocograph.getSucc(9);
         assertTrue(testSucc[0] == 0);
-
-
-
     }
 }

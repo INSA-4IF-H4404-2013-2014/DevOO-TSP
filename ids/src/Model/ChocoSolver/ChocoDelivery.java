@@ -16,6 +16,9 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ChocoDelivery {
+    /** Choco ID used in ChocoGraph costs */
+    private Integer chocoId;
+
     /** The delivery associatedd to the ChocoDelivery */
     private Delivery delivery;
 
@@ -32,10 +35,10 @@ public class ChocoDelivery {
      * Constructor
      * @param delivery the delivery
      */
-    public ChocoDelivery(Delivery delivery) {
+    public ChocoDelivery(Integer chocoId, Delivery delivery) {
+        this.chocoId = chocoId;
         this.delivery = delivery;
         this.address = delivery.getAddress();
-        successorsNode = new IntArrayList();
         successorsItinerary = new ArrayList<Itinerary>();
     }
 
@@ -43,9 +46,9 @@ public class ChocoDelivery {
      * Constructor
      * @param address the delivery node
      */
-    public ChocoDelivery(Node address) {
+    public ChocoDelivery(Integer chocoId, Node address) {
+        this.chocoId = chocoId;
         this.address = address;
-        successorsNode = new IntArrayList();
         successorsItinerary = new ArrayList<Itinerary>();
     }
 
@@ -55,6 +58,10 @@ public class ChocoDelivery {
 
     public Node getAddress() {
         return address;
+    }
+
+    public void setSuccessorsNumber(int n) {
+        successorsNode = new IntArrayList(n);
     }
 
     /**
@@ -79,7 +86,8 @@ public class ChocoDelivery {
      * @return the itinerary
      */
     public Itinerary getItinerary(int nodeId) {
-        return successorsItinerary.get(nodeId);
+        int idx = successorsNode.indexOf(nodeId);
+        return successorsItinerary.get(idx);
     }
 
     /**
@@ -97,14 +105,22 @@ public class ChocoDelivery {
      * @return the costs of each itineraries linked to the delivery
      */
     public int[] getCosts() {
+        int i = 0;
         int[] costs = new int[successorsItinerary.size()];
-        int i = -1;
 
         for(Itinerary itinerary:successorsItinerary) {
-            i++;
             costs[i] = itinerary.getCost();
+            ++i;
         }
 
         return costs;
+    }
+
+    public int getSuccArcCost(int nodeId) {
+        return getItinerary(nodeId).getCost();
+    }
+
+    public Integer getChocoId() {
+        return chocoId;
     }
 }
