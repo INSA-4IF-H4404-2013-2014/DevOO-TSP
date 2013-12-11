@@ -3,7 +3,10 @@ package Tests.ChocoSolver;
 import Model.City.Network;
 import Model.City.Node;
 import Model.Delivery.Client;
+import Model.Delivery.Round;
 import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,5 +37,10 @@ public class CalculatedRoundTest {
 
         Client client = new Client("Toto");
 
+    }
+
+    @Test
+    public void testHtmlParser() {
+        // TODO: testHtmlParser()
     }
 }
