@@ -122,6 +122,7 @@ public class ChocoGraph implements Graph {
         return minSchedule;
     }
 
+    //Find shortest past (all nodes and arcs) between source and each next delivery for a network
     private void computeDistinctScheduleArcs(Network network, Delivery source, List<Delivery> successors) {
         Map<Integer, NodeInfo> dict;
         List<Integer> shortestPath;
@@ -136,6 +137,7 @@ public class ChocoGraph implements Graph {
         }
     }
 
+    //In a network, find arc between two successive nodes taken in a organized list of nodes
     private List<Arc> getDirections(Network network, List<Integer> nodesList) {
         List<Arc> directions = new LinkedList<Arc>();
         ListIterator<Integer> iter = nodesList.listIterator();
@@ -157,7 +159,7 @@ public class ChocoGraph implements Graph {
     }
 
 
-
+    //Find next node with minimal cost and not visited yet
     private Integer getMinUnvisited(Map<Integer, NodeInfo> dict, List<Integer> neighbours) {
         int min = Integer.MAX_VALUE;
         NodeInfo n, minNodeInfo = null;
@@ -184,6 +186,7 @@ public class ChocoGraph implements Graph {
         return selected;
     }
 
+    //Yeah, that's Dijkstra. Trivial.
     private Map<Integer, NodeInfo> runDijkstra(Network network, Integer source, List<Delivery> succ) {
         //Variable declaration and initialization
         NodeInfo tmpNodeInfo;
@@ -233,6 +236,7 @@ public class ChocoGraph implements Graph {
         return dict;
     }
 
+    //Give the shortest path make of nodes between source and target based on Dijkstra graph
     private List<Integer> getShortestPath(Map<Integer, NodeInfo> dict, Integer target) {
         Integer tmp = target;
         NodeInfo tmpNodeInfo = dict.get(tmp);
