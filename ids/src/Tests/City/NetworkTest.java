@@ -50,7 +50,7 @@ public class NetworkTest {
     @Test
     public void testInvalidCreate() throws UtilsException {
 
-        for(int i = 1; i < 6; ++i) {
+        for(int i = 1; i < 8; ++i) {
             try {
                 Network.createFromXml("resources/tests/invalidNet" + i + ".xml");
                 fail();
