@@ -154,6 +154,7 @@ public class MapPanel extends JPanel {
     public void setModel(Network network) {
         modelNetwork = network;
         modelRound = null;
+        selectedNode = null;
 
         this.refreshNodeAndArcs();
     }
@@ -181,9 +182,12 @@ public class MapPanel extends JPanel {
      * Sets the currently selected node. This assumes that selectedNode is in the current model
      */
     public void setSelectedNode(Model.City.Node node) {
-        int nodeId = node.getId();
-
-        selectedNode = this.findNode(nodeId);
+        if(node == null) {
+            selectedNode = null;
+        } else {
+            int nodeId = node.getId();
+            selectedNode = this.findNode(nodeId);
+        }
 
         this.repaint();
     }
