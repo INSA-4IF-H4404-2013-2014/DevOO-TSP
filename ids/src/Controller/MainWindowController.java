@@ -172,16 +172,19 @@ public class MainWindowController implements NodeListener {
     public void nodeClicked(MapPanel panel, Node node) {
         panel.setSelectedNode(node);
         if (!(null == this.mainWindow.getRound())) {
-            if (null == this.mainWindow.getRound().findDelivered(node.getId())) {
+            Delivery del;
+            if (null == (del =this.mainWindow.getRound().findDelivered(node.getId()))) {
                 //if the node doesnt contains a delivery activate the "ajouter" button
                 mainWindow.featureAddSetEnable(true);
                 mainWindow.featureDeleteSetEnable(false);
+                mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
             }
             else
             {
-                //if the node contains a delivery activate the "supprimer" button
+                //if the node contains a delivery activate the "supprimer" button and maj delivery info panel
                 mainWindow.featureAddSetEnable(false);
                 mainWindow.featureDeleteSetEnable(true);
+                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del);
             }
         }
     }

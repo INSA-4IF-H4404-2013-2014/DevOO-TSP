@@ -196,12 +196,30 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Enable or disable the feature 'load a map'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureLoadRMapSetEnable(boolean b) {
+        topMenuBar.openMap.setEnabled(b);
+        topToolBar.loadMap.setEnabled(b);
+    }
+
+    /**
      * Enable or disable the feature 'load a round'
      * @param b whether to enable or disable the feature
      */
     public void featureLoadRoundSetEnable(boolean b) {
         topMenuBar.openRound.setEnabled(b);
         topToolBar.loadRound.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'save a round'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureSaveRoundSetEnable(boolean b) {
+        topMenuBar.saveRound.setEnabled(b);
+        topToolBar.saveRound.setEnabled(b);
     }
 
     /**
@@ -220,5 +238,23 @@ public class MainWindow extends JFrame {
     public void featureDeleteSetEnable(boolean b) {
         topMenuBar.delButton.setEnabled(b);
         topToolBar.delete.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'undo'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureUndoSetEnable(boolean b) {
+        topMenuBar.undoButton.setEnabled(b);
+        topToolBar.undo.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'redo'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureRedoSetEnable(boolean b) {
+        topMenuBar.redoButton.setEnabled(b);
+        topToolBar.redo.setEnabled(b);
     }
 }
