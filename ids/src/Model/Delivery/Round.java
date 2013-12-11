@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.*;
@@ -205,7 +206,7 @@ public class Round {
      * @throws UtilsException If the parsing returns an exception
      * @throws ParserConfigurationException If the XML file contains errors (missing or invalids elements or attributes)
      */
-    public static Round createFromXml(String xmlFilePath, Network network) throws UtilsException, ParserConfigurationException {
+    public static Round createFromXml(String xmlFilePath, Network network) throws UtilsException, ParserConfigurationException, FileNotFoundException {
         Element root;
         Document document;
         DocumentBuilder factory;
@@ -216,7 +217,7 @@ public class Round {
         File xmlFile = new File(xmlFilePath);
 
         if(!xmlFile.exists()) {
-            throw new ParserConfigurationException("Fichier <" + xmlFilePath + "> manquant.");
+            throw new FileNotFoundException("Fichier <" + xmlFilePath + "> manquant.");
         }
 
         try {
