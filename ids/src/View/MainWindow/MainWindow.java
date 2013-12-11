@@ -203,4 +203,22 @@ public class MainWindow extends JFrame {
         topMenuBar.openRound.setEnabled(b);
         topToolBar.loadRound.setEnabled(b);
     }
+
+    /**
+     * Enable or disable the feature 'add a delivery'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureAddSetEnable(boolean b) {
+        topMenuBar.addButton.setEnabled(b);
+        topToolBar.add.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'add a delivery'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureDeleteSetEnable(boolean b) {
+        topMenuBar.delButton.setEnabled(b);
+        topToolBar.delete.setEnabled(b);
+    }
 }

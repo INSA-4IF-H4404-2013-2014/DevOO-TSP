@@ -174,18 +174,14 @@ public class MainWindowController implements NodeListener {
         if (!(null == this.mainWindow.getRound())) {
             if (null == this.mainWindow.getRound().findDelivered(node.getId())) {
                 //if the node doesnt contains a delivery activate the "ajouter" button
-                mainWindow.getTopToolBar().getAdd().setEnabled(true);
-                mainWindow.getTopMenuBar().getAddButton().setEnabled(true);
-                mainWindow.getTopToolBar().getDelete().setEnabled(false);
-                mainWindow.getTopMenuBar().getDelButton().setEnabled(false);
+                mainWindow.featureAddSetEnable(true);
+                mainWindow.featureDeleteSetEnable(false);
             }
             else
             {
                 //if the node contains a delivery activate the "supprimer" button
-                mainWindow.getTopToolBar().getAdd().setEnabled(false);
-                mainWindow.getTopMenuBar().getAddButton().setEnabled(false);
-                mainWindow.getTopToolBar().getDelete().setEnabled(true);
-                mainWindow.getTopMenuBar().getDelButton().setEnabled(true);
+                mainWindow.featureAddSetEnable(false);
+                mainWindow.featureDeleteSetEnable(true);
             }
         }
     }
