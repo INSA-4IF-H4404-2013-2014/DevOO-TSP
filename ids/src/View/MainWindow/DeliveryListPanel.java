@@ -3,6 +3,7 @@ package View.MainWindow;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -36,5 +37,13 @@ public class DeliveryListPanel extends JScrollPane {
         setViewportView(deliveryList);
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         setPreferredSize(new Dimension((int)(MainWindow.DEFAULT_WIDTH*DEFAULT_WIDTH_RATIO), 0));
+    }
+
+    /**
+     * Asks the view to display the given list
+     * @param list to display
+     */
+    public void setModel(Vector<String> list) {
+        deliveryList.setListData(list);
     }
 }

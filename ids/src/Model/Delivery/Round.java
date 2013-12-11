@@ -117,6 +117,22 @@ public class Round {
         schedule.removeDelivery(delivery);
     }
 
+    /**
+     * Gets a list of strings for all deliveries.
+     * This is for the view which will call this to fill its list on the left.
+     * @return a vector of strings
+     */
+    public Vector<String> getDeliveryDisplayableList() {
+        Vector<String> displayableDeliveryList = new Vector<String>();
+        for(Schedule sched : schedules) {
+            for(Delivery deliver : sched.getDeliveries()) {
+                displayableDeliveryList.add(deliver.toString());
+            }
+        }
+
+        return displayableDeliveryList;
+    }
+
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
     {
         for(Schedule s : schedules) {

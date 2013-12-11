@@ -87,11 +87,30 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Sets the round.
+     * Asks the deliveryListPanel to display it.
+     * @param round the round to set & display
+     */
+    public void setRound(Round round) {
+        this.round = round;
+        deliveryListPanel.setModel(round.getDeliveryDisplayableList());
+    }
+
+    /**
      * Get the network of the main window
      * @return the network of the main window
      */
     public Network getNetwork() {
         return network;
+    }
+
+    /**
+     * Sets the networks.
+     * Asks the mapPanel to display it.
+     */
+    public void setNetwork(Network net) {
+        network = net;
+        mapPanel.setModel(net);
     }
 
     /**

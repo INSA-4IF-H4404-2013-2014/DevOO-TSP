@@ -15,7 +15,9 @@ import View.MapPanel.NodeListener;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class MainWindowController implements NodeListener {
         if(xmlFile != null) {
             try {
                 Network network = Network.createFromXml(xmlFile.getAbsolutePath());
-                mainWindow.getMapPanel().setModel(network);
+                mainWindow.setNetwork(network);
 
                 // Map has been successfully loaded, we enable 'load round' feature.
                 mainWindow.featureLoadRoundSetEnable(true);
@@ -74,17 +76,13 @@ public class MainWindowController implements NodeListener {
         File xmlFile = openXMLFile();
 
         if(xmlFile != null) {
+            Round round = null;
             try {
-                Network network = Network.createFromXml(xmlFile.getAbsolutePath());
-                mainWindow.getMapPanel().setModel(network);
-
-                // Map has been successfully loaded, we enable 'load round' feature.
-                mainWindow.featureLoadRoundSetEnable(true);
-
-
-            } catch (UtilsException e) {
-                JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
-                        e.getMessage(), "Erreur lors du chargement de la carte", JOptionPane.ERROR_MESSAGE);
+                round = Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork());
+                mainWindow.setRound(round);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la tournée.\n" +
+                        e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
