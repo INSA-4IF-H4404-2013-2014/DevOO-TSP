@@ -44,7 +44,9 @@ public class CalculatedRound {
         this.warehouse = warehouse;
         this.orderedDeliveries = orderedDeliveries;
         this.orderedItineraries = orderedItineraries;
-        calculateEstimatedSchedules();
+        if(!orderedDeliveries.isEmpty()) {
+            calculateEstimatedSchedules();
+        }
     }
 
     /**
