@@ -14,6 +14,8 @@ import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -32,7 +34,7 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements NodeListener {
+public class MainWindowController implements NodeListener, ListSelectionListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
@@ -357,5 +359,23 @@ public class MainWindowController implements NodeListener {
         return calculatedRound;
     }
 
+    /**
+     * Gets triggered when the selection changes in DeliveryListPanel's JList
+     * @param e event
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if(e.getValueIsAdjusting()) {
+            return;
+        }
+
+        Delivery selectedDelivery = mainWindow.getDeliveryListPanel().getSelectedValue();
+        if(selectedDelivery != null) {
+            mainWindow.getMapPanel().setSelectedNode(selectedDelivery.getAddress());
+        }
+        else {
+            mainWindow.getMapPanel().setSelectedNode(null);
+        }
+    }
 } // end of class MainWindowController --------------------------------------------------------------------
 
