@@ -26,6 +26,7 @@ public class ChocoGraph implements Graph {
     /**
      * Key : a Choco graph node id, between 0 and nbVertices
      * Value : a real network id, from the xml file
+     * Note : 0 is the warehouse's ID
      */
     private Map<Integer, Integer> nodesId = new HashMap<Integer, Integer>();
 
@@ -49,14 +50,9 @@ public class ChocoGraph implements Graph {
 
     private void initCosts() {
         ChocoDelivery cd;
-        Iterator<Integer> iter = deliveries.keySet().iterator();
+        int chocoId;
 
         cost = new int[nbVertices][];
-
-        //Initializing nodes ID linking from choco network IDs to initial networks IDs
-        for(int i = 0; i < nbVertices; ++i) {
-            nodesId.put(new Integer(i), iter.next());
-        }
 
         //Initializing cost matrix and calculating max arc cost
         //Unexisting arcs are initialized with -1
@@ -64,25 +60,27 @@ public class ChocoGraph implements Graph {
             cost[i] = new int[nbVertices];
             cd = getChocoDeliveryFromChocoId(i);
 
-            //Initializing successors cost for a delivery node
-            for(int j = 0; j < nbVertices && j < cd.getSuccessorsItinerary().size(); ++j) {
-                cost[i][j] = cd.getSuccArcCost(nodesId.get(j));
-
-                if(cost[i][j] > this.maxArcCost) {
-                    this.maxArcCost = cost[i][j];
-                }
-
-                if(cost[i][j] < this.minArcCost) {
-                    this.minArcCost = cost[i][j];
-                }
+            //Initializing successors cost for a delivery node at -1
+            for(int j = 0; j < nbVertices; ++j) {
+                cost[i][j] = -1;
             }
 
-            for(int j = cd.getSuccessorsItinerary().size(); j < nbVertices; ++j) {
-                cost[i][j] = -1;
+            //Initializing successors cost for a delivery node with real cost for existing arcs
+            for(int realNodeId : cd.getSuccessorsNode()) {
+                chocoId = getChocoDeliveryFromNetworkId(realNodeId).getChocoId();
+                cost[i][chocoId] = cd.getSuccArcCost(realNodeId);
+
+                if(cost[i][chocoId] > this.maxArcCost) {
+                    this.maxArcCost = cost[i][chocoId];
+                }
+
+                if(cost[i][chocoId] < this.minArcCost) {
+                    this.minArcCost = cost[i][chocoId];
+                }
             }
         }
 
-        //Initializing unexisting arcs (-1) with max cost + 1
+        //Initializing unexisting arcs with max cost + 1
         for(int i = 0; i < nbVertices; ++i) {
             for(int j = 0; j < nbVertices; ++j) {
                 if(cost[i][j] == -1) {
@@ -94,18 +92,23 @@ public class ChocoGraph implements Graph {
     }
 
     private void initChocoDeliveries(Network network, Round round) {
+        int i = 0;
         Map<Integer, NodeInfo> dict = new HashMap<Integer, NodeInfo>();
         List<Schedule> schedules = new LinkedList<Schedule>();
         Schedule currentSchedule = null, nextSchedule;
 
         //Initializing schedules temporary list and the delivery map
-        ChocoDelivery warehouse = new ChocoDelivery(round.getWarehouse());
+        ChocoDelivery warehouse = new ChocoDelivery(0, round.getWarehouse());
         deliveries.put(round.getWarehouse().getId(), warehouse);
+        nodesId.put(i, round.getWarehouse().getId());
+        ++i;
 
         for(Schedule s : round.getSchedules()) {
             if(!s.getDeliveries().isEmpty()) {
                 for(Delivery d : s.getDeliveries()) {
-                    deliveries.put(d.getAddress().getId(), new ChocoDelivery(d));
+                    deliveries.put(d.getAddress().getId(), new ChocoDelivery(i, d));
+                    nodesId.put(i, d.getAddress().getId());
+                    ++i;
                 }
                 schedules.add(s);
             }
@@ -202,13 +205,16 @@ public class ChocoGraph implements Graph {
     private void computeDistinctScheduleArcs(Network network, Node source, List<Node> successors, Map<Integer, NodeInfo> dict) {
         List<Integer> shortestPath;
         List<Arc> directions;
+        List<Node> succCopy = new LinkedList<Node>(successors);
+        ChocoDelivery current = deliveries.get(source.getId());
+        current.setSuccessorsNumber(successors.size());
 
-        runDijkstra(network, source.getId(), successors, dict);
+        runDijkstra(network, source.getId(), succCopy, dict);
 
         for(Node n : successors) {
             shortestPath = getShortestPath(dict, n.getId());
             directions = getDirections(network, shortestPath);
-            deliveries.get(source.getId()).addSuccessor(n.getId(), new Itinerary(source, n, directions));
+            current.addSuccessor(n.getId(), new Itinerary(source, n, directions));
         }
     }
 
@@ -313,10 +319,12 @@ public class ChocoGraph implements Graph {
         List<Integer> path = new LinkedList<Integer>();
 
         while(tmpNodeInfo.previous != null) {
-            path.add(tmp, 0);
+            path.add(0, tmp);
             tmp = tmpNodeInfo.previous;
             tmpNodeInfo = dict.get(tmp);
         }
+
+        path.add(0, tmp);
 
         return path;
     }
