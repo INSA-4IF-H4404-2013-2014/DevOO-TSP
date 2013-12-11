@@ -260,6 +260,9 @@ public class CalculatedRound {
             html += tableOpen;
             for(Arc arc:arcList) {
                 html += tdOpen;
+
+                //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
+
                 html += trOpen + "Prendre rue " + arc.getStreet().getName() + trClose;
                 html += trOpen + arc.getLength() + "m" + trClose;
                 html += trOpen + arc.getCost()/60 + "min" + trClose;
