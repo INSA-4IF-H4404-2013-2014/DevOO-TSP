@@ -170,6 +170,12 @@ public class TopMenuBar extends JMenuBar{
                 controller.loadNetwork();
             }
         });
+        openRound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.loadRound();
+            }
+        });
 
         fileExit.addActionListener(new ActionListener() {
             @Override
