@@ -74,6 +74,12 @@ public class NetworkTest {
     }
 
     @Test
+    public void testNodeFindOutgoingTo() {
+        assertTrue(CW == C.findOutgoingTo(W));
+        assertTrue(CE == C.findOutgoingTo(2));
+    }
+
+    @Test
     public void testGetDirectionTo() {
 
         Arc.Direction direction1 = NC.getDirectionTo(CS);
