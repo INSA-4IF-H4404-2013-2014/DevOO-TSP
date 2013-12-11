@@ -73,6 +73,7 @@ public class TopToolBar extends JToolBar {
         add(undo);
         add(redo);
 
+        loadRound.setEnabled(false);
         saveRound.setEnabled(false);
         add.setEnabled(false);
         delete.setEnabled(false);

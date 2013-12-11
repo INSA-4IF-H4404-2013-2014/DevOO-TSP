@@ -117,16 +117,15 @@ public class TopMenuBar extends JMenuBar{
         file.addSeparator();
         file.add(fileExit);
 
+        openRound.setEnabled(false);
         computeRound.setEnabled(false);
         saveRound.setEnabled(false);
-        //computeRound.setEnabled(false);
 
         add(file);
     }
 
     private void createEditMenu() {
         JMenu edit = new JMenu("Éditer");
-        //edit.setEnabled(false);
 
         addButton = new JMenuItem("Ajouter une livraison");
 
