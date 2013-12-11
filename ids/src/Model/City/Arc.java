@@ -134,7 +134,7 @@ public class Arc {
 
         String newStreetName = arc.getStreet().getName();
 
-        if(street.getName().equals(street.getName())) {
+        if(street.getName().equals(newStreetName)) {
             return Direction.KEEP_GOING;
         }
 
