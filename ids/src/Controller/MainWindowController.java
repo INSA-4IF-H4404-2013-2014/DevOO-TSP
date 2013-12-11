@@ -154,8 +154,8 @@ public class MainWindowController implements NodeListener {
     /**
      * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
-    public void computeRound() {
-        ChocoGraph graph = new ChocoGraph(mainWindow.getNetwork(), mainWindow.getRound());
+    public void computeRound(Network network, Round round) {
+        ChocoGraph graph = new ChocoGraph(network, round);
 
         TSP tsp = solveTsp(graph, 100);
         SolutionState solutionState = tsp.getSolutionState();
