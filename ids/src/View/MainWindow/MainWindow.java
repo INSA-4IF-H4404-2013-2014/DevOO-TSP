@@ -40,7 +40,7 @@ public class MainWindow extends JFrame {
     private Round round;
 
     private RightPanel rightPanel = new RightPanel();
-    private RoundListPanel roundListPanel = new RoundListPanel();
+    private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
 
     private MapPanel mapPanel = new MapPanel();
 
@@ -106,11 +106,30 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Sets the round.
+     * Asks the deliveryListPanel to display it.
+     * @param round the round to set & display
+     */
+    public void setRound(Round round) {
+        this.round = round;
+        deliveryListPanel.setModel(round.getDeliveryDisplayableList());
+    }
+
+    /**
      * Get the network of the main window
      * @return the network of the main window
      */
     public Network getNetwork() {
         return network;
+    }
+
+    /**
+     * Sets the networks.
+     * Asks the mapPanel to display it.
+     */
+    public void setNetwork(Network net) {
+        network = net;
+        mapPanel.setModel(net);
     }
 
     /**
@@ -121,7 +140,7 @@ public class MainWindow extends JFrame {
         JPanel subMainPanel = new JPanel(new BorderLayout());
         subMainPanel.setBorder(new EmptyBorder(SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING));
         subMainPanel.add(mapPanel, BorderLayout.CENTER);
-        subMainPanel.add(roundListPanel, BorderLayout.WEST);
+        subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
         subMainPanel.add(rightPanel, BorderLayout.EAST);
 
         return subMainPanel;
@@ -147,8 +166,8 @@ public class MainWindow extends JFrame {
      * Gets the list panel on the left of the main window
      * @return the panel on the left
      */
-    public RoundListPanel getRoundListPanel() {
-        return roundListPanel;
+    public DeliveryListPanel getDeliveryListPanel() {
+        return deliveryListPanel;
     }
 
     /**

@@ -92,7 +92,7 @@ public class Network {
      */
     public Street findStreet(String name) {
         for (Street i : this.streets) {
-            if (name == i.getName()) {
+            if (name.equals(i.getName())) {
                 return i;
             }
         }

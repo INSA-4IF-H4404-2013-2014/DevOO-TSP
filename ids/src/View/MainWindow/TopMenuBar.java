@@ -106,7 +106,7 @@ public class TopMenuBar extends JMenuBar{
 
         computeRound = new JMenuItem("Calculer une tournée");
 
-        saveRound = new JMenuItem("Sauvegarder une tournée");
+        saveRound = new JMenuItem("Sauvegarder une tournée", new ImageIcon(getClass().getResource("../../mini_save_round.png")));
         saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
         file.add(openMap);
@@ -117,25 +117,24 @@ public class TopMenuBar extends JMenuBar{
         file.addSeparator();
         file.add(fileExit);
 
+        openRound.setEnabled(false);
         computeRound.setEnabled(false);
         saveRound.setEnabled(false);
-        //computeRound.setEnabled(false);
 
         add(file);
     }
 
     private void createEditMenu() {
         JMenu edit = new JMenu("Éditer");
-        //edit.setEnabled(false);
 
-        addButton = new JMenuItem("Ajouter une livraison");
+        addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../mini_add.png")));
 
-        delButton = new JMenuItem("Supprimer une livraison");
+        delButton = new JMenuItem("Supprimer une livraison", new ImageIcon(getClass().getResource("../../mini_delete.png")));
 
-        undoButton = new JMenuItem("Annuler");
+        undoButton = new JMenuItem("Annuler", new ImageIcon(getClass().getResource("../../mini_undo.png")));
         undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 
-        redoButton = new JMenuItem("Refaire");
+        redoButton = new JMenuItem("Refaire", new ImageIcon(getClass().getResource("../../mini_redo.png")));
         redoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 
         edit.add(addButton);
@@ -169,6 +168,12 @@ public class TopMenuBar extends JMenuBar{
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.loadNetwork();
+            }
+        });
+        openRound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.loadRound();
             }
         });
 

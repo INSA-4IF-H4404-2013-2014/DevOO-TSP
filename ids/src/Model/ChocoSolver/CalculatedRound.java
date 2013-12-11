@@ -32,7 +32,7 @@ public class CalculatedRound {
     private List<Itinerary> orderedItineraries = new LinkedList<Itinerary>();
 
     /** A dictionary linking a delivery to its estimated arrival hour at the delivery point */
-    private Dictionary<Delivery, GregorianCalendar> estimatedSchedules = new Hashtable<Delivery, GregorianCalendar>();
+    private Dictionary<Integer, GregorianCalendar> estimatedSchedules = new Hashtable<Integer, GregorianCalendar>();
 
     /**
      * Constructor
@@ -44,7 +44,9 @@ public class CalculatedRound {
         this.warehouse = warehouse;
         this.orderedDeliveries = orderedDeliveries;
         this.orderedItineraries = orderedItineraries;
-        calculateEstimatedSchedules();
+        if(!orderedDeliveries.isEmpty()) {
+            calculateEstimatedSchedules();
+        }
     }
 
     /**
@@ -53,7 +55,75 @@ public class CalculatedRound {
      */
     private void calculateEstimatedSchedules()
     {
-        //TODO : CALCULATIONS (10 minutes are required in order to deliver a package)
+        GregorianCalendar firstDepartureTime = getFirstDepartureTime();
+
+        estimatedSchedules.put(warehouse.getId(), firstDepartureTime);
+
+        GregorianCalendar arrivalTime;
+
+        long timeLapse;
+        int deliveryTime = 0;
+
+        int nodeId = warehouse.getId();
+
+        for(Delivery delivery:orderedDeliveries) {
+
+            arrivalTime = getArrivalTime(nodeId, delivery, deliveryTime);
+
+            nodeId = delivery.getAddress().getId();
+            deliveryTime = 600;
+
+            estimatedSchedules.put(nodeId, arrivalTime);
+        }
+    }
+
+    /**
+     * Get the departure time at the warehouse
+     * @return the departure time at the warehouse
+     */
+    private GregorianCalendar getFirstDepartureTime() {
+        Date departureDate = orderedDeliveries.get(0).getSchedule().getEarliestBound().getGregorianChange();
+
+        int warehouseToDeliveryTime = getNextItinerary(warehouse).getCost();
+
+        long departureTime = departureDate.getTime() - (long)(warehouseToDeliveryTime * 1000);
+
+        departureDate.setTime(departureTime);
+
+        GregorianCalendar departure = new GregorianCalendar();
+        departure.setTime(departureDate);
+
+        // If the departure time is between 00:00am and 06:00am,
+        // we force the departure time to 06:00am
+        if(departure.get(Calendar.HOUR_OF_DAY) < 6) {
+            departure.set(Calendar.HOUR_OF_DAY, 6);
+            departure.set(Calendar.MINUTE, 0);
+        }
+
+        return departure;
+    }
+
+    /**
+     * Get the arrival time of the currentDelivery
+     * @param previousNodeId the id of the node that is before the currentDelivery
+     * @param currentDelivery the delivery we want the arrival time
+     * @param deliveryTime the time spend by the delivery man on the last delivery
+     * @return the arrival time at the currentDelivery
+     */
+    private GregorianCalendar getArrivalTime(int previousNodeId, Delivery currentDelivery, int deliveryTime) {
+        GregorianCalendar arrivalTime;
+        Date arrivalDate;
+        long timeLapse;
+
+        arrivalTime = (GregorianCalendar) estimatedSchedules.get(previousNodeId).clone();
+        arrivalDate = arrivalTime.getGregorianChange();
+
+        timeLapse = arrivalDate.getTime() + (long) ((getNextItinerary(currentDelivery).getCost() + deliveryTime) * 1000);
+
+        arrivalDate.setTime(timeLapse);
+        arrivalTime.setTime(arrivalDate);
+
+        return arrivalTime;
     }
 
     /**

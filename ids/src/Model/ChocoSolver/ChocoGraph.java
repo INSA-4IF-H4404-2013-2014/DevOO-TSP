@@ -42,7 +42,8 @@ public class ChocoGraph implements Graph {
      * @param round
      */
     public ChocoGraph(Network network, Round round) {
-        List<Schedule> schedules = new LinkedList<Schedule>(), realSchedule = null, nextRealSchedule;
+        List<Schedule> schedules = new LinkedList<Schedule>();
+        Schedule currentSchedule = null, nextSchedule;
 
         //Initializing schedules temporary list and the delivery map
         ChocoDelivery warehouse = new ChocoDelivery(round.getWarehouse());
@@ -61,11 +62,8 @@ public class ChocoGraph implements Graph {
         if(!schedules.isEmpty()) {
             List<Delivery> successors = new LinkedList<Delivery>();
 
-            realSchedule = getNextDistinctSchedule(schedules);
-
-            for(Schedule s : realSchedule) {
-                successors.addAll(s.getDeliveries());
-            }
+            currentSchedule = getNextSchedule(schedules);
+            successors.addAll(currentSchedule.getDeliveries());
 
             computeDistinctScheduleArcs(network, warehouse.getDelivery(), successors);
         }
@@ -75,49 +73,56 @@ public class ChocoGraph implements Graph {
         //  AND
         //  Linking every node of ds to every node of the next distinct schedule
         while(!schedules.isEmpty()) {
-            nextRealSchedule = getNextDistinctSchedule(schedules);
+            nextSchedule = getNextSchedule(schedules);
 
-            for(Schedule s : realSchedule) {
-                for(Delivery source : s.getDeliveries())
-                {
-                    List<Delivery> successors = new LinkedList<Delivery>();
+            for(Delivery source : currentSchedule.getDeliveries())
+            {
+                List<Delivery> successors = new LinkedList<Delivery>();
 
-                    for(Schedule s1 : realSchedule) {
-                        for(Delivery d : s.getDeliveries()) {
-                            if(d != source) {
-                                successors.add(d);
-                            }
-                        }
+                for(Delivery d : currentSchedule.getDeliveries()) {
+                    if(d != source) {
+                        successors.add(d);
                     }
-                    for(Schedule s1 : nextRealSchedule) {
-                        successors.addAll(s.getDeliveries());
-                    }
-
-                    computeDistinctScheduleArcs(network, source, successors);
                 }
+                successors.addAll(nextSchedule.getDeliveries());
+
+                computeDistinctScheduleArcs(network, source, successors);
             }
 
-            realSchedule = nextRealSchedule;
+            currentSchedule = nextSchedule;
         }
 
         //Linking every node of the last distinct schedule to the warehouse
-        if(realSchedule != null && !realSchedule.isEmpty()) {
+        if(currentSchedule != null) {
             List<Delivery> successors = new LinkedList<Delivery>();
             successors.add(warehouse.getDelivery());
 
-            for(Schedule s : realSchedule) {
-                for(Delivery d : s.getDeliveries()) {
-                    computeDistinctScheduleArcs(network, d, successors);
-                }
+            for(Delivery d : currentSchedule.getDeliveries()) {
+                computeDistinctScheduleArcs(network, d, successors);
             }
         }
     }
 
-    private List<Schedule> getNextDistinctSchedule(List<Schedule> schedules) {
-        //TODO
-        return null;
+    private Schedule getNextSchedule(List<Schedule> schedules) {
+        Schedule minSchedule = null, tmp;
+        ListIterator<Schedule> minIter = null, iter = schedules.listIterator();
+
+        while(iter.hasNext()) {
+            tmp = iter.next();
+            if(tmp.getEarliestBound().before(minSchedule.getEarliestBound())) {
+                minSchedule = tmp;
+                minIter = iter;
+            }
+        }
+
+        if(minIter != null) {
+            minIter.remove();
+        }
+
+        return minSchedule;
     }
 
+    //Find shortest past (all nodes and arcs) between source and each next delivery for a network
     private void computeDistinctScheduleArcs(Network network, Delivery source, List<Delivery> successors) {
         Map<Integer, NodeInfo> dict;
         List<Integer> shortestPath;
@@ -132,6 +137,7 @@ public class ChocoGraph implements Graph {
         }
     }
 
+    //In a network, find arc between two successive nodes taken in a organized list of nodes
     private List<Arc> getDirections(Network network, List<Integer> nodesList) {
         List<Arc> directions = new LinkedList<Arc>();
         ListIterator<Integer> iter = nodesList.listIterator();
@@ -153,7 +159,7 @@ public class ChocoGraph implements Graph {
     }
 
 
-
+    //Find next node with minimal cost and not visited yet
     private Integer getMinUnvisited(Map<Integer, NodeInfo> dict, List<Integer> neighbours) {
         int min = Integer.MAX_VALUE;
         NodeInfo n, minNodeInfo = null;
@@ -180,6 +186,7 @@ public class ChocoGraph implements Graph {
         return selected;
     }
 
+    //Yeah, that's Dijkstra. Trivial.
     private Map<Integer, NodeInfo> runDijkstra(Network network, Integer source, List<Delivery> succ) {
         //Variable declaration and initialization
         NodeInfo tmpNodeInfo;
@@ -229,6 +236,7 @@ public class ChocoGraph implements Graph {
         return dict;
     }
 
+    //Give the shortest path make of nodes between source and target based on Dijkstra graph
     private List<Integer> getShortestPath(Map<Integer, NodeInfo> dict, Integer target) {
         Integer tmp = target;
         NodeInfo tmpNodeInfo = dict.get(tmp);

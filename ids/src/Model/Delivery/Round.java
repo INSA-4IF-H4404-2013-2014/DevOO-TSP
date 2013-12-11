@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -115,6 +116,37 @@ public class Round {
 
         client.removeDelivery(delivery);
         schedule.removeDelivery(delivery);
+
+        if(schedule.getDeliveries().isEmpty()) {
+            schedules.remove(schedule);
+        }
+    }
+
+    public boolean isScheduleOverlapping(GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+        for(Schedule s : schedules) {
+            if((latestBound.before(s.getLatestBound()) && latestBound.after(s.getEarliestBound()))
+                    || (earliestBound.before(s.getLatestBound()) && earliestBound.after(s.getEarliestBound()))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets a list of strings for all deliveries.
+     * This is for the view which will call this to fill its list on the left.
+     * @return a vector of strings
+     */
+    public Vector<String> getDeliveryDisplayableList() {
+        Vector<String> displayableDeliveryList = new Vector<String>();
+        for(Schedule sched : schedules) {
+            for(Delivery deliver : sched.getDeliveries()) {
+                displayableDeliveryList.add(deliver.toString());
+            }
+        }
+
+        return displayableDeliveryList;
     }
 
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
