@@ -102,7 +102,7 @@ public class TopMenuBar extends JMenuBar{
 
         openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("../../mini_open_map.png")));
 
-        openRound = new JMenuItem("Ouvrir une tournée");
+        openRound = new JMenuItem("Ouvrir une tournée", new ImageIcon(getClass().getResource("../../mini_open_round.png")));
 
         computeRound = new JMenuItem("Calculer une tournée");
 
@@ -117,9 +117,10 @@ public class TopMenuBar extends JMenuBar{
         file.addSeparator();
         file.add(fileExit);
 
-        openRound.setEnabled(false);
         computeRound.setEnabled(false);
         saveRound.setEnabled(false);
+        //computeRound.setEnabled(false);
+
         add(file);
     }
 

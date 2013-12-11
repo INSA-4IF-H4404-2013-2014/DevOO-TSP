@@ -1,13 +1,22 @@
 package Model.ChocoSolver;
 
+import Model.City.Arc;
 import Model.City.Network;
+import Model.City.Node;
 import Model.Delivery.Delivery;
+import Model.Delivery.Itinerary;
 import Model.Delivery.Round;
 import Model.Delivery.Schedule;
 
 import java.util.*;
 
 public class ChocoGraph implements Graph {
+    class NodeInfo {
+        int cost = Integer.MAX_VALUE;
+        boolean visited = false;
+        Integer previous = null;
+    }
+
     private Map<Integer, ChocoDelivery> deliveries;
 
 	private int nbVertices;
@@ -33,40 +42,205 @@ public class ChocoGraph implements Graph {
      * @param round
      */
     public ChocoGraph(Network network, Round round) {
-        class NodeInfo {
+        List<Schedule> schedules = new LinkedList<Schedule>(), realSchedule = null, nextRealSchedule;
 
-        }
-        List<Delivery> succ;
+        //Initializing schedules temporary list and the delivery map
+        ChocoDelivery warehouse = new ChocoDelivery(round.getWarehouse());
+        deliveries.put(round.getWarehouse().getId(), warehouse);
 
         for(Schedule s : round.getSchedules()) {
-            succ = getSucc(round, s);
+            if(!s.getDeliveries().isEmpty()) {
+                for(Delivery d : s.getDeliveries()) {
+                    deliveries.put(d.getId(), new ChocoDelivery(d));
+                }
+                schedules.add(s);
+            }
+        }
 
-            for(Delivery d : s.getDeliveries()) {
-                //Adding the delivery to the ChocoDelivery map
-                deliveries.put(d.getId(), new ChocoDelivery(d));
+        //Linking warehouse with every node of the first distinct schedule
+        if(!schedules.isEmpty()) {
+            List<Delivery> successors = new LinkedList<Delivery>();
 
-                runDijkstra(network, d, succ);
+            realSchedule = getNextDistinctSchedule(schedules);
+
+            for(Schedule s : realSchedule) {
+                successors.addAll(s.getDeliveries());
+            }
+
+            computeDistinctScheduleArcs(network, warehouse.getDelivery(), successors);
+        }
+
+        //For each distinct schedule ds
+        //  Linking every node of ds to every node of ds
+        //  AND
+        //  Linking every node of ds to every node of the next distinct schedule
+        while(!schedules.isEmpty()) {
+            nextRealSchedule = getNextDistinctSchedule(schedules);
+
+            for(Schedule s : realSchedule) {
+                for(Delivery source : s.getDeliveries())
+                {
+                    List<Delivery> successors = new LinkedList<Delivery>();
+
+                    for(Schedule s1 : realSchedule) {
+                        for(Delivery d : s.getDeliveries()) {
+                            if(d != source) {
+                                successors.add(d);
+                            }
+                        }
+                    }
+                    for(Schedule s1 : nextRealSchedule) {
+                        successors.addAll(s.getDeliveries());
+                    }
+
+                    computeDistinctScheduleArcs(network, source, successors);
+                }
+            }
+
+            realSchedule = nextRealSchedule;
+        }
+
+        //Linking every node of the last distinct schedule to the warehouse
+        if(realSchedule != null && !realSchedule.isEmpty()) {
+            List<Delivery> successors = new LinkedList<Delivery>();
+            successors.add(warehouse.getDelivery());
+
+            for(Schedule s : realSchedule) {
+                for(Delivery d : s.getDeliveries()) {
+                    computeDistinctScheduleArcs(network, d, successors);
+                }
             }
         }
     }
 
-    private List<Delivery> getSucc(Round round, Schedule schedule) {
-        List<Delivery> succ = new LinkedList<Delivery>();
+    private List<Schedule> getNextDistinctSchedule(List<Schedule> schedules) {
+        //TODO
+        return null;
+    }
 
-        for(Schedule s : round.getSchedules()) {
-            if(!schedule.getEarliestBound().after(s.getLatestBound())) {
-                for(Delivery d : s.getDeliveries()) {
-                    succ.add(d);
+    private void computeDistinctScheduleArcs(Network network, Delivery source, List<Delivery> successors) {
+        Map<Integer, NodeInfo> dict;
+        List<Integer> shortestPath;
+        List<Arc> directions;
+
+        dict = runDijkstra(network, source.getId(), successors);
+
+        for(Delivery d : successors) {
+            shortestPath = getShortestPath(dict, d.getId());
+            directions = getDirections(network, shortestPath);
+            deliveries.get(source.getId()).addSuccessor(d.getId(), new Itinerary(source.getAddress(), d.getAddress(), directions));
+        }
+    }
+
+    private List<Arc> getDirections(Network network, List<Integer> nodesList) {
+        List<Arc> directions = new LinkedList<Arc>();
+        ListIterator<Integer> iter = nodesList.listIterator();
+        Node currentNode, nextNode;
+
+        if(iter.hasNext()) {
+            currentNode = network.findNode(iter.next());
+
+            while(iter.hasNext()) {
+                nextNode = network.findNode(iter.next());
+
+                directions.add(currentNode.findOutgoingTo(nextNode));
+
+                currentNode = nextNode;
+            }
+        }
+
+        return directions;
+    }
+
+
+
+    private Integer getMinUnvisited(Map<Integer, NodeInfo> dict, List<Integer> neighbours) {
+        int min = Integer.MAX_VALUE;
+        NodeInfo n, minNodeInfo = null;
+        boolean found = false;
+        ListIterator<Integer> minIter = null, iter;
+        Integer tmp, selected = null;
+
+        iter = neighbours.listIterator();
+        while(iter.hasNext() && !found) {
+            tmp = iter.next();
+            n = dict.get(tmp);
+            if(n.cost < min && n.visited == false) {
+                min = n.cost;
+                minNodeInfo = n;
+                minIter = iter;
+                selected = tmp;
+                found = true;
+            }
+        }
+
+        minIter.remove();
+        minNodeInfo.visited = true;
+
+        return selected;
+    }
+
+    private Map<Integer, NodeInfo> runDijkstra(Network network, Integer source, List<Delivery> succ) {
+        //Variable declaration and initialization
+        NodeInfo tmpNodeInfo;
+        int tmpDist;
+        boolean found;
+        Delivery tmpDelivery;
+        ListIterator<Delivery> iter;
+        Integer current, tmpNodeId;
+        List<Integer> neighbours = new LinkedList<Integer>();
+        Map<Integer, NodeInfo> dict = new HashMap<Integer, NodeInfo>();
+
+        //Initializing search from source
+        dict.get(source).cost = 0;
+        neighbours.add(source);
+
+        //While every targeted delivery node has not been reached
+        while(!neighbours.isEmpty() && !succ.isEmpty()) {
+            current = getMinUnvisited(dict, neighbours);
+
+            //We stop the search if we have found every delivery node
+            iter = succ.listIterator();
+            found = false;
+            while(iter.hasNext() && !found) {
+                tmpDelivery = iter.next();
+                if(tmpDelivery.getAddress().getId() == current) {
+                    iter.remove();
+                    found = true;
+                }
+            }
+
+            if(!succ.isEmpty()) {
+                for(Arc a : network.findNode(current).getOutgoing()) {
+                    tmpNodeId = a.getTo().getId();
+                    tmpDist = dict.get(current).cost + network.getCost(current, tmpNodeId);
+                    tmpNodeInfo = dict.get(tmpNodeId);
+                    if(tmpDist < tmpNodeInfo.cost) {
+                        tmpNodeInfo.cost = tmpDist;
+                        tmpNodeInfo.previous = current;
+                        if(!tmpNodeInfo.visited) {
+                            neighbours.add(tmpNodeId);
+                        }
+                    }
                 }
             }
         }
 
-        return succ;
+        return dict;
     }
 
-    private void runDijkstra(Network network, Delivery delivery, List<Delivery> succ) {
-        Map<Integer, Integer> dist;
-        List<Integer> visited;
+    private List<Integer> getShortestPath(Map<Integer, NodeInfo> dict, Integer target) {
+        Integer tmp = target;
+        NodeInfo tmpNodeInfo = dict.get(tmp);
+        List<Integer> path = new LinkedList<Integer>();
+
+        while(tmpNodeInfo.previous != null) {
+            path.add(tmp, 0);
+            tmp = tmpNodeInfo.previous;
+            tmpNodeInfo = dict.get(tmp);
+        }
+
+        return path;
     }
 
     public ChocoDelivery getDelivery(Integer nodeId) {
