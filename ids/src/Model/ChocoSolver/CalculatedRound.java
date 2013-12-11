@@ -1,8 +1,11 @@
 package Model.ChocoSolver;
 
+import Model.City.Arc;
 import Model.City.Node;
+import Model.Delivery.Client;
 import Model.Delivery.Delivery;
 import Model.Delivery.Itinerary;
+import Model.Delivery.Schedule;
 import Utils.UtilsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,7 +47,9 @@ public class CalculatedRound {
         this.warehouse = warehouse;
         this.orderedDeliveries = orderedDeliveries;
         this.orderedItineraries = orderedItineraries;
-        calculateEstimatedSchedules();
+        if(!orderedDeliveries.isEmpty()) {
+            calculateEstimatedSchedules();
+        }
     }
 
     /**
@@ -209,5 +214,67 @@ public class CalculatedRound {
         }
 
         return estimatedSchedule.after(delivery.getSchedule().getLatestBound());
+    }
+
+
+    // TODO: to be tested!
+    /**
+     * Parse the round into a html format
+     * @return the html text in a String
+     */
+    public String calculatedRoundToHtml() {
+
+        String earlyText = "Heure min : ";
+        String latestText = "Heure max : ";
+
+        String htmlOpen = "<html>\n";
+        String htmlClose = "\n</html>";
+
+        String tableOpen = "\n<table>\n";
+        String tableClose = "\n</table>\n<br/>\n";
+
+        String hOpen = "\n<h5>";
+        String hClose = "</h5>\n";
+
+        String trOpen = "\n<tr>\n";
+        String trClose = "\n</tr>\n";
+
+        String tdOpen = "\n<td>";
+        String tdClose = "</td>\n";
+
+        String html;
+
+        int i = 0;
+
+        html = htmlOpen;
+
+        html += hOpen + "Départ de l'entrepôt à " + getFirstDepartureTime().get(Calendar.HOUR_OF_DAY) + "h" + getFirstDepartureTime().get(Calendar.MINUTE) + hClose;
+
+        List<Arc> arcList;
+        Delivery delivery;
+
+        for(Itinerary itinerary:orderedItineraries) {
+            arcList = itinerary.getArcs();
+            delivery = orderedDeliveries.get(i++);
+
+            html += tableOpen;
+            for(Arc arc:arcList) {
+                html += tdOpen;
+
+                //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
+
+                html += trOpen + "Prendre rue " + arc.getStreet().getName() + trClose;
+                html += trOpen + arc.getLength() + "m" + trClose;
+                html += trOpen + arc.getCost()/60 + "min" + trClose;
+                html += tdClose;
+            }
+            html += tableClose;
+            html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
+            html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound() +" | " + delivery.getSchedule().getLatestBound() + hClose;
+        }
+
+        html += htmlClose;
+
+        return html;
     }
 }

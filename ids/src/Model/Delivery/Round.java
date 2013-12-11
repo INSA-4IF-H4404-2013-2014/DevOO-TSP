@@ -134,19 +134,19 @@ public class Round {
     }
 
     /**
-     * Gets a list of strings for all deliveries.
+     * Gets a list of deliveries for all deliveries.
      * This is for the view which will call this to fill its list on the left.
      * @return a vector of strings
      */
-    public Vector<String> getDeliveryDisplayableList() {
-        Vector<String> displayableDeliveryList = new Vector<String>();
+    public Vector<Delivery> getDeliveryList() {
+        Vector<Delivery> deliveryList = new Vector<Delivery>();
         for(Schedule sched : schedules) {
             for(Delivery deliver : sched.getDeliveries()) {
-                displayableDeliveryList.add(deliver.toString());
+                deliveryList.add(deliver);
             }
         }
 
-        return displayableDeliveryList;
+        return deliveryList;
     }
 
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
@@ -288,83 +288,5 @@ public class Round {
         }
 
         return round;
-    }
-
-
-    /**
-     * Parse the round into a html format
-     * @return the html text in a String
-     */
-    public String roundToHtml() {
-
-        String earlyText = "Heure min : ";
-        String latestText = "Heure max : ";
-
-        String htmlOpen = "<html>\n";
-        String htmlClose = "\n</html>";
-
-        String tableOpen = "\n<table>\n";
-        String tableClose = "\n</table>\n<br/>\n";
-
-        String hOpen = "\n<h5>";
-        String hClose = "</h5>\n";
-
-        String trOpen = "\n<tr>\n";
-        String trClose = "\n</tr>\n";
-
-        String tdOpen = "\n<td>";
-        String tdClose = "</td>\n";
-
-        String html;
-
-        Client client;
-        String clientId;
-        String adress;
-
-        GregorianCalendar earliestBound;
-        GregorianCalendar latestBound;
-
-        int i = 0;
-
-        List<Schedule> schedulesList = this.getSchedules();
-
-        html = htmlOpen;
-
-        for(Schedule schedule:schedulesList) {
-
-            if(schedule.getDeliveries().size() != 0) {
-
-                i++;
-
-                List<Delivery> deliveriesList = schedule.getDeliveries();
-
-                earliestBound = schedule.getEarliestBound();
-                latestBound = schedule.getLatestBound();
-
-                html += tableOpen;
-                html += hOpen + "Plage horaire n&deg;" + Integer.toString(i) + hClose;
-                html += hOpen + earlyText + earliestBound.get(Calendar.HOUR_OF_DAY) + "h" + earliestBound.get(Calendar.MINUTE);
-                html += " | " + latestText + latestBound.get(Calendar.HOUR_OF_DAY) + "h" + latestBound.get(Calendar.MINUTE) + hClose;
-
-                for(Delivery delivery:deliveriesList) {
-                    client = delivery.getClient();
-                    clientId = client.getId();
-                    adress = Integer.toString(delivery.getAddress().getId());
-
-                    html += trOpen;
-
-                    html += tdOpen + "Client n&deg; : " + clientId + " | " + tdClose;
-                    html += tdOpen + "Lieu n&deg; : " + adress + tdClose;
-
-                    html += trClose;
-                }
-
-                html += tableClose;
-            }
-        }
-
-        html += htmlClose;
-
-        return html;
     }
 }

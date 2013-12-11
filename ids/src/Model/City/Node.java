@@ -28,6 +28,9 @@ public class Node {
     /** the node's outgoing arcs */
     private List<Arc> outgoing;
 
+    /** the node's incoming arcs */
+    private List<Arc> incoming;
+
     /**
      * Constructor
      * @param id the node's id
@@ -39,6 +42,7 @@ public class Node {
         this.x = x;
         this.y = y;
         this.outgoing = new LinkedList<Arc>();
+        this.incoming = new LinkedList<Arc>();
     }
 
     /**
@@ -71,6 +75,14 @@ public class Node {
      */
     public List<Arc> getOutgoing() {
         return outgoing;
+    }
+
+    /**
+     * Gets node's incoming arcs
+     * @return node's incoming arcs list
+     */
+    public List<Arc> getIncoming() {
+        return incoming;
     }
 
     /**

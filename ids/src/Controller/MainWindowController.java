@@ -72,14 +72,15 @@ public class MainWindowController implements NodeListener {
         }
     }
 
+    /**
+     * Action triggered when user wants to load a round
+     */
     public void loadRound() {
         File xmlFile = openXMLFile();
 
         if(xmlFile != null) {
-            Round round = null;
             try {
-                round = Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork());
-                mainWindow.setRound(round);
+                mainWindow.setRound(Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork()));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la tournée.\n" +
                         e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
@@ -91,10 +92,10 @@ public class MainWindowController implements NodeListener {
      * Export the current round in a HTML file choosen by user
      */
     public void exportRound() {
-        Round round = this.mainWindow.getRound();
+        CalculatedRound calculatedRound = this.mainWindow.getCalculatedRound();
 
-        if(round != null) {
-            String htmlRound = round.roundToHtml();
+        if(calculatedRound != null) {
+            String htmlRound = calculatedRound.calculatedRoundToHtml();
 
             try {
                 FileWriter outputWriter = new FileWriter(openFile("html"), false);
@@ -172,20 +173,19 @@ public class MainWindowController implements NodeListener {
     public void nodeClicked(MapPanel panel, Node node) {
         panel.setSelectedNode(node);
         if (!(null == this.mainWindow.getRound())) {
-            if (null == this.mainWindow.getRound().findDelivered(node.getId())) {
+            Delivery del;
+            if (null == (del =this.mainWindow.getRound().findDelivered(node.getId()))) {
                 //if the node doesnt contains a delivery activate the "ajouter" button
-                mainWindow.getTopToolBar().getAdd().setEnabled(true);
-                mainWindow.getTopMenuBar().getAddButton().setEnabled(true);
-                mainWindow.getTopToolBar().getDelete().setEnabled(false);
-                mainWindow.getTopMenuBar().getDelButton().setEnabled(false);
+                mainWindow.featureAddSetEnable(true);
+                mainWindow.featureDeleteSetEnable(false);
+                mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
             }
             else
             {
-                //if the node contains a delivery activate the "supprimer" button
-                mainWindow.getTopToolBar().getAdd().setEnabled(false);
-                mainWindow.getTopMenuBar().getAddButton().setEnabled(false);
-                mainWindow.getTopToolBar().getDelete().setEnabled(true);
-                mainWindow.getTopMenuBar().getDelButton().setEnabled(true);
+                //if the node contains a delivery activate the "supprimer" button and maj delivery info panel
+                mainWindow.featureAddSetEnable(false);
+                mainWindow.featureDeleteSetEnable(true);
+                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del);
             }
         }
     }

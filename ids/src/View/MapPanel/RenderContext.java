@@ -216,6 +216,24 @@ public class RenderContext {
     }
 
     /**
+     * Draws the given arc's itinerary
+     * @param arc the arc to draw
+     */
+    protected void drawArcItinerary(Arc arc) {
+        ArcInfo arcInfo = arcInfo(arc);
+
+        AffineTransform previousTransform = context.getTransform();
+
+        context.translate(arcInfo.x1, arcInfo.y1);
+        context.rotate(arcInfo.angle);
+
+        drawModelArcItinerary(arcInfo, 1);
+        drawModelArcItinerary(arcInfo, 2);
+
+        context.setTransform(previousTransform);
+    }
+
+    /**
      * Draw the global view of the map in the top right corner
      */
     protected void drawGlobalView() {
@@ -354,6 +372,34 @@ public class RenderContext {
     }
 
     /**
+     * Draws arc's itinerary symbols
+     * @param arcInfo the arc's drawing information
+     * @param arcLeaving the leaving node
+     */
+    private void drawModelArcItinerary(ArcInfo arcInfo, int arcLeaving) {
+        if(!arcInfo.arc.isItineraryFrom(arcLeaving)) {
+            return;
+        }
+
+        int yOffset = 0;
+
+        if(arcInfo.isBidirectional()) {
+            yOffset = ((3 - arcLeaving * 2) * streetThickness) / 2;
+        }
+
+        int dotCount = (int)Math.floor((arcInfo.length - 2.0 * (double)streetThickness) / (double)itineraryDotDistance);
+
+        context.setColor(itineraryColor);
+
+        for(int i = 0; i < dotCount; i++) {
+            int x = streetThickness + i * itineraryDotDistance;
+            int y = (yOffset * streetThickness) / 4;
+
+            context.fillOval(x - itineraryThickness / 2, y - itineraryThickness / 2, itineraryThickness, itineraryThickness);
+        }
+    }
+
+    /**
      * Arc rendering information
      */
     private class ArcInfo {
@@ -406,6 +452,11 @@ public class RenderContext {
     protected static final int streetNodeRadius = 10;
     private static final Color streetSelectedNodeColor = new Color(240, 80, 80);
     private static final int streetSelectedNodeRadiusPx = 4;
+
+    /** itinerary constants */
+    private static final Color itineraryColor = new Color(55, 122, 255);
+    private static final int itineraryThickness = 2;
+    private static final int itineraryDotDistance = 3;
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);

@@ -1,7 +1,11 @@
 package View.MainWindow;
 
 import Controller.MainWindowController;
+import Model.ChocoSolver.CalculatedRound;
+import Model.City.Arc;
 import Model.City.Network;
+import Model.Delivery.Delivery;
+import Model.Delivery.Itinerary;
 import Model.Delivery.Round;
 import Utils.UtilsException;
 import View.MapPanel.MapPanel;
@@ -9,6 +13,7 @@ import View.MapPanel.MapPanel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.LinkedList;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -34,6 +39,7 @@ public class MainWindow extends JFrame {
 
     private Network network;
     private Round round;
+    private CalculatedRound calculatedRound;
 
     private RightPanel rightPanel = new RightPanel();
     private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
@@ -68,9 +74,24 @@ public class MainWindow extends JFrame {
 
         // automatic load for map testing
         try {
-            network = Network.createFromXml("../sujet/plan10x10.xml");
-            //network = Network.createFromXml("../sujet/planTiny.xml");
+            network = Network.createFromXml("../sujet/planTiny.xml");
+
+            Model.City.Node warHouse = network.findNode(0);
+            LinkedList<Arc> arcList = new LinkedList<Arc>();
+
+            arcList.add(network.findArc(0, 2));
+            arcList.add(network.findArc(2, 1));
+            arcList.add(network.findArc(1, 0));
+
+            LinkedList<Itinerary> itineraryList = new LinkedList<Itinerary>();
+
+            Model.Delivery.Itinerary itinerary = new Model.Delivery.Itinerary(null, null, arcList);
+            itineraryList.add(itinerary);
+
+            CalculatedRound calculatedRound = new CalculatedRound(warHouse, new LinkedList<Delivery>(), itineraryList);
+
             mapPanel.setModel(network);
+            mapPanel.setRound(calculatedRound);
         }
         catch (UtilsException e) {
             System.out.println(e);
@@ -87,13 +108,29 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Get the calculated round of the main window
+     * @return the calculated round of the main window
+     */
+    public CalculatedRound getCalculatedRound() {
+        return getCalculatedRound();
+    }
+
+    /**
      * Sets the round.
      * Asks the deliveryListPanel to display it.
      * @param round the round to set & display
      */
     public void setRound(Round round) {
         this.round = round;
-        deliveryListPanel.setModel(round.getDeliveryDisplayableList());
+        deliveryListPanel.setModel(round.getDeliveryList());
+    }
+
+    /**
+     * Sets the calculated round
+     * @param calculatedRound the calculated round to set & display
+     */
+    public void setCalculatedRound(CalculatedRound calculatedRound) {
+        this.calculatedRound = calculatedRound;
     }
 
     /**
@@ -176,11 +213,65 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Enable or disable the feature 'load a map'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureLoadRMapSetEnable(boolean b) {
+        topMenuBar.openMap.setEnabled(b);
+        topToolBar.loadMap.setEnabled(b);
+    }
+
+    /**
      * Enable or disable the feature 'load a round'
      * @param b whether to enable or disable the feature
      */
     public void featureLoadRoundSetEnable(boolean b) {
         topMenuBar.openRound.setEnabled(b);
         topToolBar.loadRound.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'save a round'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureSaveRoundSetEnable(boolean b) {
+        topMenuBar.saveRound.setEnabled(b);
+        topToolBar.saveRound.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'add a delivery'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureAddSetEnable(boolean b) {
+        topMenuBar.addButton.setEnabled(b);
+        topToolBar.add.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'add a delivery'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureDeleteSetEnable(boolean b) {
+        topMenuBar.delButton.setEnabled(b);
+        topToolBar.delete.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'undo'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureUndoSetEnable(boolean b) {
+        topMenuBar.undoButton.setEnabled(b);
+        topToolBar.undo.setEnabled(b);
+    }
+
+    /**
+     * Enable or disable the feature 'redo'
+     * @param b whether to enable or disable the feature
+     */
+    public void featureRedoSetEnable(boolean b) {
+        topMenuBar.redoButton.setEnabled(b);
+        topToolBar.redo.setEnabled(b);
     }
 }

@@ -2,6 +2,7 @@ package View.MapPanel;
 
 import Model.ChocoSolver.CalculatedRound;
 import Model.City.Network;
+import Model.Delivery.Itinerary;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +21,9 @@ public class MapPanel extends JPanel {
 
     /** associated model graph */
     private Network modelNetwork;
+
+    /** the model round */
+    CalculatedRound modelRound;
 
     /** nodes map */
     private Map<Integer,Node> nodes;
@@ -145,10 +149,12 @@ public class MapPanel extends JPanel {
 
     /**
      * Sets the model
-     * @param modelNetwork the model we want to set
+     * @param network the model we want to set
      */
-    public void setModel(Network modelNetwork) {
-        this.modelNetwork = modelNetwork;
+    public void setModel(Network network) {
+        modelNetwork = network;
+        modelRound = null;
+        selectedNode = null;
 
         this.refreshNodeAndArcs();
     }
@@ -158,7 +164,10 @@ public class MapPanel extends JPanel {
      * @param round the calculated round to show
      */
     public void setRound(CalculatedRound round) {
-        //TODO: by Guillaume
+        modelRound = round;
+
+        this.refreshArcsItineraries();
+        this.repaint();
     }
 
     /**
@@ -173,9 +182,12 @@ public class MapPanel extends JPanel {
      * Sets the currently selected node. This assumes that selectedNode is in the current model
      */
     public void setSelectedNode(Model.City.Node node) {
-        int nodeId = node.getId();
-
-        selectedNode = this.findNode(nodeId);
+        if(node == null) {
+            selectedNode = null;
+        } else {
+            int nodeId = node.getId();
+            selectedNode = this.findNode(nodeId);
+        }
 
         this.repaint();
     }
@@ -306,6 +318,12 @@ public class MapPanel extends JPanel {
 
         for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
             renderContext.drawNode(entry.getValue());
+        }
+
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                renderContext.drawArcItinerary(entry.getValue());
+            }
         }
 
         renderContext.setTransformIdentity();
@@ -445,6 +463,39 @@ public class MapPanel extends JPanel {
         }
 
         this.fitToView();
+    }
+
+    /**
+     * Refreshes view's arcs' itineraries from the calculated round
+     */
+    private void refreshArcsItineraries() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                Arc arc = entry.getValue();
+
+                arc.setItineraryFrom(1, false);
+                arc.setItineraryFrom(2, false);
+            }
+        }
+
+        if(modelRound == null) {
+            return;
+        }
+
+        for(Itinerary modelItinerary : modelRound.getOrderedItineraries()) {
+            for(Model.City.Arc modelArc : modelItinerary.getArcs()) {
+                int from = modelArc.getFrom().getId();
+                int to = modelArc.getTo().getId();
+
+                Arc arc = findArc(from, to);
+
+                if (arc.getNode1().getModelNode() == modelArc.getFrom()) {
+                    arc.setItineraryFrom(1, true);
+                } else {
+                    arc.setItineraryFrom(2, true);
+                }
+            }
+        }
     }
 
 

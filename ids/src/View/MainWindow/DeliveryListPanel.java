@@ -1,5 +1,8 @@
 package View.MainWindow;
 
+import Model.Delivery.Delivery;
+import View.Utils;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -20,21 +23,19 @@ public class DeliveryListPanel extends JScrollPane {
     public DeliveryListPanel() {
         deliveryList.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
         deliveryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        deliveryList.setEnabled(false);
-
+        Utils.enableJList(deliveryList, false);
 
         // We configure our JScrollPane
         setViewportView(deliveryList);
-        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
-        setPreferredSize(new Dimension((int)(MainWindow.DEFAULT_WIDTH*DEFAULT_WIDTH_RATIO), 0));
+        setPreferredSize(new Dimension((int) (MainWindow.DEFAULT_WIDTH * DEFAULT_WIDTH_RATIO), 0));
     }
 
     /**
      * Asks the view to display the given list
      * @param list to display
      */
-    public void setModel(Vector<String> list) {
+    public void setModel(Vector<Delivery> list) {
         deliveryList.setListData(list);
-        deliveryList.setEnabled(true);
+        Utils.enableJList(deliveryList, true);
     }
 }
