@@ -4,6 +4,7 @@ import Controller.MainWindowController;
 import Model.ChocoSolver.CalculatedRound;
 import Model.City.Arc;
 import Model.City.Network;
+import Model.Delivery.Delivery;
 import Model.Delivery.Itinerary;
 import Model.Delivery.Round;
 import Utils.UtilsException;
@@ -86,7 +87,7 @@ public class MainWindow extends JFrame {
             Model.Delivery.Itinerary itinerary = new Model.Delivery.Itinerary(null, null, arcList);
             itineraryList.add(itinerary);
 
-            CalculatedRound calculatedRound = new CalculatedRound(warHouse, null, itineraryList);
+            CalculatedRound calculatedRound = new CalculatedRound(warHouse, new LinkedList<Delivery>(), itineraryList);
 
             mapPanel.setModel(network);
             mapPanel.setRound(calculatedRound);
