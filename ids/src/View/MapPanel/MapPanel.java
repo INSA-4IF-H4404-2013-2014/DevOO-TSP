@@ -2,6 +2,7 @@ package View.MapPanel;
 
 import Model.ChocoSolver.CalculatedRound;
 import Model.City.Network;
+import Model.Delivery.Itinerary;
 
 import javax.swing.*;
 import java.awt.*;
@@ -164,6 +165,7 @@ public class MapPanel extends JPanel {
     public void setRound(CalculatedRound round) {
         modelRound = round;
 
+        this.refreshArcsItineraries();
         this.repaint();
     }
 
@@ -314,6 +316,12 @@ public class MapPanel extends JPanel {
             renderContext.drawNode(entry.getValue());
         }
 
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                renderContext.drawArcItinerary(entry.getValue());
+            }
+        }
+
         renderContext.setTransformIdentity();
 
         renderContext.drawScale();
@@ -451,6 +459,39 @@ public class MapPanel extends JPanel {
         }
 
         this.fitToView();
+    }
+
+    /**
+     * Refreshes view's arcs' itineraries from the calculated round
+     */
+    private void refreshArcsItineraries() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                Arc arc = entry.getValue();
+
+                arc.setItineraryFrom(1, false);
+                arc.setItineraryFrom(2, false);
+            }
+        }
+
+        if(modelRound == null) {
+            return;
+        }
+
+        for(Itinerary modelItinerary : modelRound.getOrderedItineraries()) {
+            for(Model.City.Arc modelArc : modelItinerary.getArcs()) {
+                int from = modelArc.getFrom().getId();
+                int to = modelArc.getTo().getId();
+
+                Arc arc = findArc(from, to);
+
+                if (arc.getNode1().getModelNode() == modelArc.getFrom()) {
+                    arc.setItineraryFrom(1, true);
+                } else {
+                    arc.setItineraryFrom(2, true);
+                }
+            }
+        }
     }
 
 
