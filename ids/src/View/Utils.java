@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -20,6 +21,21 @@ public class Utils {
 
         if(!b) {
             textfield.setBackground(UIManager.getColor("TextField.background"));
+        }
+    }
+
+    /**
+     * Enables or disables a JList, but set a grey background when disabled.
+     * @param list the JList to enable / disable
+     * @param b Whether to enale or disable the JList
+     */
+    public static void enableJList(JList list, boolean b) {
+        list.setEnabled(b);
+        if(b) {
+            list.setBackground(UIManager.getColor("List.background"));
+        }
+        else {
+            list.setBackground(new Color(240, 240, 240));
         }
     }
 }
