@@ -92,12 +92,23 @@ public class Network {
      */
     public Street findStreet(String name) {
         for (Street i : this.streets) {
-            if (name == i.getName()) {
+            if (name.equals(i.getName())) {
                 return i;
             }
         }
 
         return null;
+    }
+
+    /**
+     * Returns the cost of an existing arc going from a source node to an end node
+     * Note : A call to this method with an unexisting arc will throw a null pointer exception
+     * @param source Source node
+     * @param target Target node
+     * @return The cost of an arc
+     */
+    public int getCost(int source, int target) {
+        return findNode(source).findOutgoingTo(target).getCost();
     }
 
     /**

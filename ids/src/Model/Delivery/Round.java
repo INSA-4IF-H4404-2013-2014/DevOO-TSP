@@ -12,8 +12,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -31,6 +33,9 @@ public class Round {
 
     /** The schedules containing the deliveries */
     private List<Schedule> schedules = new LinkedList<Schedule>();
+
+    /** The clients delivered */
+    private List<Client> clients = new LinkedList<Client>();
 
     /**
      * Constructor
@@ -111,6 +116,37 @@ public class Round {
 
         client.removeDelivery(delivery);
         schedule.removeDelivery(delivery);
+
+        if(schedule.getDeliveries().isEmpty()) {
+            schedules.remove(schedule);
+        }
+    }
+
+    public boolean isScheduleOverlapping(GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+        for(Schedule s : schedules) {
+            if((latestBound.before(s.getLatestBound()) && latestBound.after(s.getEarliestBound()))
+                    || (earliestBound.before(s.getLatestBound()) && earliestBound.after(s.getEarliestBound()))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets a list of strings for all deliveries.
+     * This is for the view which will call this to fill its list on the left.
+     * @return a vector of strings
+     */
+    public Vector<String> getDeliveryDisplayableList() {
+        Vector<String> displayableDeliveryList = new Vector<String>();
+        for(Schedule sched : schedules) {
+            for(Delivery deliver : sched.getDeliveries()) {
+                displayableDeliveryList.add(deliver.toString());
+            }
+        }
+
+        return displayableDeliveryList;
     }
 
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
@@ -129,15 +165,15 @@ public class Round {
 
     public Client getClient(String clientId)
     {
-        for(Schedule s : schedules) {
-            for(Delivery d : s.getDeliveries()) {
-                if(d.getClient().getId().equals(clientId)) {
-                    return d.getClient();
-                }
+        for(Client c : clients) {
+            if(c.getId().equals(clientId)) {
+                return c;
             }
         }
 
-        return new Client(clientId);
+        Client c = new Client(clientId);
+        clients.add(c);
+        return c;
     }
 
     /**
@@ -162,6 +198,15 @@ public class Round {
      */
     public List<Schedule> getSchedules() {
         return schedules;
+    }
+
+
+    /**
+     * Returns the clients delivered
+     * @return the clients delivered
+     */
+    public List<Client> getClients() {
+        return clients;
     }
 
     /**
@@ -205,7 +250,7 @@ public class Round {
      * @throws UtilsException If the parsing returns an exception
      * @throws ParserConfigurationException If the XML file contains errors (missing or invalids elements or attributes)
      */
-    public static Round createFromXml(String xmlFilePath, Network network) throws UtilsException, ParserConfigurationException {
+    public static Round createFromXml(String xmlFilePath, Network network) throws UtilsException, ParserConfigurationException, FileNotFoundException {
         Element root;
         Document document;
         DocumentBuilder factory;
@@ -216,7 +261,7 @@ public class Round {
         File xmlFile = new File(xmlFilePath);
 
         if(!xmlFile.exists()) {
-            throw new ParserConfigurationException("Fichier <" + xmlFilePath + "> manquant.");
+            throw new FileNotFoundException("Fichier <" + xmlFilePath + "> manquant.");
         }
 
         try {

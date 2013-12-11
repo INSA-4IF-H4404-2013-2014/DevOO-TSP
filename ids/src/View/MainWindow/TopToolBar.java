@@ -75,6 +75,7 @@ public class TopToolBar extends JToolBar {
         redo.setIcon(new ImageIcon("./src/redo.png"));
         add(redo);
 
+        loadRound.setEnabled(false);
         saveRound.setEnabled(false);
         add.setEnabled(false);
         delete.setEnabled(false);
@@ -83,19 +84,22 @@ public class TopToolBar extends JToolBar {
     }
 
     public void addListener(final MainWindowController controller) {
-        // Add button
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.addDelivery();
             }
         });
-
-        // Load map button
         loadMap.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.loadNetwork();
+            }
+        });
+        loadRound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.loadRound();
             }
         });
     }
