@@ -42,7 +42,8 @@ public class ChocoGraph implements Graph {
      * @param round
      */
     public ChocoGraph(Network network, Round round) {
-        List<Schedule> schedules = new LinkedList<Schedule>(), realSchedule = null, nextRealSchedule;
+        List<Schedule> schedules = new LinkedList<Schedule>();
+        Schedule currentSchedule = null, nextSchedule;
 
         //Initializing schedules temporary list and the delivery map
         ChocoDelivery warehouse = new ChocoDelivery(round.getWarehouse());
@@ -61,11 +62,8 @@ public class ChocoGraph implements Graph {
         if(!schedules.isEmpty()) {
             List<Delivery> successors = new LinkedList<Delivery>();
 
-            realSchedule = getNextDistinctSchedule(schedules);
-
-            for(Schedule s : realSchedule) {
-                successors.addAll(s.getDeliveries());
-            }
+            currentSchedule = getNextSchedule(schedules);
+            successors.addAll(currentSchedule.getDeliveries());
 
             computeDistinctScheduleArcs(network, warehouse.getDelivery(), successors);
         }
@@ -75,47 +73,53 @@ public class ChocoGraph implements Graph {
         //  AND
         //  Linking every node of ds to every node of the next distinct schedule
         while(!schedules.isEmpty()) {
-            nextRealSchedule = getNextDistinctSchedule(schedules);
+            nextSchedule = getNextSchedule(schedules);
 
-            for(Schedule s : realSchedule) {
-                for(Delivery source : s.getDeliveries())
-                {
-                    List<Delivery> successors = new LinkedList<Delivery>();
+            for(Delivery source : currentSchedule.getDeliveries())
+            {
+                List<Delivery> successors = new LinkedList<Delivery>();
 
-                    for(Schedule s1 : realSchedule) {
-                        for(Delivery d : s.getDeliveries()) {
-                            if(d != source) {
-                                successors.add(d);
-                            }
-                        }
+                for(Delivery d : currentSchedule.getDeliveries()) {
+                    if(d != source) {
+                        successors.add(d);
                     }
-                    for(Schedule s1 : nextRealSchedule) {
-                        successors.addAll(s.getDeliveries());
-                    }
-
-                    computeDistinctScheduleArcs(network, source, successors);
                 }
+                successors.addAll(nextSchedule.getDeliveries());
+
+                computeDistinctScheduleArcs(network, source, successors);
             }
 
-            realSchedule = nextRealSchedule;
+            currentSchedule = nextSchedule;
         }
 
         //Linking every node of the last distinct schedule to the warehouse
-        if(realSchedule != null && !realSchedule.isEmpty()) {
+        if(currentSchedule != null) {
             List<Delivery> successors = new LinkedList<Delivery>();
             successors.add(warehouse.getDelivery());
 
-            for(Schedule s : realSchedule) {
-                for(Delivery d : s.getDeliveries()) {
-                    computeDistinctScheduleArcs(network, d, successors);
-                }
+            for(Delivery d : currentSchedule.getDeliveries()) {
+                computeDistinctScheduleArcs(network, d, successors);
             }
         }
     }
 
-    private List<Schedule> getNextDistinctSchedule(List<Schedule> schedules) {
-        //TODO
-        return null;
+    private Schedule getNextSchedule(List<Schedule> schedules) {
+        Schedule minSchedule = null, tmp;
+        ListIterator<Schedule> minIter = null, iter = schedules.listIterator();
+
+        while(iter.hasNext()) {
+            tmp = iter.next();
+            if(tmp.getEarliestBound().before(minSchedule.getEarliestBound())) {
+                minSchedule = tmp;
+                minIter = iter;
+            }
+        }
+
+        if(minIter != null) {
+            minIter.remove();
+        }
+
+        return minSchedule;
     }
 
     //Find shortest past (all nodes and arcs) between source and each next delivery for a network

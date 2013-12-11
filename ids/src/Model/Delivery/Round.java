@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -115,6 +116,21 @@ public class Round {
 
         client.removeDelivery(delivery);
         schedule.removeDelivery(delivery);
+
+        if(schedule.getDeliveries().isEmpty()) {
+            schedules.remove(schedule);
+        }
+    }
+
+    public boolean isScheduleOverlapping(GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+        for(Schedule s : schedules) {
+            if((latestBound.before(s.getLatestBound()) && latestBound.after(s.getEarliestBound()))
+                    || (earliestBound.before(s.getLatestBound()) && earliestBound.after(s.getEarliestBound()))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

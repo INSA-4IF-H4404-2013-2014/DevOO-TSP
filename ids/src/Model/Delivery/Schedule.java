@@ -56,7 +56,11 @@ public class Schedule {
         this.latestBound = getScheduleBoundFromXMLAttr(element, XMLConstants.DELIVERY_SCHEDULE_LATEST_ATTR, year, month, day);
 
         if(this.earliestBound.after(this.latestBound)) {
-            throw new ParserConfigurationException("L'heure de début de l'élément <" + XMLConstants.DELIVERY_DELIVERIES_ELEMENT + "> est postérieure à son heure de fin.");
+           throw new ParserConfigurationException("L'heure de début de l'élément <" + XMLConstants.DELIVERY_DELIVERIES_ELEMENT + "> est postérieure à son heure de fin.");
+        }
+
+        if(round.isScheduleOverlapping(this.earliestBound, this.latestBound)) {
+            throw new ParserConfigurationException("Un chevauchement de plages horaires a été détecté.");
         }
 
         NodeList deliveries = element.getElementsByTagName(XMLConstants.DELIVERY_DELIVERIES_ELEMENT);
