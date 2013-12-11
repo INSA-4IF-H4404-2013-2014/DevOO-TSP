@@ -88,6 +88,7 @@ public class MainWindowController implements NodeListener {
                         e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
             }
         }
+        computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
     }
 
     /**

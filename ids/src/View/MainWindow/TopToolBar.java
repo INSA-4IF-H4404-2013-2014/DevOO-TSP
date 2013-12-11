@@ -108,10 +108,24 @@ public class TopToolBar extends JToolBar {
                 controller.exportRound();
             }
         });
-        this.delete.addActionListener(new ActionListener() {
+        delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.exportRound();
+                controller.removeDelivery();
+            }
+        });
+
+        undo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.historyUndo();
+            }
+        });
+
+        redo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.historyRedo();
             }
         });
     }
