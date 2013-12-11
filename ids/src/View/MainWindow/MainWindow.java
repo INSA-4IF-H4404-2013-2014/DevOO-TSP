@@ -1,7 +1,10 @@
 package View.MainWindow;
 
 import Controller.MainWindowController;
+import Model.ChocoSolver.CalculatedRound;
+import Model.City.Arc;
 import Model.City.Network;
+import Model.Delivery.Itinerary;
 import Model.Delivery.Round;
 import Utils.UtilsException;
 import View.MapPanel.MapPanel;
@@ -9,6 +12,7 @@ import View.MapPanel.MapPanel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.LinkedList;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -68,9 +72,24 @@ public class MainWindow extends JFrame {
 
         // automatic load for map testing
         try {
-            network = Network.createFromXml("../sujet/plan10x10.xml");
-            //network = Network.createFromXml("../sujet/planTiny.xml");
+            network = Network.createFromXml("../sujet/planTiny.xml");
+
+            Model.City.Node warHouse = network.findNode(0);
+            LinkedList<Arc> arcList = new LinkedList<Arc>();
+
+            arcList.add(network.findArc(0, 2));
+            arcList.add(network.findArc(2, 1));
+            arcList.add(network.findArc(1, 0));
+
+            LinkedList<Itinerary> itineraryList = new LinkedList<Itinerary>();
+
+            Model.Delivery.Itinerary itinerary = new Model.Delivery.Itinerary(null, null, arcList);
+            itineraryList.add(itinerary);
+
+            CalculatedRound calculatedRound = new CalculatedRound(warHouse, null, itineraryList);
+
             mapPanel.setModel(network);
+            mapPanel.setRound(calculatedRound);
         }
         catch (UtilsException e) {
             System.out.println(e);

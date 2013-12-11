@@ -101,6 +101,24 @@ public class Network {
     }
 
     /**
+     * Finds a arc between two nodes
+     * @param from node id
+     * @param to node id
+     * @return
+     *  - null if there is no arc with the given parameters
+     *  - the existing arc
+     */
+    public Arc findArc(int from, int to) {
+        Node node = this.findNode(from);
+
+        if(node == null) {
+            return null;
+        }
+
+        return node.findOutgoingTo(to);
+    }
+
+    /**
      * Returns the cost of an existing arc going from a source node to an end node
      * Note : A call to this method with an unexisting arc will throw a null pointer exception
      * @param source Source node
@@ -108,7 +126,7 @@ public class Network {
      * @return The cost of an arc
      */
     public int getCost(int source, int target) {
-        return findNode(source).findOutgoingTo(target).getCost();
+        return findArc(source, target).getCost();
     }
 
     /**

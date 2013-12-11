@@ -21,6 +21,9 @@ public class MapPanel extends JPanel {
     /** associated model graph */
     private Network modelNetwork;
 
+    /** the model round */
+    CalculatedRound modelRound;
+
     /** nodes map */
     private Map<Integer,Node> nodes;
 
@@ -145,10 +148,11 @@ public class MapPanel extends JPanel {
 
     /**
      * Sets the model
-     * @param modelNetwork the model we want to set
+     * @param network the model we want to set
      */
-    public void setModel(Network modelNetwork) {
-        this.modelNetwork = modelNetwork;
+    public void setModel(Network network) {
+        modelNetwork = network;
+        modelRound = null;
 
         this.refreshNodeAndArcs();
     }
@@ -158,7 +162,9 @@ public class MapPanel extends JPanel {
      * @param round the calculated round to show
      */
     public void setRound(CalculatedRound round) {
-        //TODO: by Guillaume
+        modelRound = round;
+
+        this.repaint();
     }
 
     /**
