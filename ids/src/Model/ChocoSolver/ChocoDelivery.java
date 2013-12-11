@@ -79,7 +79,8 @@ public class ChocoDelivery {
      * @return the itinerary
      */
     public Itinerary getItinerary(int nodeId) {
-        return successorsItinerary.get(nodeId);
+        int idx = successorsNode.indexOf(nodeId);
+        return successorsItinerary.get(idx);
     }
 
     /**
@@ -97,14 +98,18 @@ public class ChocoDelivery {
      * @return the costs of each itineraries linked to the delivery
      */
     public int[] getCosts() {
+        int i = 0;
         int[] costs = new int[successorsItinerary.size()];
-        int i = -1;
 
         for(Itinerary itinerary:successorsItinerary) {
-            i++;
             costs[i] = itinerary.getCost();
+            ++i;
         }
 
         return costs;
+    }
+
+    public int getSuccArcCost(int nodeId) {
+        return getItinerary(nodeId).getCost();
     }
 }

@@ -17,8 +17,17 @@ public class ChocoGraph implements Graph {
         Integer previous = null;
     }
 
-    /** HashMap which has as Key : node ID and Value : Choco Delivery => targeted node + itinerary */
+    /**
+     * Key : real network node ID
+     * Value : Choco Delivery => targeted delivery node + itinerary with network nodes
+     */
     private Map<Integer, ChocoDelivery> deliveries = new HashMap<Integer, ChocoDelivery>();
+
+    /**
+     * Key : a Choco graph node id, between 0 and nbVertices
+     * Value : a real network id, from the xml file
+     */
+    private Map<Integer, Integer> nodesId = new HashMap<Integer, Integer>();
 
 	private int nbVertices;
 
@@ -28,21 +37,63 @@ public class ChocoGraph implements Graph {
 
 	private int[][] cost;
 
-    /**
-     * On doit créer un arc entre une livraison
-         et toutes les livraisons de sa plage horaire et après
-
-         Donc deux passes :
-            on crée les chocodelivery
-            pour chaque livraison
-                déterminer les livraisons visées
-                run dijkstra tant que on a pas atteint toutes les livraisons VISEES(int décrémenté)
-                 ajouter à la livraison un itinéraire créé grâce à Dijkstra
-
-     * @param network
-     * @param round
-     */
     public ChocoGraph(Network network, Round round) {
+        nbVertices = round.getDeliveryList().size() + 1;
+        this.maxArcCost = Integer.MIN_VALUE;
+        this.minArcCost = Integer.MAX_VALUE;
+
+        initChocoDeliveries(network, round);
+
+        initCosts();
+    }
+
+    private void initCosts() {
+        ChocoDelivery cd;
+        Iterator<Integer> iter = deliveries.keySet().iterator();
+
+        cost = new int[nbVertices][];
+
+        //Initializing nodes ID linking from choco network IDs to initial networks IDs
+        for(int i = 0; i < nbVertices; ++i) {
+            nodesId.put(new Integer(i), iter.next());
+        }
+
+        //Initializing cost matrix and calculating max arc cost
+        //Unexisting arcs are initialized with -1
+        for(int i = 0; i < nbVertices; ++i) {
+            cost[i] = new int[nbVertices];
+            cd = getChocoDeliveryFromChocoId(i);
+
+            //Initializing successors cost for a delivery node
+            for(int j = 0; j < nbVertices && j < cd.getSuccessorsItinerary().size(); ++j) {
+                cost[i][j] = cd.getSuccArcCost(nodesId.get(j));
+
+                if(cost[i][j] > this.maxArcCost) {
+                    this.maxArcCost = cost[i][j];
+                }
+
+                if(cost[i][j] < this.minArcCost) {
+                    this.minArcCost = cost[i][j];
+                }
+            }
+
+            for(int j = cd.getSuccessorsItinerary().size(); j < nbVertices; ++j) {
+                cost[i][j] = -1;
+            }
+        }
+
+        //Initializing unexisting arcs (-1) with max cost + 1
+        for(int i = 0; i < nbVertices; ++i) {
+            for(int j = 0; j < nbVertices; ++j) {
+                if(cost[i][j] == -1) {
+                    cost[i][j] = maxArcCost + 1;
+                }
+
+            }
+        }
+    }
+
+    private void initChocoDeliveries(Network network, Round round) {
         Map<Integer, NodeInfo> dict = new HashMap<Integer, NodeInfo>();
         List<Schedule> schedules = new LinkedList<Schedule>();
         Schedule currentSchedule = null, nextSchedule;
@@ -270,11 +321,15 @@ public class ChocoGraph implements Graph {
         return path;
     }
 
-    public ChocoDelivery getDelivery(Integer nodeId) {
+    public ChocoDelivery getChocoDeliveryFromChocoId(Integer nodeId) {
+        return deliveries.get(nodesId.get(nodeId));
+    }
+
+    public ChocoDelivery getChocoDeliveryFromNetworkId(Integer nodeId) {
         return deliveries.get(nodeId);
     }
 
-	public int getMaxArcCost() {
+    public int getMaxArcCost() {
 		return maxArcCost;
 	}
 

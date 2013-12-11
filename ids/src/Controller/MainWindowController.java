@@ -330,7 +330,7 @@ public class MainWindowController implements NodeListener {
         for(int i = 0 ; i <= nodeList.length ; i++) {
 
             //TODO: be sure that the delivery added to deliveriesList is not erased at each iteration (Java pointers...)
-            chocoDelivery = chocoGraph.getDelivery(nodeList[i]);
+            chocoDelivery = chocoGraph.getChocoDeliveryFromChocoId(nodeList[i]);
             delivery = chocoDelivery.getDelivery();
             deliveriesList.add(delivery);
 
