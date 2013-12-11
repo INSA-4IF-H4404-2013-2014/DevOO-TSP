@@ -39,6 +39,7 @@ public class MainWindow extends JFrame {
 
     private Network network;
     private Round round;
+    private CalculatedRound calculatedRound;
 
     private RightPanel rightPanel = new RightPanel();
     private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
@@ -107,6 +108,14 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Get the calculated round of the main window
+     * @return the calculated round of the main window
+     */
+    public CalculatedRound getCalculatedRound() {
+        return getCalculatedRound();
+    }
+
+    /**
      * Sets the round.
      * Asks the deliveryListPanel to display it.
      * @param round the round to set & display
@@ -114,6 +123,14 @@ public class MainWindow extends JFrame {
     public void setRound(Round round) {
         this.round = round;
         deliveryListPanel.setModel(round.getDeliveryDisplayableList());
+    }
+
+    /**
+     * Sets the calculated round
+     * @param calculatedRound the calculated round to set & display
+     */
+    public void setCalculatedRound(CalculatedRound calculatedRound) {
+        this.calculatedRound = calculatedRound;
     }
 
     /**
