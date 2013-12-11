@@ -26,6 +26,14 @@ import static org.junit.Assert.fail;
 public class ChocoGraphTest {
 
     @Test
+    public void testCreate2() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        Network network = Network.createFromXml("resources/tests/chocograph/plan10x10.xml");
+        Round round = Round.createFromXml("resources/tests/chocograph/livraison10x10-1.xml", network);
+
+        ChocoGraph chocograph = new ChocoGraph(network, round);
+    }
+
+    @Test
     public void testCreate() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
         Round round = Round.createFromXml("resources/tests/chocograph/valid2.xml", network);
@@ -50,13 +58,5 @@ public class ChocoGraphTest {
         assertTrue(testSucc[0] == 5 || testSucc[0] == 7);
         testSucc = chocograph.getSucc(9);
         assertTrue(testSucc[0] == 0);
-    }
-
-    @Test
-    public void testCreate2() throws UtilsException, FileNotFoundException, ParserConfigurationException {
-        Network network = Network.createFromXml("resources/tests/chocograph/plan10x10.xml");
-        Round round = Round.createFromXml("resources/tests/chocograph/livraison10x10-1.xml", network);
-
-        ChocoGraph chocograph = new ChocoGraph(network, round);
     }
 }
