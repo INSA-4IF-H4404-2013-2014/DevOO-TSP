@@ -12,12 +12,13 @@ import java.util.*;
 
 public class ChocoGraph implements Graph {
     class NodeInfo {
-        int cost = Integer.MAX_VALUE;
         boolean visited = false;
+        int cost = Integer.MAX_VALUE;
         Integer previous = null;
     }
 
-    private Map<Integer, ChocoDelivery> deliveries;
+    /** HashMap which has as Key : node ID and Value : Choco Delivery => targeted node + itinerary */
+    private Map<Integer, ChocoDelivery> deliveries = new HashMap<Integer, ChocoDelivery>();
 
 	private int nbVertices;
 
@@ -42,6 +43,7 @@ public class ChocoGraph implements Graph {
      * @param round
      */
     public ChocoGraph(Network network, Round round) {
+        Map<Integer, NodeInfo> dict = new HashMap<Integer, NodeInfo>();
         List<Schedule> schedules = new LinkedList<Schedule>();
         Schedule currentSchedule = null, nextSchedule;
 
@@ -52,7 +54,7 @@ public class ChocoGraph implements Graph {
         for(Schedule s : round.getSchedules()) {
             if(!s.getDeliveries().isEmpty()) {
                 for(Delivery d : s.getDeliveries()) {
-                    deliveries.put(d.getId(), new ChocoDelivery(d));
+                    deliveries.put(d.getAddress().getId(), new ChocoDelivery(d));
                 }
                 schedules.add(s);
             }
@@ -60,12 +62,15 @@ public class ChocoGraph implements Graph {
 
         //Linking warehouse with every node of the first distinct schedule
         if(!schedules.isEmpty()) {
-            List<Delivery> successors = new LinkedList<Delivery>();
+            List<Node> successors = new LinkedList<Node>();
 
             currentSchedule = getNextSchedule(schedules);
-            successors.addAll(currentSchedule.getDeliveries());
+            for(Delivery d : currentSchedule.getDeliveries()) {
+                successors.add(d.getAddress());
+            }
 
-            computeDistinctScheduleArcs(network, warehouse.getDelivery(), successors);
+            initDict(network, dict);
+            computeDistinctScheduleArcs(network, warehouse.getAddress(), successors, dict);
         }
 
         //For each distinct schedule ds
@@ -77,16 +82,19 @@ public class ChocoGraph implements Graph {
 
             for(Delivery source : currentSchedule.getDeliveries())
             {
-                List<Delivery> successors = new LinkedList<Delivery>();
+                List<Node> successors = new LinkedList<Node>();
 
                 for(Delivery d : currentSchedule.getDeliveries()) {
                     if(d != source) {
-                        successors.add(d);
+                        successors.add(d.getAddress());
                     }
                 }
-                successors.addAll(nextSchedule.getDeliveries());
+                for(Delivery d : nextSchedule.getDeliveries()) {
+                    successors.add(d.getAddress());
+                }
 
-                computeDistinctScheduleArcs(network, source, successors);
+                reinitDict(dict);
+                computeDistinctScheduleArcs(network, source.getAddress(), successors, dict);
             }
 
             currentSchedule = nextSchedule;
@@ -94,46 +102,62 @@ public class ChocoGraph implements Graph {
 
         //Linking every node of the last distinct schedule to the warehouse
         if(currentSchedule != null) {
-            List<Delivery> successors = new LinkedList<Delivery>();
-            successors.add(warehouse.getDelivery());
+            List<Node> successors = new LinkedList<Node>();
 
             for(Delivery d : currentSchedule.getDeliveries()) {
-                computeDistinctScheduleArcs(network, d, successors);
+                reinitDict(dict);
+                successors.add(warehouse.getAddress());
+                computeDistinctScheduleArcs(network, d.getAddress(), successors, dict);
             }
+        }
+    }
+
+    private void initDict(Network network, Map<Integer, NodeInfo> dict) {
+        for(Integer i : network.getNodes().keySet()) {
+            dict.put(i, new NodeInfo());
+        }
+    }
+
+    private void reinitDict(Map<Integer, NodeInfo> dict) {
+        for(NodeInfo value : dict.values()) {
+            value.cost = Integer.MAX_VALUE;
+            value.visited = false;
+            value.previous = null;
         }
     }
 
     private Schedule getNextSchedule(List<Schedule> schedules) {
         Schedule minSchedule = null, tmp;
-        ListIterator<Schedule> minIter = null, iter = schedules.listIterator();
+        ListIterator<Schedule> iter = schedules.listIterator();
 
-        while(iter.hasNext()) {
-            tmp = iter.next();
-            if(tmp.getEarliestBound().before(minSchedule.getEarliestBound())) {
-                minSchedule = tmp;
-                minIter = iter;
+        if(iter.hasNext()) {
+            minSchedule = iter.next();
+
+            while(iter.hasNext()) {
+                tmp = iter.next();
+                if(tmp.getEarliestBound().before(minSchedule.getEarliestBound())) {
+                    minSchedule = tmp;
+                }
             }
+
+            schedules.remove(minSchedule);
         }
 
-        if(minIter != null) {
-            minIter.remove();
-        }
 
         return minSchedule;
     }
 
     //Find shortest past (all nodes and arcs) between source and each next delivery for a network
-    private void computeDistinctScheduleArcs(Network network, Delivery source, List<Delivery> successors) {
-        Map<Integer, NodeInfo> dict;
+    private void computeDistinctScheduleArcs(Network network, Node source, List<Node> successors, Map<Integer, NodeInfo> dict) {
         List<Integer> shortestPath;
         List<Arc> directions;
 
-        dict = runDijkstra(network, source.getId(), successors);
+        runDijkstra(network, source.getId(), successors, dict);
 
-        for(Delivery d : successors) {
-            shortestPath = getShortestPath(dict, d.getId());
+        for(Node n : successors) {
+            shortestPath = getShortestPath(dict, n.getId());
             directions = getDirections(network, shortestPath);
-            deliveries.get(source.getId()).addSuccessor(d.getId(), new Itinerary(source.getAddress(), d.getAddress(), directions));
+            deliveries.get(source.getId()).addSuccessor(n.getId(), new Itinerary(source, n, directions));
         }
     }
 
@@ -158,45 +182,40 @@ public class ChocoGraph implements Graph {
         return directions;
     }
 
-
     //Find next node with minimal cost and not visited yet
     private Integer getMinUnvisited(Map<Integer, NodeInfo> dict, List<Integer> neighbours) {
         int min = Integer.MAX_VALUE;
         NodeInfo n, minNodeInfo = null;
         boolean found = false;
-        ListIterator<Integer> minIter = null, iter;
         Integer tmp, selected = null;
+        ListIterator<Integer> iter = neighbours.listIterator();
 
-        iter = neighbours.listIterator();
-        while(iter.hasNext() && !found) {
+        while(iter.hasNext()) {
             tmp = iter.next();
             n = dict.get(tmp);
-            if(n.cost < min && n.visited == false) {
+            if(n.cost < min && !n.visited) {
                 min = n.cost;
                 minNodeInfo = n;
-                minIter = iter;
                 selected = tmp;
-                found = true;
             }
         }
 
-        minIter.remove();
+        neighbours.remove(selected);
         minNodeInfo.visited = true;
 
         return selected;
     }
 
     //Yeah, that's Dijkstra. Trivial.
-    private Map<Integer, NodeInfo> runDijkstra(Network network, Integer source, List<Delivery> succ) {
+    private Map<Integer, NodeInfo> runDijkstra(Network network, Integer source, List<Node> succ, Map<Integer, NodeInfo> dict) {
         //Variable declaration and initialization
         NodeInfo tmpNodeInfo;
         int tmpDist;
         boolean found;
-        Delivery tmpDelivery;
-        ListIterator<Delivery> iter;
+        ListIterator<Node> iter;
+        Node tmpNode;
         Integer current, tmpNodeId;
         List<Integer> neighbours = new LinkedList<Integer>();
-        Map<Integer, NodeInfo> dict = new HashMap<Integer, NodeInfo>();
 
         //Initializing search from source
         dict.get(source).cost = 0;
@@ -210,8 +229,8 @@ public class ChocoGraph implements Graph {
             iter = succ.listIterator();
             found = false;
             while(iter.hasNext() && !found) {
-                tmpDelivery = iter.next();
-                if(tmpDelivery.getAddress().getId() == current) {
+                tmpNode = iter.next();
+                if(tmpNode.getId() == current) {
                     iter.remove();
                     found = true;
                 }

@@ -19,8 +19,8 @@ public class GraphTest {
 	 */
 	@Test
 	public void testArcCost() throws UtilsException, ParserConfigurationException, FileNotFoundException {
-        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
-        Round round = Round.createFromXml("resources/tests/valid.xml", network);
+        Network network = Network.createFromXml("resources/tests/round/plan10x10.xml");
+        Round round = Round.createFromXml("resources/tests/round/valid.xml", network);
 
         ChocoGraph graph = new ChocoGraph(network, round);
 	}
