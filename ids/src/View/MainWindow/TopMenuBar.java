@@ -97,16 +97,16 @@ public class TopMenuBar extends JMenuBar{
     private void createFileMenu() {
         JMenu file = new JMenu("Fichier");
 
-        fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("../../door_out.png")));
+        fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("./../../img/door_out.png")));
         fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 
-        openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("../../mini_open_map.png")));
+        openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("../../img/mini_open_map.png")));
 
-        openRound = new JMenuItem("Ouvrir une tournée", new ImageIcon(getClass().getResource("../../mini_open_round.png")));
+        openRound = new JMenuItem("Ouvrir une tournée", new ImageIcon(getClass().getResource("../../img/mini_open_round.png")));
 
         computeRound = new JMenuItem("Calculer une tournée");
 
-        saveRound = new JMenuItem("Sauvegarder une tournée", new ImageIcon(getClass().getResource("../../mini_save_round.png")));
+        saveRound = new JMenuItem("Sauvegarder une tournée", new ImageIcon(getClass().getResource("../../img/mini_save_round.png")));
         saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
         file.add(openMap);
@@ -127,14 +127,14 @@ public class TopMenuBar extends JMenuBar{
     private void createEditMenu() {
         JMenu edit = new JMenu("Éditer");
 
-        addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../mini_add.png")));
+        addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../img/mini_add.png")));
 
-        delButton = new JMenuItem("Supprimer une livraison", new ImageIcon(getClass().getResource("../../mini_delete.png")));
+        delButton = new JMenuItem("Supprimer une livraison", new ImageIcon(getClass().getResource("../../img/mini_delete.png")));
 
-        undoButton = new JMenuItem("Annuler", new ImageIcon(getClass().getResource("../../mini_undo.png")));
+        undoButton = new JMenuItem("Annuler", new ImageIcon(getClass().getResource("../../img/mini_undo.png")));
         undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 
-        redoButton = new JMenuItem("Refaire", new ImageIcon(getClass().getResource("../../mini_redo.png")));
+        redoButton = new JMenuItem("Refaire", new ImageIcon(getClass().getResource("../../img/mini_redo.png")));
         redoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 
         edit.add(addButton);

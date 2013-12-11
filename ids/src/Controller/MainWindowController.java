@@ -76,6 +76,8 @@ public class MainWindowController implements NodeListener {
      * Action triggered when user wants to load a round
      */
     public void loadRound() {
+        mainWindow.featureUndoSetEnable(false);
+        mainWindow.featureRedoSetEnable(false);
         File xmlFile = openXMLFile();
 
         if(xmlFile != null) {
@@ -120,6 +122,8 @@ public class MainWindowController implements NodeListener {
     }
 
     public void historyDo(Command command){
+        mainWindow.featureUndoSetEnable(true);
+        mainWindow.featureRedoSetEnable(false);
         historyBackedOut.clear();
 
         command.Apply();
@@ -127,6 +131,8 @@ public class MainWindowController implements NodeListener {
     }
 
     public void historyRedo(){
+        mainWindow.featureUndoSetEnable(true);
+        mainWindow.featureRedoSetEnable(false);
         Command command = historyBackedOut.pollFirst();
 
         if (command == null) {
@@ -138,6 +144,8 @@ public class MainWindowController implements NodeListener {
     }
 
     public void historyUndo(){
+        mainWindow.featureUndoSetEnable(false);
+        mainWindow.featureRedoSetEnable(true);
         Command command = historyApplied.pollLast();
 
         if (command == null) {

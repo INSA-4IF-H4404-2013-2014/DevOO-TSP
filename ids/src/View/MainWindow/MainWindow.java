@@ -112,7 +112,7 @@ public class MainWindow extends JFrame {
      * @return the calculated round of the main window
      */
     public CalculatedRound getCalculatedRound() {
-        return getCalculatedRound();
+        return this.calculatedRound;
     }
 
     /**
@@ -216,7 +216,7 @@ public class MainWindow extends JFrame {
      * Enable or disable the feature 'load a map'
      * @param b whether to enable or disable the feature
      */
-    public void featureLoadRMapSetEnable(boolean b) {
+    public void featureLoadMapSetEnable(boolean b) {
         topMenuBar.openMap.setEnabled(b);
         topToolBar.loadMap.setEnabled(b);
     }
