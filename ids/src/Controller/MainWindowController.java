@@ -91,10 +91,10 @@ public class MainWindowController implements NodeListener {
      * Export the current round in a HTML file choosen by user
      */
     public void exportRound() {
-        Round round = this.mainWindow.getRound();
+        CalculatedRound calculatedRound = this.mainWindow.getCalculatedRound();
 
-        if(round != null) {
-            String htmlRound = round.roundToHtml();
+        if(calculatedRound != null) {
+            String htmlRound = calculatedRound.calculatedRoundToHtml();
 
             try {
                 FileWriter outputWriter = new FileWriter(openFile("html"), false);
