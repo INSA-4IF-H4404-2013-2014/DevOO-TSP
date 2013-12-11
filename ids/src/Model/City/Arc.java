@@ -90,4 +90,48 @@ public class Arc {
     public int getCost() {
         return (int) (length / speed);
     }
+
+    /**
+     * Give the type of direction from an arc to another arc.
+     */
+    public enum Direction {
+        GO_ON, KEEP_GOING, TURN_LEFT, TURN_RIGHT, TURN_BACK
+    }
+
+    /**
+     * Gets direction from this arc to the next given arc
+     * @param arc the next arc you are going
+     * @return
+     *  - Direction.TURN_BACK if arc is going backward
+     *  - Direction.KEEP_GOING if arc on the same street but not going backward
+     *  - Direction.GO_ON if arc
+     * @asserts
+     *  - arc in this.to.getOutgoing()
+     */
+    public Direction getDirectionTo(Arc arc) {
+        if(arc.getTo() == from) {
+            return Direction.TURN_BACK;
+        }
+
+        String streetName = street.getName();
+        String newStreetName = street.getName();
+
+        if(newStreetName.equals(streetName)) {
+            return Direction.KEEP_GOING;
+        }
+
+        int newStreetArcs = 0;
+
+        for(Arc potentialNextArc : to.getOutgoing()) {
+            if(potentialNextArc.getStreet().getName().equals(newStreetName)) {
+                newStreetArcs += 1;
+            }
+        }
+
+        if(newStreetArcs == 1) {
+            return Direction.GO_ON;
+        }
+
+        return Direction.GO_ON;
+    }
 }
