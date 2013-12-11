@@ -93,6 +93,24 @@ public class Arc {
     }
 
     /**
+     * Gets arc's direction angle
+     * @return the arc's orientation angle
+     *  - 0.0 is indicating the north
+     *  - 90 is indicating the est
+     *  - 180 is indicating the south
+     *  - 270 is indicating the west
+     */
+    public double getDirectionAngle() {
+        double radianAngle = Math.atan2(to.getX() - from.getX(),to.getY() - from.getY());
+
+        if(radianAngle < 0.0) {
+            radianAngle += 2.0 * Math.PI;
+        }
+
+        return radianAngle * 180.0 / Math.PI;
+    }
+
+    /**
      * Give the type of direction from an arc to another arc.
      */
     public enum Direction {
@@ -114,25 +132,39 @@ public class Arc {
             return Direction.TURN_BACK;
         }
 
-        String streetName = street.getName();
-        String newStreetName = street.getName();
+        String newStreetName = arc.getStreet().getName();
 
-        if(newStreetName.equals(streetName)) {
+        if(street.getName().equals(street.getName())) {
             return Direction.KEEP_GOING;
         }
 
         int newStreetArcs = 0;
+        Arc otherNewStreetArc = null;
 
         for(Arc potentialNextArc : to.getOutgoing()) {
             if(potentialNextArc.getStreet().getName().equals(newStreetName)) {
                 newStreetArcs += 1;
+
+                if(!arc.getFrom().equals(potentialNextArc.getTo())) {
+                    otherNewStreetArc = potentialNextArc;
+                }
             }
         }
 
-        if(newStreetArcs == 1) {
+        if(newStreetArcs != 2) {
+            /**
+             * If newStreetArcs > 2, we don't now what to do.
+             * If newStreetArcs = 1, it is obvious
+             */
             return Direction.GO_ON;
         }
 
-        return Direction.GO_ON;
+        double rotatingAngle = (arc.getDirectionAngle() - getDirectionAngle()) % 360.0;
+
+        if (rotatingAngle < 180.0) {
+            return Direction.TURN_RIGHT;
+        }
+
+        return Direction.TURN_LEFT;
     }
 }
