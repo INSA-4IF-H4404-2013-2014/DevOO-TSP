@@ -28,6 +28,8 @@ public class CalculatedRound {
     /** The warehouse which is the start and end point of the round */
     private Node warehouse;
 
+    private GregorianCalendar departureTime;
+
     /** An ordered list of deliveries which defines the round */
     private List<Delivery> orderedDeliveries;
 
@@ -58,9 +60,7 @@ public class CalculatedRound {
      */
     private void calculateEstimatedSchedules()
     {
-        GregorianCalendar firstDepartureTime = getFirstDepartureTime();
-
-        estimatedSchedules.put(warehouse.getId(), firstDepartureTime);
+        this.departureTime = getFirstDepartureTime();
 
         GregorianCalendar arrivalTime;
 
@@ -69,13 +69,14 @@ public class CalculatedRound {
 
         int nodeId = warehouse.getId();
 
-        for(Delivery delivery:orderedDeliveries) {
+        for(Delivery delivery : orderedDeliveries) {
 
             arrivalTime = getArrivalTime(nodeId, delivery, deliveryTime);
 
             nodeId = delivery.getAddress().getId();
             deliveryTime = 600;
 
+            //TODO : check that the warehouse is put in the map as last element
             estimatedSchedules.put(nodeId, arrivalTime);
         }
     }
@@ -104,6 +105,14 @@ public class CalculatedRound {
         }
 
         return departure;
+    }
+
+    public GregorianCalendar getDepartureTime() {
+        return departureTime;
+    }
+
+    public GregorianCalendar getArrivalTime() {
+        return estimatedSchedules.get(warehouse.getId());
     }
 
     /**
@@ -143,6 +152,32 @@ public class CalculatedRound {
 
         return 0;
     }
+
+    public long getCumulatedDelay() {
+        long roundDelay = 0;
+
+        for(Delivery d : orderedDeliveries) {
+            roundDelay += getDelay(d);
+        }
+
+        return roundDelay;
+    }
+
+    public float getTotalLength() {
+        float length = 0;
+
+        for(Itinerary i : orderedItineraries) {
+            length += i.getLength();
+        }
+
+        return length;
+    }
+
+    public long getTotalDuration() {
+        return estimatedSchedules.get(warehouse.getId()).getTimeInMillis() - departureTime.getTimeInMillis();
+    }
+
+
 
     /**
      * Returns the ordered list of itineraries

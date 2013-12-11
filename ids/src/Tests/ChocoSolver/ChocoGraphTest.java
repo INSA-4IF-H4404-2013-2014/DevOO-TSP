@@ -51,4 +51,12 @@ public class ChocoGraphTest {
         testSucc = chocograph.getSucc(9);
         assertTrue(testSucc[0] == 0);
     }
+
+    @Test
+    public void testCreate2() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        Network network = Network.createFromXml("resources/tests/chocograph/plan10x10.xml");
+        Round round = Round.createFromXml("resources/tests/chocograph/livraison10x10-1.xml", network);
+
+        ChocoGraph chocograph = new ChocoGraph(network, round);
+    }
 }
