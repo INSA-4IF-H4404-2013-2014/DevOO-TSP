@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -30,8 +31,9 @@ public class RoundTest {
     @Test
     public void testValidCreate() throws FileNotFoundException {
         try {
+            System.out.println("Valid test");
             Network network = Network.createFromXml("resources/tests/plan10x10.xml");
-            Round round = Round.createFromXml("resources/tests/valid.xml", network);
+            Round round = Round.createFromXml("resources/tests/round/valid.xml", network);
 
             assertTrue(round.getWarehouse().getId() == 40);
             assertTrue(round.getSchedules().size() == 3);
@@ -48,9 +50,8 @@ public class RoundTest {
             assertTrue(s1.getDeliveries().get(0).getClient().getDeliveries().size() == 2);
             assertTrue(s1.getDeliveries().get(0).getClient().getDeliveries().contains(s1.getDeliveries().get(0)));
             assertTrue(s1.getDeliveries().get(0).getSchedule() == s1);
-        } catch(UtilsException e) {
-            fail();
-        } catch(ParserConfigurationException e) {
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
             fail();
         }
     }
@@ -61,15 +62,15 @@ public class RoundTest {
      */
     @Test
     public void testInvalidCreate() throws UtilsException, FileNotFoundException {
-        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
+        Network network = Network.createFromXml("resources/tests/round/plan10x10.xml");
 
-        for(int i = 1; i < 16; ++i) {
+        for(int i = 1; i < 18; ++i) {
             try {
                 System.out.println("Invalid test " + i);
-                Round.createFromXml("resources/tests/invalid (" + i + ").xml", network);
+                Round.createFromXml("resources/tests/round/invalid (" + i + ").xml", network);
                 fail();
-            } catch(UtilsException e) {
-            } catch(ParserConfigurationException e) {
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -78,6 +79,7 @@ public class RoundTest {
     /**
      * Exports the round contained in resources/tests/valid.xml into resources/tests/export.html
      */
+    /*
     @Test
     public void testHtmlParser() {
         try {
@@ -108,4 +110,5 @@ public class RoundTest {
             fail();
         }
     }
+    */
 }
