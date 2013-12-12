@@ -17,18 +17,35 @@ public class CalculatedRound {
     /** The warehouse which is the start and end point of the round */
     private Node warehouse;
 
+    /**
+     * Key : node ID
+     * Value : successors node ID
+     * Note : The node ID can be the warehouse's one
+     */
     private Map<Integer, Integer> successors = new HashMap<Integer, Integer>();
 
+    /**
+     * Key : node ID
+     * Value : ChocoDelivery containing the delivery (null for the warehouse) and the itinerary for the successors nodes
+     * Note : The node ID can be the warehouse's one
+     */
     private Map<Integer, ChocoDelivery> chocoDeliveries = new HashMap<Integer, ChocoDelivery>();
 
+    /** The round departure time */
     private GregorianCalendar departureTime;
 
-    /** A dictionary linking a delivery to its estimated arrival hour at the delivery point */
+    /**
+     * Key : node ID
+     * Value : estimated arrival hour at the node (which is a delivery point or the warehouse)
+     * Note : The node ID can be the warehouse's one
+     */
     private Map<Integer, GregorianCalendar> estimatedSchedules = new Hashtable<Integer, GregorianCalendar>();
 
     /**
-     * Constructor
-     * @param warehouse start and end point of the round
+     * Constructor which estimates the arrival hour at every delivery, and for the warehouse
+     * @param warehouse The warehouse
+     * @param tspOrderedDeliveries The successors "dictionary" nodes returned by the TSP (@see tsp.getNext())
+     * @param chocoGraph The calculated choco graph
      */
     public CalculatedRound(Node warehouse, int[] tspOrderedDeliveries, ChocoGraph chocoGraph) {
         this.warehouse = warehouse;
@@ -68,8 +85,8 @@ public class CalculatedRound {
     }
 
     /**
-     * Get the departure time at the warehouse
-     * @return the departure time at the warehouse
+     * Calculates the departure time from the warehouse
+     * @return the departure time from the warehouse
      */
     private GregorianCalendar getFirstDepartureTime() {
         ChocoDelivery firstDelivery = chocoDeliveries.get(getNextNodeId(warehouse.getId()));
@@ -94,14 +111,26 @@ public class CalculatedRound {
         return departure;
     }
 
+    /**
+     * Returns the round departure time from the warehouse
+     * @return the round departure time from the warehouse
+     */
     public GregorianCalendar getDepartureTime() {
         return departureTime;
     }
 
+    /**
+     * Returns the estimated arrival time at the warehouse at the end of the round
+     * @return the estimated arrival time at the warehouse
+     */
     public GregorianCalendar getArrivalTime() {
         return estimatedSchedules.get(warehouse.getId());
     }
 
+    /**
+     * An ordered list of nodes ID
+     * @return
+     */
     public List<Integer> getOrderedNodesId() {
         List<Integer> nodesId = new LinkedList<Integer>();
         Integer currentNodeId = warehouse.getId();
