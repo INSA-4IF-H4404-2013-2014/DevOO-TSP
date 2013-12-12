@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.FileNotFoundException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -25,22 +26,12 @@ import static org.junit.Assert.fail;
  */
 public class ChocoGraphTest {
 
-    @Test
-    public void testCreate2() throws UtilsException, FileNotFoundException, ParserConfigurationException {
-        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
-        Round round = Round.createFromXml("resources/tests/livraison10x10-3.xml", network);
-
-        ChocoGraph chocograph = new ChocoGraph(network, round);
-    }
-
-    @Test
-    public void testCreate3() throws UtilsException, FileNotFoundException, ParserConfigurationException {
-        Network network = Network.createFromXml("resources/tests/plan20x20.xml");
-        Round round = Round.createFromXml("resources/tests/livraison20x20-2.xml", network);
-
-        ChocoGraph chocograph = new ChocoGraph(network, round);
-    }
-
+    /**
+     * Tests the creation of a choco graph and checks that this one is correct
+     * @throws UtilsException
+     * @throws FileNotFoundException
+     * @throws ParserConfigurationException
+     */
     @Test
     public void testCreate() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
@@ -74,5 +65,20 @@ public class ChocoGraphTest {
         assertTrue(testSucc[0] == 5 || testSucc[0] == 7);
         testSucc = chocograph.getSucc(9);
         assertTrue(testSucc[0] == 0);
+    }
+
+    /**
+     * Checks a bigger choco graph creation
+     * @throws UtilsException
+     * @throws FileNotFoundException
+     * @throws ParserConfigurationException
+     */
+    @Test
+    public void testCreate2() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        Network network = Network.createFromXml("resources/tests/plan20x20.xml");
+        Round round = Round.createFromXml("resources/tests/livraison20x20-2.xml", network);
+
+        ChocoGraph chocograph = new ChocoGraph(network, round);
+        assertEquals(chocograph.getNbVertices(), 13);
     }
 }

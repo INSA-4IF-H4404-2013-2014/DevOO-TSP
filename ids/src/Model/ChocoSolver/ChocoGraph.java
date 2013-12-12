@@ -62,8 +62,7 @@ public class ChocoGraph implements Graph {
 
             //Initializing successors cost for a delivery node at -1
             for(int j = 0; j < nbVertices; ++j) {
-                //TODO : replace by -1 according to the graph interface
-                cost[i][j] = Integer.MAX_VALUE;
+                cost[i][j] = -1;
             }
 
             //Initializing successors cost for a delivery node with real cost for existing arcs
@@ -82,7 +81,6 @@ public class ChocoGraph implements Graph {
         }
 
         //Initializing unexisting arcs with max cost + 1
-        /* TODO : Unconment according to the graph interface
         for(int i = 0; i < nbVertices; ++i) {
             for(int j = 0; j < nbVertices; ++j) {
                 if(cost[i][j] == -1) {
@@ -91,7 +89,6 @@ public class ChocoGraph implements Graph {
 
             }
         }
-        */
     }
 
     private void initChocoDeliveries(Network network, Round round) {

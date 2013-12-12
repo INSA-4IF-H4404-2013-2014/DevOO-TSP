@@ -24,7 +24,7 @@ public class CalculatedRound {
     private GregorianCalendar departureTime;
 
     /** A dictionary linking a delivery to its estimated arrival hour at the delivery point */
-    private Dictionary<Integer, GregorianCalendar> estimatedSchedules = new Hashtable<Integer, GregorianCalendar>();
+    private Map<Integer, GregorianCalendar> estimatedSchedules = new Hashtable<Integer, GregorianCalendar>();
 
     /**
      * Constructor
@@ -100,6 +100,18 @@ public class CalculatedRound {
 
     public GregorianCalendar getArrivalTime() {
         return estimatedSchedules.get(warehouse.getId());
+    }
+
+    public List<Integer> getOrderedNodesId() {
+        List<Integer> nodesId = new LinkedList<Integer>();
+        Integer currentNodeId = warehouse.getId();
+
+        do {
+            nodesId.add(currentNodeId);
+            currentNodeId = successors.get(currentNodeId);
+        } while(currentNodeId != warehouse.getId());
+
+        return nodesId;
     }
 
     /**
@@ -208,11 +220,11 @@ public class CalculatedRound {
 
     /**
      * Returns the estimated arrival hour of a delivery
-     * @param delivery the specified delivery
+     * @param nodeId the specified node id for the delivery
      * @return the estimated arrival hour of a delivery
      */
-    public GregorianCalendar getEstimatedSchedules(Delivery delivery) {
-        return estimatedSchedules.get(delivery);
+    public GregorianCalendar getEstimatedSchedules(Integer nodeId) {
+        return estimatedSchedules.get(nodeId);
     }
 
     /**
