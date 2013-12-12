@@ -194,6 +194,11 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     @Override
     public void nodeClicked(MapPanel panel, Node node) {
         mainWindow.getDeliveryListPanel().clearSelection();
+
+        if(node == panel.getSelectedNode()) {
+            node = null;
+        }
+
         selectNode(node);
     }
 
