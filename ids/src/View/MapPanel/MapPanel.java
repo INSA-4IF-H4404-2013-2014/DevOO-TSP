@@ -7,8 +7,8 @@ import Model.Delivery.Itinerary;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -186,6 +186,7 @@ public class MapPanel extends JPanel {
     public void setRound(CalculatedRound round) {
         modelRound = round;
 
+        this.refreshBodesDeliveries();
         this.refreshArcsItineraries();
         this.repaint();
     }
@@ -455,6 +456,27 @@ public class MapPanel extends JPanel {
         }
 
         this.fitToView();
+    }
+
+    /**
+     * Refreshes view's nodes' deliveries from the calculated round
+     */
+    private void refreshBodesDeliveries() {
+        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
+            entry.getValue().setKind(Node.Kind.DEFAULT);
+        }
+
+        if(modelRound == null) {
+            return;
+        }
+
+        List<Integer> deliveryNodesId = modelRound.getOrderedNodesId();
+
+        for(int deliveryNodeId : deliveryNodesId) {
+            findNode(deliveryNodeId).setKind(Node.Kind.DELIVERY);
+        }
+
+        findNode(modelRound.getWarehouse().getId()).setKind(Node.Kind.WAREHOUSE);
     }
 
     /**

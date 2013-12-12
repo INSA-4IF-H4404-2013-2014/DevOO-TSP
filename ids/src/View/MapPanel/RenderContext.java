@@ -135,6 +135,12 @@ public class RenderContext {
             context.setColor(streetBorderColor);
         }
 
+        if(node.getKind() == Node.Kind.DELIVERY) {
+            context.setColor(itineraryColor);
+        } else if(node.getKind() == Node.Kind.WAREHOUSE) {
+            context.setColor(itineraryWarehouseColor);
+        }
+
         context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
     }
 
@@ -506,6 +512,7 @@ public class RenderContext {
 
     /** itinerary constants */
     private static final Color itineraryColor = new Color(55, 122, 255);
+    private static final Color itineraryWarehouseColor = new Color(100, 100, 100);
     private static final int itineraryThickness = 2;
     private static final int itineraryDotDistance = 3;
 
