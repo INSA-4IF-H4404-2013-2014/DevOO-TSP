@@ -10,16 +10,30 @@ import Model.Delivery.Schedule;
 
 import java.util.*;
 
+/**
+ * @author Rémi Domingues
+ * This class aims at creating a graph defined as follow, from a network parsed from an XML file :
+ * - Node : warehouse and delivery node from the XML network
+ * - Arc : shortest path from a delivery/warehouse node to an other delivery/warehouse node
+ */
 public class ChocoGraph implements Graph {
+    /**
+     * Node information used by the Dijkstra algorithm
+     * */
     class NodeInfo {
+        /** true if the node has been visited by Dijkstra, false else */
         boolean visited = false;
+
+        /** Smallest cost (time) currently found in order to go from this node to a source node (@see Dijkstra) */
         int cost = Integer.MAX_VALUE;
+
+        /** Predecessor in the shortest path currently found in order to go to this source node */
         Integer previous = null;
     }
 
     /**
      * Key : real network node ID
-     * Value : Choco Delivery => targeted delivery node + itinerary with network nodes
+     * Value : Choco Delivery => targeted delivery node + itinerary in order to go to successors delivery nodes
      */
     private Map<Integer, ChocoDelivery> deliveries = new HashMap<Integer, ChocoDelivery>();
 
@@ -30,24 +44,39 @@ public class ChocoGraph implements Graph {
      */
     private Map<Integer, Integer> nodesId = new HashMap<Integer, Integer>();
 
+    /** The number of verticies (warehouse included) of the choco graph */
 	private int nbVertices;
 
+    /** The maximal arc cost in this graph */
 	private int maxArcCost;
 
+    /** The minimal arc cost in this graph */
 	private int minArcCost;
 
+    /**
+     * A cost matrix
+     * cost[i][j] is the cost of the(i,j) arc (from i to j)
+     * If an arc does not exist, the cost is maxArcCost + 1
+     */
 	private int[][] cost;
 
+    /**
+     * Constructor which initialized the choco graph and its costs
+     * @param network The network containing the nodes
+     * @param round The round containing the deliveries
+     */
     public ChocoGraph(Network network, Round round) {
         nbVertices = round.getDeliveryList().size() + 1;
         this.maxArcCost = Integer.MIN_VALUE;
         this.minArcCost = Integer.MAX_VALUE;
 
-        initChocoDeliveries(network, round);
-
+        createGraph(network, round);
         initCosts();
     }
 
+    /**
+     * Calculates the costs of the choco graph
+     */
     private void initCosts() {
         ChocoDelivery cd;
         int chocoId;
@@ -91,13 +120,37 @@ public class ChocoGraph implements Graph {
         }
     }
 
-    private void initChocoDeliveries(Network network, Round round) {
-        int i = 0;
+    /**
+     * Calls Dijkstra in order to calculates the shortest itineraries between the warehouse/delivery nodes,
+     * and creates a choco delivery for each of these nodes
+     * @param network The network containing the nodes
+     * @param round The round containing the deliveries
+     */
+    private void createGraph(Network network, Round round) {
         Map<Integer, NodeInfo> dict = new HashMap<Integer, NodeInfo>();
-        List<Schedule> schedules = new LinkedList<Schedule>();
-        Schedule currentSchedule = null, nextSchedule;
+        Schedule firstSchedule, lastSchedule;
 
-        //Initializing schedules temporary list and the delivery map
+        Node warehouse = round.getWarehouse();
+        List<Schedule> schedules = initChocoDeliveries(round);
+        initDict(network, dict);
+
+        firstSchedule = linkWarehouseToDeliveries(network, dict, schedules, warehouse);
+
+        lastSchedule = linkDeliveries(network, dict, schedules, firstSchedule);
+
+        linkDeliveriesToWarehouse(network, dict, lastSchedule, warehouse);
+    }
+
+    /**
+     * Initialized the choco deliveries map attribute by adding the warehouse and delivery nodes
+     * A schedules temporary list is also returned
+     * @param round The round
+     * @return A temporary schedule list which will contain every schedule
+     */
+    private List<Schedule> initChocoDeliveries(Round round) {
+        int i = 0;
+        List<Schedule> schedules = new LinkedList<Schedule>();
+
         ChocoDelivery warehouse = new ChocoDelivery(0, round.getWarehouse());
         deliveries.put(round.getWarehouse().getId(), warehouse);
         nodesId.put(i, round.getWarehouse().getId());
@@ -114,23 +167,35 @@ public class ChocoGraph implements Graph {
             }
         }
 
-        //Linking warehouse with every node of the first distinct schedule
+        return schedules;
+    }
+
+    //Linking warehouse with every node of the first distinct schedule
+    private Schedule linkWarehouseToDeliveries(Network network, Map<Integer, NodeInfo> dict, List<Schedule> schedules, Node warehouse) {
+        Schedule firstSchedule = null;
+
         if(!schedules.isEmpty()) {
             List<Node> successors = new LinkedList<Node>();
 
-            currentSchedule = getNextSchedule(schedules);
-            for(Delivery d : currentSchedule.getDeliveries()) {
+            firstSchedule = getNextSchedule(schedules);
+            for(Delivery d : firstSchedule.getDeliveries()) {
                 successors.add(d.getAddress());
             }
 
-            initDict(network, dict);
-            computeDistinctScheduleArcs(network, warehouse.getAddress(), successors, dict);
+            computeDistinctScheduleArcs(network, warehouse, successors, dict);
         }
 
-        //For each distinct schedule ds
-        //  Linking every node of ds to every node of ds
-        //  AND
-        //  Linking every node of ds to every node of the next distinct schedule
+        return firstSchedule;
+    }
+
+    //For each distinct schedule ds
+    //  Linking every node of ds to every node of ds
+    //  AND
+    //  Linking every node of ds to every node of the next distinct schedule
+
+    private Schedule linkDeliveries(Network network, Map<Integer, NodeInfo> dict, List<Schedule> schedules, Schedule currentSchedule) {
+        Schedule nextSchedule;
+
         while(!schedules.isEmpty()) {
             nextSchedule = getNextSchedule(schedules);
 
@@ -154,13 +219,19 @@ public class ChocoGraph implements Graph {
             currentSchedule = nextSchedule;
         }
 
-        //Linking every node of the last distinct schedule to the warehouse
-        if(currentSchedule != null) {
+        return currentSchedule;
+    }
 
-            for(Delivery source : currentSchedule.getDeliveries()) {
+
+
+    //Linking every node of the last distinct schedule to the warehouse
+    private void linkDeliveriesToWarehouse(Network network, Map<Integer, NodeInfo> dict, Schedule lastSchedule, Node warehouse) {
+        if(lastSchedule != null) {
+
+            for(Delivery source : lastSchedule.getDeliveries()) {
                 List<Node> successors = new LinkedList<Node>();
-                successors.add(warehouse.getAddress());
-                for(Delivery d : currentSchedule.getDeliveries()) {
+                successors.add(warehouse);
+                for(Delivery d : lastSchedule.getDeliveries()) {
                     if(d != source) {
                         successors.add(d.getAddress());
                     }
