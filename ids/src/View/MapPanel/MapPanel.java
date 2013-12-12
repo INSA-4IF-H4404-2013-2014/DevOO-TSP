@@ -26,10 +26,10 @@ public class MapPanel extends JPanel {
     CalculatedRound modelRound;
 
     /** nodes map */
-    private Map<Integer,Node> nodes;
+    protected Map<Integer,Node> nodes;
 
     /** arcs map */
-    private Map<Integer,Map<Integer,Arc>> arcs;
+    protected Map<Integer,Map<Integer,Arc>> arcs;
 
     /** view's center pos in the model basis */
     protected Point modelCenterPos;
@@ -313,43 +313,11 @@ public class MapPanel extends JPanel {
         }
 
         renderContext.setTransformNetwork();
-
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                renderContext.drawArcStreetName(entry.getValue());
-            }
+        {
+            renderContext.drawStreetNames();
+            renderContext.drawBorders();
+            renderContext.drawStreets();
         }
-
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                renderContext.drawArcBorders(entry.getValue());
-            }
-        }
-
-        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
-            renderContext.drawNodeBorders(entry.getValue());
-        }
-
-        if(selectedNode != null) {
-            renderContext.drawNodeBorders(selectedNode);
-        }
-
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                renderContext.drawArc(entry.getValue());
-            }
-        }
-
-        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
-            renderContext.drawNode(entry.getValue());
-        }
-
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                renderContext.drawArcItinerary(entry.getValue());
-            }
-        }
-
         renderContext.setTransformIdentity();
 
         renderContext.drawScale();

@@ -198,6 +198,57 @@ public class RenderContext {
     }
 
     /**
+     * Draws a streets and nodes' borders
+     */
+    protected void drawBorders() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                drawArcBorders(entry.getValue());
+            }
+        }
+
+        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
+            drawNodeBorders(entry.getValue());
+        }
+
+        if(mapPanel.selectedNode != null) {
+            drawNodeBorders(mapPanel.selectedNode);
+        }
+    }
+
+    /**
+     * Draws streets
+     */
+    protected void drawStreets() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                drawArc(entry.getValue());
+            }
+        }
+
+        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
+            drawNode(entry.getValue());
+        }
+
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                drawArcItinerary(entry.getValue());
+            }
+        }
+    }
+
+    /**
+     * Draws a street names
+     */
+    protected void drawStreetNames() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                drawArcStreetName(entry.getValue());
+            }
+        }
+    }
+
+    /**
      * Draws a given arc
      * @param arc the arc to draw
      */
