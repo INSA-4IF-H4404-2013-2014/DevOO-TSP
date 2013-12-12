@@ -96,6 +96,7 @@ public class TopMenuBar extends JMenuBar{
 
     private void createFileMenu() {
         JMenu file = new JMenu("Fichier");
+        file.setMnemonic(KeyEvent.VK_F);
 
         fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("./../../img/door_out.png")));
         fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
@@ -126,6 +127,7 @@ public class TopMenuBar extends JMenuBar{
 
     private void createEditMenu() {
         JMenu edit = new JMenu("Éditer");
+        edit.setMnemonic(KeyEvent.VK_E);
 
         addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../img/mini_add.png")));
 
@@ -153,6 +155,7 @@ public class TopMenuBar extends JMenuBar{
 
     private void createViewMenu() {
         JMenu view = new JMenu("Affichage");
+        view.setMnemonic(KeyEvent.VK_A);
         view.setEnabled(false);
         add(view);
     }
