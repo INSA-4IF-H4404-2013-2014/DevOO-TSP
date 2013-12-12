@@ -116,24 +116,22 @@ public class RenderContext {
     /**
      * Draws a given node's borders
      * @param node the node to draw
+     * @param selectOverlay defines if drawing the selection overlay
      */
-    protected void drawNodeBorders(Node node) {
+    protected void drawNodeBorders(Node node, boolean selectOverlay) {
         int nodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
         int x = node.getX() - nodeRadius;
         int y = node.getY() - nodeRadius;
 
-        if(node == mapPanel.selectedNode) {
-            int nodeRadiusAdd = (int)((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
+        if(node == mapPanel.selectedNode && selectOverlay) {
+            int nodeRadiusAdd = (int)Math.ceil((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
+            int overlayNodeRadius = nodeRadius + nodeRadiusAdd;
 
-            x -= nodeRadiusAdd;
-            y -= nodeRadiusAdd;
-
-            nodeRadius += nodeRadiusAdd;
-
-            context.setColor(streetSelectedNodeColor);
-        } else {
-            context.setColor(streetBorderColor);
+            context.setColor(streetSelectedNodeOverlay);
+            context.fillOval(x - nodeRadiusAdd, y - nodeRadiusAdd, overlayNodeRadius * 2, overlayNodeRadius * 2);
         }
+
+        context.setColor(streetBorderColor);
 
         if(node.getKind() == Node.Kind.DELIVERY) {
             context.setColor(itineraryColor);
@@ -214,11 +212,11 @@ public class RenderContext {
         }
 
         for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
-            drawNodeBorders(entry.getValue());
+            drawNodeBorders(entry.getValue(), false);
         }
 
         if(mapPanel.selectedNode != null) {
-            drawNodeBorders(mapPanel.selectedNode);
+            drawNodeBorders(mapPanel.selectedNode, true);
         }
     }
 
@@ -507,12 +505,12 @@ public class RenderContext {
 
     /** node color */
     protected static final int streetNodeRadius = 10;
-    private static final Color streetSelectedNodeColor = new Color(240, 80, 80);
-    private static final int streetSelectedNodeRadiusPx = 4;
+    private static final Color streetSelectedNodeOverlay = new Color(0, 0, 0, 80);
+    private static final int streetSelectedNodeRadiusPx = 8;
 
     /** itinerary constants */
-    private static final Color itineraryColor = new Color(55, 122, 255);
-    private static final Color itineraryWarehouseColor = new Color(100, 100, 100);
+    private static final Color itineraryColor = new Color(30, 140, 255);
+    private static final Color itineraryWarehouseColor = new Color(70, 210, 70);
     private static final int itineraryThickness = 2;
     private static final int itineraryDotDistance = 3;
 
