@@ -10,10 +10,10 @@ import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: nbuisson
+ * User: rdomingues
  * Date: 09/12/13
  * Time: 09:25
- * To change this template use File | Settings | File Templates.
+ * This class aims at managing a choco node, which is a warehouse or a delivery
  */
 public class ChocoDelivery {
     /** Choco ID used in ChocoGraph costs */
@@ -36,6 +36,7 @@ public class ChocoDelivery {
 
     /**
      * Constructor
+     * @param chocoId the choco node ID of this delivery
      * @param delivery the delivery
      */
     public ChocoDelivery(Integer chocoId, Delivery delivery) {
@@ -47,6 +48,7 @@ public class ChocoDelivery {
 
     /**
      * Constructor
+     * @param chocoId the choco node ID of this delivery
      * @param address the delivery node
      */
     public ChocoDelivery(Integer chocoId, Node address) {
@@ -55,10 +57,18 @@ public class ChocoDelivery {
         successorsItinerary = new ArrayList<Itinerary>();
     }
 
+    /**
+     * Returns the delivery
+     * @return @see description
+     */
     public Delivery getDelivery() {
         return delivery;
     }
 
+    /**
+     * Returns the node of this delivery
+     * @return @see description
+     */
     public Node getAddress() {
         return address;
     }
@@ -130,10 +140,20 @@ public class ChocoDelivery {
         return costs;
     }
 
+    /**
+     * Returns the cost (time, unit according to the round xml file)
+     * of the itinerary from a node to its successor
+     * @param nodeId the source node
+     * @return @see description
+     */
     public int getSuccArcCost(int nodeId) {
         return getItinerary(nodeId).getCost();
     }
 
+    /**
+     * Returns the choco ID
+     * @return @see description
+     */
     public Integer getChocoId() {
         return chocoId;
     }
