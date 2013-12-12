@@ -50,7 +50,26 @@ public class DeliveryListPanel extends JScrollPane {
         deliveryList.getSelectionModel().addListSelectionListener(controller);
     }
 
+    /**
+     * Gets the currently selected delivery in the deliveryList.
+     * @return the currently selected delivery
+     */
     public Delivery getSelectedValue() {
         return (Delivery)deliveryList.getSelectedValue();
+    }
+
+    /**
+     * Sets the currently selected delivery in the deliveryList.
+     * @param delivery The delivery to select.
+     */
+    public void setSelectedValue(Delivery delivery) {
+        deliveryList.setSelectedValue(delivery, true);
+    }
+
+    /**
+     * Clears the selection in the deliveryList
+     */
+    public void clearSelection() {
+        deliveryList.clearSelection();
     }
 }

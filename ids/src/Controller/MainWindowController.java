@@ -186,24 +186,62 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         }
     }
 
-
+    /**
+     * Gets triggered when a node has been clicked.
+     * @param node the model node that has been clicked
+     */
     @Override
-    public void nodeClicked(MapPanel panel, Node node) {
-        panel.setSelectedNode(node);
-        if (!(null == this.mainWindow.getRound())) {
-            Delivery del;
-            if (null == (del =this.mainWindow.getRound().findDelivered(node.getId()))) {
-                //if the node doesnt contains a delivery activate the "ajouter" button
+    public void nodeClicked(Node node) {
+        mainWindow.getDeliveryListPanel().clearSelection();
+        selectNode(node);
+    }
+
+    /**
+     * Gets triggered when the selection changes in DeliveryListPanel's JList
+     * @param e event
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if(e.getValueIsAdjusting()) {
+            return;
+        }
+
+        Delivery selectedDelivery = mainWindow.getDeliveryListPanel().getSelectedValue();
+        if(selectedDelivery != null) {
+            selectNode(selectedDelivery.getAddress());
+        }
+        else {
+            selectNode(null);
+        }
+    }
+
+    /**
+     * Apply actions following a node selection from the DeliveryListPanel or MapPanel
+     * @param node
+     */
+    private void selectNode(Node node) {
+        mainWindow.getMapPanel().setSelectedNode(node);
+
+        if (this.mainWindow.getRound() != null) {
+
+            Delivery del = null;
+            if(node != null) {
+                del = this.mainWindow.getRound().findDelivered(node.getId());
+            }
+
+            if (del == null) {
+                // If the node doesn't contain a delivery, activate the "ajouter" button
                 mainWindow.featureAddSetEnable(true);
                 mainWindow.featureDeleteSetEnable(false);
                 mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
             }
             else
             {
-                //if the node contains a delivery activate the "supprimer" button and maj delivery info panel
+                // If the node contains a delivery, activate the "supprimer" button and maj delivery info panel
                 mainWindow.featureAddSetEnable(false);
                 mainWindow.featureDeleteSetEnable(true);
-                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del,mainWindow.getCalculatedRound());
+                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del, mainWindow.getCalculatedRound());
+                mainWindow.getDeliveryListPanel().setSelectedValue(del);
             }
         }
     }
@@ -357,25 +395,6 @@ public class MainWindowController implements NodeListener, ListSelectionListener
 
         CalculatedRound calculatedRound = new CalculatedRound(mainWindow.getRound().getWarehouse(), deliveriesList, itinerariesList);
         return calculatedRound;
-    }
-
-    /**
-     * Gets triggered when the selection changes in DeliveryListPanel's JList
-     * @param e event
-     */
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        if(e.getValueIsAdjusting()) {
-            return;
-        }
-
-        Delivery selectedDelivery = mainWindow.getDeliveryListPanel().getSelectedValue();
-        if(selectedDelivery != null) {
-            mainWindow.getMapPanel().setSelectedNode(selectedDelivery.getAddress());
-        }
-        else {
-            mainWindow.getMapPanel().setSelectedNode(null);
-        }
     }
 } // end of class MainWindowController --------------------------------------------------------------------
 
