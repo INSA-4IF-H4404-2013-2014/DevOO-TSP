@@ -90,6 +90,8 @@ public class NetworkXMLTest {
         testInvalidCreate("networkMissingAttrVitesse.xml", false);
         testInvalidCreate("networkMissingAttrX.xml", false);
         testInvalidCreate("networkMissingAttrY.xml", false);
+        testInvalidCreate("networkDuplicatedNoeud.xml", false);
+        testInvalidCreate("networkDuplicatedTroncon.xml", false);
         testInvalidCreate("networkNegaviteAttrLongueur.xml", false);
         testInvalidCreate("networkNegaviteAttrVitesse.xml", false);
         testInvalidCreate("networkNullAttrVitesse.xml", false);

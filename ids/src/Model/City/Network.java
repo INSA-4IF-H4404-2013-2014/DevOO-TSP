@@ -233,10 +233,14 @@ public class Network {
                 throw new UtilsException("destination inconnue");
             }
 
+            if (from.findOutgoingTo(to) != null) {
+                throw new UtilsException("le troncon a distination de '" + destinationId + "' existe deja");
+            }
+
             Arc goingBackArc = to.findOutgoingTo(from);
 
             if (goingBackArc != null && !goingBackArc.getStreet().getName().equals(streetName)) {
-                throw new UtilsException("me possede pas le meme nom de rue (\"" + streetName + "\") que l'arc " +
+                throw new UtilsException("ne possede pas le meme nom de rue (\"" + streetName + "\") que l'arc " +
                         to.getId() + " a " + from.getId() + "(\"" + goingBackArc.getStreet().getName() + "\")");
             }
         }
