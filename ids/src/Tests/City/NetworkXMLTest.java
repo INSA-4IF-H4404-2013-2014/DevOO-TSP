@@ -48,15 +48,21 @@ public class NetworkXMLTest {
     }
 
     private void testInvalidCreate(String xmlPath) {
-        final String testDir = "resources/tests/";
+        final String testDir = "resources/tests/network/";
+
+        boolean success = false;
 
         try {
             Network.createFromXml(testDir + xmlPath);
-            fail();
+            System.out.println("unexpected success");
         } catch(UtilsException e) {
+            success = true;
         } catch(Exception e) {
             System.out.println("unexpected exception");
-            fail();
+        }
+
+        if(!success) {
+            fail("test " + xmlPath + " has failed");
         }
     }
 
@@ -70,9 +76,16 @@ public class NetworkXMLTest {
         testInvalidCreate("networkInvalidSyntax1.xml");
         testInvalidCreate("networkInvalidRoot.xml");
         testInvalidCreate("networkMissingAttrDestination.xml");
+        testInvalidCreate("networkMissingAttrLongueur.xml");
+        testInvalidCreate("networkMissingAttrNomRue.xml");
+        testInvalidCreate("networkMissingAttrVitesse.xml");
+        testInvalidCreate("networkMissingAttrX.xml");
+        testInvalidCreate("networkMissingAttrY.xml");
         testInvalidCreate("networkNegaviteAttrLongueur.xml");
         testInvalidCreate("networkNegaviteAttrVitesse.xml");
         testInvalidCreate("networkWrongAttrLongueur.xml");
+
+        System.out.println("testInvalidCreateAll: OK");
     }
 
 }
