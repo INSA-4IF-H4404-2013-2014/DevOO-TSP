@@ -276,10 +276,6 @@ public class Network {
 
             NodeList xmlArcList = xmlNode.getElementsByTagName("TronconSortant");
 
-            if(xmlArcList.getLength() == 0) {
-                throw new UtilsException("Noeud \"" + from.getId() + "\": aucun troncon sortant");
-            }
-
             for (int j = 0; j < xmlArcList.getLength(); j++) {
                 Element xmlArc = (Element) xmlArcList.item(j);
 

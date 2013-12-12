@@ -104,7 +104,7 @@ public class NetworkXMLTest {
         testInvalidCreate("networkWrongAttrY.xml", false);
         testInvalidCreate("networkWrongNoeud.xml", false);
         testInvalidCreate("networkWrongTroncon.xml", true);
-        testInvalidCreate("networkEmptyTroncon.xml", false);
+        testInvalidCreate("networkEmptyTroncon.xml", true);
 
         System.out.println("testInvalidCreateAll: OK");
     }
