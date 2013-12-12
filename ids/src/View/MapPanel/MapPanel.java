@@ -92,7 +92,11 @@ public class MapPanel extends JPanel {
             public void mouseClicked(MouseEvent mouseEvent) {
                 MapPanel panel = (MapPanel) mouseEvent.getComponent();
 
-                if(panel.nodeEventListener == null) {
+                if(mouseEvent.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
+
+                if (panel.nodeEventListener == null) {
                     return;
                 }
 
@@ -104,7 +108,7 @@ public class MapPanel extends JPanel {
 
                 Model.City.Node nearestNode = null;
 
-                for(Map.Entry<Integer,Node> entry : panel.nodes.entrySet()) {
+                for (Map.Entry<Integer, Node> entry : panel.nodes.entrySet()) {
                     Node node = entry.getValue();
 
                     int dx = node.getX() - x;
@@ -112,13 +116,13 @@ public class MapPanel extends JPanel {
 
                     int distancePow = dx * dx + dy * dy;
 
-                    if(distancePow < minDistancePow) {
+                    if (distancePow < minDistancePow) {
                         minDistancePow = distancePow;
                         nearestNode = node.getModelNode();
                     }
                 }
 
-                if(nearestNode == null ||
+                if (nearestNode == null ||
                         minDistancePow >= RenderContext.streetNodeRadius * RenderContext.streetNodeRadius) {
                     panel.nodeEventListener.backgroundClicked(panel);
                     return;
@@ -129,10 +133,26 @@ public class MapPanel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
+                if(mouseEvent.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
+
+                MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+                panel.addMouseMotionListener(new MouseDragging(mouseEvent));
             }
 
             @Override
             public void mouseReleased(MouseEvent mouseEvent) {
+                if(mouseEvent.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
+
+                MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+                for(MouseMotionListener e : panel.getMouseMotionListeners()) {
+                    panel.removeMouseMotionListener(e);
+                }
             }
 
             @Override
@@ -141,17 +161,6 @@ public class MapPanel extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-            }
-        });
-
-        this.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent mouseEvent) {
             }
         });
     }
@@ -508,6 +517,67 @@ public class MapPanel extends JPanel {
                     arc.setItineraryFrom(2, true);
                 }
             }
+        }
+    }
+
+    /**
+     * Sets the new model center position
+     * @param x the new model center X position
+     * @param y the new model center Y position
+     * @caution it doesn't redraw the view
+     */
+    public void setModelCenterPos(int x, int y) {
+        modelCenterPos.x = Math.min(Math.max(x, modelMinPos.x), modelMaxPos.x);
+        modelCenterPos.y = Math.min(Math.max(y, modelMinPos.y), modelMaxPos.y);
+    }
+
+    /**
+     * MapPanel's mouse dragging class instantiated to drag the map panel view
+     */
+    private class MouseDragging implements MouseMotionListener {
+
+        /** cursor start X position */
+        private int startX;
+
+        /** cursor start Y position */
+        private int startY;
+
+        /** previous center X position */
+        private int previousModelCenterPosX;
+
+        /** previous center Y position */
+        private int previousModelCenterPosY;
+
+        /**
+         * Constructor
+         * @param mouseEvent the mouseEvent
+         */
+        public MouseDragging(MouseEvent mouseEvent) {
+            MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+            startX = mouseEvent.getX();
+            startY = mouseEvent.getY();
+            previousModelCenterPosX = panel.modelCenterPos.x;
+            previousModelCenterPosY = panel.modelCenterPos.y;
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+            MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+            double modelMoveVectorX = (double)(startX - mouseEvent.getX()) / modelViewScaleFactor;
+            double modelMoveVectorY = (double)(mouseEvent.getY() - startY) / modelViewScaleFactor;
+
+            int modelCenterPosX = previousModelCenterPosX + (int)modelMoveVectorX;
+            int modelCenterPosY = previousModelCenterPosY + (int)modelMoveVectorY;
+
+            panel.setModelCenterPos(modelCenterPosX, modelCenterPosY);
+            panel.repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            mouseDragged(mouseEvent);
         }
     }
 
