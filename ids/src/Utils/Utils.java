@@ -18,7 +18,7 @@ public class Utils {
         String value = xmlElement.getAttribute(attribute);
 
         if(value.equals("")) {
-            throw new UtilsException("missing attribute '" +  attribute + "'");
+            throw new UtilsException("attribut '" +  attribute + "' manquant");
         }
 
         return value;
@@ -44,7 +44,7 @@ public class Utils {
                 value = value * 10.0f + (float)(c - '0');
             }
             else {
-                throw new UtilsException("unexpected character '" + c + "'");
+                throw new UtilsException("character '" + c + "' inatendu");
             }
         }
 
@@ -74,7 +74,7 @@ public class Utils {
                 value = newValue;
             }
             else {
-                throw new UtilsException("unexpected character '" + c + "'");
+                throw new UtilsException("character '" + c + "' inatendu");
             }
         }
 
