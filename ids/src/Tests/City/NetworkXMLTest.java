@@ -91,7 +91,14 @@ public class NetworkXMLTest {
         testInvalidCreate("networkMissingAttrY.xml", false);
         testInvalidCreate("networkNegaviteAttrLongueur.xml", false);
         testInvalidCreate("networkNegaviteAttrVitesse.xml", false);
+        testInvalidCreate("networkNullAttrVitesse.xml", false);
+        testInvalidCreate("networkUnmatchingStreetName.xml", false);
+        testInvalidCreate("networkWrongAttrDestination.xml", false);
         testInvalidCreate("networkWrongAttrLongueur.xml", false);
+        testInvalidCreate("networkWrongAttrNodeId.xml", false);
+        testInvalidCreate("networkWrongAttrVitesse.xml", false);
+        testInvalidCreate("networkWrongAttrX.xml", false);
+        testInvalidCreate("networkWrongAttrY.xml", false);
 
         System.out.println("testInvalidCreateAll: OK");
     }
