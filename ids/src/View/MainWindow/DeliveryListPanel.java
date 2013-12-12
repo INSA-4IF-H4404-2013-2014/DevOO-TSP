@@ -1,10 +1,13 @@
 package View.MainWindow;
 
+import Controller.MainWindowController;
 import Model.Delivery.Delivery;
 import View.Utils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Vector;
 
@@ -37,5 +40,36 @@ public class DeliveryListPanel extends JScrollPane {
     public void setModel(Vector<Delivery> list) {
         deliveryList.setListData(list);
         Utils.enableJList(deliveryList, true);
+    }
+
+    /**
+     * Adds the listener
+     * @param controller controller which will listen to the event
+     */
+    public void addListener(final MainWindowController controller) {
+        deliveryList.getSelectionModel().addListSelectionListener(controller);
+    }
+
+    /**
+     * Gets the currently selected delivery in the deliveryList.
+     * @return the currently selected delivery
+     */
+    public Delivery getSelectedValue() {
+        return (Delivery)deliveryList.getSelectedValue();
+    }
+
+    /**
+     * Sets the currently selected delivery in the deliveryList.
+     * @param delivery The delivery to select.
+     */
+    public void setSelectedValue(Delivery delivery) {
+        deliveryList.setSelectedValue(delivery, true);
+    }
+
+    /**
+     * Clears the selection in the deliveryList
+     */
+    public void clearSelection() {
+        deliveryList.clearSelection();
     }
 }
