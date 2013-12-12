@@ -9,8 +9,9 @@ public interface NodeListener {
 
     /**
      * Click event on a node in a given map panel
+     * @param panel the map panel that has received the mouse clicked event
      * @param node the model node that has been clicked
      */
-    public void nodeClicked(Model.City.Node node);
+    public void nodeClicked(MapPanel panel, Model.City.Node node);
 
 }

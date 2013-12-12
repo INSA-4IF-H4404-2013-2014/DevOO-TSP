@@ -191,7 +191,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @param node the model node that has been clicked
      */
     @Override
-    public void nodeClicked(Node node) {
+    public void nodeClicked(MapPanel panel, Node node) {
         mainWindow.getDeliveryListPanel().clearSelection();
         selectNode(node);
     }

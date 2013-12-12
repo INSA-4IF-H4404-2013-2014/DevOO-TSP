@@ -126,7 +126,7 @@ public class MapPanel extends JPanel {
                     return;
                 }
 
-                panel.nodeEventListener.nodeClicked(nearestNode);
+                panel.nodeEventListener.nodeClicked(panel, nearestNode);
             }
 
             @Override
