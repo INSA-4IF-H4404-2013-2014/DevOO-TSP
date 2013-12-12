@@ -47,17 +47,32 @@ public class NetworkXMLTest {
 
     }
 
-    @Test
-    public void testInvalidCreate() throws UtilsException {
+    private void testInvalidCreate(String xmlPath) {
+        final String testDir = "resources/tests/";
 
-        for(int i = 1; i < 8; ++i) {
-            try {
-                Network.createFromXml("resources/tests/invalidNet" + i + ".xml");
-                fail();
-            } catch(UtilsException e) {
-            }
+        try {
+            Network.createFromXml(testDir + xmlPath);
+            fail();
+        } catch(UtilsException e) {
+        } catch(Exception e) {
+            System.out.println("unexpected exception");
+            fail();
         }
+    }
 
+    /**
+     * Tests all xml
+     * @throws UtilsException
+     */
+    @Test
+    public void testInvalidCreateAll() {
+        testInvalidCreate("networkInvalidSyntax0.xml");
+        testInvalidCreate("networkInvalidSyntax1.xml");
+        testInvalidCreate("networkInvalidRoot.xml");
+        testInvalidCreate("networkMissingAttrDestination.xml");
+        testInvalidCreate("networkNegaviteAttrLongueur.xml");
+        testInvalidCreate("networkNegaviteAttrVitesse.xml");
+        testInvalidCreate("networkWrongAttrLongueur.xml");
     }
 
 }
