@@ -118,11 +118,9 @@ public class MapPanel extends JPanel {
                     }
                 }
 
-                if(nearestNode == null) {
-                    return;
-                }
-
-                if(minDistancePow >= RenderContext.streetNodeRadius * RenderContext.streetNodeRadius) {
+                if(nearestNode == null ||
+                        minDistancePow >= RenderContext.streetNodeRadius * RenderContext.streetNodeRadius) {
+                    panel.nodeEventListener.backgroundClicked(panel);
                     return;
                 }
 
@@ -143,6 +141,17 @@ public class MapPanel extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
+            }
+        });
+
+        this.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
             }
         });
     }

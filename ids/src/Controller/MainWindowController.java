@@ -219,11 +219,18 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     public void nodeClicked(MapPanel panel, Node node) {
         mainWindow.getDeliveryListPanel().clearSelection();
 
-        if(node == panel.getSelectedNode()) {
-            node = null;
-        }
-
         selectNode(node);
+    }
+
+    /**
+     * Gets triggered when the map panel's background has been clicked.
+     * @param panel the map panel that has received the mouse clicked event
+     */
+    @Override
+    public void backgroundClicked(MapPanel panel) {
+        mainWindow.getDeliveryListPanel().clearSelection();
+
+        selectNode(null);
     }
 
     /**
