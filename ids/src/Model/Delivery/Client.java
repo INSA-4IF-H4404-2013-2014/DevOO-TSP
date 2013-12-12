@@ -57,4 +57,12 @@ public class Client {
     public List<Delivery> getDeliveries() {
         return deliveries;
     }
+
+    /**
+     * Represents a client in a string
+     * @return The string
+     */
+    public String toString() {
+        return id;
+    }
 }

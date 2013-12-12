@@ -220,6 +220,7 @@ public class MainWindow extends JFrame {
     public void addListener() {
         topMenuBar.addListener(mainWindowController);
         topToolBar.addListener(mainWindowController);
+        deliveryListPanel.addListener(mainWindowController);
     }
 
     /**

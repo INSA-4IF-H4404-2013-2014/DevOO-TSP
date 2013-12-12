@@ -175,6 +175,10 @@ public class MapPanel extends JPanel {
      * @return the model selected node or null if any are selected
      */
     public Model.City.Node getSelectedNode() {
+        if(selectedNode == null) {
+            return null;
+        }
+
         return selectedNode.getModelNode();
     }
 

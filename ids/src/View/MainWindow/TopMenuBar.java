@@ -96,13 +96,16 @@ public class TopMenuBar extends JMenuBar{
 
     private void createFileMenu() {
         JMenu file = new JMenu("Fichier");
+        file.setMnemonic(KeyEvent.VK_F);
 
         fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("./../../img/door_out.png")));
         fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 
         openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("../../img/mini_open_map.png")));
+        openMap.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 
         openRound = new JMenuItem("Ouvrir une tournée", new ImageIcon(getClass().getResource("../../img/mini_open_round.png")));
+        openRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
         computeRound = new JMenuItem("Calculer une tournée");
 
@@ -126,6 +129,7 @@ public class TopMenuBar extends JMenuBar{
 
     private void createEditMenu() {
         JMenu edit = new JMenu("Éditer");
+        edit.setMnemonic(KeyEvent.VK_E);
 
         addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../img/mini_add.png")));
 
@@ -153,6 +157,7 @@ public class TopMenuBar extends JMenuBar{
 
     private void createViewMenu() {
         JMenu view = new JMenu("Affichage");
+        view.setMnemonic(KeyEvent.VK_A);
         view.setEnabled(false);
         add(view);
     }

@@ -14,6 +14,8 @@ import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -32,7 +34,7 @@ import java.util.Deque;
  * Time: 09:49
  * To change this template use File | Settings | File Templates.
  */
-public class MainWindowController implements NodeListener {
+public class MainWindowController implements NodeListener, ListSelectionListener {
 
     private Deque<Controller.Command.Command> historyApplied;
     private Deque<Controller.Command.Command> historyBackedOut;
@@ -83,16 +85,17 @@ public class MainWindowController implements NodeListener {
         if(xmlFile != null) {
             try {
                 mainWindow.setRound(Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork()));
+                computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
+                mainWindow.getRightPanel().getRoundPanel().emptyFields();
+                mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+                mainWindow.getMapPanel().setSelectedNode(null);
+                mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la tournée.\n" +
                         e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
             }
         }
-        computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
-        mainWindow.getRightPanel().getRoundPanel().emptyFields();
-        mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
-        mainWindow.getMapPanel().setSelectedNode(null);
-        mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
     }
 
     /**
@@ -184,24 +187,73 @@ public class MainWindowController implements NodeListener {
         }
     }
 
-
+    /**
+     * Gets triggered when a node has been clicked.
+     * @param node the model node that has been clicked
+     */
     @Override
     public void nodeClicked(MapPanel panel, Node node) {
-        panel.setSelectedNode(node);
-        if (!(null == this.mainWindow.getRound())) {
-            Delivery del;
-            if (null == (del =this.mainWindow.getRound().findDelivered(node.getId()))) {
-                //if the node doesnt contains a delivery activate the "ajouter" button
+        mainWindow.getDeliveryListPanel().clearSelection();
+
+        if(node == panel.getSelectedNode()) {
+            node = null;
+        }
+
+        selectNode(node);
+    }
+
+    /**
+     * Gets triggered when the selection changes in DeliveryListPanel's JList
+     * @param e event
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if(e.getValueIsAdjusting()) {
+            return;
+        }
+
+        Delivery selectedDelivery = mainWindow.getDeliveryListPanel().getSelectedValue();
+        if(selectedDelivery != null) {
+            selectNode(selectedDelivery.getAddress());
+        }
+        else {
+            selectNode(null);
+        }
+    }
+
+    /**
+     * Apply actions following a node selection from the DeliveryListPanel or MapPanel
+     * @param node
+     */
+    private void selectNode(Node node) {
+        mainWindow.getMapPanel().setSelectedNode(node);
+
+        if (this.mainWindow.getRound() != null) {
+
+            Delivery del = null;
+            if(node != null) {
+                del = this.mainWindow.getRound().findDelivered(node.getId());
+            }
+
+            if(node == null) {
+                // No node is selected. So we don't want to let user add delivery to nowhere.
+                mainWindow.featureAddSetEnable(false);
+                mainWindow.featureDeleteSetEnable(false);
+                mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+            }
+            else if (del == null) {
+                // If the node doesn't contain a delivery, activate the "ajouter" button
                 mainWindow.featureAddSetEnable(true);
                 mainWindow.featureDeleteSetEnable(false);
                 mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
             }
             else
             {
-                //if the node contains a delivery activate the "supprimer" button and maj delivery info panel
+                // If the node contains a delivery, activate the "supprimer" button and maj delivery info panel
                 mainWindow.featureAddSetEnable(false);
                 mainWindow.featureDeleteSetEnable(true);
-                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del,mainWindow.getCalculatedRound());
+                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del, mainWindow.getCalculatedRound());
+                mainWindow.getDeliveryListPanel().setSelectedValue(del);
             }
         }
     }
@@ -337,6 +389,5 @@ public class MainWindowController implements NodeListener {
     private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
         return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
     }
-
 } // end of class MainWindowController --------------------------------------------------------------------
 

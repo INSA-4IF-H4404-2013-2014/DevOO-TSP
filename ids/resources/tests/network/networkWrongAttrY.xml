@@ -7,7 +7,7 @@
 <Noeud id="1" x="88" y="171">
 <TronconSortant nomRue="v0" vitesse="4,100000" longueur="602,100000" destination="0"/>
 </Noeud>
-<Noeud id="10" x="154" y="95">
+<Noeud id="10" x="154" y="hello">
 <TronconSortant nomRue="h0" vitesse="4,500000" longueur="729,000000" destination="0"/>
 </Noeud>
 </Reseau>
