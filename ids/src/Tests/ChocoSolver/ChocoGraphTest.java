@@ -34,6 +34,14 @@ public class ChocoGraphTest {
     }
 
     @Test
+    public void testCreate3() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        Network network = Network.createFromXml("resources/tests/chocograph/plan20x20.xml");
+        Round round = Round.createFromXml("resources/tests/chocograph/livraison20x20-2.xml", network);
+
+        ChocoGraph chocograph = new ChocoGraph(network, round);
+    }
+
+    @Test
     public void testCreate() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
         Round round = Round.createFromXml("resources/tests/chocograph/valid2.xml", network);
