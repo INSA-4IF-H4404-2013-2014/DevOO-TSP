@@ -79,6 +79,7 @@ public class NetworkXMLTest {
     public void testInvalidCreateAll() {
         testInvalidCreate("networkWorking.xml", true);
 
+        testInvalidCreate("networkNonExisting.xml", false);
         testInvalidCreate("networkInvalidSyntax0.xml", false);
         testInvalidCreate("networkInvalidSyntax1.xml", false);
         testInvalidCreate("networkInvalidRoot.xml", false);
@@ -99,6 +100,9 @@ public class NetworkXMLTest {
         testInvalidCreate("networkWrongAttrVitesse.xml", false);
         testInvalidCreate("networkWrongAttrX.xml", false);
         testInvalidCreate("networkWrongAttrY.xml", false);
+        testInvalidCreate("networkWrongNoeud.xml", false);
+        testInvalidCreate("networkWrongTroncon.xml", true);
+        testInvalidCreate("networkEmptyTroncon.xml", false);
 
         System.out.println("testInvalidCreateAll: OK");
     }
