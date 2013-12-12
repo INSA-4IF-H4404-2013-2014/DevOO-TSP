@@ -128,6 +128,6 @@ public class Delivery {
     }
 
     public String toString() {
-        return String.valueOf(id) + " - " + address.getId();
+        return String.valueOf(id) + " - " + address;
     }
 }
