@@ -58,19 +58,29 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     public void loadNetwork() {
         File xmlFile = openXMLFile();
 
-        if(xmlFile != null) {
-            try {
-                Network network = Network.createFromXml(xmlFile.getAbsolutePath());
-                mainWindow.setNetwork(network);
+        if(xmlFile == null) {
+            return;
+        }
 
-                // Map has been successfully loaded, we enable 'load round' feature.
-                mainWindow.featureLoadRoundSetEnable(true);
+        loadNetwork(xmlFile.getAbsolutePath());
+    }
+
+    /**
+     * Loads a network form a given XML path
+     * @param xmlPath the xml path
+     */
+    public void loadNetwork(String xmlPath) {
+        try {
+            Network network = Network.createFromXml(xmlPath);
+            mainWindow.setNetwork(network);
+
+            // Map has been successfully loaded, we enable 'load round' feature.
+            mainWindow.featureLoadRoundSetEnable(true);
 
 
-            } catch (UtilsException e) {
-                JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
-                        e.getMessage(), "Erreur lors du chargement de la carte", JOptionPane.ERROR_MESSAGE);
-            }
+        } catch (UtilsException e) {
+            JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
+                    e.getMessage(), "Erreur lors du chargement de la carte", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -78,29 +88,37 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Action triggered when user wants to load a round
      */
     public void loadRound() {
-        mainWindow.featureUndoSetEnable(false);
-        mainWindow.featureRedoSetEnable(false);
         File xmlFile = openXMLFile();
 
-        if(xmlFile != null) {
-            try {
-                mainWindow.setRound(Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork()));
-                try {
-                    computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
-                    mainWindow.getRightPanel().getRoundPanel().emptyFields();
-                    mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
-                    mainWindow.getMapPanel().setSelectedNode(null);
-                    mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(mainWindow, "Une erreur est survenue lors du calcul de la tournée",
-                            "Erreur lors du calcul de la tournée", JOptionPane.ERROR_MESSAGE);
-                }
+        if(xmlFile == null) {
+            return;
+        }
 
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(mainWindow, "Le chargement de la tournée a retourné une erreur :\n" +
-                        e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
-            }
+        loadRound(xmlFile.getAbsolutePath());
+    }
+
+    /**
+     * Loads a deliveries round form a given XML path
+     * @param xmlPath the xml path
+     */
+    public void loadRound(String xmlPath) {
+        try {
+            mainWindow.setRound(Round.createFromXml(xmlPath, mainWindow.getNetwork()));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(mainWindow, "Le chargement de la tournée a retourné une erreur :\n" +
+                    e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
+        }
+
+        try {
+            computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
+            mainWindow.getRightPanel().getRoundPanel().emptyFields();
+            mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+            mainWindow.getMapPanel().setSelectedNode(null);
+            mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+        } catch(Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(mainWindow, "Une erreur est survenue lors du calcul de la tournée",
+                    "Erreur lors du calcul de la tournée", JOptionPane.ERROR_MESSAGE);
         }
     }
 
