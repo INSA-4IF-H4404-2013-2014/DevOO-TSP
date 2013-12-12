@@ -1,9 +1,0 @@
-Séance 1 : 27/11 => Conception préliminaire
-
-Séance 2 : 2/12 => Conception détaillée + début de l'implémentation
-Séance 3 : 4/12 => Implémentation + tests
-
-Séance 4 : 9/12 => Implémentation + tests
-Séance 5 : 11/12 => Implémentation + tests + finitions
-
-18/12 all over
