@@ -97,16 +97,6 @@ public class MainWindow extends JFrame {
             System.out.println(e);
             //TODO: prety load
         }
-
-        //TODO remove
-        try {
-            network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
-            round = Round.createFromXml("resources/tests/chocograph/valid2.xml", network);
-            mapPanel.setModel(network);
-            mainWindowController.computeRound(network, round);
-        } catch(Exception e) {
-            System.out.println(e);
-        }
     }
 
     /**
