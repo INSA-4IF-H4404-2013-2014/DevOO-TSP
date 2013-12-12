@@ -46,16 +46,6 @@ public class ChocoGraph implements Graph {
         initChocoDeliveries(network, round);
 
         initCosts();
-
-        //TODO : remove
-        /*
-        for(ChocoDelivery cd : deliveries.values()) {
-            System.out.print("\nID : " + cd.getAddress().getId() + "\nSucc : ");
-            for(int i : cd.getSuccessorsNode()) {
-                System.out.print("" + i + ", ");
-            }
-        }
-        */
     }
 
     private void initCosts() {
@@ -72,7 +62,8 @@ public class ChocoGraph implements Graph {
 
             //Initializing successors cost for a delivery node at -1
             for(int j = 0; j < nbVertices; ++j) {
-                cost[i][j] = -1;
+                //TODO : replace by -1 according to the graph interface
+                cost[i][j] = Integer.MAX_VALUE;
             }
 
             //Initializing successors cost for a delivery node with real cost for existing arcs
@@ -91,6 +82,7 @@ public class ChocoGraph implements Graph {
         }
 
         //Initializing unexisting arcs with max cost + 1
+        /* TODO : Unconment according to the graph interface
         for(int i = 0; i < nbVertices; ++i) {
             for(int j = 0; j < nbVertices; ++j) {
                 if(cost[i][j] == -1) {
@@ -99,6 +91,7 @@ public class ChocoGraph implements Graph {
 
             }
         }
+        */
     }
 
     private void initChocoDeliveries(Network network, Round round) {
@@ -166,12 +159,18 @@ public class ChocoGraph implements Graph {
 
         //Linking every node of the last distinct schedule to the warehouse
         if(currentSchedule != null) {
-            List<Node> successors = new LinkedList<Node>();
 
-            for(Delivery d : currentSchedule.getDeliveries()) {
-                reinitDict(dict);
+            for(Delivery source : currentSchedule.getDeliveries()) {
+                List<Node> successors = new LinkedList<Node>();
                 successors.add(warehouse.getAddress());
-                computeDistinctScheduleArcs(network, d.getAddress(), successors, dict);
+                for(Delivery d : currentSchedule.getDeliveries()) {
+                    if(d != source) {
+                        successors.add(d.getAddress());
+                    }
+                }
+
+                reinitDict(dict);
+                computeDistinctScheduleArcs(network, source.getAddress(), successors, dict);
             }
         }
     }
@@ -381,4 +380,7 @@ public class ChocoGraph implements Graph {
         return deliveries.get(nodesId.get(i)).getSuccessorsChocoNode().length;
 	}
 
+    public Map<Integer, ChocoDelivery> getDeliveries() {
+        return deliveries;
+    }
 }

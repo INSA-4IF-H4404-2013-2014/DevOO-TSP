@@ -1,10 +1,16 @@
 package Tests.ChocoSolver;
 
+import Controller.MainWindowController;
+import Model.ChocoSolver.ChocoGraph;
 import Model.City.Network;
 import Model.City.Node;
 import Model.Delivery.Client;
 import Model.Delivery.Round;
+import Utils.UtilsException;
 import org.junit.Test;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
 
 import static org.junit.Assert.fail;
 

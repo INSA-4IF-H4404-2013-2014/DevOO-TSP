@@ -17,7 +17,7 @@ public class CalculatedRound {
     /** The warehouse which is the start and end point of the round */
     private Node warehouse;
 
-    private List<Node> orderedNodes;
+    private Map<Integer, Integer> successors = new HashMap<Integer, Integer>();
 
     private Map<Integer, ChocoDelivery> chocoDeliveries = new HashMap<Integer, ChocoDelivery>();
 
@@ -32,16 +32,15 @@ public class CalculatedRound {
      */
     public CalculatedRound(Node warehouse, int[] tspOrderedDeliveries, ChocoGraph chocoGraph) {
         this.warehouse = warehouse;
+        this.chocoDeliveries = chocoGraph.getDeliveries();
 
-        orderedNodes = new ArrayList(tspOrderedDeliveries.length);
         for(int i = 0; i < tspOrderedDeliveries.length; ++i) {
-            Integer networkId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
-            ChocoDelivery cd = chocoGraph.getChocoDeliveryFromNetworkId(networkId);
-            orderedNodes.add(cd.getAddress());
-            chocoDeliveries.put(networkId, cd);
+            Integer srcId = chocoGraph.getNetworkIdFromChocoId(i);
+            Integer destId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
+            successors.put(srcId, destId);
         }
 
-        if(orderedNodes.size() != 0) {
+        if(tspOrderedDeliveries.length != 0) {
 //            calculateEstimatedSchedules();
         }
     }
@@ -59,12 +58,12 @@ public class CalculatedRound {
         int deliveryTime = 0;
         int nodeId = warehouse.getId();
 
-        for(Node n : orderedNodes) {
+        for(Integer id : successors.keySet()) {
+            //TODO : nodeID tjrs = warehouseId ?
             arrivalTime = getArrivalTime(nodeId, deliveryTime);
             deliveryTime = 600;
 
-            //TODO : CACA
-            estimatedSchedules.put(n.getId(), arrivalTime);
+            estimatedSchedules.put(id, arrivalTime);
         }
     }
 
@@ -73,10 +72,10 @@ public class CalculatedRound {
      * @return the departure time at the warehouse
      */
     private GregorianCalendar getFirstDepartureTime() {
-        ChocoDelivery firstDelivery = chocoDeliveries.get(getNextNode(warehouse).getId());
+        ChocoDelivery firstDelivery = chocoDeliveries.get(getNextNodeId(warehouse.getId()));
         Date departureDate = firstDelivery.getDelivery().getSchedule().getEarliestBound().getTime();
 
-        int warehouseToDeliveryTime = getNextItinerary(warehouse).getCost();
+        int warehouseToDeliveryTime = getNextItinerary(warehouse.getId()).getCost();
 
         long departureTime = departureDate.getTime() - (long)(warehouseToDeliveryTime * 1000);
 
@@ -128,14 +127,14 @@ public class CalculatedRound {
 
     public List<Itinerary> getOrderedItineraries() {
         List<Itinerary> itineraries = new LinkedList<Itinerary>();
-        Node currentNode = warehouse;
-        Itinerary firstItinerary = getNextItinerary(currentNode), itinerary = firstItinerary;
+        Integer currentNodeId = warehouse.getId();
+        Itinerary firstItinerary = getNextItinerary(currentNodeId), itinerary = firstItinerary;
 
         if(itinerary != null) {
             do {
                 itineraries.add(itinerary);
-                currentNode = getNextNode(currentNode);
-                itinerary = getNextItinerary(currentNode);
+                currentNodeId = getNextNodeId(currentNodeId);
+                itinerary = getNextItinerary(currentNodeId);
             } while(itinerary != firstItinerary);
         }
 
@@ -165,8 +164,8 @@ public class CalculatedRound {
     public long getCumulatedDelay() {
         long roundDelay = 0;
 
-        for(Node n : orderedNodes) {
-            roundDelay += getDelay(n.getId());
+        for(Integer n : successors.keySet()) {
+            roundDelay += getDelay(n);
         }
 
         return roundDelay;
@@ -176,8 +175,8 @@ public class CalculatedRound {
         float length = 0;
         Itinerary itinerary;
 
-        for(int i = 0; i < orderedNodes.size(); ++i) {
-            itinerary = chocoDeliveries.get(orderedNodes.get(i)).getItinerary(orderedNodes.get((i + 1) % orderedNodes.size()).getId());
+        for(Integer i : successors.keySet()) {
+            itinerary = chocoDeliveries.get(i).getItinerary(successors.get(i));
             length += itinerary.getLength();
         }
 
@@ -192,20 +191,19 @@ public class CalculatedRound {
         return warehouse;
     }
 
-    public Node getNextNode(Node node) {
-        int idx = orderedNodes.indexOf(node);
-        return orderedNodes.get((idx + 1) % orderedNodes.size());
+    public Integer getNextNodeId(Integer nodeId) {
+        return successors.get(nodeId);
     }
 
     /**
      * Returns the itinerary to cross from a specified delivery node (or the warehouse) in order to go to the next one,
      * or null if the specified node is not a delivery node or the warehouse
-     * @param node A delivery node, or the warehouse
+     * @param nodeId A delivery node id, or the warehouse id
      * @return @see description
      */
-    public Itinerary getNextItinerary(Node node)
+    public Itinerary getNextItinerary(Integer nodeId)
     {
-        return chocoDeliveries.get(node.getId()).getItinerary(getNextNode(node).getId());
+        return chocoDeliveries.get(nodeId).getItinerary(getNextNodeId(nodeId));
     }
 
     /**
@@ -269,13 +267,13 @@ public class CalculatedRound {
 
         List<Arc> arcList;
         Delivery delivery;
-        Node currentNode = warehouse;
-        Itinerary firstItinerary = getNextItinerary(currentNode), itinerary = firstItinerary;
+        Integer currentNodeId = warehouse.getId();
+        Itinerary firstItinerary = getNextItinerary(currentNodeId), itinerary = firstItinerary;
 
         if(itinerary != null) {
             do {
                 arcList = itinerary.getArcs();
-                delivery = chocoDeliveries.get(currentNode.getId()).getDelivery();
+                delivery = chocoDeliveries.get(currentNodeId).getDelivery();
 
                 html += tableOpen;
                 for(Arc arc:arcList) {
@@ -292,8 +290,8 @@ public class CalculatedRound {
                 html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
                 html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound() +" | " + delivery.getSchedule().getLatestBound() + hClose;
 
-                currentNode = getNextNode(currentNode);
-                itinerary = getNextItinerary(currentNode);
+                currentNodeId = getNextNodeId(currentNodeId);
+                itinerary = getNextItinerary(currentNodeId);
             } while(itinerary != firstItinerary);
         }
 
