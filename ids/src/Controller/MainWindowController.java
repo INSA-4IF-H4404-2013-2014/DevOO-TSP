@@ -85,16 +85,17 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         if(xmlFile != null) {
             try {
                 mainWindow.setRound(Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork()));
+                computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
+                mainWindow.getRightPanel().getRoundPanel().emptyFields();
+                mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+                mainWindow.getMapPanel().setSelectedNode(null);
+                mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la tournée.\n" +
                         e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
             }
         }
-        computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
-        mainWindow.getRightPanel().getRoundPanel().emptyFields();
-        mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
-        mainWindow.getMapPanel().setSelectedNode(null);
-        mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
     }
 
     /**
