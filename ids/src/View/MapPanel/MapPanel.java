@@ -126,6 +126,12 @@ public class MapPanel extends JPanel {
                     return;
                 }
 
+                // Handles node de-selection
+                if(selectedNode != null && nearestNode == selectedNode.getModelNode())
+                {
+                    nearestNode = null;
+                }
+
                 panel.nodeEventListener.nodeClicked(nearestNode);
             }
 
