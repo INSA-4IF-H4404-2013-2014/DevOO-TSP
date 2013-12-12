@@ -42,7 +42,7 @@ public class CalculatedRound {
         }
 
         if(orderedNodes.size() != 0) {
-            calculateEstimatedSchedules();
+//            calculateEstimatedSchedules();
         }
     }
 
@@ -193,7 +193,7 @@ public class CalculatedRound {
     }
 
     public Node getNextNode(Node node) {
-        int idx = orderedNodes.indexOf(node.getId());
+        int idx = orderedNodes.indexOf(node);
         return orderedNodes.get((idx + 1) % orderedNodes.size());
     }
 

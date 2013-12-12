@@ -99,9 +99,6 @@ public class ChocoDelivery {
      */
     public Itinerary getItinerary(int nodeId) {
         int idx = successorsNode.indexOf(nodeId);
-        if(idx == -1) {
-            System.out.println("a");
-        }
         return successorsItinerary.get(idx);
     }
 
