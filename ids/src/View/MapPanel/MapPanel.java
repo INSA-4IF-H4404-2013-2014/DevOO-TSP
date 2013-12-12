@@ -299,6 +299,42 @@ public class MapPanel extends JPanel {
     }
 
     /**
+     * Test is the network view fully fits
+     * @return
+     */
+    public boolean isViewFitted() {
+        return fittedScaleFactor;
+    }
+
+    /**
+     * Center the view on a model node
+     * @param node the node we want to center on
+     * @param scaleFactor the scale factor we want to apply
+     */
+    public void centerOn(Model.City.Node node, double scaleFactor) {
+        double smallestScaleFactor = smallestScaleFactor();
+
+        if (scaleFactor <= smallestScaleFactor) {
+            fitToView();
+            return;
+        }
+
+        modelViewScaleFactor = Math.min(scaleFactor, maxScaleFactor);
+
+        setModelCenterPos(node.getX(), node.getY());
+
+        repaint();
+    }
+
+    /**
+     * Gets the model/view scale factor
+     * @return the model/view scale factor (view = modelViewScaleFactor * model)
+     */
+    public double getModelViewScaleFactor() {
+        return modelViewScaleFactor;
+    }
+
+    /**
      * Paints map panel event
      * @param g the graphic context
      */
