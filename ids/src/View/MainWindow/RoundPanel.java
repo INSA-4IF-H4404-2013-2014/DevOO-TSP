@@ -1,8 +1,13 @@
 package View.MainWindow;
 
+import Model.ChocoSolver.CalculatedRound;
+import Model.Delivery.Delivery;
+import Model.Delivery.Round;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -69,7 +74,7 @@ public class RoundPanel extends JPanel {
         roundPanelContentForm.add(createRow1());
         roundPanelContentForm.add(createRow2());
         roundPanelContentForm.add(createRow3());
-        disableAllFields();
+        setEnableAllFields(false);
 
         // We add this "form" to our roundPanelContent
         roundPanelContent.add(roundPanelContentForm, BorderLayout.CENTER);
@@ -101,12 +106,39 @@ public class RoundPanel extends JPanel {
     }
 
     /**
-     * Disables all JTextFields.
+     * Enable or disable the fields
+     * @param b whether to enable or disable the fields
      */
-    private void disableAllFields() {
-        View.Utils.enableJTextField(deliveryCount, false);
-        View.Utils.enableJTextField(duration, false);
-        View.Utils.enableJTextField(delay, false);
-        View.Utils.enableJTextField(distance, false);
+    private void setEnableAllFields(boolean b) {
+        View.Utils.enableJTextField(deliveryCount, b);
+        View.Utils.enableJTextField(duration, b);
+        View.Utils.enableJTextField(delay, b);
+        View.Utils.enableJTextField(distance, b);
     }
+
+    /**
+     * fill all the fields with the information in the Delivery given
+     * @param round the round which should be described
+     */
+    public void fillRoundPanel(CalculatedRound round){
+        if(round != null)
+        {
+            this.delay.setText(CalculatedRound.conversionMSHM(round.getCumulatedDelay()));
+            this.distance.setText(""+round.getTotalLength());
+            // -1 because the warehouse is two times in this list
+            this.deliveryCount.setText(""+(round.getOrderedItineraries().size()-1));
+            this.duration.setText(CalculatedRound.conversionMSHM(round.getTotalDuration()));
+        }
+    }
+
+    /**
+     * empty all the fields
+     */
+    public void emptyFields(){
+        this.delay.setText("");
+        this.distance.setText("");
+        this.deliveryCount.setText("");
+        this.duration.setText("");
+    }
+
 }

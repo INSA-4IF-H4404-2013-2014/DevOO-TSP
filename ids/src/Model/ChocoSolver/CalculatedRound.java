@@ -252,7 +252,7 @@ public class CalculatedRound {
     }
 
 
-    // TODO: to be tested!
+    // TODO: to be tested!  to be prune !!!
     /**
      * Parse the round into a html format
      * @return the html text in a String
@@ -311,5 +311,21 @@ public class CalculatedRound {
         html += htmlClose;
 
         return html;
+    }
+
+    /**
+     * convert from MILISECONDS (thank you remi) to hours:minutes
+     * @param milisec delay in MILISECONDS (for tyrant supervisor)
+     * @return a string containing hours:minutes (yes we loose some precision)
+     */
+    public static String conversionMSHM(long milisec)
+    {
+        String res="";
+        long hour, min;
+
+        hour = milisec/3600000;
+        min = (milisec-(hour*3600000))/60000;
+        res += hour + ":" + min;
+        return res;
     }
 }

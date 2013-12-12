@@ -89,6 +89,10 @@ public class MainWindowController implements NodeListener {
             }
         }
         computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
+        mainWindow.getRightPanel().getRoundPanel().emptyFields();
+        mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+        mainWindow.getMapPanel().setSelectedNode(null);
+        mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
     }
 
     /**
@@ -164,7 +168,7 @@ public class MainWindowController implements NodeListener {
     /**
      * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
-    public void computeRound(Network network, Round round) {
+    public int computeRound(Network network, Round round) {
         ChocoGraph graph = new ChocoGraph(network, round);
 
         TSP tsp = solveTsp(graph, 100);
@@ -173,10 +177,13 @@ public class MainWindowController implements NodeListener {
         if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
             CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
             mainWindow.getMapPanel().setRound(calculatedRound);
+            return 0;
         } else {
-            JOptionPane.showMessageDialog(mainWindow, "Aucune trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainWindow, "Aucun trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return 1;
         }
     }
+
 
     @Override
     public void nodeClicked(MapPanel panel, Node node) {
@@ -194,7 +201,7 @@ public class MainWindowController implements NodeListener {
                 //if the node contains a delivery activate the "supprimer" button and maj delivery info panel
                 mainWindow.featureAddSetEnable(false);
                 mainWindow.featureDeleteSetEnable(true);
-                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del);
+                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del,mainWindow.getCalculatedRound());
             }
         }
     }

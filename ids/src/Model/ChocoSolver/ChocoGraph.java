@@ -355,12 +355,12 @@ public class ChocoGraph implements Graph {
 	}
 
 	public int[] getSucc(int i) {
-		return deliveries.get(i).getSuccessorsNode();
+		return deliveries.get(nodesId.get(i)).getSuccessorsNode();
 	}
 
 
 	public int getNbSucc(int i) {
-        return deliveries.get(i).getSuccessorsNode().length;
+        return deliveries.get(nodesId.get(i)).getSuccessorsNode().length;
 	}
 
 }
