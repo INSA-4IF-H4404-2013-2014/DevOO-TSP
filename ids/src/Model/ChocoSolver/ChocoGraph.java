@@ -280,6 +280,7 @@ public class ChocoGraph implements Graph {
 
         //While every targeted delivery node has not been reached
         while(!neighbours.isEmpty() && !succ.isEmpty()) {
+
             current = getMinUnvisited(dict, neighbours);
 
             //We stop the search if we have found every delivery node
@@ -301,7 +302,7 @@ public class ChocoGraph implements Graph {
                     if(tmpDist < tmpNodeInfo.cost) {
                         tmpNodeInfo.cost = tmpDist;
                         tmpNodeInfo.previous = current;
-                        if(!tmpNodeInfo.visited) {
+                        if(!tmpNodeInfo.visited && !neighbours.contains(tmpNodeId)) {
                             neighbours.add(tmpNodeId);
                         }
                     }
