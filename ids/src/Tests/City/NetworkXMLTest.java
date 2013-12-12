@@ -47,13 +47,18 @@ public class NetworkXMLTest {
 
     }
 
-    private void testInvalidCreate(String xmlPath) {
+    private void testInvalidCreate(String xmlPath, boolean supposedToSuccess) {
         final String testDir = "resources/tests/network/";
 
         boolean success = false;
 
         try {
             Network.createFromXml(testDir + xmlPath);
+
+            if(supposedToSuccess) {
+                return;
+            }
+
             System.out.println("unexpected success");
         } catch(UtilsException e) {
             success = true;
@@ -72,18 +77,21 @@ public class NetworkXMLTest {
      */
     @Test
     public void testInvalidCreateAll() {
-        testInvalidCreate("networkInvalidSyntax0.xml");
-        testInvalidCreate("networkInvalidSyntax1.xml");
-        testInvalidCreate("networkInvalidRoot.xml");
-        testInvalidCreate("networkMissingAttrDestination.xml");
-        testInvalidCreate("networkMissingAttrLongueur.xml");
-        testInvalidCreate("networkMissingAttrNomRue.xml");
-        testInvalidCreate("networkMissingAttrVitesse.xml");
-        testInvalidCreate("networkMissingAttrX.xml");
-        testInvalidCreate("networkMissingAttrY.xml");
-        testInvalidCreate("networkNegaviteAttrLongueur.xml");
-        testInvalidCreate("networkNegaviteAttrVitesse.xml");
-        testInvalidCreate("networkWrongAttrLongueur.xml");
+        testInvalidCreate("networkWorking.xml", true);
+
+        testInvalidCreate("networkInvalidSyntax0.xml", false);
+        testInvalidCreate("networkInvalidSyntax1.xml", false);
+        testInvalidCreate("networkInvalidRoot.xml", false);
+        testInvalidCreate("networkMissingAttrDestination.xml", false);
+        testInvalidCreate("networkMissingAttrLongueur.xml", false);
+        testInvalidCreate("networkMissingAttrNodeId.xml", false);
+        testInvalidCreate("networkMissingAttrNomRue.xml", false);
+        testInvalidCreate("networkMissingAttrVitesse.xml", false);
+        testInvalidCreate("networkMissingAttrX.xml", false);
+        testInvalidCreate("networkMissingAttrY.xml", false);
+        testInvalidCreate("networkNegaviteAttrLongueur.xml", false);
+        testInvalidCreate("networkNegaviteAttrVitesse.xml", false);
+        testInvalidCreate("networkWrongAttrLongueur.xml", false);
 
         System.out.println("testInvalidCreateAll: OK");
     }
