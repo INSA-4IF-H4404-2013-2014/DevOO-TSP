@@ -2,39 +2,26 @@ package Model.ChocoSolver;
 
 import Model.City.Arc;
 import Model.City.Node;
-import Model.Delivery.Client;
 import Model.Delivery.Delivery;
 import Model.Delivery.Itinerary;
-import Model.Delivery.Schedule;
-import Utils.UtilsException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
  * Date: 28/11/13
  * Time: 14:34
- * This class aims at managing a round defined by an ordered list of itineraries
+ * This class aims at managing a round defined by an ordered list of chocoDeliveries
  */
 public class CalculatedRound {
     /** The warehouse which is the start and end point of the round */
     private Node warehouse;
 
+    private List<Node> orderedNodes;
+
+    private Map<Integer, ChocoDelivery> chocoDeliveries = new HashMap<Integer, ChocoDelivery>();
+
     private GregorianCalendar departureTime;
-
-    /** An ordered list of deliveries which defines the round */
-    private List<Delivery> orderedDeliveries;
-
-    /** An ordered list of itineraries in ordered to link the deliveries */
-    private List<Itinerary> orderedItineraries = new LinkedList<Itinerary>();
 
     /** A dictionary linking a delivery to its estimated arrival hour at the delivery point */
     private Dictionary<Integer, GregorianCalendar> estimatedSchedules = new Hashtable<Integer, GregorianCalendar>();
@@ -42,14 +29,19 @@ public class CalculatedRound {
     /**
      * Constructor
      * @param warehouse start and end point of the round
-     * @param orderedDeliveries an ordered list of deliveries which defines the round
-     * @param orderedItineraries an ordered list of itineraries in ordered to link the deliveries
      */
-    public CalculatedRound(Node warehouse, List<Delivery> orderedDeliveries, List<Itinerary> orderedItineraries) {
+    public CalculatedRound(Node warehouse, int[] tspOrderedDeliveries, ChocoGraph chocoGraph) {
         this.warehouse = warehouse;
-        this.orderedDeliveries = orderedDeliveries;
-        this.orderedItineraries = orderedItineraries;
-        if(!orderedDeliveries.isEmpty()) {
+
+        orderedNodes = new ArrayList(tspOrderedDeliveries.length);
+        for(int i = 0; i < tspOrderedDeliveries.length; ++i) {
+            Integer networkId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
+            ChocoDelivery cd = chocoGraph.getChocoDeliveryFromNetworkId(networkId);
+            orderedNodes.add(cd.getAddress());
+            chocoDeliveries.put(networkId, cd);
+        }
+
+        if(orderedNodes.size() != 0) {
             calculateEstimatedSchedules();
         }
     }
@@ -63,21 +55,16 @@ public class CalculatedRound {
         this.departureTime = getFirstDepartureTime();
 
         GregorianCalendar arrivalTime;
-
         long timeLapse;
         int deliveryTime = 0;
-
         int nodeId = warehouse.getId();
 
-        for(Delivery delivery : orderedDeliveries) {
-
-            arrivalTime = getArrivalTime(nodeId, delivery, deliveryTime);
-
-            nodeId = delivery.getAddress().getId();
+        for(Node n : orderedNodes) {
+            arrivalTime = getArrivalTime(nodeId, deliveryTime);
             deliveryTime = 600;
 
-            //TODO : check that the warehouse is put in the map as last element
-            estimatedSchedules.put(nodeId, arrivalTime);
+            //TODO : CACA
+            estimatedSchedules.put(n.getId(), arrivalTime);
         }
     }
 
@@ -86,7 +73,8 @@ public class CalculatedRound {
      * @return the departure time at the warehouse
      */
     private GregorianCalendar getFirstDepartureTime() {
-        Date departureDate = orderedDeliveries.get(0).getSchedule().getEarliestBound().getGregorianChange();
+        ChocoDelivery firstDelivery = chocoDeliveries.get(getNextNode(warehouse).getId());
+        Date departureDate = firstDelivery.getDelivery().getSchedule().getEarliestBound().getTime();
 
         int warehouseToDeliveryTime = getNextItinerary(warehouse).getCost();
 
@@ -118,11 +106,10 @@ public class CalculatedRound {
     /**
      * Get the arrival time of the currentDelivery
      * @param previousNodeId the id of the node that is before the currentDelivery
-     * @param currentDelivery the delivery we want the arrival time
      * @param deliveryTime the time spend by the delivery man on the last delivery
      * @return the arrival time at the currentDelivery
      */
-    private GregorianCalendar getArrivalTime(int previousNodeId, Delivery currentDelivery, int deliveryTime) {
+    private GregorianCalendar getArrivalTime(int previousNodeId, int deliveryTime) {
         GregorianCalendar arrivalTime;
         Date arrivalDate;
         long timeLapse;
@@ -130,34 +117,56 @@ public class CalculatedRound {
         arrivalTime = (GregorianCalendar) estimatedSchedules.get(previousNodeId).clone();
         arrivalDate = arrivalTime.getGregorianChange();
 
-        timeLapse = arrivalDate.getTime() + (long) ((getNextItinerary(currentDelivery).getCost() + deliveryTime) * 1000);
+        // TODO : correct
+        // timeLapse = arrivalDate.getTime() + (long) ((getNextItinerary(currentDelivery.).getCost() + deliveryTime) * 1000);
 
-        arrivalDate.setTime(timeLapse);
+        //arrivalDate.setTime(timeLapse);
         arrivalTime.setTime(arrivalDate);
 
         return arrivalTime;
     }
 
-    /**
-     * Returns the estimated delay in milliseconds of a delivery comparing to the latest bound of the schedule
-     * @param delivery The delivery for which the delay is estimated
-     * @return The estimated delay in milliseconds
-     */
-    public long getDelay(Delivery delivery)
-    {
-        if(isDelayed(delivery))
-        {
-            return estimatedSchedules.get(delivery).getTimeInMillis() - delivery.getSchedule().getLatestBound().getTimeInMillis();
+    public List<Itinerary> getOrderedItineraries() {
+        List<Itinerary> itineraries = new LinkedList<Itinerary>();
+        Node currentNode = warehouse;
+        Itinerary firstItinerary = getNextItinerary(currentNode), itinerary = firstItinerary;
+
+        if(itinerary != null) {
+            do {
+                itineraries.add(itinerary);
+                currentNode = getNextNode(currentNode);
+                itinerary = getNextItinerary(currentNode);
+            } while(itinerary != firstItinerary);
         }
 
-        return 0;
+        return itineraries;
+    }
+
+    /**
+     * Returns the estimated delay in milliseconds of a delivery comparing to the latest bound of the schedule
+     * @param nodeId The delivery for which the delay is estimated
+     * @return The estimated delay in milliseconds
+     */
+    public long getDelay(Integer nodeId)
+    {
+        if(nodeId.equals(warehouse.getId())) {
+            return 0;
+        }
+
+        long delay = estimatedSchedules.get(nodeId).getTimeInMillis() - chocoDeliveries.get(nodeId).getDelivery().getSchedule().getLatestBound().getTimeInMillis();
+
+        if(delay < 0) {
+            return 0;
+        }
+
+        return delay;
     }
 
     public long getCumulatedDelay() {
         long roundDelay = 0;
 
-        for(Delivery d : orderedDeliveries) {
-            roundDelay += getDelay(d);
+        for(Node n : orderedNodes) {
+            roundDelay += getDelay(n.getId());
         }
 
         return roundDelay;
@@ -165,9 +174,11 @@ public class CalculatedRound {
 
     public float getTotalLength() {
         float length = 0;
+        Itinerary itinerary;
 
-        for(Itinerary i : orderedItineraries) {
-            length += i.getLength();
+        for(int i = 0; i < orderedNodes.size(); ++i) {
+            itinerary = chocoDeliveries.get(orderedNodes.get(i)).getItinerary(orderedNodes.get((i + 1) % orderedNodes.size()).getId());
+            length += itinerary.getLength();
         }
 
         return length;
@@ -177,14 +188,13 @@ public class CalculatedRound {
         return estimatedSchedules.get(warehouse.getId()).getTimeInMillis() - departureTime.getTimeInMillis();
     }
 
+    public Node getWarehouse() {
+        return warehouse;
+    }
 
-
-    /**
-     * Returns the ordered list of itineraries
-     * @return the ordered list of itineraries
-     */
-    public List<Itinerary> getOrderedItineraries() {
-        return orderedItineraries;
+    public Node getNextNode(Node node) {
+        int idx = orderedNodes.indexOf(node.getId());
+        return orderedNodes.get((idx + 1) % orderedNodes.size());
     }
 
     /**
@@ -195,34 +205,7 @@ public class CalculatedRound {
      */
     public Itinerary getNextItinerary(Node node)
     {
-        int i = 0;
-
-        if(node.equals(warehouse)) {
-            return orderedItineraries.get(i);
-        }
-
-        ++i;
-
-        for(Delivery d : orderedDeliveries) {
-            if(d.getAddress().equals(node))
-            {
-                return orderedItineraries.get(i);
-            }
-            ++i;
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the itinerary to cross from a specified delivery in order to go to the next one,
-     * or null if the specified node is not a delivery
-     * @param delivery A delivery
-     * @return @see description
-     */
-    public Itinerary getNextItinerary(Delivery delivery)
-    {
-        return getNextItinerary(delivery.getAddress());
+        return chocoDeliveries.get(node.getId()).getItinerary(getNextNode(node).getId());
     }
 
     /**
@@ -236,19 +219,18 @@ public class CalculatedRound {
 
     /**
      * Returns true if the arrival hour at the specified delivery if after the latest bound of its schedule, false else
-     * @param delivery the specified delivery
+     * @param nodeId the specified delivery
      * @return true if the arrival hour at the specified delivery if after the latest bound of its schedule, false else
      */
-    public boolean isDelayed(Delivery delivery)
+    public boolean isDelayed(Integer nodeId)
     {
-        GregorianCalendar estimatedSchedule = estimatedSchedules.get(delivery);
-
-        if(estimatedSchedule == null)
-        {
+        if(nodeId.equals(warehouse.getId())) {
             return false;
         }
 
-        return estimatedSchedule.after(delivery.getSchedule().getLatestBound());
+        GregorianCalendar estimatedSchedule = estimatedSchedules.get(nodeId);
+
+        return estimatedSchedule.after(chocoDeliveries.get(nodeId).getDelivery().getSchedule().getLatestBound());
     }
 
 
@@ -287,25 +269,32 @@ public class CalculatedRound {
 
         List<Arc> arcList;
         Delivery delivery;
+        Node currentNode = warehouse;
+        Itinerary firstItinerary = getNextItinerary(currentNode), itinerary = firstItinerary;
 
-        for(Itinerary itinerary:orderedItineraries) {
-            arcList = itinerary.getArcs();
-            delivery = orderedDeliveries.get(i++);
+        if(itinerary != null) {
+            do {
+                arcList = itinerary.getArcs();
+                delivery = chocoDeliveries.get(currentNode.getId()).getDelivery();
 
-            html += tableOpen;
-            for(Arc arc:arcList) {
-                html += tdOpen;
+                html += tableOpen;
+                for(Arc arc:arcList) {
+                    html += tdOpen;
 
-                //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
+                    //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
 
-                html += trOpen + "Prendre rue " + arc.getStreet().getName() + trClose;
-                html += trOpen + arc.getLength() + "m" + trClose;
-                html += trOpen + arc.getCost()/60 + "min" + trClose;
-                html += tdClose;
-            }
-            html += tableClose;
-            html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
-            html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound() +" | " + delivery.getSchedule().getLatestBound() + hClose;
+                    html += trOpen + "Prendre rue " + arc.getStreet().getName() + trClose;
+                    html += trOpen + arc.getLength() + "m" + trClose;
+                    html += trOpen + arc.getCost()/60 + "min" + trClose;
+                    html += tdClose;
+                }
+                html += tableClose;
+                html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
+                html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound() +" | " + delivery.getSchedule().getLatestBound() + hClose;
+
+                currentNode = getNextNode(currentNode);
+                itinerary = getNextItinerary(currentNode);
+            } while(itinerary != firstItinerary);
         }
 
         html += htmlClose;

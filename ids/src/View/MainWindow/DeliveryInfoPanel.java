@@ -123,7 +123,7 @@ public class DeliveryInfoPanel extends JPanel {
          if(round != null)
          {
             deliveryTime.setText(""+form.format(round.getEstimatedSchedules(delivery).getTime()));
-            delay.setText(""+round.getDelay(delivery));
+            delay.setText(""+round.getDelay(delivery.getId()));
          }
      }
 

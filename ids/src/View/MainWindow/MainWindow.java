@@ -88,14 +88,24 @@ public class MainWindow extends JFrame {
             Model.Delivery.Itinerary itinerary = new Model.Delivery.Itinerary(null, null, arcList);
             itineraryList.add(itinerary);
 
-            CalculatedRound calculatedRound = new CalculatedRound(warHouse, new LinkedList<Delivery>(), itineraryList);
+            //CalculatedRound calculatedRound = new CalculatedRound(warHouse, new LinkedList<Delivery>(), itineraryList);
 
             mapPanel.setModel(network);
-            mapPanel.setRound(calculatedRound);
+            //mapPanel.setRound(calculatedRound);
         }
         catch (UtilsException e) {
             System.out.println(e);
             //TODO: prety load
+        }
+
+        //TODO remove
+        try {
+            network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
+            round = Round.createFromXml("resources/tests/chocograph/valid2.xml", network);
+            mapPanel.setModel(network);
+            mainWindowController.computeRound(network, round);
+        } catch(Exception e) {
+            System.out.println(e);
         }
     }
 

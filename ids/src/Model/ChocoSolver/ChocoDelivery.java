@@ -28,6 +28,9 @@ public class ChocoDelivery {
     /** The successors node of the delivery */
     private IntArrayList successorsNode;
 
+    /** The successors node of the delivery identified by their choco ID */
+    private IntArrayList successorsChocoNode;
+
     /** The list of itineraries linked to the delivery */
     private List<Itinerary> successorsItinerary;
 
@@ -62,14 +65,23 @@ public class ChocoDelivery {
 
     public void setSuccessorsNumber(int n) {
         successorsNode = new IntArrayList(n);
+        successorsChocoNode = new IntArrayList(n);
     }
 
     /**
      * Get the successors' list of the delivery
-     * @return the list successors' ID of the delivery
+     * @return the list of successors' ID of the delivery
      */
     public int[] getSuccessorsNode() {
         return successorsNode.elements();
+    }
+
+    /**
+     * Get the choco successors' list of the delivery
+     * @return the list of choco successors' ID of the delivery
+     */
+    public int[] getSuccessorsChocoNode() {
+        return successorsChocoNode.elements();
     }
 
     /**
@@ -82,21 +94,26 @@ public class ChocoDelivery {
 
     /**
      * Get the itinerary linked to a node
-     * @param nodeId the id of the node you want the linked itinerary
+     * @param nodeId the network id of the node you want the linked itinerary
      * @return the itinerary
      */
     public Itinerary getItinerary(int nodeId) {
         int idx = successorsNode.indexOf(nodeId);
+        if(idx == -1) {
+            System.out.println("a");
+        }
         return successorsItinerary.get(idx);
     }
 
     /**
      * Add a successor to the delivery
-     * @param nodeId the ID of the successor node
+     * @param nodeId the network ID of the successor node
+     * @param chocoId the choco ID of the successor node
      * @param itinerary the linked itinerary
      */
-    public void addSuccessor(int nodeId, Itinerary itinerary) {
+    public void addSuccessor(int nodeId, int chocoId, Itinerary itinerary) {
         successorsNode.add(nodeId);
+        successorsChocoNode.add(chocoId);
         successorsItinerary.add(itinerary);
     }
 

@@ -171,7 +171,7 @@ public class MainWindowController implements NodeListener {
     public int computeRound(Network network, Round round) {
         ChocoGraph graph = new ChocoGraph(network, round);
 
-        TSP tsp = solveTsp(graph, 100);
+        TSP tsp = solveTsp(graph, 10000);
         SolutionState solutionState = tsp.getSolutionState();
 
         if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
@@ -313,7 +313,7 @@ public class MainWindowController implements NodeListener {
 
         int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
 
-        tsp.solve(baseTime, bound);
+        tsp.solve(baseTime, bound-1);
         SolutionState solutionState = tsp.getSolutionState();
 
         for( ; (solutionState != SolutionState.OPTIMAL_SOLUTION_FOUND) && (solutionState != SolutionState.INCONSISTENT) && (baseTime <= 400) ; baseTime *= 2) {
@@ -335,26 +335,7 @@ public class MainWindowController implements NodeListener {
      * @return the CalculatedRound
      */
     private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
-        int[] nodeList = tsp.getNext(); // ordered node list
-        List<Delivery> deliveriesList = new ArrayList<Delivery>();
-        List<Itinerary> itinerariesList = new ArrayList<Itinerary>();
-
-        // Temporary variables
-        ChocoDelivery chocoDelivery;
-        Delivery delivery;
-
-        for(int i = 0 ; i <= nodeList.length ; i++) {
-
-            //TODO: be sure that the delivery added to deliveriesList is not erased at each iteration (Java pointers...)
-            chocoDelivery = chocoGraph.getChocoDeliveryFromChocoId(nodeList[i]);
-            delivery = chocoDelivery.getDelivery();
-            deliveriesList.add(delivery);
-
-            itinerariesList.add(chocoDelivery.getItinerary(delivery.getAddress().getId()));
-        }
-
-        CalculatedRound calculatedRound = new CalculatedRound(mainWindow.getRound().getWarehouse(), deliveriesList, itinerariesList);
-        return calculatedRound;
+        return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
     }
 
 } // end of class MainWindowController --------------------------------------------------------------------

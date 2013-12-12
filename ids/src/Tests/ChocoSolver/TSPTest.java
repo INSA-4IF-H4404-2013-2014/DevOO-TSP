@@ -20,24 +20,22 @@ public class TSPTest {
 	 */
 	@Test
 	public void testCost() throws UtilsException, ParserConfigurationException, FileNotFoundException {
-        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
-        Round round = Round.createFromXml("resources/tests/valid.xml", network);
+        Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
+        Round round = Round.createFromXml("resources/tests/chocograph/valid2.xml", network);
 
-        ChocoGraph graph = new ChocoGraph(network, round);
+        ChocoGraph g = new ChocoGraph(network, round);
 
-        /*
 		int totalCost = 0;
 		TSP tsp = new TSP(g);
 		tsp.solve(200000,g.getNbVertices()*g.getMaxArcCost()+1);
 		if (tsp.getSolutionState() != SolutionState.INCONSISTENT){
 			int[] next = tsp.getNext();
-			for (int i=0; i<nbVertices; i++)
+			for (int i=0; i<g.getNbVertices(); i++)
 				totalCost += g.getCost()[i][next[i]];
 			assertEquals(totalCost,tsp.getTotalCost());
 		}
 		else
 			assertTrue("No solution found after 200 seconds...", false);
-			*/
 	}
 
 	/**

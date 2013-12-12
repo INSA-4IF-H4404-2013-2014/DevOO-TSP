@@ -46,6 +46,16 @@ public class ChocoGraph implements Graph {
         initChocoDeliveries(network, round);
 
         initCosts();
+
+        //TODO : remove
+        /*
+        for(ChocoDelivery cd : deliveries.values()) {
+            System.out.print("\nID : " + cd.getAddress().getId() + "\nSucc : ");
+            for(int i : cd.getSuccessorsNode()) {
+                System.out.print("" + i + ", ");
+            }
+        }
+        */
     }
 
     private void initCosts() {
@@ -214,7 +224,7 @@ public class ChocoGraph implements Graph {
         for(Node n : successors) {
             shortestPath = getShortestPath(dict, n.getId());
             directions = getDirections(network, shortestPath);
-            current.addSuccessor(n.getId(), new Itinerary(source, n, directions));
+            current.addSuccessor(n.getId(), deliveries.get(n.getId()).getChocoId(), new Itinerary(source, n, directions));
         }
     }
 
@@ -338,6 +348,14 @@ public class ChocoGraph implements Graph {
         return deliveries.get(nodeId);
     }
 
+    public Integer getChocoIdFromNetworkId(Integer nodeId) {
+        return deliveries.get(nodeId).getChocoId();
+    }
+
+    public Integer getNetworkIdFromChocoId(Integer chocoId) {
+        return nodesId.get(chocoId);
+    }
+
     public int getMaxArcCost() {
 		return maxArcCost;
 	}
@@ -355,12 +373,12 @@ public class ChocoGraph implements Graph {
 	}
 
 	public int[] getSucc(int i) {
-		return deliveries.get(nodesId.get(i)).getSuccessorsNode();
+		return deliveries.get(nodesId.get(i)).getSuccessorsChocoNode();
 	}
 
 
 	public int getNbSucc(int i) {
-        return deliveries.get(nodesId.get(i)).getSuccessorsNode().length;
+        return deliveries.get(nodesId.get(i)).getSuccessorsChocoNode().length;
 	}
 
 }
