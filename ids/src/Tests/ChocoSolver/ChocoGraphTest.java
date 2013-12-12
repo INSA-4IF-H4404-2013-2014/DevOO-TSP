@@ -25,13 +25,21 @@ import static org.junit.Assert.fail;
  * To change this template use File | Settings | File Templates.
  */
 public class ChocoGraphTest {
-
     /**
      * Tests the creation of a choco graph and checks that this one is correct
      * @throws UtilsException
      * @throws FileNotFoundException
      * @throws ParserConfigurationException
      */
+
+    @Test
+    public void testCreate3() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        Network network = Network.createFromXml("resources/tests/plan20x20.xml");
+        Round round = Round.createFromXml("resources/tests/livraison20x20-2.xml", network);
+
+        ChocoGraph chocograph = new ChocoGraph(network, round);
+    }
+
     @Test
     public void testCreate() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
@@ -48,22 +56,24 @@ public class ChocoGraphTest {
 
 
         assertTrue(chocograph.getNbVertices() == 7);
-        assertTrue(chocograph.getMinArcCost() == 1);
-        assertTrue(chocograph.getMaxArcCost() == 9);
+        assertTrue(chocograph.getMinArcCost() == 100);
+        assertTrue(chocograph.getMaxArcCost() == 900);
 
-        int[][] testCost = chocograph.getCost();
-        assertTrue(testCost[3][7] == 4);
-        assertTrue(testCost[5][9] == 9);
-        assertTrue(testCost[3][5] == 3);
+       int[][] testCost = chocograph.getCost();
 
-        assertTrue(chocograph.getNbSucc(0) == 2);
-        assertTrue(chocograph.getNbSucc(1) == 2);
-        assertTrue(chocograph.getNbSucc(3) == 2);
-        assertTrue(chocograph.getNbSucc(9) == 1);
+        assertTrue(testCost[chocograph.getChocoIdFromNetworkId(3)][chocograph.getChocoIdFromNetworkId(7)] == 400);
+        assertTrue(testCost[chocograph.getChocoIdFromNetworkId(5)][chocograph.getChocoIdFromNetworkId(9)] == 700);
+        assertTrue(testCost[chocograph.getChocoIdFromNetworkId(3)][chocograph.getChocoIdFromNetworkId(5)] == 300);
 
-        int[] testSucc = chocograph.getSucc(3);
+
+        assertTrue(chocograph.getNbSucc(chocograph.getChocoIdFromNetworkId(0)) == 2);
+        assertTrue(chocograph.getNbSucc(chocograph.getChocoIdFromNetworkId(1)) == 2);
+        assertTrue(chocograph.getNbSucc(chocograph.getChocoIdFromNetworkId(3)) == 2);
+        assertTrue(chocograph.getNbSucc(chocograph.getChocoIdFromNetworkId(9)) == 1);
+
+        int[] testSucc = chocograph.getSucc(chocograph.getChocoIdFromNetworkId(3));
         assertTrue(testSucc[0] == 5 || testSucc[0] == 7);
-        testSucc = chocograph.getSucc(9);
+        testSucc = chocograph.getSucc(chocograph.getChocoIdFromNetworkId(9));
         assertTrue(testSucc[0] == 0);
     }
 
