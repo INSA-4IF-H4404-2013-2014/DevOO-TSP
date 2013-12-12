@@ -139,7 +139,9 @@ public class MapPanel extends JPanel {
 
                 MapPanel panel = (MapPanel) mouseEvent.getComponent();
 
-                panel.addMouseMotionListener(new MouseDragging(mouseEvent));
+                if(!panel.fittedScaleFactor) {
+                    panel.addMouseMotionListener(new MouseDragging(mouseEvent));
+                }
             }
 
             @Override
