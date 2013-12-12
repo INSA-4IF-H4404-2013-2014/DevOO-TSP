@@ -32,6 +32,9 @@ public class Node {
     /** the node's incoming arcs */
     private List<Arc> incoming;
 
+    /** Computed string representation */
+    private String computedStringRepresentation;
+
     /**
      * Constructor
      * @param id the node's id
@@ -136,6 +139,10 @@ public class Node {
      * @return The string
      */
     public String toString() {
+        if(computedStringRepresentation != null) {
+            return computedStringRepresentation;
+        }
+
         TreeSet<String> streetsNames = new TreeSet<String>();
 
         for(Arc out : outgoing) {
@@ -147,18 +154,18 @@ public class Node {
         }
 
         if(streetsNames.size() == 1) {
-            return streetsNames.first();
+            computedStringRepresentation = streetsNames.first();
         }
         else {
-            String finalName = new String();
+            computedStringRepresentation = new String();
             for(String streetName : streetsNames) {
-                finalName += streetName;
+                computedStringRepresentation += streetName;
 
                 if(streetName != streetsNames.last()) {
-                    finalName += " / ";
+                    computedStringRepresentation += " / ";
                 }
             }
-            return finalName;
         }
+        return computedStringRepresentation;
     }
 }
