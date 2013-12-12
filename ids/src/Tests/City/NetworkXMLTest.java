@@ -50,8 +50,6 @@ public class NetworkXMLTest {
     private void testInvalidCreate(String xmlPath, boolean supposedToSuccess) {
         final String testDir = "resources/tests/network/";
 
-        boolean success = false;
-
         try {
             Network.createFromXml(testDir + xmlPath);
 
@@ -61,14 +59,16 @@ public class NetworkXMLTest {
 
             System.out.println("unexpected success");
         } catch(UtilsException e) {
-            success = true;
+            if(!supposedToSuccess) {
+                return;
+            }
+
+            System.out.println("exception");
         } catch(Exception e) {
             System.out.println("unexpected exception");
         }
 
-        if(!success) {
-            fail("test " + xmlPath + " has failed");
-        }
+        fail("test " + xmlPath + " has failed");
     }
 
     /**
