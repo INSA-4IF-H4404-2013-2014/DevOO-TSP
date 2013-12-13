@@ -9,7 +9,7 @@
 <Noeud id="1" x="88" y="171">
 <TronconSortant nomRue="v0" vitesse="1,000000" longueur="100,000000" destination="0"/>
 <TronconSortant nomRue="v0" vitesse="1,000000" longueur="100,000000" destination="2"/>
-<TronconSortant nomRue="v0" vitesse="1,0000000" longueur="100,000000" destination="3"/>
+<TronconSortant nomRue="v0" vitesse="1,000000" longueur="100,000000" destination="3"/>
 <TronconSortant nomRue="v0" vitesse="1,000000" longueur="100,000000" destination="4"/>
 <TronconSortant nomRue="v0" vitesse="1,000000" longueur="100,000000" destination="6"/>
 <TronconSortant nomRue="v0" vitesse="1,000000" longueur="100,000000" destination="8"/>
