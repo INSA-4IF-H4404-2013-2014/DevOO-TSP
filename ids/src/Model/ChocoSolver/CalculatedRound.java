@@ -84,6 +84,12 @@ public class CalculatedRound {
 
             estimatedSchedules.put(id, arrivalTime);
         }
+
+        //TODO: delete print
+
+        if(estimatedSchedules != null) {
+            System.out.println(estimatedSchedules.get(1).getDisplayName(Calendar.HOUR_OF_DAY, Calendar.ALL_STYLES, Locale.FRANCE));
+        }
     }
 
     /**

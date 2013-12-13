@@ -14,9 +14,7 @@ import org.junit.Test;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,17 +50,21 @@ public class CalculatedRoundTest {
     @Test
     public void testEstimatedSchedule() throws UtilsException, ParserConfigurationException, FileNotFoundException {
         // TODO: test this function once computeRound() is ready
-        Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
-        Round round = Round.createFromXml("resources/tests/chocograph/valid2.xml", network);
+        //Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
+        //Round round = Round.createFromXml("resources/tests/chocograph/valid2.xml", network);
 
-        ChocoGraph g = new ChocoGraph(network, round);
+        //ChocoGraph g = new ChocoGraph(network, round);
 
         MainWindowController main = new MainWindowController();
 
-        main.loadNetwork();
-        main.loadRound();
+        main.loadNetwork("resources/tests/planTiny.xml");
+        main.loadRound("resources/tests/livraisonTiny.xml");
 
         main.computeRound(main.getMainWindow().getNetwork(), main.getMainWindow().getRound());
+
+        assertNotEquals(main.getMainWindow().getCalculatedRound().getEstimatedSchedules(1), null);
+
+        System.out.println();
 
     }
 
