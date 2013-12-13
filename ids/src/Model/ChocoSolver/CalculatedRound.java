@@ -59,7 +59,7 @@ public class CalculatedRound {
         }
 
         if(tspOrderedDeliveries.length != 0) {
-//            calculateEstimatedSchedules();
+            calculateEstimatedSchedules();
         }
     }
 
@@ -70,6 +70,7 @@ public class CalculatedRound {
     private void calculateEstimatedSchedules()
     {
         this.departureTime = getFirstDepartureTime();
+        estimatedSchedules.put(getWarehouse().getId(), departureTime);
 
         GregorianCalendar arrivalTime;
         long timeLapse;
