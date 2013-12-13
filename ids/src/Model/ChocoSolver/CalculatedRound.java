@@ -77,9 +77,9 @@ public class CalculatedRound {
         int nodeId = warehouse.getId();
 
         for(Integer id : successors.keySet()) {
-            //TODO : nodeID tjrs = warehouseId ?
             arrivalTime = getArrivalTime(nodeId, deliveryTime);
             deliveryTime = 600;
+            nodeId = id;
 
             estimatedSchedules.put(id, arrivalTime);
         }
