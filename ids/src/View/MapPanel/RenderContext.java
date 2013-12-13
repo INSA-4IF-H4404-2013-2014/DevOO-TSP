@@ -432,6 +432,11 @@ public class RenderContext {
      * @param arcLeaving the leaving node
      */
     private void drawModelArcItinerary(ArcInfo arcInfo, int arcLeaving) {
+        int arrow1X[] = { -itineraryThickness / 2, -itineraryThickness / 2, itineraryThickness / 2 };
+        int arrow1Y[] = { itineraryThickness / 2, -itineraryThickness / 2, 0 };
+        int arrow2X[] = { -itineraryThickness / 2, itineraryThickness / 2, itineraryThickness / 2 };
+        int arrow2Y[] = { 0, -itineraryThickness / 2, +itineraryThickness / 2 };
+
         if(!arcInfo.arc.isItineraryFrom(arcLeaving)) {
             return;
         }
@@ -444,14 +449,27 @@ public class RenderContext {
 
         int dotCount = (int)Math.floor((arcInfo.length - 2.0 * (double)streetThickness) / (double)itineraryDotDistance);
 
+        AffineTransform previousTransform = context.getTransform();
+
         context.setColor(itineraryColor);
 
         for(int i = 0; i < dotCount; i++) {
             int x = streetThickness + i * itineraryDotDistance;
             int y = (yOffset * streetThickness) / 4;
 
-            context.fillOval(x - itineraryThickness / 2, y - itineraryThickness / 2, itineraryThickness, itineraryThickness);
+            //context.fillOval(x - itineraryThickness / 2, y - itineraryThickness / 2, itineraryThickness, itineraryThickness);
+
+            context.setTransform(previousTransform);
+            context.translate(x, y);
+
+            if(arcLeaving == 2) {
+                context.fillPolygon(arrow1X, arrow1Y, 3);
+            } else {
+                context.fillPolygon(arrow2X, arrow2Y, 3);
+            }
         }
+
+        context.setTransform(previousTransform);
     }
 
     /**
@@ -511,8 +529,8 @@ public class RenderContext {
     /** itinerary constants */
     private static final Color itineraryColor = new Color(30, 140, 255);
     private static final Color itineraryWarehouseColor = new Color(70, 210, 70);
-    private static final int itineraryThickness = 2;
-    private static final int itineraryDotDistance = 3;
+    private static final int itineraryThickness = 4;
+    private static final int itineraryDotDistance = 4;
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);
