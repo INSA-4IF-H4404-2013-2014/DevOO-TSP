@@ -60,7 +60,7 @@ public class CalculatedRoundTest {
         main.loadNetwork("resources/tests/planTiny.xml");
         main.loadRound("resources/tests/livraisonTiny.xml");
 
-        main.computeRound(main.getMainWindow().getNetwork(), main.getMainWindow().getRound());
+        //main.computeRound(main.getMainWindow().getNetwork(), main.getMainWindow().getRound());
 
         assertNotEquals(main.getMainWindow().getCalculatedRound().getEstimatedSchedules(1), null);
 

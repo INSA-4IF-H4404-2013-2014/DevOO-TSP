@@ -59,7 +59,7 @@ public class CalculatedRound {
         }
 
         if(tspOrderedDeliveries.length != 0) {
-            calculateEstimatedSchedules();
+            //calculateEstimatedSchedules();
         }
     }
 
@@ -88,10 +88,12 @@ public class CalculatedRound {
         //TODO: delete print
 
         if(estimatedSchedules != null) {
-            System.out.println(estimatedSchedules.get(1).getDisplayName(Calendar.HOUR_OF_DAY, Calendar.ALL_STYLES, Locale.FRANCE));
+            System.out.println(estimatedSchedules.get(getWarehouse().getId()).get(Calendar.HOUR_OF_DAY));
         }
     }
 
+
+    //TODO: getFirstDepartureTime() works
     /**
      * Calculates the departure time from the warehouse
      * @return the departure time from the warehouse
@@ -100,10 +102,10 @@ public class CalculatedRound {
         ChocoDelivery firstDelivery = chocoDeliveries.get(getNextNodeId(warehouse.getId()));
         Date departureDate = firstDelivery.getDelivery().getSchedule().getEarliestBound().getTime();
 
+
         int warehouseToDeliveryTime = getNextItinerary(warehouse.getId()).getCost();
 
         long departureTime = departureDate.getTime() - (long)(warehouseToDeliveryTime * 1000);
-
         departureDate.setTime(departureTime);
 
         GregorianCalendar departure = new GregorianCalendar();
