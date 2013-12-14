@@ -1,6 +1,7 @@
 package Tests.ChocoSolver;
 
 import Controller.MainWindowController;
+import Model.ChocoSolver.CalculatedRound;
 import Model.ChocoSolver.ChocoGraph;
 import Model.ChocoSolver.SolutionState;
 import Model.ChocoSolver.TSP;
@@ -13,6 +14,7 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
+import java.util.Calendar;
 
 import static org.junit.Assert.*;
 
@@ -49,27 +51,29 @@ public class CalculatedRoundTest {
 
     @Test
     public void testEstimatedSchedule() throws UtilsException, ParserConfigurationException, FileNotFoundException {
-        // TODO: test this function once computeRound() is ready
-        //Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
-        //Round round = Round.createFromXml("resources/tests/chocograph/valid2.xml", network);
-
-        //ChocoGraph g = new ChocoGraph(network, round);
-
         MainWindowController main = new MainWindowController();
 
         main.loadNetwork("resources/tests/planTiny.xml");
         main.loadRound("resources/tests/livraisonTiny.xml");
 
-        //main.computeRound(main.getMainWindow().getNetwork(), main.getMainWindow().getRound());
+        CalculatedRound calculatedRound = main.getMainWindow().getCalculatedRound();
 
-        //assertNotEquals(main.getMainWindow().getCalculatedRound().getEstimatedSchedules(1), null);
+        assert(calculatedRound.getEstimatedSchedules(7).get(Calendar.HOUR_OF_DAY) == 8);
+        assert(calculatedRound.getEstimatedSchedules(7).get(Calendar.MINUTE) == 00);
 
-        System.out.println();
+        assert(calculatedRound.getEstimatedSchedules(5).get(Calendar.HOUR_OF_DAY) == 9);
+        assert(calculatedRound.getEstimatedSchedules(5).get(Calendar.MINUTE) == 30);
 
+        assert(calculatedRound.getEstimatedSchedules(9).get(Calendar.HOUR_OF_DAY) == 9);
+        assert(calculatedRound.getEstimatedSchedules(9).get(Calendar.MINUTE) == 42);
     }
 
-    @Test
-    public void testHtmlParser() {
-        // TODO: testHtmlParser()
-    }
+    /*@Test
+    public void testHtmlParser() throws UtilsException, ParserConfigurationException, FileNotFoundException {
+        MainWindowController main = new MainWindowController();
+
+        main.loadNetwork("resources/tests/planTiny.xml");
+        main.loadRound("resources/tests/livraisonTiny.xml");
+        System.out.println(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
+    }*/
 }
