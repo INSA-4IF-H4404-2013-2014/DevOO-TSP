@@ -352,6 +352,17 @@ public class RenderContext {
     }
 
     /**
+     * Draws MapPanel's borders
+     */
+    protected void drawPanelBorders() {
+        context.setColor(panelBorderColor);
+        context.drawLine(0, 0, mapPanel.getWidth(), 0);
+        context.drawLine(0, 0, 0, mapPanel.getHeight());
+        context.drawLine(0, mapPanel.getHeight() - 1, mapPanel.getWidth(), mapPanel.getHeight() - 1);
+        context.drawLine(mapPanel.getWidth() - 1, 0, mapPanel.getWidth() - 1, mapPanel.getHeight());
+    }
+
+    /**
      * Generates Arc's rendering informations
      * @param arc the given arc we want to render
      * @return an ArcInfo structure containing all informations
@@ -506,6 +517,7 @@ public class RenderContext {
 
     /** background color */
     private static final Color backgroundColor = new Color(236, 232, 223);
+    private static final Color panelBorderColor = new Color(160, 120, 100);
     private static final Color textColor = new Color(0, 0, 0, 150);
 
     /** street's constants */

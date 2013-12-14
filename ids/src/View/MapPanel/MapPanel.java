@@ -367,6 +367,7 @@ public class MapPanel extends JPanel {
 
         if(modelNetwork == null) {
             renderContext.drawEmptyMessage();
+            renderContext.drawPanelBorders();
             return;
         }
 
@@ -384,6 +385,8 @@ public class MapPanel extends JPanel {
         if (!fittedScaleFactor) {
             renderContext.drawGlobalView();
         }
+
+        renderContext.drawPanelBorders();
     }
 
     /**
