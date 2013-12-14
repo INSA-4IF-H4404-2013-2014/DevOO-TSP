@@ -39,7 +39,7 @@ public class DeliveryInfoPanel extends JPanel {
                 (
                         new TitledBorder
                                 (
-                                        BorderFactory.createLineBorder(Color.BLACK, 1, true),
+                                        BorderFactory.createLineBorder(Color.BLACK, 1),
                                         "Livraison",
                                         TitledBorder.DEFAULT_JUSTIFICATION,
                                         TitledBorder.DEFAULT_POSITION,
