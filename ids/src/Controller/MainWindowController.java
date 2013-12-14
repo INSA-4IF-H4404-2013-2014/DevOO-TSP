@@ -23,10 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Deque;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -74,6 +71,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         try {
             Network network = Network.createFromXml(xmlPath);
             mainWindow.setNetwork(network);
+            mainWindow.setRound(null);
+            mainWindow.setCalculatedRound(null);
 
             // Map has been successfully loaded, we enable 'load round' feature.
             mainWindow.featureLoadRoundSetEnable(true);

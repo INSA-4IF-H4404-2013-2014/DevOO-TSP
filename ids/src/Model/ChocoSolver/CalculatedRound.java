@@ -71,6 +71,8 @@ public class CalculatedRound {
     {
         int warehouseId = getWarehouse().getId();
         this.departureTime = getFirstDepartureTime();
+        GregorianCalendar arrivalTime;
+        GregorianCalendar earlyBound;
 
         // Initialisation
         int nextId = successors.get(warehouseId);
@@ -79,7 +81,14 @@ public class CalculatedRound {
 
         for(nextId = successors.get(previousId) ; nextId != warehouseId ; nextId = successors.get(previousId))
         {
-            estimatedSchedules.put(nextId, getArrivalTime(previousId, 600));
+            arrivalTime = getArrivalTime(previousId, 600);
+            earlyBound = chocoDeliveries.get(nextId).getDelivery().getSchedule().getEarliestBound();
+
+            if(arrivalTime.getTime().getTime() < earlyBound.getTime().getTime()) {
+                estimatedSchedules.put(nextId, earlyBound);
+            } else {
+                estimatedSchedules.put(nextId, arrivalTime);
+            }
             previousId = nextId;
         }
 
@@ -333,13 +342,9 @@ public class CalculatedRound {
         String tdOpen = "\n<td>";
         String tdClose = "</td>\n";
 
-        String html;
+        String html = htmlOpen;
 
-        int i = 0;
-
-        html = htmlOpen;
-
-        html += hOpen + "Départ de l'entrepôt à " + getFirstDepartureTime().get(Calendar.HOUR_OF_DAY) + "h" + getFirstDepartureTime().get(Calendar.MINUTE) + hClose;
+        html += hOpen + "Départ de l'entrepôt à " + departureTime.get(Calendar.HOUR_OF_DAY) + "h" + departureTime.get(Calendar.MINUTE) + hClose;
 
         List<Arc> arcList;
         Delivery delivery;
@@ -348,6 +353,7 @@ public class CalculatedRound {
 
         if(itinerary != null) {
             do {
+                int i = 0;
                 arcList = itinerary.getArcs();
                 delivery = chocoDeliveries.get(currentNodeId).getDelivery();
 
@@ -357,7 +363,7 @@ public class CalculatedRound {
 
                     //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
 
-                    html += trOpen + "Prendre rue " + arc.getStreet().getName() + trClose;
+                    html += trOpen + "Prendre " + arc.getDirectionTo(arcList.get(++i)) + " sur rue " + arc.getStreet().getName() + trClose;
                     html += trOpen + arc.getLength() + "m" + trClose;
                     html += trOpen + arc.getCost()/60 + "min" + trClose;
                     html += tdClose;
