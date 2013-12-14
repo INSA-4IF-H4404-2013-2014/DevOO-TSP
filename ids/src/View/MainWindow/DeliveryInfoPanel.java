@@ -121,8 +121,9 @@ public class DeliveryInfoPanel extends JPanel {
             timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
          if(round != null)
          {
-            deliveryTime.setText(""+form.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()));
-            delay.setText(""+round.getDelay(delivery.getId()));
+             //TODO : There is a bug here!
+            //deliveryTime.setText(""+form.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()));
+            //delay.setText(""+round.getDelay(delivery.getId()));
          }
      }
 
