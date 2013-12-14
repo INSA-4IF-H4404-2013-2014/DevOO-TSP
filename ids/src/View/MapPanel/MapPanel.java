@@ -341,7 +341,7 @@ public class MapPanel extends JPanel {
      */
     public boolean isVisible(Model.City.Node node) {
         int x = viewCoordinateX(node.getX());
-        int y = viewCoordinateX(node.getY());
+        int y = viewCoordinateY(node.getY());
 
         return (x >= 0 && x < getWidth() && y >= 0 && y < getHeight());
     }
@@ -403,14 +403,14 @@ public class MapPanel extends JPanel {
      * Gets view X coordinate
      */
     protected int viewCoordinateX(int x) {
-        return (int)((double)(x - modelCenterPos.x) * modelViewScaleFactor + this.getWidth() / 2);
+        return (int)((double)(x - modelCenterPos.x) * modelViewScaleFactor + 0.5 * (double) this.getWidth());
     }
 
     /**
      * Gets view Y coordinate
      */
     protected int viewCoordinateY(int y) {
-        return (int)(this.getHeight() / 2 - (double)(y - modelCenterPos.y) * modelViewScaleFactor);
+        return (int)(0.5 * (double)this.getHeight() - (double)(y - modelCenterPos.y) * modelViewScaleFactor);
     }
 
     /**
