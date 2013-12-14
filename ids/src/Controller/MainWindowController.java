@@ -157,38 +157,34 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     }
 
     public void historyDo(Command command){
-        mainWindow.featureUndoSetEnable(true);
-        mainWindow.featureRedoSetEnable(false);
-        historyBackedOut.clear();
-
         command.Apply();
-        historyApplied.addLast(command);
+        historyBackedOut.clear();
+        historyApplied.push(command);
+        updateUndoRedoButtons();
     }
 
     public void historyRedo(){
-        mainWindow.featureUndoSetEnable(true);
-        mainWindow.featureRedoSetEnable(false);
-        Command command = historyBackedOut.pollFirst();
+        Command command = historyBackedOut.pop();
 
         if (command == null) {
             return;
         }
 
         command.Apply();
-        historyApplied.addLast(command);
+        historyApplied.push(command);
+        updateUndoRedoButtons();
     }
 
     public void historyUndo(){
-        mainWindow.featureUndoSetEnable(false);
-        mainWindow.featureRedoSetEnable(true);
-        Command command = historyApplied.pollLast();
+        Command command = historyApplied.pop();
 
         if (command == null) {
             return;
         }
 
         command.Reverse();
-        historyBackedOut.addFirst(command);
+        historyBackedOut.push(command);
+        updateUndoRedoButtons();
     }
 
     public void exit() {
@@ -427,6 +423,15 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      */
     private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
         return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
+    }
+
+    /**
+     * Update the enable/disable status of undo & redo buttons.
+     */
+    private void updateUndoRedoButtons() {
+        mainWindow.featureUndoSetEnable(historyApplied.size() > 0);
+        mainWindow.featureRedoSetEnable(historyBackedOut.size() > 0);
+
     }
 } // end of class MainWindowController --------------------------------------------------------------------
 
