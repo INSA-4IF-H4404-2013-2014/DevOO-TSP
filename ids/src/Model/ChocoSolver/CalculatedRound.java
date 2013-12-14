@@ -345,7 +345,7 @@ public class CalculatedRound {
 
         String html = htmlOpen;
 
-        html += hOpen + "Départ de l'entrepôt à " + departureTime.get(Calendar.HOUR_OF_DAY) + "h" + departureTime.get(Calendar.MINUTE) + hClose;
+        html += hOpen + "D&eacute;part de l'entrep&ocirc;t &agrave; " + departureTime.get(Calendar.HOUR_OF_DAY) + "h" + departureTime.get(Calendar.MINUTE) + hClose;
 
         List<Arc> arcList;
         Delivery delivery;
@@ -365,13 +365,13 @@ public class CalculatedRound {
 
                     //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
 
-                    html += trOpen + "Prendre " /*+ arc.getDirectionTo(arcList.get(++i))*/ + " sur rue " + arc.getStreet().getName() + trClose;
+                    html += trOpen + "Prendre " + /*arc.getDirectionTo(arcList.get(++i)) +*/ " sur rue " + arc.getStreet().getName() + trClose;
                     html += trOpen + arc.getLength() + "m" + trClose;
                     html += trOpen + arc.getCost()/60 + "min" + trClose;
                     html += tdClose;
                 }
 
-                html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
+                html += hOpen + "Client n&deg;" + delivery.getClient().getId() + hClose;
                 html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound().getTime() +" | " + delivery.getSchedule().getLatestBound().getTime() + hClose;
                 html += tableClose;
 
