@@ -17,8 +17,8 @@ public class Node {
     /** the associated model node */
     private Model.City.Node modelNode;
 
-    /** the node's kind */
-    private Kind kind;
+    /** the node's color */
+    private Color color;
 
 
     /**
@@ -29,7 +29,7 @@ public class Node {
     protected Node(MapPanel mapPanel, Model.City.Node modelNode) {
         this.mapPanel = mapPanel;
         this.modelNode = modelNode;
-        this.kind = Kind.DEFAULT;
+        this.color = RenderContext.streetBorderColor;
     }
 
     /**
@@ -65,27 +65,18 @@ public class Node {
     }
 
     /**
-     * Gets the view node's kind
-     * @return the view node's kind
+     * Gets the node's color
+     * @return the node's color
      */
-    public Kind getKind() {
-        return kind;
+    public Color getColor() {
+        return color;
     }
 
     /**
-     * Sets the view node's kind
-     * @param kind the kind to set
+     * Sets the node's color
+     * @param color the new node's color
      */
-    public void setKind(Kind kind) {
-        this.kind = kind;
-    }
-
-    /**
-     * Defines the node's kind
-     */
-    protected enum Kind {
-        DEFAULT,
-        DELIVERY,
-        WAREHOUSE
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

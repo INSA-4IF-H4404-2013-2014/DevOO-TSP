@@ -186,7 +186,7 @@ public class MapPanel extends JPanel {
     public void setRound(CalculatedRound round) {
         modelRound = round;
 
-        this.refreshBodesDeliveries();
+        this.refreshNodesColor();
         this.refreshArcsItineraries();
         this.repaint();
     }
@@ -505,9 +505,9 @@ public class MapPanel extends JPanel {
     /**
      * Refreshes view's nodes' deliveries from the calculated round
      */
-    private void refreshBodesDeliveries() {
+    private void refreshNodesColor() {
         for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
-            entry.getValue().setKind(Node.Kind.DEFAULT);
+            entry.getValue().setColor(RenderContext.streetBorderColor);
         }
 
         if(modelRound == null) {
@@ -516,11 +516,19 @@ public class MapPanel extends JPanel {
 
         List<Integer> deliveryNodesId = modelRound.getOrderedNodesId();
 
+        int colorId = 0;
+
         for(int deliveryNodeId : deliveryNodesId) {
-            findNode(deliveryNodeId).setKind(Node.Kind.DELIVERY);
+            findNode(deliveryNodeId).setColor(RenderContext.itineraryColors[colorId]);
+
+            colorId++;
+
+            if(colorId == RenderContext.itineraryColors.length) {
+                colorId = 0;
+            }
         }
 
-        findNode(modelRound.getWarehouse().getId()).setKind(Node.Kind.WAREHOUSE);
+        findNode(modelRound.getWarehouse().getId()).setColor(RenderContext.itineraryWarehouseColor);
     }
 
     /**
@@ -529,16 +537,15 @@ public class MapPanel extends JPanel {
     private void refreshArcsItineraries() {
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                Arc arc = entry.getValue();
-
-                arc.setItineraryFrom(1, false);
-                arc.setItineraryFrom(2, false);
+                entry.getValue().resetItineraryColors();
             }
         }
 
         if(modelRound == null) {
             return;
         }
+
+        int colorId = 0;
 
         for(Itinerary modelItinerary : modelRound.getOrderedItineraries()) {
             for(Model.City.Arc modelArc : modelItinerary.getArcs()) {
@@ -548,10 +555,16 @@ public class MapPanel extends JPanel {
                 Arc arc = findArc(from, to);
 
                 if (arc.getNode1().getModelNode() == modelArc.getFrom()) {
-                    arc.setItineraryFrom(1, true);
+                    arc.getItineraryColorsFrom(1).add(RenderContext.itineraryColors[colorId]);
                 } else {
-                    arc.setItineraryFrom(2, true);
+                    arc.getItineraryColorsFrom(2).add(RenderContext.itineraryColors[colorId]);
                 }
+            }
+
+            colorId++;
+
+            if(colorId == RenderContext.itineraryColors.length) {
+                colorId = 0;
             }
         }
     }

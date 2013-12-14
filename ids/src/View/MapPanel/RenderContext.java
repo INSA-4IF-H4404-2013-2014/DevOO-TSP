@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -131,14 +131,7 @@ public class RenderContext {
             context.fillOval(x - nodeRadiusAdd, y - nodeRadiusAdd, overlayNodeRadius * 2, overlayNodeRadius * 2);
         }
 
-        context.setColor(streetBorderColor);
-
-        if(node.getKind() == Node.Kind.DELIVERY) {
-            context.setColor(itineraryColor);
-        } else if(node.getKind() == Node.Kind.WAREHOUSE) {
-            context.setColor(itineraryWarehouseColor);
-        }
-
+        context.setColor(node.getColor());
         context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
     }
 
@@ -437,7 +430,9 @@ public class RenderContext {
         int arrow2X[] = { -itineraryThickness / 2, itineraryThickness / 2, itineraryThickness / 2 };
         int arrow2Y[] = { 0, -itineraryThickness / 2, +itineraryThickness / 2 };
 
-        if(!arcInfo.arc.isItineraryFrom(arcLeaving)) {
+        java.util.List<Color> itineraryColors = arcInfo.arc.getItineraryColorsFrom(arcLeaving);
+
+        if(itineraryColors.isEmpty()) {
             return;
         }
 
@@ -451,7 +446,7 @@ public class RenderContext {
 
         AffineTransform previousTransform = context.getTransform();
 
-        context.setColor(itineraryColor);
+        context.setColor(itineraryColors.get(0));
 
         for(int i = 0; i < dotCount; i++) {
             int x = streetThickness + i * itineraryDotDistance;
@@ -516,7 +511,7 @@ public class RenderContext {
     /** street's constants */
     private static final Color streetColor = new Color(255, 255, 255);
     private static final Color streetMarksColor = new Color(200, 200, 200);
-    private static final Color streetBorderColor = new Color(210, 140, 100);
+    protected static final Color streetBorderColor = new Color(210, 140, 100);
     private static final int streetThickness = 4;
     private static final int streetBorderThickness = 1;
     private static final double streetCenterLineThickness = 0.2;
@@ -527,8 +522,15 @@ public class RenderContext {
     private static final int streetSelectedNodeRadiusPx = 8;
 
     /** itinerary constants */
-    private static final Color itineraryColor = new Color(30, 140, 255);
-    private static final Color itineraryWarehouseColor = new Color(70, 210, 70);
+    protected static final Color[] itineraryColors = new Color[]{
+            new Color (255, 0, 0),
+            new Color (255, 107, 0),
+            new Color (250, 200, 0),
+            new Color (20, 180, 20),
+            new Color (30, 140, 255),
+            new Color (129, 0, 235)
+    };
+    protected static final Color itineraryWarehouseColor = new Color(0, 0, 0);
     private static final int itineraryThickness = 4;
     private static final int itineraryDotDistance = 4;
 
