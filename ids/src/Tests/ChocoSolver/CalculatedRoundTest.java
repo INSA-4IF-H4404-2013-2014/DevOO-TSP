@@ -77,7 +77,7 @@ public class CalculatedRoundTest {
         assert(calculatedRound.getDepartureTime().get(Calendar.MINUTE) == 53);
     }
 
-    /*@Test
+    @Test
     public void testHtmlParser() throws UtilsException, ParserConfigurationException, FileNotFoundException, IOException {
         MainWindowController main = new MainWindowController();
 
@@ -87,6 +87,5 @@ public class CalculatedRoundTest {
         FileWriter output = new FileWriter("resources/tests/export.html", false);
         output.write(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
         output.close();
-        //System.out.println(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
-    }*/
+    }
 }
