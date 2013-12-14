@@ -66,7 +66,7 @@ public class RoundPanel extends JPanel {
                 (
                         new TitledBorder
                                 (
-                                        BorderFactory.createLineBorder(Color.BLACK, 1, true),
+                                        BorderFactory.createLineBorder(Color.BLACK, 1),
                                         "Tournée",
                                         TitledBorder.DEFAULT_JUSTIFICATION,
                                         TitledBorder.DEFAULT_POSITION,
