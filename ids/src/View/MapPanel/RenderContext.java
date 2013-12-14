@@ -436,27 +436,19 @@ public class RenderContext {
             return;
         }
 
-        int yOffset = 0;
-
+        double yOffset = 0.0;
         if(arcInfo.isBidirectional()) {
-            yOffset = -((3 - arcLeaving * 2) * streetThickness) / 2;
+            yOffset = 0.5 * (double)((arcLeaving * 2 - 3) * streetThickness);
         }
 
-        int dotCount = (int)Math.floor((arcInfo.length - 2.0 * (double)streetThickness) / (double)itineraryDotDistance);
+        int dotCount = (int)Math.ceil((arcInfo.length - 2.0 * (double)streetThickness) / (double)itineraryDotDistance);
+        double x = 0.5 * (arcInfo.length - (double)(dotCount - 1) * (double)itineraryDotDistance);
 
         AffineTransform previousTransform = context.getTransform();
-
         Iterator<Color> colorsIt = arcInfo.arc.getItineraryColorsFrom(arcLeaving).iterator();
 
         for(int i = 0; i < dotCount; i++) {
-            int x = streetThickness + i * itineraryDotDistance;
-            int y = (yOffset * streetThickness) / 4;
-
-            //context.fillOval(x - itineraryThickness / 2, y - itineraryThickness / 2, itineraryThickness, itineraryThickness);
-
-            context.setTransform(previousTransform);
-            context.translate(x, y);
-
+            context.translate(x, yOffset);
             context.setColor(colorsIt.next());
 
             if(!colorsIt.hasNext()) {
@@ -468,9 +460,11 @@ public class RenderContext {
             } else {
                 context.fillPolygon(arrow1X, arrow1Y, 3);
             }
-        }
 
-        context.setTransform(previousTransform);
+            context.setTransform(previousTransform);
+
+            x += (double)itineraryDotDistance;
+        }
     }
 
     /**
