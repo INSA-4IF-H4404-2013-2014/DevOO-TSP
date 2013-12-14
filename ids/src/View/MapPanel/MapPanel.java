@@ -309,6 +309,14 @@ public class MapPanel extends JPanel {
     /**
      * Center the view on a model node
      * @param node the node we want to center on
+     */
+    public void centerOn(Model.City.Node node) {
+        centerOn(node, getModelViewScaleFactor());
+    }
+
+    /**
+     * Center the view on a model node
+     * @param node the node we want to center on
      * @param scaleFactor the scale factor we want to apply
      */
     public void centerOn(Model.City.Node node, double scaleFactor) {
