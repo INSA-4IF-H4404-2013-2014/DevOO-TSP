@@ -1,13 +1,10 @@
 package View.MainWindow;
 
 import Model.ChocoSolver.CalculatedRound;
-import Model.Delivery.Delivery;
-import Model.Delivery.Round;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -24,7 +21,6 @@ public class RoundPanel extends JPanel {
 
     public RoundPanel() {
         setLayout(new GridBagLayout());
-        setBackground(Color.GRAY);
         add(createRoundPanelContent());
     }
 
@@ -65,19 +61,22 @@ public class RoundPanel extends JPanel {
      * @return the JPanel
      */
     private JPanel createRoundPanelContent() {
-        JPanel roundPanelContent = new JPanel(new BorderLayout());
-        roundPanelContent.setBorder(new EmptyBorder(10, 10, 10, 10));
-        roundPanelContent.add(new JLabel("Tournée"), BorderLayout.PAGE_START);
-
-        // We create here the small "form"
-        JPanel roundPanelContentForm = new JPanel(new GridLayout(3, 1));
-        roundPanelContentForm.add(createRow1());
-        roundPanelContentForm.add(createRow2());
-        roundPanelContentForm.add(createRow3());
+        JPanel roundPanelContent = new JPanel(new GridLayout(3, 1));
+        roundPanelContent.setBorder
+                (
+                        new TitledBorder
+                                (
+                                        BorderFactory.createLineBorder(Color.BLACK, 1, true),
+                                        "Tournée",
+                                        TitledBorder.DEFAULT_JUSTIFICATION,
+                                        TitledBorder.DEFAULT_POSITION,
+                                        new Font("Verdana", Font.BOLD, 17)
+                                )
+                );
+        roundPanelContent.add(createRow1());
+        roundPanelContent.add(createRow2());
+        roundPanelContent.add(createRow3());
         setEnableAllFields(false);
-
-        // We add this "form" to our roundPanelContent
-        roundPanelContent.add(roundPanelContentForm, BorderLayout.CENTER);
 
         return roundPanelContent;
     }

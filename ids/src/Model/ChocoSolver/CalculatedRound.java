@@ -59,7 +59,7 @@ public class CalculatedRound {
         }
 
         if(tspOrderedDeliveries.length != 0) {
-            //calculateEstimatedSchedules();
+            calculateEstimatedSchedules();
         }
     }
 
@@ -69,31 +69,24 @@ public class CalculatedRound {
      */
     private void calculateEstimatedSchedules()
     {
+        int warehouseId = getWarehouse().getId();
         this.departureTime = getFirstDepartureTime();
-        estimatedSchedules.put(getWarehouse().getId(), departureTime);
 
-        GregorianCalendar arrivalTime;
-        long timeLapse;
-        int deliveryTime = 0;
-        int nodeId = warehouse.getId();
+        // Initialisation
+        int nextId = successors.get(warehouseId);
+        estimatedSchedules.put(nextId, getArrivalTime(warehouseId, 0));
+        int previousId = nextId;
 
-        for(Integer id : successors.keySet()) {
-            arrivalTime = getArrivalTime(nodeId, deliveryTime);
-            deliveryTime = 600;
-            nodeId = id;
-
-            estimatedSchedules.put(id, arrivalTime);
+        for(nextId = successors.get(previousId) ; nextId != warehouseId ; nextId = successors.get(previousId))
+        {
+            estimatedSchedules.put(nextId, getArrivalTime(previousId, 600));
+            previousId = nextId;
         }
 
-        //TODO: delete print
-
-        if(estimatedSchedules != null) {
-            System.out.println(estimatedSchedules.get(getWarehouse().getId()).get(Calendar.HOUR_OF_DAY));
-        }
+        estimatedSchedules.put(warehouseId, getArrivalTime(previousId, 600));
     }
 
 
-    //TODO: getFirstDepartureTime() works
     /**
      * Calculates the departure time from the warehouse
      * @return the departure time from the warehouse
@@ -106,6 +99,7 @@ public class CalculatedRound {
         int warehouseToDeliveryTime = getNextItinerary(warehouse.getId()).getCost();
 
         long departureTime = departureDate.getTime() - (long)(warehouseToDeliveryTime * 1000);
+
         departureDate.setTime(departureTime);
 
         GregorianCalendar departure = new GregorianCalendar();
@@ -156,13 +150,17 @@ public class CalculatedRound {
         Date arrivalDate;
         long timeLapse;
 
-        arrivalTime = (GregorianCalendar) estimatedSchedules.get(previousNodeId).clone();
-        arrivalDate = arrivalTime.getGregorianChange();
+        if(previousNodeId == warehouse.getId()) {
+            arrivalTime = departureTime;
+        } else {
+            arrivalTime = (GregorianCalendar) estimatedSchedules.get(previousNodeId).clone();
+        }
 
-        // TODO : correct
-        // timeLapse = arrivalDate.getTime() + (long) ((getNextItinerary(currentDelivery.).getCost() + deliveryTime) * 1000);
+        arrivalDate = arrivalTime.getTime();
 
-        //arrivalDate.setTime(timeLapse);
+        timeLapse = arrivalDate.getTime() + (((long) getNextItinerary(previousNodeId).getCost() +  (long) deliveryTime) * 1000);
+
+        arrivalDate.setTime(timeLapse);
         arrivalTime.setTime(arrivalDate);
 
         return arrivalTime;
