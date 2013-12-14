@@ -11,7 +11,7 @@
     \item[Acteur principal :] Superviseur
     \item[Precondition :] -
     \item[Postconditions :] Le plan doit \^etre affich\'e
-    \item[Scenario principal :] ~ \\
+    \item[Scenario principal :] ~
     \begin{enumerate}
         \item Le superviseur demande le chargement d'un plan pour une zone de la ville
         \item Le syst\`eme demande au SGBD si la zone existe bien, ainsi que les donn\`ees correspondantes
@@ -26,6 +26,7 @@
         \item Le syst\'eme affiche le plan \`a l'\`ecran, le cas d'utilisation se termine par un succ\`es.
     \end{enumerate}
 \end{description}
+\pagebreak
 
 \subsection{Charger une demande de livraison}
 \begin{description}
@@ -34,7 +35,7 @@
     \item[Acteur principal :] Superviseur
     \item[Precondition :] Le plan doit \^etre charg\'e
     \item[Postconditions :] Les points doivent \^etre affich\'es sur le plan
-    \item[Scenario principal :] ~ \\
+    \item[Scenario principal :] ~
     \begin{enumerate}
         \item Le superviseur s\'electionne une demande de livraison
         \item Le syst\`eme demande au SGBD si la demande de livraison existe bien, ainsi que les donn\'ees correspondantes
@@ -56,7 +57,7 @@
     \item[Acteur principal :] Superviseur
     \item[Precondition :] Une tourn\'ee doit \^etre selectionn\'ee, les demandes de livraisons doivent \^etre charg\'ees
     \item[Postconditions :] -
-    \item[Scenario principal :] ~ \\
+    \item[Scenario principal :] ~
     \begin{enumerate}
         \item Le superviseur clique sur "calculer tourn\'ee" pour la demande de livraison
         \item Le syst\`eme calcule la tourn\'ee et l'envoie au SGBD
@@ -67,6 +68,7 @@
         \item Le syst\`eme affiche la tourn\'ee sur le plan, le cas d'utilisation se termine par un succ\`es.
     \end{enumerate}
 \end{description}
+\pagebreak
 
 \subsection{Visualiser une tourn\'ee}
 \begin{description}
@@ -74,12 +76,12 @@
     \item[Acteur principal :] Superviseur
     \item[Precondition :] La tourn\'ee existe et est dans une liste de tourn\'ees disponnibles
     \item[Postconditions :] La tourn\'ee existe, est dans une liste de tourn\'ees disponnibles, est selectionn\'ee et est affich\'ee
-    \item[Scenario principal :] ~ \\
+    \item[Scenario principal :] ~
     \begin{enumerate}
         \item Le superviseur clique sur la tourn\'ee dans la liste
         \item La tourn\'ee s'affiche dans la zone pr\'evue \`a cet effet
     \end{enumerate}
-    \item[Extension :] ~ \\
+    \item[Extension :] ~
     \begin{enumerate}
         \item Le superviseur clique sur "d\'etail"
         \begin{enumerate}
@@ -89,83 +91,13 @@
     \end{enumerate}
 \end{description}
 
-\subsection{Modifier une tourn\'ee en temps r\'eel}
-\begin{description}
-    \item[Contexte :] Le superviseur veut modifier une tourn\'ee le jour m\^eme en ajoutant ou retirant une livraison. Il doit \^etre possible d'annuler la derni\`ere action, mais aussi de la refaire.
-    \item[Acteur principal :] Superviseur
-    \item[Preconditions :] ~\\
-    \begin{description}
-        \item[G\'en\'erale :] Il y a une tourn\'ee s\'electionn\'ee, il est possible de communiquer avec le livreur
-        \item[Pour ajouter :] Il y a au moins un noeud libre sur le plan
-        \item[Pour enlever :] Il y a au moins une livraison dans la tourn\'ee
-    \end{description}
-    \item[Postconditions :]
-    \begin{description}
-        \item[G\'en\'erale :] La tourn\'ee s\'electionn\'ee est modifi\'ee et les changements ont \'et\'e envoy\'es au livreur
-        \item[Pour ajouter :] La livraison est ajout\'ee \`a la tourn\'ee \`a la bonne place
-        \item[Pour enlever :] La livraison est enlev\'ee de la tourn\'ee qui est automatiquement recalcul\'ee
-    \end{description}
-    \item[Scenario principal :] ~ \\
-    \begin{description}
-        \item[Ajouter] ~ \\
-        \begin{enumerate}
-            \item Le superviseur selectionne un noeud disponnible
-            \item Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client, etc.)
-            \item Le supervieur clique sur "ok"
-            \item La livraison est ajout\'ee et la tourn\'ee recalcul\'ee
-            \item L'ajout est envoy\'e au livreur, le cas d'utilisation se termine par un succ\`es.
-        \end{enumerate}
-        \item[Enlever] ~ \\
-        \begin{enumerate}
-            \item Le superviseur selectionne une livraison sur la tourn\'ee
-            \item Le superviseur clique sur "enlever"
-            \item La livraison est enlev\'ee et la tourn\'ee recalcul\'ee
-            \item La suppression est envoy\'ee au livreur, le cas d'utilisation se termine par un succ\`es.
-        \end{enumerate}
-    \end{description}
-\end{description}
-
-\subsection{Pr\'e-modifier une tourn\'ee}
-\begin{description}
-    \item[Contexte :] Le superviseur veut modifier une tourn\'ee la veille en ajoutant ou retirant une livraison. Il doit \^etre possible d'annuler la derni\`ere action, mais aussi de la refaire.
-    \item[Acteur principal :] Superviseur
-    \item[Preconditions :] ~\\
-    \begin{description}
-        \item[G\'en\'erale :] Il y a une tourn\'ee s\'electionn\'ee, il est possible de communiquer avec le livreur
-        \item[Pour ajouter :] Il y a au moins un noeud libre sur le plan
-        \item[Pour enlever :] Il y a au moins une livraison dans la tourn\'ee
-    \end{description}
-    \item[Postconditions :]
-    \begin{description}
-        \item[G\'en\'erale :] La tourn\'ee s\'electionn\'ee est modifi\'ee
-        \item[Pour ajouter :] La livraison est ajout\'ee \`a la tourn\'ee \`a la bonne place
-        \item[Pour enlever :] La livraison est enlev\'ee de la tourn\'ee qui est automatiquement recalcul\'ee
-    \end{description}
-    \item[Scenario principal :] ~ \\
-    \begin{description}
-        \item[Ajouter] ~ \\
-        \begin{enumerate}
-            \item Le superviseur selectionne un noeud disponnible
-            \item Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client) La plage horaire se decompose en deux champs chiffr\'es qui doivent \^etre coh\'erents avec la notion de plage horaire
-            \item Le supervieur clique sur "ok"
-            \item La livraison est ajout\'ee et la tourn\'ee recalcul\'ee, le cas d'utilisation se termine par un succ\`es.
-        \end{enumerate}
-        \item[Enlever] ~ \\
-        \begin{enumerate}
-            \item Le superviseur selectionne une livraison sur la tourn\'ee
-            \item Le superviseur clique sur "enlever"
-            \item La livraison est enlev\'ee et la tourn\'ee recalcul\'ee, le cas d'utilisation se termine par un succ\`es.
-        \end{enumerate}
-    \end{description}
-\end{description}
-
 \subsection{G\'en\'erer d'une feuille de route}
 \begin{description}
     \item[Contexte :] Le superviseur veut g\'en\'erer une feuille de route d'un livreur contenant les itin\'eraires de chaque livraisons
     \item[Acteur principal :] Superviseur
     \item[Precondition :] La tourn\'ee du livreur est pr\^ete.
     \item[Postconditions :] La feuille de route a \'et\'e g\'en\'er\'ee et la version papier imprim\'ee
-    \item[Scenario principal :] ~ \\
+    \item[Scenario principal :] ~
     \begin{enumerate}
         \item Le superviseur clique sur "g\'en\'erer feuille de route"
         \item La feuille de route est g\'en\'er\'ee et sauvegard\'ee, le cas d'utilisation se termine par un succ\`es.
@@ -181,11 +113,106 @@
         \end{enumerate}
     \end{enumerate}
 \end{description}
+\pagebreak
+
+\subsection{Modifier une tourn\'ee en temps r\'eel}
+\begin{description}
+    \item[Contexte :] Le superviseur veut modifier une tourn\'ee le jour m\^eme en ajoutant ou retirant une livraison. Il doit \^etre possible d'annuler la derni\`ere action, mais aussi de la refaire.
+    \item[Acteur principal :] Superviseur
+    \item[Preconditions :] ~
+    \begin{description}
+        \item[G\'en\'erale :] Il y a une tourn\'ee s\'electionn\'ee, il est possible de communiquer avec le livreur
+        \item[Pour ajouter :] Il y a au moins un noeud libre sur le plan
+        \item[Pour enlever :] Il y a au moins une livraison dans la tourn\'ee
+    \end{description}
+    \item[Postconditions :] ~
+    \begin{description}
+        \item[G\'en\'erale :] La tourn\'ee s\'electionn\'ee est modifi\'ee et les changements ont \'et\'e envoy\'es au livreur
+        \item[Pour ajouter :] La livraison est ajout\'ee \`a la tourn\'ee \`a la bonne place
+        \item[Pour enlever :] La livraison est enlev\'ee de la tourn\'ee qui est automatiquement recalcul\'ee
+    \end{description}
+    \item[Scenario principal :] ~
+    \begin{description}
+        \item[Ajouter] ~
+        \begin{enumerate}
+            \item Le superviseur selectionne un noeud disponnible
+            \item Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client, etc.)
+            \item Le superviseur clique sur "annuler" pendant qu'il remplit le formulaire
+            \begin{enumerate}
+                \item L'ajout est annul\'e et le superviseur perd ce qu'il avait pr\'e-rempli, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
+            \item Le supervieur clique sur "ok"
+            \item La livraison est ajout\'ee et la tourn\'ee recalcul\'ee
+            \item L'ajout est envoy\'e au livreur, le cas d'utilisation se termine par un succ\`es.
+            \begin{enumerate}
+                \item La connexion au livreur \'echoue, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
+        \end{enumerate}
+        \item[Enlever] ~
+        \begin{enumerate}
+            \item Le superviseur selectionne une livraison sur la tourn\'ee
+            \item Le superviseur clique sur "enlever"
+            \item La livraison est enlev\'ee et la tourn\'ee recalcul\'ee
+            \begin{enumerate}
+                \item La livraison est enlev\'ee et la tourn\'ee est vide, le syst\'eme continue \`a l'\'etape enlever:4
+            \end{enumerate}
+            \item La suppression est envoy\'ee au livreur, le cas d'utilisation se termine par un succ\`es.
+            \begin{enumerate}
+                \item La connexion au livreur \'echoue, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
+        \end{enumerate}
+    \end{description}
+\end{description}
+\pagebreak
+
+\subsection{Pr\'e-modifier une tourn\'ee}
+\begin{description}
+    \item[Contexte :] Le superviseur veut modifier une tourn\'ee la veille en ajoutant ou retirant une livraison. Il doit \^etre possible d'annuler la derni\`ere action, mais aussi de la refaire.
+    \item[Acteur principal :] Superviseur
+    \item[Preconditions :] ~
+    \begin{description}
+        \item[G\'en\'erale :] Il y a une tourn\'ee s\'electionn\'ee, il est possible de communiquer avec le livreur
+        \item[Pour ajouter :] Il y a au moins un noeud libre sur le plan
+        \item[Pour enlever :] Il y a au moins une livraison dans la tourn\'ee
+    \end{description}
+    \item[Postconditions :] ~
+    \begin{description}
+        \item[G\'en\'erale :] La tourn\'ee s\'electionn\'ee est modifi\'ee
+        \item[Pour ajouter :] La livraison est ajout\'ee \`a la tourn\'ee \`a la bonne place
+        \item[Pour enlever :] La livraison est enlev\'ee de la tourn\'ee qui est automatiquement recalcul\'ee
+    \end{description}
+    \item[Scenario principal :] ~
+    \begin{description}
+        \item[Ajouter] ~
+        \begin{enumerate}
+            \item Le superviseur selectionne un noeud disponnible
+            \item Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client) La plage horaire se decompose en deux champs chiffr\'es qui doivent \^etre coh\'erents avec la notion de plage horaire
+            \item Le superviseur clique sur "annuler" pendant qu'il remplit le formulaire
+            \begin{enumerate}
+                \item L'ajout est annul\'e et le superviseur perda ce qu'il avait pr\'e-rempli, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
+            \item Le supervieur clique sur "ok"
+            \begin{enumerate}
+                \item Une aberration est dans la livraison \`a ajouter, le syst\`eme signale une erreur, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
+            \item La livraison est ajout\'ee et la tourn\'ee recalcul\'ee, le cas d'utilisation se termine par un succ\`es.
+        \end{enumerate}
+        \item[Enlever] ~
+        \begin{enumerate}
+            \item Le superviseur selectionne une livraison sur la tourn\'ee
+            \item Le superviseur clique sur "enlever"
+            \item La livraison est enlev\'ee et la tourn\'ee recalcul\'ee, le cas d'utilisation se termine par un succ\`es.
+            \begin{enumerate}
+                \item La livraison est enlev\'ee et la tourn\'ee est vide, le cas d'utilisation se termine par un succ\`es.
+            \end{enumerate}
+        \end{enumerate}
+    \end{description}
+\end{description}
+\pagebreak
 
 
 % ----------------------------------------------------------------------------- Diagrames-
 
-\pagebreak
 \section{Diagrammes de packages et de classes}
 
 \begin{figure}[h]

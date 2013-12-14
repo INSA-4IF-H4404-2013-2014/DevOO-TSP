@@ -18,38 +18,42 @@ public class TopMenuBar extends JMenuBar{
      * the exit option and shortcut
       */
     protected JMenuItem fileExit;
+
     /**
      * the import map option and shortcut
      */
     protected JMenuItem openMap;
+
     /**
      * the import round option and shortcut
      */
     protected JMenuItem openRound;
-    /**
-     * calculate the optimal round
-     */
-    protected JMenuItem computeRound;
+
     /**
      * save the actual round
      */
     protected JMenuItem saveRound;
+
     /**
      * add a delivery
      */
     protected JMenuItem addButton;
+
     /**
      * delete a delivery
      */
     protected JMenuItem delButton;
+
     /**
      * undo
      */
     protected JMenuItem undoButton;
+
     /**
      * redo
      */
     protected JMenuItem redoButton;
+
 
     public JMenuItem getOpenMap() {
         return openMap;
@@ -61,10 +65,6 @@ public class TopMenuBar extends JMenuBar{
 
     public JMenuItem getOpenRound() {
         return openRound;
-    }
-
-    public JMenuItem getComputeRound() {
-        return computeRound;
     }
 
     public JMenuItem getSaveRound() {
@@ -107,21 +107,17 @@ public class TopMenuBar extends JMenuBar{
         openRound = new JMenuItem("Ouvrir une tournée", new ImageIcon(getClass().getResource("../../img/mini_open_round.png")));
         openRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
-        computeRound = new JMenuItem("Calculer une tournée");
-
         saveRound = new JMenuItem("Sauvegarder une tournée", new ImageIcon(getClass().getResource("../../img/mini_save_round.png")));
         saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
         file.add(openMap);
         file.add(openRound);
         file.addSeparator();
-        file.add(computeRound);
         file.add(saveRound);
         file.addSeparator();
         file.add(fileExit);
 
         openRound.setEnabled(false);
-        computeRound.setEnabled(false);
         saveRound.setEnabled(false);
 
         add(file);
@@ -134,6 +130,7 @@ public class TopMenuBar extends JMenuBar{
         addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../img/mini_add.png")));
 
         delButton = new JMenuItem("Supprimer une livraison", new ImageIcon(getClass().getResource("../../img/mini_delete.png")));
+        delButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
         undoButton = new JMenuItem("Annuler", new ImageIcon(getClass().getResource("../../img/mini_undo.png")));
         undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
