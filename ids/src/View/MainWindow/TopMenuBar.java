@@ -134,6 +134,7 @@ public class TopMenuBar extends JMenuBar{
         addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../img/mini_add.png")));
 
         delButton = new JMenuItem("Supprimer une livraison", new ImageIcon(getClass().getResource("../../img/mini_delete.png")));
+        delButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
         undoButton = new JMenuItem("Annuler", new ImageIcon(getClass().getResource("../../img/mini_undo.png")));
         undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
