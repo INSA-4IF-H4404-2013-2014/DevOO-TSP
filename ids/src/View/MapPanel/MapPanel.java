@@ -328,6 +328,7 @@ public class MapPanel extends JPanel {
         }
 
         modelViewScaleFactor = Math.min(scaleFactor, maxScaleFactor);
+        fittedScaleFactor = false;
 
         setModelCenterPos(node.getX(), node.getY());
 
