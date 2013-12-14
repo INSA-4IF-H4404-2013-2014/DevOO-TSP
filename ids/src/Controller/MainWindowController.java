@@ -253,7 +253,11 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         if(selectedDelivery != null) {
             Node selectedNode = selectedDelivery.getAddress();
             selectNode(selectedNode);
-            mainWindow.getMapPanel().centerOn(selectedNode);
+
+            // We only want to move the map if the node is not already visible.
+            if(!mainWindow.getMapPanel().isVisible(selectedNode)) {
+                mainWindow.getMapPanel().centerOn(selectedNode);
+            }
         }
         else {
             selectNode(null);
