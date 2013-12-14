@@ -14,6 +14,8 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Calendar;
 
 import static org.junit.Assert.*;
@@ -66,14 +68,25 @@ public class CalculatedRoundTest {
 
         assert(calculatedRound.getEstimatedSchedules(9).get(Calendar.HOUR_OF_DAY) == 9);
         assert(calculatedRound.getEstimatedSchedules(9).get(Calendar.MINUTE) == 42);
+
+        main.loadNetwork("../sujet/plan10x10.xml");
+        main.loadRound("resources/tests/livraison10x10-3.xml");
+
+        calculatedRound = main.getMainWindow().getCalculatedRound();
+        assert(calculatedRound.getDepartureTime().get(Calendar.HOUR_OF_DAY) == 7);
+        assert(calculatedRound.getDepartureTime().get(Calendar.MINUTE) == 53);
     }
 
     /*@Test
-    public void testHtmlParser() throws UtilsException, ParserConfigurationException, FileNotFoundException {
+    public void testHtmlParser() throws UtilsException, ParserConfigurationException, FileNotFoundException, IOException {
         MainWindowController main = new MainWindowController();
 
-        main.loadNetwork("resources/tests/planTiny.xml");
-        main.loadRound("resources/tests/livraisonTiny.xml");
-        System.out.println(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
+        main.loadNetwork("../sujet/plan10x10.xml");
+        main.loadRound("resources/tests/livraison10x10-3.xml");
+
+        FileWriter output = new FileWriter("resources/tests/export.html", false);
+        output.write(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
+        output.close();
+        //System.out.println(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
     }*/
 }

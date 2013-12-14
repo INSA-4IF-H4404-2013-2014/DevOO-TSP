@@ -70,16 +70,17 @@ public class CalculatedRound {
     private void calculateEstimatedSchedules()
     {
         int warehouseId = getWarehouse().getId();
-        this.departureTime = getFirstDepartureTime();
+        departureTime = getFirstDepartureTime();
+
         GregorianCalendar arrivalTime;
         GregorianCalendar earlyBound;
 
         // Initialisation
-        int nextId = successors.get(warehouseId);
+        int nextId = getNextNodeId(warehouseId);
         estimatedSchedules.put(nextId, getArrivalTime(warehouseId, 0));
         int previousId = nextId;
 
-        for(nextId = successors.get(previousId) ; nextId != warehouseId ; nextId = successors.get(previousId))
+        for(nextId = getNextNodeId(previousId) ; nextId != warehouseId ; nextId = getNextNodeId(previousId))
         {
             arrivalTime = getArrivalTime(previousId, 600);
             earlyBound = chocoDeliveries.get(nextId).getDelivery().getSchedule().getEarliestBound();
@@ -160,7 +161,7 @@ public class CalculatedRound {
         long timeLapse;
 
         if(previousNodeId == warehouse.getId()) {
-            arrivalTime = departureTime;
+            arrivalTime = (GregorianCalendar) departureTime.clone();
         } else {
             arrivalTime = (GregorianCalendar) estimatedSchedules.get(previousNodeId).clone();
         }
@@ -331,7 +332,7 @@ public class CalculatedRound {
         String htmlClose = "\n</html>";
 
         String tableOpen = "\n<table>\n";
-        String tableClose = "\n</table>\n<br/>\n";
+        String tableClose = "\n</table>\n";
 
         String hOpen = "\n<h5>";
         String hClose = "</h5>\n";
@@ -340,7 +341,7 @@ public class CalculatedRound {
         String trClose = "\n</tr>\n";
 
         String tdOpen = "\n<td>";
-        String tdClose = "</td>\n";
+        String tdClose = "</td><br/>\n";
 
         String html = htmlOpen;
 
@@ -363,14 +364,19 @@ public class CalculatedRound {
 
                     //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
 
-                    html += trOpen + "Prendre " + arc.getDirectionTo(arcList.get(++i)) + " sur rue " + arc.getStreet().getName() + trClose;
+                    html += trOpen + "Prendre " /*+ arc.getDirectionTo(arcList.get(++i))*/ + " sur rue " + arc.getStreet().getName() + trClose;
                     html += trOpen + arc.getLength() + "m" + trClose;
                     html += trOpen + arc.getCost()/60 + "min" + trClose;
                     html += tdClose;
                 }
+
+                //TODO: resolve this mystery case of null pointer exception occuring when the "if" statement is not there...
+                if(delivery != null) {
+                    html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
+                    html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound().getTime() +" | " + delivery.getSchedule().getLatestBound().getTime() + hClose;
+                }
                 html += tableClose;
-                html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
-                html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound() +" | " + delivery.getSchedule().getLatestBound() + hClose;
+
 
                 currentNodeId = getNextNodeId(currentNodeId);
                 itinerary = getNextItinerary(currentNodeId);
