@@ -203,6 +203,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
             CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
             mainWindow.getMapPanel().setRound(calculatedRound);
+            mainWindow.setCalculatedRound(calculatedRound);
             return 0;
         } else {
             JOptionPane.showMessageDialog(mainWindow, "Aucun trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);

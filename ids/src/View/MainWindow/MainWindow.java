@@ -2,18 +2,14 @@ package View.MainWindow;
 
 import Controller.MainWindowController;
 import Model.ChocoSolver.CalculatedRound;
-import Model.City.Arc;
 import Model.City.Network;
 import Model.Delivery.Delivery;
-import Model.Delivery.Itinerary;
 import Model.Delivery.Round;
-import Utils.UtilsException;
 import View.MapPanel.MapPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.LinkedList;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -96,7 +92,6 @@ public class MainWindow extends JFrame {
      */
     public void setRound(Round round) {
         this.round = round;
-        deliveryListPanel.setModel(round.getDeliveryList());
     }
 
     /**
@@ -105,6 +100,7 @@ public class MainWindow extends JFrame {
      */
     public void setCalculatedRound(CalculatedRound calculatedRound) {
         this.calculatedRound = calculatedRound;
+        deliveryListPanel.setModel(getOrderedDeliveryList());
     }
 
     /**
@@ -248,5 +244,20 @@ public class MainWindow extends JFrame {
     public void featureRedoSetEnable(boolean b) {
         topMenuBar.redoButton.setEnabled(b);
         topToolBar.redo.setEnabled(b);
+    }
+
+    /**
+     * Gets an ordered vector of deliveries.
+     * The JList on the left side of the window will need this.
+     * @return The vector.
+     */
+    private java.util.Vector<Delivery> getOrderedDeliveryList() {
+        java.util.List<Integer> orderedNodesId = calculatedRound.getOrderedNodesId();
+        java.util.Vector<Delivery> orderedDeliveryList = new java.util.Vector<Delivery>();
+
+        for(Integer nodeId : orderedNodesId) {
+            orderedDeliveryList.add(round.findDelivered(nodeId));
+        }
+        return orderedDeliveryList;
     }
 }
