@@ -351,6 +351,7 @@ public class CalculatedRound {
         Delivery delivery;
         Integer currentNodeId = warehouse.getId();
         Itinerary firstItinerary = getNextItinerary(currentNodeId), itinerary = firstItinerary;
+        currentNodeId = getNextNodeId(currentNodeId);
 
         if(itinerary != null) {
             do {
@@ -370,11 +371,8 @@ public class CalculatedRound {
                     html += tdClose;
                 }
 
-                //TODO: resolve this mystery case of null pointer exception occuring when the "if" statement is not there...
-                if(delivery != null) {
-                    html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
-                    html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound().getTime() +" | " + delivery.getSchedule().getLatestBound().getTime() + hClose;
-                }
+                html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
+                html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound().getTime() +" | " + delivery.getSchedule().getLatestBound().getTime() + hClose;
                 html += tableClose;
 
 
