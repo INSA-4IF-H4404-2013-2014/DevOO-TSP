@@ -4,6 +4,8 @@ import Model.ChocoSolver.CalculatedRound;
 import Model.Delivery.Delivery;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -16,82 +18,96 @@ import java.text.SimpleDateFormat;
  */
 public class DeliveryInfoPanel extends JPanel {
 
-    private JTextField deliveryID = new JTextField("", 4);
-    private JTextField timeFrameBegin = new JTextField("", 4);
-    private JTextField timeFrameEnd = new JTextField("", 4);
-    private JTextField clientName = new JTextField("", 10);
-    private JTextField address = new JTextField("", 14);
-    private JTextField deliveryTime = new JTextField("", 4);
-    private JTextField delay = new JTextField("", 4);
+    private JTextField deliveryID;
+    private JTextField timeFrameBegin;
+    private JTextField timeFrameEnd;
+    private JTextField clientName;
+    private JTextField address;
+    private JTextField deliveryTime;
+    private JTextField delay;
 
     public DeliveryInfoPanel() {
-        setLayout(new GridBagLayout());
-        add(createDeliveryInfoPanelContent());
-    }
+        final int borderSize = 5;
+        final int rowHeight = 30;
+        final int alignForms = 100 + 2 * borderSize;
+        final int textFieldOffset = -5;
 
-    /**
-     * Creates the dialog of the delivery info panel.
-     * @return the JPanel
-     */
-    private JPanel createDeliveryInfoPanelContent() {
-        JPanel deliveryInfoPanelContent = new JPanel(new GridLayout(5, 1));
-        deliveryInfoPanelContent.setBorder
-                (
-                        new TitledBorder
-                                (
-                                        BorderFactory.createLineBorder(Color.BLACK, 1),
-                                        "Livraison",
-                                        TitledBorder.DEFAULT_JUSTIFICATION,
-                                        TitledBorder.DEFAULT_POSITION,
-                                        new Font("Verdana", Font.BOLD, 17)
-                                )
-                );
-        deliveryInfoPanelContent.add(createRow1());
-        deliveryInfoPanelContent.add(createRow2());
-        deliveryInfoPanelContent.add(createRow3());
-        deliveryInfoPanelContent.add(createRow4());
-        deliveryInfoPanelContent.add(createRow5());
+        JLabel labelId = new JLabel("ID :");
+        JLabel labelTimeFrame = new JLabel("Plage horaire :");
+        JLabel labelClient = new JLabel("Nom du client :");
+        JLabel labelAddress = new JLabel("Adresse :");
+        JLabel labelDeliveryTime = new JLabel("Arrivée :");
+        JLabel labelDeliveryDelay = new JLabel("Retard :");
+
+        deliveryID = new JTextField("", 4);
+        timeFrameBegin = new JTextField("", 4);
+        timeFrameEnd = new JTextField("", 4);
+        clientName = new JTextField("", 10);
+        address = new JTextField("", 14);
+        deliveryTime = new JTextField("", 4);
+        delay = new JTextField("", 4);
+
+        SpringLayout layout = new SpringLayout();
+        setLayout(layout);
+
+        Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+        TitledBorder title = BorderFactory.createTitledBorder(lowerEtched, "Informations de livraison");
+        setBorder(title);
+
+        add(labelId);
+        add(labelTimeFrame);
+        add(labelClient);
+        add(labelAddress);
+        add(labelDeliveryTime);
+        add(labelDeliveryDelay);
+
+        add(deliveryID);
+        add(timeFrameBegin);
+        add(timeFrameEnd);
+        add(clientName);
+        add(address);
+        add(deliveryTime);
+        add(delay);
+
+        layout.putConstraint(SpringLayout.WEST, deliveryID, alignForms, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, timeFrameBegin, alignForms, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, clientName, alignForms, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, address, alignForms, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, deliveryTime, alignForms, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, delay, alignForms, SpringLayout.WEST, this);
+
+        layout.putConstraint(SpringLayout.WEST, timeFrameEnd, borderSize, SpringLayout.EAST, timeFrameBegin);
+
+        layout.putConstraint(SpringLayout.EAST, deliveryID, -borderSize, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, timeFrameEnd, -borderSize, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, clientName, -borderSize, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, address, -borderSize, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, deliveryTime, -borderSize, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, delay, -borderSize, SpringLayout.EAST, this);
+
+        layout.putConstraint(SpringLayout.NORTH, deliveryID, textFieldOffset, SpringLayout.NORTH, labelId);
+        layout.putConstraint(SpringLayout.NORTH, timeFrameBegin, textFieldOffset, SpringLayout.NORTH, labelTimeFrame);
+        layout.putConstraint(SpringLayout.NORTH, timeFrameEnd, textFieldOffset, SpringLayout.NORTH, labelTimeFrame);
+        layout.putConstraint(SpringLayout.NORTH, clientName, textFieldOffset, SpringLayout.NORTH, labelClient);
+        layout.putConstraint(SpringLayout.NORTH, address, textFieldOffset, SpringLayout.NORTH, labelAddress);
+        layout.putConstraint(SpringLayout.NORTH, deliveryTime, textFieldOffset, SpringLayout.NORTH, labelDeliveryTime);
+        layout.putConstraint(SpringLayout.NORTH, delay, textFieldOffset, SpringLayout.NORTH, labelDeliveryDelay);
+
+        layout.putConstraint(SpringLayout.EAST, labelId, -borderSize, SpringLayout.WEST, deliveryID);
+        layout.putConstraint(SpringLayout.EAST, labelTimeFrame, -borderSize, SpringLayout.WEST, timeFrameBegin);
+        layout.putConstraint(SpringLayout.EAST, labelClient, -borderSize, SpringLayout.WEST, clientName);
+        layout.putConstraint(SpringLayout.EAST, labelAddress, -borderSize, SpringLayout.WEST, address);
+        layout.putConstraint(SpringLayout.EAST, labelDeliveryTime, -borderSize, SpringLayout.WEST, deliveryTime);
+        layout.putConstraint(SpringLayout.EAST, labelDeliveryDelay, -borderSize, SpringLayout.WEST, delay);
+
+        layout.putConstraint(SpringLayout.NORTH, labelId, borderSize, SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.NORTH, labelTimeFrame, rowHeight, SpringLayout.NORTH, labelId);
+        layout.putConstraint(SpringLayout.NORTH, labelClient, rowHeight, SpringLayout.NORTH, labelTimeFrame);
+        layout.putConstraint(SpringLayout.NORTH, labelAddress, rowHeight, SpringLayout.NORTH, labelClient);
+        layout.putConstraint(SpringLayout.NORTH, labelDeliveryTime, rowHeight, SpringLayout.NORTH, labelAddress);
+        layout.putConstraint(SpringLayout.NORTH, labelDeliveryDelay, rowHeight, SpringLayout.NORTH, labelDeliveryTime);
+
         setEnableAllFields(false);
-
-        return deliveryInfoPanelContent;
-    }
-
-    private JPanel createRow1() {
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("ID : "));
-        row.add(deliveryID);
-        return row;
-    }
-
-    private JPanel createRow2() {
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Plage horaire : "));
-        row.add(timeFrameBegin);
-        row.add(timeFrameEnd);
-        return row;
-    }
-
-    private JPanel createRow3() {
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Nom du client : "));
-        row.add(clientName);
-        return row;
-    }
-
-    private JPanel createRow4() {
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Adresse : "));
-        row.add(address);
-        return row;
-    }
-
-    private JPanel createRow5() {
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Arrivée : "));
-        row.add(deliveryTime);
-        row.add(new JLabel("Retard : "));
-        row.add(delay);
-        return row;
     }
 
     /**
