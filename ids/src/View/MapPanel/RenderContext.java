@@ -446,7 +446,7 @@ public class RenderContext {
 
         AffineTransform previousTransform = context.getTransform();
 
-        context.setColor(itineraryColors.get(0));
+        Iterator<Color> colorsIt = arcInfo.arc.getItineraryColorsFrom(arcLeaving).iterator();
 
         for(int i = 0; i < dotCount; i++) {
             int x = streetThickness + i * itineraryDotDistance;
@@ -456,6 +456,12 @@ public class RenderContext {
 
             context.setTransform(previousTransform);
             context.translate(x, y);
+
+            context.setColor(colorsIt.next());
+
+            if(!colorsIt.hasNext()) {
+                colorsIt = arcInfo.arc.getItineraryColorsFrom(arcLeaving).iterator();
+            }
 
             if(arcLeaving == 2) {
                 context.fillPolygon(arrow2X, arrow2Y, 3);
