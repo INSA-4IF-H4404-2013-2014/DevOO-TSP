@@ -34,6 +34,7 @@ public class DeliveryInfoPanel extends JPanel {
 
         JLabel labelId = new JLabel("ID :");
         JLabel labelTimeFrame = new JLabel("Plage horaire :");
+        JLabel labelTimeFrameTo = new JLabel("à");
         JLabel labelClient = new JLabel("Nom du client :");
         JLabel labelAddress = new JLabel("Adresse :");
         JLabel labelDeliveryTime = new JLabel("Arrivée :");
@@ -56,6 +57,7 @@ public class DeliveryInfoPanel extends JPanel {
 
         add(labelId);
         add(labelTimeFrame);
+        add(labelTimeFrameTo);
         add(labelClient);
         add(labelAddress);
         add(labelDeliveryTime);
@@ -76,10 +78,12 @@ public class DeliveryInfoPanel extends JPanel {
         layout.putConstraint(SpringLayout.WEST, deliveryTime, alignForms, SpringLayout.WEST, this);
         layout.putConstraint(SpringLayout.WEST, delay, alignForms, SpringLayout.WEST, this);
 
-        layout.putConstraint(SpringLayout.WEST, timeFrameEnd, borderSize, SpringLayout.EAST, timeFrameBegin);
+        layout.putConstraint(SpringLayout.NORTH, labelTimeFrameTo, 0, SpringLayout.NORTH, labelTimeFrame);
+        layout.putConstraint(SpringLayout.WEST, labelTimeFrameTo, borderSize, SpringLayout.EAST, timeFrameBegin);
+        layout.putConstraint(SpringLayout.WEST, timeFrameEnd, borderSize, SpringLayout.EAST, labelTimeFrameTo);
 
         layout.putConstraint(SpringLayout.EAST, deliveryID, -borderSize, SpringLayout.EAST, this);
-        layout.putConstraint(SpringLayout.EAST, timeFrameEnd, -borderSize, SpringLayout.EAST, this);
+        //layout.putConstraint(SpringLayout.EAST, timeFrameEnd, -borderSize, SpringLayout.EAST, this);
         layout.putConstraint(SpringLayout.EAST, clientName, -borderSize, SpringLayout.EAST, this);
         layout.putConstraint(SpringLayout.EAST, address, -borderSize, SpringLayout.EAST, this);
         layout.putConstraint(SpringLayout.EAST, deliveryTime, -borderSize, SpringLayout.EAST, this);
