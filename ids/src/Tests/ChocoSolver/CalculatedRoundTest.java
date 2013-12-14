@@ -87,5 +87,12 @@ public class CalculatedRoundTest {
         FileWriter output = new FileWriter("resources/tests/export.html", false);
         output.write(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
         output.close();
+
+        main.loadNetwork("resources/tests/planTiny.xml");
+        main.loadRound("resources/tests/livraisonTiny.xml");
+
+        output = new FileWriter("resources/tests/export2.html", false);
+        output.write(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
+        output.close();
     }
 }
