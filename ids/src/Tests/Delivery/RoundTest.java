@@ -1,8 +1,12 @@
 package Tests.Delivery;
 
+import Model.City.Arc;
 import Model.City.Network;
+import Model.City.Node;
+import Model.Delivery.Delivery;
 import Model.Delivery.Round;
 import Model.Delivery.Schedule;
+import Tests.City.NetworkTest;
 import Utils.UtilsException;
 import org.junit.Test;
 
@@ -13,6 +17,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -25,90 +31,44 @@ import static org.junit.Assert.fail;
  * To change this template use File | Settings | File Templates.
  */
 public class RoundTest {
-    /**
-     * Checks that a complex and valid XML delivery file is correctly parsed
-     */
-    @Test
-    public void testValidCreate() throws FileNotFoundException {
-        try {
-            System.out.println("Valid test");
-            Network network = Network.createFromXml("resources/tests/plan10x10.xml");
-            Round round = Round.createFromXml("resources/tests/round/valid.xml", network);
 
-            assertTrue(round.getWarehouse().getId() == 40);
-            assertTrue(round.getSchedules().size() == 3);
+    private Network network;
+    private Round round;
+    private List<Schedule> schedules;
 
-            Schedule s1 = round.getSchedules().get(0);
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-            assertTrue(sdf.format(s1.getEarliestBound().getTime()).equals("08:01:07"));
-            assertTrue(sdf.format(s1.getLatestBound().getTime()).equals("12:53:44"));
-
-            assertTrue(s1.getDeliveries().size() == 2);
-            assertTrue(s1.getDeliveries().get(0).getId() == 1);
-            assertTrue(s1.getDeliveries().get(0).getAddress().getId() == 13);
-            assertTrue(s1.getDeliveries().get(0).getClient().getId().equals("611"));
-            assertTrue(s1.getDeliveries().get(0).getClient().getDeliveries().size() == 2);
-            assertTrue(s1.getDeliveries().get(0).getClient().getDeliveries().contains(s1.getDeliveries().get(0)));
-            assertTrue(s1.getDeliveries().get(0).getSchedule() == s1);
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
-            fail();
-        }
+    public RoundTest() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        network = Network.createFromXml("resources/tests/round/plan10x10.xml");
+        round = Round.createFromXml("resources/tests/round/valid.xml", network);
+        schedules = round.getSchedules();
     }
 
-    /**
-     * Checks that a set of invalid XML delivery files cannot be parsed
-     * @throws UtilsException If the network parser fails
-     */
-    @Test
-    public void testInvalidCreate() throws UtilsException, FileNotFoundException {
-        Network network = Network.createFromXml("resources/tests/round/plan10x10.xml");
+    @org.junit.Test
+    public void testAdd() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        String idClient = new String();
 
-        for(int i = 1; i < 18; ++i) {
-            try {
-                System.out.println("Invalid test " + i);
-                Round.createFromXml("resources/tests/round/invalid (" + i + ").xml", network);
-                fail();
-            } catch(Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
+        assertTrue(schedules.get(0).getNextDeliveryId() == 3);
+        assertTrue(schedules.get(0).getDeliveries().size() == 2);
+
+        round.addDelivery(idClient, 2, schedules.get(0).getEarliestBound(), schedules.get(0).getLatestBound());
+
+        assertTrue(schedules.get(0).getNextDeliveryId() == 4);
+        assertTrue(schedules.get(0).getDeliveries().size() == 3);
+    }
+
+    @org.junit.Test
+    public void testRemove() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        String idClient = new String();
+        round.addDelivery(idClient, 2, schedules.get(0).getEarliestBound(), schedules.get(0).getLatestBound());
+
+        assertTrue(schedules.get(0).getNextDeliveryId() == 4);
+        assertTrue(schedules.get(0).getDeliveries().size() == 3);
+
+        round.removeDelivery(2);
+
+        assertTrue(schedules.get(0).getNextDeliveryId() == 4);
+        assertTrue(schedules.get(0).getDeliveries().size() == 2);
     }
 
 
-    /**
-     * Exports the round contained in resources/tests/valid.xml into resources/tests/export.html
-     */
-    /*
-    @Test
-    public void testHtmlParser() {
-        try {
-            Network network = Network.createFromXml("resources/tests/plan10x10.xml");
-            Round round = Round.createFromXml("resources/tests/valid.xml", network);
 
-            String html = round.roundToHtml();
-
-            java.io.File file = new java.io.File("resources/tests/export.html");
-
-            if(!file.exists()) {
-                try {
-                    file.createNewFile();
-                } catch(IOException e) {
-                    e.printStackTrace();
-                    fail();
-                }
-            }
-
-            //System.out.print(html);
-
-            java.io.FileWriter output = new FileWriter(file, false);
-
-            output.write(html);
-
-            output.close();
-        } catch(Exception e) {
-            fail();
-        }
-    }
-    */
 }

@@ -335,6 +335,18 @@ public class MapPanel extends JPanel {
     }
 
     /**
+     * Tests if the node is visible on the view
+     * @param node the node we want to test
+     * @return true if node is visible, false elsewhere
+     */
+    public boolean isVisible(Model.City.Node node) {
+        int x = viewCoordinateX(node.getX());
+        int y = viewCoordinateY(node.getY());
+
+        return (x >= 0 && x < getWidth() && y >= 0 && y < getHeight());
+    }
+
+    /**
      * Gets the model/view scale factor
      * @return the model/view scale factor (view = modelViewScaleFactor * model)
      */
@@ -385,6 +397,20 @@ public class MapPanel extends JPanel {
      */
     protected int modelCoordinateY(int y) {
         return (int)(modelCenterPos.y - (double)(y - this.getHeight() / 2) / modelViewScaleFactor);
+    }
+
+    /**
+     * Gets view X coordinate
+     */
+    protected int viewCoordinateX(int x) {
+        return (int)((double)(x - modelCenterPos.x) * modelViewScaleFactor + 0.5 * (double) this.getWidth());
+    }
+
+    /**
+     * Gets view Y coordinate
+     */
+    protected int viewCoordinateY(int y) {
+        return (int)(0.5 * (double)this.getHeight() - (double)(y - modelCenterPos.y) * modelViewScaleFactor);
     }
 
     /**
