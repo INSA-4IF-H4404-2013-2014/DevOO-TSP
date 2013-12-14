@@ -439,7 +439,7 @@ public class RenderContext {
         int yOffset = 0;
 
         if(arcInfo.isBidirectional()) {
-            yOffset = ((3 - arcLeaving * 2) * streetThickness) / 2;
+            yOffset = -((3 - arcLeaving * 2) * streetThickness) / 2;
         }
 
         int dotCount = (int)Math.floor((arcInfo.length - 2.0 * (double)streetThickness) / (double)itineraryDotDistance);
@@ -458,9 +458,9 @@ public class RenderContext {
             context.translate(x, y);
 
             if(arcLeaving == 2) {
-                context.fillPolygon(arrow1X, arrow1Y, 3);
-            } else {
                 context.fillPolygon(arrow2X, arrow2Y, 3);
+            } else {
+                context.fillPolygon(arrow1X, arrow1Y, 3);
             }
         }
 

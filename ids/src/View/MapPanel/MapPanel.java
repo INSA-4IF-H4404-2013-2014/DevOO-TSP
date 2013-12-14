@@ -516,7 +516,7 @@ public class MapPanel extends JPanel {
 
         List<Integer> deliveryNodesId = modelRound.getOrderedNodesId();
 
-        int colorId = 0;
+        int colorId = RenderContext.itineraryColors.length - 1;
 
         for(int deliveryNodeId : deliveryNodesId) {
             findNode(deliveryNodeId).setColor(RenderContext.itineraryColors[colorId]);
