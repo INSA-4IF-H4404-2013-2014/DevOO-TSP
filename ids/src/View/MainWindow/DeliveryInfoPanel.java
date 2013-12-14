@@ -3,7 +3,6 @@ package View.MainWindow;
 import Model.ChocoSolver.CalculatedRound;
 import Model.Delivery.Delivery;
 import Model.Delivery.Round;
-import View.TimeFramePanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
