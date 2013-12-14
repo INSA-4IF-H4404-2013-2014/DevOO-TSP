@@ -116,7 +116,7 @@ public class DeliveryInfoPanel extends JPanel {
             deliveryID.setText(""+delivery.getId());
             clientName.setText(""+delivery.getClient().getId());
             address.setText((""+delivery.getAddress().getId()));
-            SimpleDateFormat form = new SimpleDateFormat("hh:mm");
+            SimpleDateFormat form = new SimpleDateFormat("kk:mm");
             timeFrameBegin.setText(""+form.format(delivery.getSchedule().getEarliestBound().getTime()));
             timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
          if(round != null)
