@@ -195,6 +195,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
     public int computeRound(Network network, Round round) {
+        if(round.getDeliveryList().size() == 0) {
+            mainWindow.getMapPanel().setRound(null);
+            mainWindow.setCalculatedRound(null);
+            return 0;
+        }
+
         ChocoGraph graph = new ChocoGraph(network, round);
 
         TSP tsp = solveTsp(graph, 10000);

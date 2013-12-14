@@ -10,6 +10,7 @@ import View.MapPanel.MapPanel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -251,9 +252,13 @@ public class MainWindow extends JFrame {
      * The JList on the left side of the window will need this.
      * @return The vector.
      */
-    private java.util.Vector<Delivery> getOrderedDeliveryList() {
+    private Vector<Delivery> getOrderedDeliveryList() {
+        if(calculatedRound == null) {
+            return new Vector<Delivery>();
+        }
+
         java.util.List<Integer> orderedNodesId = calculatedRound.getOrderedNodesId();
-        java.util.Vector<Delivery> orderedDeliveryList = new java.util.Vector<Delivery>();
+        Vector<Delivery> orderedDeliveryList = new Vector<Delivery>();
 
         for(Integer nodeId : orderedNodesId) {
             orderedDeliveryList.add(round.findDelivered(nodeId));
