@@ -137,16 +137,29 @@
         \begin{enumerate}
             \item Le superviseur selectionne un noeud disponnible
             \item Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client, etc.)
+            \item Le superviseur clique sur "annuler" pendant qu'il remplit le formulaire
+            \begin{enumerate}
+                \item L'ajout est annul\'e et le superviseur perd ce qu'il avait pr\'e-rempli, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
             \item Le supervieur clique sur "ok"
             \item La livraison est ajout\'ee et la tourn\'ee recalcul\'ee
             \item L'ajout est envoy\'e au livreur, le cas d'utilisation se termine par un succ\`es.
+            \begin{enumerate}
+                \item La connexion au livreur \'echoue, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
         \end{enumerate}
         \item[Enlever] ~
         \begin{enumerate}
             \item Le superviseur selectionne une livraison sur la tourn\'ee
             \item Le superviseur clique sur "enlever"
             \item La livraison est enlev\'ee et la tourn\'ee recalcul\'ee
+            \begin{enumerate}
+                \item La livraison est enlev\'ee et la tourn\'ee est vide, le syst\'eme continue \`a l'\'etape enlever:4
+            \end{enumerate}
             \item La suppression est envoy\'ee au livreur, le cas d'utilisation se termine par un succ\`es.
+            \begin{enumerate}
+                \item La connexion au livreur \'echoue, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
         \end{enumerate}
     \end{description}
 \end{description}
@@ -174,7 +187,14 @@
         \begin{enumerate}
             \item Le superviseur selectionne un noeud disponnible
             \item Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client) La plage horaire se decompose en deux champs chiffr\'es qui doivent \^etre coh\'erents avec la notion de plage horaire
+            \item Le superviseur clique sur "annuler" pendant qu'il remplit le formulaire
+            \begin{enumerate}
+                \item L'ajout est annul\'e et le superviseur perda ce qu'il avait pr\'e-rempli, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
             \item Le supervieur clique sur "ok"
+            \begin{enumerate}
+                \item Une aberration est dans la livraison \`a ajouter, le syst\`eme signale une erreur, le cas d'utilisation se termine par un echec.
+            \end{enumerate}
             \item La livraison est ajout\'ee et la tourn\'ee recalcul\'ee, le cas d'utilisation se termine par un succ\`es.
         \end{enumerate}
         \item[Enlever] ~
@@ -182,6 +202,9 @@
             \item Le superviseur selectionne une livraison sur la tourn\'ee
             \item Le superviseur clique sur "enlever"
             \item La livraison est enlev\'ee et la tourn\'ee recalcul\'ee, le cas d'utilisation se termine par un succ\`es.
+            \begin{enumerate}
+                \item La livraison est enlev\'ee et la tourn\'ee est vide, le cas d'utilisation se termine par un succ\`es.
+            \end{enumerate}
         \end{enumerate}
     \end{description}
 \end{description}
