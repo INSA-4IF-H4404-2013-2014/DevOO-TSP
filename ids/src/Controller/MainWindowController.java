@@ -1,6 +1,7 @@
 package Controller;
 
 import Controller.Command.Command;
+import Controller.Command.RemoveDelivery;
 import Model.ChocoSolver.*;
 import Model.City.Network;
 import Model.City.Node;
@@ -150,7 +151,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     }
 
     public void removeDelivery() {
-
+        int idNode = this.mainWindow.getMapPanel().getSelectedNode().getId();
+        RemoveDelivery remove = RemoveDelivery.create(this, idNode);
+        this.historyDo(remove);
     }
 
     public void historyDo(Command command){
