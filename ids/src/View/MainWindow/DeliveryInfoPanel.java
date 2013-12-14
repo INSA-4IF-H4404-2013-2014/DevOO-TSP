@@ -2,10 +2,9 @@ package View.MainWindow;
 
 import Model.ChocoSolver.CalculatedRound;
 import Model.Delivery.Delivery;
-import Model.Delivery.Round;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 
@@ -27,7 +26,6 @@ public class DeliveryInfoPanel extends JPanel {
 
     public DeliveryInfoPanel() {
         setLayout(new GridBagLayout());
-        setBackground(Color.LIGHT_GRAY);
         add(createDeliveryInfoPanelContent());
     }
 
@@ -36,21 +34,24 @@ public class DeliveryInfoPanel extends JPanel {
      * @return the JPanel
      */
     private JPanel createDeliveryInfoPanelContent() {
-        JPanel deliveryInfoPanelContent = new JPanel(new BorderLayout());
-        deliveryInfoPanelContent.setBorder(new EmptyBorder(10, 10, 10, 10));
-        deliveryInfoPanelContent.add(new JLabel("Livraison"), BorderLayout.PAGE_START);
-
-        // We create here the small "form"
-        JPanel deliveryInfoPanelContentForm = new JPanel(new GridLayout(5, 1));
-        deliveryInfoPanelContentForm.add(createRow1());
-        deliveryInfoPanelContentForm.add(createRow2());
-        deliveryInfoPanelContentForm.add(createRow3());
-        deliveryInfoPanelContentForm.add(createRow4());
-        deliveryInfoPanelContentForm.add(createRow5());
+        JPanel deliveryInfoPanelContent = new JPanel(new GridLayout(5, 1));
+        deliveryInfoPanelContent.setBorder
+                (
+                        new TitledBorder
+                                (
+                                        BorderFactory.createLineBorder(Color.BLACK, 1, true),
+                                        "Livraison",
+                                        TitledBorder.DEFAULT_JUSTIFICATION,
+                                        TitledBorder.DEFAULT_POSITION,
+                                        new Font("Verdana", Font.BOLD, 17)
+                                )
+                );
+        deliveryInfoPanelContent.add(createRow1());
+        deliveryInfoPanelContent.add(createRow2());
+        deliveryInfoPanelContent.add(createRow3());
+        deliveryInfoPanelContent.add(createRow4());
+        deliveryInfoPanelContent.add(createRow5());
         setEnableAllFields(false);
-
-        // We add this "form" to deliveryInfoPanelContent
-        deliveryInfoPanelContent.add(deliveryInfoPanelContentForm, BorderLayout.CENTER);
 
         return deliveryInfoPanelContent;
     }

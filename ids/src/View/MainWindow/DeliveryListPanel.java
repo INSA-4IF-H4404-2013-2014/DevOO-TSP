@@ -39,7 +39,7 @@ public class DeliveryListPanel extends JScrollPane {
      */
     public void setModel(Vector<Delivery> list) {
         deliveryList.setListData(list);
-        Utils.enableJList(deliveryList, true);
+        Utils.enableJList(deliveryList, list.size() > 0);
     }
 
     /**
