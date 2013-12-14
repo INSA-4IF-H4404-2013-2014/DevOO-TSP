@@ -245,7 +245,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
 
         Delivery selectedDelivery = mainWindow.getDeliveryListPanel().getSelectedValue();
         if(selectedDelivery != null) {
-            selectNode(selectedDelivery.getAddress());
+            Node selectedNode = selectedDelivery.getAddress();
+            selectNode(selectedNode);
+
+            if(!mainWindow.getMapPanel().isViewFitted()) {
+                mainWindow.getMapPanel().centerOn(selectedNode, mainWindow.getMapPanel().getModelViewScaleFactor());
+            }
         }
         else {
             selectNode(null);
