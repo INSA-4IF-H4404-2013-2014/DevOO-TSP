@@ -126,6 +126,23 @@ public class CalculatedRound {
     }
 
     /**
+     * Convert an Arc.Direction to an String directly usable in the HTML parser
+     * @param direction the direction to translate
+     * @return the translation
+     */
+    private String translateDirections(Arc.Direction direction) {
+        if(direction == Arc.Direction.TURN_LEFT) {
+            return "&agrave; gauche";
+        } else if(direction == Arc.Direction.TURN_RIGHT) {
+            return "&agrave; droite";
+        } else if(direction == Arc.Direction.TURN_BACK) {
+            return "en sens inverse";
+        } else {
+            return "tout droit";
+        }
+    }
+
+    /**
      * Returns the warehouse
      * @return the warehouse
      */
@@ -353,9 +370,11 @@ public class CalculatedRound {
         Itinerary firstItinerary = getNextItinerary(currentNodeId), itinerary = firstItinerary;
         currentNodeId = getNextNodeId(currentNodeId);
 
+        int i;
+
         if(itinerary != null) {
             do {
-                int i = 0;
+                i = 0;
                 arcList = itinerary.getArcs();
                 delivery = chocoDeliveries.get(currentNodeId).getDelivery();
 
@@ -363,9 +382,14 @@ public class CalculatedRound {
                 for(Arc arc:arcList) {
                     html += tdOpen;
 
-                    //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
+                    if(i == 0) {
+                        html += trOpen + "Prendre rue " + arc.getStreet().getName() + trClose;
+                        i++;
+                    } else {
+                        html += trOpen + "Prendre " + translateDirections(arcList.get(i-1).getDirectionTo(arc)) + " sur rue " + arc.getStreet().getName() + trClose;
+                        i++;
+                    }
 
-                    html += trOpen + "Prendre " + /*arc.getDirectionTo(arcList.get(++i)) +*/ " sur rue " + arc.getStreet().getName() + trClose;
                     html += trOpen + arc.getLength() + "m" + trClose;
                     html += trOpen + arc.getCost()/60 + "min" + trClose;
                     html += tdClose;
