@@ -154,16 +154,22 @@ public class Node {
         }
 
         if(streetsNames.size() == 1) {
-            computedStringRepresentation = streetsNames.first();
+            computedStringRepresentation = "rue " + streetsNames.first();
         }
         else {
-            computedStringRepresentation = new String();
+            computedStringRepresentation = new String("entre les rues ");
+            int pos = 0;
             for(String streetName : streetsNames) {
+                if(streetName == streetsNames.last()) {
+                    computedStringRepresentation += " et ";
+                }
+
                 computedStringRepresentation += streetName;
 
-                if(streetName != streetsNames.last()) {
-                    computedStringRepresentation += " / ";
+                if(pos < streetsNames.size() - 2) {
+                    computedStringRepresentation += ", ";
                 }
+                ++pos;
             }
         }
         return computedStringRepresentation;

@@ -30,8 +30,10 @@ public class DeliveryDialog extends JDialog {
 
     private JTextField newClient = new JTextField("", 4);
     private JLabel clientAddress = new JLabel("");
-    private JTextField timeFrameBegin = new JTextField("", 4);
-    private JTextField timeFrameEnd = new JTextField("", 4);
+    private JTextField timeFrameBeginH = new JTextField("", 2);
+    private JTextField timeFrameBeginM = new JTextField("", 2);
+    private JTextField timeFrameEndH = new JTextField("", 2);
+    private JTextField timeFrameEndM = new JTextField("", 2);
     private JButton okButton = new JButton("Confirmer");
     private JButton cancelButton = new JButton("Annuler");
     private JLabel labelNewClient = new JLabel("Nouvel id : ");
@@ -60,12 +62,20 @@ public class DeliveryDialog extends JDialog {
         return PADDING;
     }
 
-    public JTextField getTimeFrameEnd() {
-        return timeFrameEnd;
+    public JTextField getTimeFrameEndH() {
+        return timeFrameEndH;
     }
 
-    public JTextField getTimeFrameBegin() {
-        return timeFrameBegin;
+    public JTextField getTimeFrameBeginH() {
+        return timeFrameBeginH;
+    }
+
+    public JTextField getTimeFrameEndM() {
+        return timeFrameEndM;
+    }
+
+    public JTextField getTimeFrameBeginM() {
+        return timeFrameBeginM;
     }
 
     public JComboBox getClientBox() {
@@ -159,9 +169,13 @@ public class DeliveryDialog extends JDialog {
 
     private JPanel createRow5() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(timeFrameBegin);
+        row.add(timeFrameBeginH);
+        row.add(new JLabel(":"));
+        row.add(timeFrameBeginM);
         row.add(new JLabel("à"));
-        row.add(timeFrameEnd);
+        row.add(timeFrameEndH);
+        row.add(new JLabel(":"));
+        row.add(timeFrameEndM);
         return row;
     }
 
