@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class Delivery {
 
+    public static int freeId = 1;
+
     /** The delivery unique ID */
     private int id;
 

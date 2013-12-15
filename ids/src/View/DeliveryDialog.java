@@ -109,9 +109,7 @@ public class DeliveryDialog extends JDialog {
         JLabel title = new JLabel("Livraison");
         title.setFont(new Font("Serif", Font.BOLD, 16));
         mainPanel.add(title, BorderLayout.PAGE_START);
-
         mainPanel.add(createForm(), BorderLayout.CENTER);
-
         mainPanel.add(createFooterButtons(), BorderLayout.PAGE_END);
 
         return mainPanel;
@@ -122,11 +120,12 @@ public class DeliveryDialog extends JDialog {
      * @return the panel
      */
     private JPanel createForm() {
-        JPanel form = new JPanel(new GridLayout(4,1));
+        JPanel form = new JPanel(new GridLayout(5,1));
         form.add(createRow1());
         form.add(createRow2());
         form.add(createRow3());
         form.add(createRow4());
+        form.add(createRow5());
         return form;
     }
 
@@ -154,7 +153,12 @@ public class DeliveryDialog extends JDialog {
 
     private JPanel createRow4() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Plage horaire : "));
+        row.add(new JLabel("Plage horaire (format hh:mm )"));
+        return row;
+    }
+
+    private JPanel createRow5() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(timeFrameBegin);
         row.add(new JLabel("à"));
         row.add(timeFrameEnd);
