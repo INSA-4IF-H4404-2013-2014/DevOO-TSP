@@ -69,8 +69,22 @@ public class MainWindowControllerTest {
 
         assertTrue(mwc.getHistoryApplied().size() == 0);
         assertTrue(mwc.getHistoryBackedOut().size() == 1);
+    }
 
+    @Test
+    public void testRedo() throws UtilsException {
+        String idClient = new String();
+        AddDelivery add = new AddDelivery(mwc, idClient, 0, schedule.getEarliestBound(), schedule.getLatestBound());
+        mwc.historyDo(add);
+        mwc.historyUndo();
 
+        assertTrue(mwc.getHistoryApplied().size() == 0);
+        assertTrue(mwc.getHistoryBackedOut().size() == 1);
+
+        mwc.historyRedo();
+
+        assertTrue(mwc.getHistoryApplied().size() == 1);
+        assertTrue(mwc.getHistoryBackedOut().size() == 0);
 
     }
 }
