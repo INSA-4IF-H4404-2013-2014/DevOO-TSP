@@ -144,11 +144,17 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         }
     }
 
+    /**
+     * Opens the add delivery window
+     */
     public void addDelivery() {
         DeliveryDialogController deliveryDialogController = new DeliveryDialogController(mainWindow);
         deliveryDialogController.show();
     }
 
+    /**
+     * Creates a removeDelivery command, adds it to the history and apply it
+     */
     public void removeDelivery() {
         int idNode = this.mainWindow.getMapPanel().getSelectedNode().getId();
         RemoveDelivery remove = RemoveDelivery.create(this, idNode);
