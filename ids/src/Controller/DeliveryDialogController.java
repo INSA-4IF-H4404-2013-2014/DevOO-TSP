@@ -29,16 +29,77 @@ public class DeliveryDialogController {
         //TODO trnasform text into real structures
         //TODO close the dialog if ok
         //TODO error boxes ( wrong format, id already set?, etc.)
-        System.out.println(dialog.getAddress().toString());
-       if( dialog.newCliIsSelected()) {
-           System.out.println(dialog.getNewClient().getText());
-       }
-        else {
-           System.out.println(dialog.getClientBox().getSelectedItem().toString());
-       }
-        System.out.println(dialog.getTimeFrameBegin().getText());
-        System.out.println(dialog.getTimeFrameEnd().getText());
+        if (checkAnsOk())      {
+            System.out.println(dialog.getParent().getMapPanel().getSelectedNode().toString());
+            if( dialog.newCliIsSelected()) {
+                System.out.println(dialog.getNewClient().getText());
+            }
+            else {
+                System.out.println(dialog.getClientBox().getSelectedItem().toString());
+            }
+            System.out.println(dialog.getTimeFrameBegin().getText());
+            System.out.println(dialog.getTimeFrameEnd().getText());
+            dialog.dispose();
+        }
+    }
 
+    /**
+     * check if all the fields have correctly been filled
+     * @return true if everything ok, false and popup messages if not
+     */
+    public boolean checkAnsOk(){
+        boolean allIsOk = checkNewCliOk();
+        if (allIsOk){
+            allIsOk = checkScheduleOk();
+        }
+        return allIsOk;
+    }
+
+
+    /**
+     * check if all the fields have correctly been filled
+     * @return true if everything ok, false and popup messages if not
+     */
+    public boolean checkNewCliOk(){
+        boolean allIsOk = true;
+        try {
+            if(dialog.newCliIsSelected()){
+                int testInt =  Integer.parseInt(dialog.getNewClient().getText());
+                if(testInt == 0)
+                {
+                    allIsOk=false;
+                    JFrame frame = new JFrame();
+                    JOptionPane.showMessageDialog(frame, "l'id 0 n'est pas disponible pour un client", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+                if(dialog.getParent().getRound().getIndexClient( dialog.getNewClient().getText()) != -1 ){
+                    allIsOk=false;
+                    JFrame frame = new JFrame();
+                    JOptionPane.showMessageDialog(frame, "le numéro d'id du client que vous voulez ajouter existe déjà", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }catch (Exception e){
+            allIsOk=false;
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "Mauvais format de donnée dans le champ nouveau client", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+        return allIsOk;
+    }
+
+    public boolean checkScheduleOk(){
+        boolean allIsOk = true;
+        try {
+            if(false ){
+                //TODO debut apres fin
+                allIsOk=false;
+                JFrame frame = new JFrame();
+                JOptionPane.showMessageDialog(frame, "debut de plage horaire apres sa fin", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        }catch (Exception e){
+            //TODO hours format acceptable or not (00h00 00:00 00)
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "Mauvais format de donnée dans le(s) champ horaire", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+        return allIsOk;
     }
 
     /**

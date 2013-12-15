@@ -96,6 +96,7 @@ public class Round {
         }
     }
 
+    //TODO missing doc
     public void addDelivery(String clientId, int nodeId, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
         Node node = network.findNode(nodeId);
 
@@ -108,6 +109,7 @@ public class Round {
         schedule.addDelivery(delivery);
     }
 
+    //TODO missing doc
     public void removeDelivery(int nodeId) {
         Delivery delivery = findDelivered(nodeId);
 
@@ -163,6 +165,7 @@ public class Round {
         return schedule;
     }
 
+    //TODO missing doc
     public Client getClient(String clientId)
     {
         for(Client c : clients) {
@@ -174,6 +177,21 @@ public class Round {
         Client c = new Client(clientId);
         clients.add(c);
         return c;
+    }
+
+    /**
+     * search a client by its id and return the index of it
+     * @param clientId the client id searched
+     * @return the index in the list of client, -1 if the id isn't in
+     */
+    public int getIndexClient(String clientId)
+    {
+        for(Client c : clients) {
+            if(c.getId().equals(clientId)) {
+                return clients.indexOf(c);
+            }
+        }
+        return -1;
     }
 
     /**
@@ -226,6 +244,7 @@ public class Round {
         return null;
     }
 
+    //TODO missing doc
     public boolean isTwiceDelivered(Node node) {
         boolean delivered = false;
         for(Schedule s : schedules) {

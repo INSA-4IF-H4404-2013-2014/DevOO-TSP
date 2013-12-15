@@ -24,7 +24,7 @@ public class DeliveryDialog extends JDialog {
     public static final String newCli = "nouveau client";
 
     private DeliveryDialogController controller;
-    private Node address;
+    private MainWindow parent;
     //private MainWindow parent;
     private JComboBox clientBox = new JComboBox();
 
@@ -41,7 +41,7 @@ public class DeliveryDialog extends JDialog {
         super(parent, title, true);
         //this.parent = parent;
         this.controller = controller;
-        this.address = parent.getMapPanel().getSelectedNode();
+        this.parent = parent;
         setContentPane(createMainPanel());
         setResizable(false);
         pack();
@@ -51,7 +51,7 @@ public class DeliveryDialog extends JDialog {
             clientBox.addItem(cli);
         }
         clientBox.addItem(newCli);
-        clientAddress.setText(address.toString());
+        clientAddress.setText(parent.getMapPanel().getSelectedNode().toString());
         setNewClientEnabled(false);
         addListener();
     }
@@ -76,8 +76,8 @@ public class DeliveryDialog extends JDialog {
         return newClient;
     }
 
-    public Node getAddress() {
-        return address;
+    public MainWindow getParent() {
+        return parent;
     }
 
     /**
