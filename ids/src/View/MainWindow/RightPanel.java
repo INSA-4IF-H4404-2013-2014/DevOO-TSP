@@ -14,7 +14,7 @@ public class RightPanel extends JPanel {
     private RoundPanel roundPanel = new RoundPanel();
     private DeliveryInfoPanel deliveryInfoPanel = new DeliveryInfoPanel();
 
-    public static final float DEFAULT_WIDTH_RATIO = (float)0.33;
+    public static final float DEFAULT_WIDTH_RATIO = (float)0.30;
 
     public RightPanel() {
         setPreferredSize(new Dimension((int)(MainWindow.DEFAULT_WIDTH*DEFAULT_WIDTH_RATIO), 0));
