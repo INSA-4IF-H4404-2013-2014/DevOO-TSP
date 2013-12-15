@@ -39,6 +39,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     private Deque<Controller.Command.Command> historyBackedOut;
     private MainWindow mainWindow;
 
+    /**
+     * Constructor
+     */
     public MainWindowController() {
         this.mainWindow = new MainWindow(this);
         this.mainWindow.getMapPanel().setNodeEventListener(this);
@@ -47,14 +50,26 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         historyBackedOut = new LinkedList<Controller.Command.Command>();
     }
 
+    /**
+     * Returns the history backed out
+     * @return the history backed out
+     */
     public Deque<Controller.Command.Command> getHistoryBackedOut() {
         return historyBackedOut;
     }
 
+    /**
+     * Returns the history applied
+     * @return the history applied
+     */
     public Deque<Controller.Command.Command> getHistoryApplied() {
         return historyApplied;
     }
 
+    /**
+     * Returns the controller's main window
+     * @return the controller's main window
+     */
     public MainWindow getMainWindow() {
         return mainWindow;
     }
