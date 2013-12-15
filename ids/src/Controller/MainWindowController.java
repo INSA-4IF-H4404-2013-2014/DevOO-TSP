@@ -83,6 +83,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             historyBackedOut.clear();
             updateUndoRedoButtons();
 
+            // Disable export round feature
+            mainWindow.featureSaveRoundSetEnable(false);
+
 
         } catch (UtilsException e) {
             JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
@@ -108,6 +111,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @param xmlPath the xml path
      */
     public void loadRound(String xmlPath) {
+        mainWindow.featureSaveRoundSetEnable(false);
+
         try {
             mainWindow.setRound(Round.createFromXml(xmlPath, mainWindow.getNetwork()));
         } catch (Exception e) {
@@ -121,6 +126,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
             mainWindow.getMapPanel().setSelectedNode(null);
             mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+            mainWindow.featureSaveRoundSetEnable(true);
         } catch(Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(mainWindow, "Une erreur est survenue lors du calcul de la tournée",
