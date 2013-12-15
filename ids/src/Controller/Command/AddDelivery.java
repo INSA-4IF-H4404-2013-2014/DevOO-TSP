@@ -28,6 +28,18 @@ public class AddDelivery extends Command {
         this.latestBound = latestBound;
     }
 
+    public static AddDelivery create(MainWindowController controller, int nodeId) {
+        Round round = controller.getMainWindow().getRound();
+
+        Delivery delivery = round.findDelivered(nodeId);
+
+        String clientId = delivery.getClient().getId();
+        GregorianCalendar earliestBound = delivery.getSchedule().getEarliestBound();
+        GregorianCalendar latestBound = delivery.getSchedule().getLatestBound();
+
+        return new AddDelivery(controller, clientId, nodeId, earliestBound, latestBound);
+    }
+
     public void Apply() {
         Round round = this.getController().getMainWindow().getRound();
 

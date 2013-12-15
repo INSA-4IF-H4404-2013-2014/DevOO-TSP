@@ -1,6 +1,7 @@
 package Controller;
 
 import View.DeliveryDialog;
+import View.MainWindow.MainWindow;
 
 import javax.swing.*;
 
@@ -17,15 +18,26 @@ public class DeliveryDialogController {
      * Creates the controller.
      * @param mainWindow: the parent window (for the modal mode)
      */
-    public DeliveryDialogController(JFrame mainWindow) {
+    public DeliveryDialogController(MainWindow mainWindow) {
         dialog = new DeliveryDialog(this, mainWindow);
-
     }
 
     /**
      * Action to be performed when the user clicks on "confirm" button
      */
     public void confirm() {
+        //TODO trnasform text into real structures
+        //TODO close the dialog if ok
+        //TODO error boxes ( wrong format, id already set?, etc.)
+        System.out.println(dialog.getAddress().toString());
+       if( dialog.newCliIsSelected()) {
+           System.out.println(dialog.getNewClient().getText());
+       }
+        else {
+           System.out.println(dialog.getClientBox().getSelectedItem().toString());
+       }
+        System.out.println(dialog.getTimeFrameBegin().getText());
+        System.out.println(dialog.getTimeFrameEnd().getText());
 
     }
 
