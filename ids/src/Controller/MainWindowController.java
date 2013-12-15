@@ -144,15 +144,19 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             String htmlRound = calculatedRound.calculatedRoundToHtml();
 
             try {
-                FileWriter outputWriter = new FileWriter(openFile("html"), false);
+                File file = saveFileDialog();
+                if(file == null) {
+                    return;
+                }
+
+                FileWriter outputWriter = new FileWriter(file, false);
                 outputWriter.write(htmlRound);
                 outputWriter.close();
             } catch (java.io.IOException e) {
                 System.out.println(e);
             }
         } else {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "Aucune tournée n'est active", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainWindow, "Aucune tournée n'est active", "Erreur d'export", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -318,25 +322,20 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     }
 
     /**
-     * Allow user to choose a file from specified type
-     * @param type the type of file you want the user to be able to choose
-     * @return the file the user choosed
+     * Display a JFileChooser in 'save file' mode.
+     * @return the file the user chose
      */
-    private File openFile(String type) {
+    private File saveFileDialog() {
         JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("../"));
+        chooser.setAcceptAllFileFilterUsed(true);
 
-        FileNameExtensionFilter allExtension = new FileNameExtensionFilter("All files (*.*)", "");
-        chooser.addChoosableFileFilter(allExtension);
-
-        chooser = addExtensionType(type, chooser);
-
-        File file = chooser.getSelectedFile();
-
-        if(createFile(file)) {
-            return file;
-        } else {
-            return null;
+        int feedback = chooser.showSaveDialog(mainWindow);
+        if(feedback == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFile();
         }
+
+        return null;
     }
 
     /**
