@@ -184,6 +184,13 @@ public class TopMenuBar extends JMenuBar{
             }
         });
 
+        saveRound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exportRound();
+            }
+        });
+
         fileExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
