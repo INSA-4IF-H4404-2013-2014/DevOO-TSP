@@ -1,6 +1,7 @@
 package View.MainWindow;
 
 import Model.ChocoSolver.CalculatedRound;
+import Model.City.Node;
 import Model.Delivery.Delivery;
 
 import javax.swing.*;
@@ -133,13 +134,12 @@ public class DeliveryInfoPanel extends JPanel {
      * @param delivery the delivery which should be described
      */
      public void fillDeliveryInfoPanel(Delivery delivery, CalculatedRound round){
-
-            deliveryID.setText(""+delivery.getId());
-            clientName.setText(""+delivery.getClient().getId());
-            address.setText((""+delivery.getAddress().getId()));
-            SimpleDateFormat form = new SimpleDateFormat("kk:mm");
-            timeFrameBegin.setText(""+form.format(delivery.getSchedule().getEarliestBound().getTime()));
-            timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
+        deliveryID.setText(""+delivery.getId());
+        clientName.setText(""+delivery.getClient().getId());
+        address.setText((""+delivery.getAddress().getId()));
+        SimpleDateFormat form = new SimpleDateFormat("kk:mm");
+        timeFrameBegin.setText(""+form.format(delivery.getSchedule().getEarliestBound().getTime()));
+        timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
          if(round != null)
          {
              //TODO : There is a bug here!
@@ -147,6 +147,14 @@ public class DeliveryInfoPanel extends JPanel {
             //delay.setText(""+round.getDelay(delivery.getId()));
          }
      }
+
+    /**
+     * Fill the fields with the required node informations
+     * @param node The node (which is not a delivery node)
+     */
+    public void fillDeliveryInfoPanelNonDeliveryNode(Node node) {
+        address.setText(String.valueOf(node.getId()));
+    }
 
     /**
     * empty all the fields

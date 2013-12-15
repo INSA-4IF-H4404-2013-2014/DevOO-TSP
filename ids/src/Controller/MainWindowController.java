@@ -293,11 +293,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         if (this.mainWindow.getRound() != null) {
             Delivery del = mainWindow.getRound().findDelivered(node.getId());
 
-            if ((del == null) && (node.getId() != mainWindow.getRound().getWarehouse().getId())) {
+            if (del == null) {
                 // If the node doesn't contain a delivery, activate the "ajouter" button
                 mainWindow.featureAddSetEnable(true);
                 mainWindow.featureDeleteSetEnable(false);
                 mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanelNonDeliveryNode(node);
             }
             else
             {
