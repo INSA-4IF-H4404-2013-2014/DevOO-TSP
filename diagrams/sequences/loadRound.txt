@@ -1,4 +1,4 @@
-User->+MainWindowController: Clique sur le bouton "Demande de livraison"
+User->+MainWindowController: Clique sur le bouton "Importer une demande de livraisons"
 
 MainWindowController->+Round : createFromXml(String xmlPath, Network network)
 
