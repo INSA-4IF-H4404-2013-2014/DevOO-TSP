@@ -78,6 +78,11 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             // Map has been successfully loaded, we enable 'load round' feature.
             mainWindow.featureLoadRoundSetEnable(true);
 
+            // Reset Undo/Redo features
+            historyApplied.clear();
+            historyBackedOut.clear();
+            updateUndoRedoButtons();
+
 
         } catch (UtilsException e) {
             JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
