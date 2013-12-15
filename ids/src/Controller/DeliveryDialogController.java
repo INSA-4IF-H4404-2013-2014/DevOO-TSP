@@ -29,6 +29,12 @@ public class DeliveryDialogController {
     private int address;
     private boolean addReady;
 
+    private int beginH;
+    private int beginM;
+    private int endH;
+    private int endM;
+
+
     /**
      * Creates the controller.
      * @param mainWindow: the parent window (for the modal mode)
@@ -164,19 +170,33 @@ public class DeliveryDialogController {
     private boolean checkBeginField(){
         DateFormat df = new SimpleDateFormat("kk:mm");
         Date parsed = new Date();
-        try {
-            parsed = df.parse(dialog.getTimeFrameBegin().getText());
-        }catch (ParseException e){
-            df = new SimpleDateFormat("kk");
-            try{
-                parsed = df.parse(dialog.getTimeFrameBegin().getText());
-            }catch(ParseException ex){
-                JFrame frame = new JFrame();
-                JOptionPane.showMessageDialog(frame, "Mauvais format de donnée dans le(s) champ begin", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return false;
+        String dateTxt;
+
+        try{
+            if(dialog.getTimeFrameBeginH().getText().equals("")){
+                beginH = 0;
+            }else{
+                beginH = Integer.parseInt(dialog.getTimeFrameBeginH().getText());
             }
+            if(dialog.getTimeFrameBeginM().getText().equals("")){
+                beginM = 0;
+            }else{
+                beginM = Integer.parseInt(dialog.getTimeFrameBeginM().getText());
+            }
+
+            if ((beginH <0 ) || (beginM <0)||(beginH > 23) || (beginM > 59)){
+                throw new Exception();
+            }
+            dateTxt ="" + beginH + ":" +beginM;
+            parsed = df.parse(dateTxt);
+        }catch(Exception e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "veuillez entrer une heure entre 0 et 23h et des minutes en 0 et 59",
+                    "Erreur horaire debut", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        GregorianCalendar cal = new GregorianCalendar();//parsed.toGregorianCalendar();
+
+        GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(parsed);
         begin = cal;
         return true;
@@ -188,20 +208,44 @@ public class DeliveryDialogController {
      * @return true if everything ok, false and popup messages if not
      */
     private boolean checkEndField(){
+
+        // TODO comparer debut et fin
         DateFormat df = new SimpleDateFormat("hh:mm");
         Date parsed;
-        try {
-            parsed = df.parse(dialog.getTimeFrameEnd().getText());
-        }catch (ParseException e){
-            df = new SimpleDateFormat("hh");
-            try{
-                parsed = df.parse(dialog.getTimeFrameEnd().getText());
-            }catch(ParseException ex){
-                JFrame frame = new JFrame();
-                JOptionPane.showMessageDialog(frame, "Mauvais format de donnée dans le(s) champ begin", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return false;
+        String dateTxt;
+        try{
+            if(dialog.getTimeFrameEndH().getText().equals("")){
+                endH = 0;
+            }else{
+                endH = Integer.parseInt(dialog.getTimeFrameEndH().getText());
             }
+            if(dialog.getTimeFrameEndM().getText().equals("")){
+                endM = 0;
+            }else{
+                endM = Integer.parseInt(dialog.getTimeFrameEndM().getText());
+            }
+
+            if ((endH <0 ) || (endM <0)||(endH > 23) || (endM > 59)){
+                throw new Exception();
+            }
+        }catch(Exception e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "veuillez entrer une heure entre 0 et 23h et des minutes en 0 et 59",
+                    "Erreur horaire fin", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
+        try{
+            if((endH < beginH) || ((endH == beginH)&&(endM <= beginM))){
+                throw new Exception();
+            }
+            dateTxt ="" + endH + ":" +endM;
+            parsed = df.parse(dateTxt);
+        } catch (Exception e) {
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "fin de plage horaire avant le debut", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         GregorianCalendar cal = new GregorianCalendar();//parsed.toGregorianCalendar();
         cal.setTime(parsed);
         end = cal;
