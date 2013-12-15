@@ -47,6 +47,14 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         historyBackedOut = new LinkedList<Controller.Command.Command>();
     }
 
+    public Deque<Controller.Command.Command> getHistoryBackedOut() {
+        return historyBackedOut;
+    }
+
+    public Deque<Controller.Command.Command> getHistoryApplied() {
+        return historyApplied;
+    }
+
     public MainWindow getMainWindow() {
         return mainWindow;
     }
