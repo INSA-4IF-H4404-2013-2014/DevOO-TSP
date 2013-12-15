@@ -27,6 +27,9 @@ public class DeliveryInfoPanel extends JPanel {
     private JTextField deliveryTime;
     private JTextField delay;
 
+    /**
+     * Constructor
+     */
     public DeliveryInfoPanel() {
         final int borderSize = 5;
         final int rowHeight = 30;

@@ -21,6 +21,9 @@ public class RoundPanel extends JPanel {
     private JTextField delay = new JTextField("", 4);
     private JTextField distance = new JTextField("", 4);
 
+    /**
+     * Constructor
+     */
     public RoundPanel() {
         final int borderSize = 5;
         final int rowHeight = 30;

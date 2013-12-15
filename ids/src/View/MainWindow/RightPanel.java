@@ -16,6 +16,9 @@ public class RightPanel extends JPanel {
 
     public static final float DEFAULT_WIDTH_RATIO = (float)0.30;
 
+    /**
+     * Constructor
+     */
     public RightPanel() {
         setPreferredSize(new Dimension((int)(MainWindow.DEFAULT_WIDTH*DEFAULT_WIDTH_RATIO), 0));
 
