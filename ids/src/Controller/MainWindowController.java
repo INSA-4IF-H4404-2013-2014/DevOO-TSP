@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Command.AddDelivery;
 import Controller.Command.Command;
 import Controller.Command.RemoveDelivery;
 import Model.ChocoSolver.*;
@@ -147,6 +148,11 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     public void addDelivery() {
         DeliveryDialogController deliveryDialogController = new DeliveryDialogController(mainWindow);
         deliveryDialogController.show();
+        if(deliveryDialogController.addIsReady()) {
+            AddDelivery add = new AddDelivery(this, deliveryDialogController.getClient(), deliveryDialogController.getAddress(), deliveryDialogController.getBegin(), deliveryDialogController.getEnd());
+            this.historyDo(add);
+            selectNode(mainWindow.getMapPanel().getSelectedNode());
+        }
     }
 
     public void removeDelivery() {
@@ -283,7 +289,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
                 mainWindow.featureDeleteSetEnable(false);
                 mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
             }
-            else if (del == null) {
+            else if ((del == null)&& (node.getId() != mainWindow.getRound().getWarehouse().getId())) {
                 // If the node doesn't contain a delivery, activate the "ajouter" button
                 mainWindow.featureAddSetEnable(true);
                 mainWindow.featureDeleteSetEnable(false);
