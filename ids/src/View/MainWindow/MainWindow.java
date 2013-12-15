@@ -50,6 +50,10 @@ public class MainWindow extends JFrame {
 
     protected MainWindowController mainWindowController;
 
+    /**
+     * Constructor
+     * @param mainWindowController The main window 's controller
+     */
     public MainWindow(MainWindowController mainWindowController) {
         this.mainWindowController = mainWindowController;
 
@@ -123,7 +127,7 @@ public class MainWindow extends JFrame {
 
     /**
      * Creates the big panel under the two first toolbars (where most of the content of the window will be displayed)
-     * @return
+     * @return the panel
      */
     private JPanel createSubMainPanel() {
         JPanel subMainPanel = new JPanel(new BorderLayout());

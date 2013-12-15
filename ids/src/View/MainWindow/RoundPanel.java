@@ -21,6 +21,9 @@ public class RoundPanel extends JPanel {
     private JTextField delay = new JTextField("", 4);
     private JTextField distance = new JTextField("", 4);
 
+    /**
+     * Constructor
+     */
     public RoundPanel() {
         final int borderSize = 5;
         final int rowHeight = 30;
@@ -132,14 +135,11 @@ public class RoundPanel extends JPanel {
     public void fillRoundPanel(CalculatedRound round){
         if(round != null)
         {
-            // TODO: There is a bug here!
-            /*
             this.delay.setText(CalculatedRound.conversionMSHM(round.getCumulatedDelay()));
-            this.distance.setText(""+round.getTotalLength());
+            this.distance.setText(""+((int)round.getTotalLength())+" m");
             // -1 because the warehouse is two times in this list
             this.deliveryCount.setText(""+(round.getOrderedItineraries().size()-1));
             this.duration.setText(CalculatedRound.conversionMSHM(round.getTotalDuration()));
-            */
         }
     }
 

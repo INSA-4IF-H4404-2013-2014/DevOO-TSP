@@ -299,8 +299,8 @@ public class MapPanel extends JPanel {
     }
 
     /**
-     * Test is the network view fully fits
-     * @return
+     * Test if the network view fully fits
+     * @return true if the network view fully fits
      */
     public boolean isViewFitted() {
         return fittedScaleFactor;

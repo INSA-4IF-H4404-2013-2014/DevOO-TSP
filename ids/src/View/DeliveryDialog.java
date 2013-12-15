@@ -30,8 +30,10 @@ public class DeliveryDialog extends JDialog {
 
     private JTextField newClient = new JTextField("", 4);
     private JLabel clientAddress = new JLabel("");
-    private JTextField timeFrameBegin = new JTextField("", 4);
-    private JTextField timeFrameEnd = new JTextField("", 4);
+    private JTextField timeFrameBeginH = new JTextField("", 2);
+    private JTextField timeFrameBeginM = new JTextField("", 2);
+    private JTextField timeFrameEndH = new JTextField("", 2);
+    private JTextField timeFrameEndM = new JTextField("", 2);
     private JButton okButton = new JButton("Confirmer");
     private JButton cancelButton = new JButton("Annuler");
     private JLabel labelNewClient = new JLabel("Nouvel id : ");
@@ -60,12 +62,20 @@ public class DeliveryDialog extends JDialog {
         return PADDING;
     }
 
-    public JTextField getTimeFrameEnd() {
-        return timeFrameEnd;
+    public JTextField getTimeFrameEndH() {
+        return timeFrameEndH;
     }
 
-    public JTextField getTimeFrameBegin() {
-        return timeFrameBegin;
+    public JTextField getTimeFrameBeginH() {
+        return timeFrameBeginH;
+    }
+
+    public JTextField getTimeFrameEndM() {
+        return timeFrameEndM;
+    }
+
+    public JTextField getTimeFrameBeginM() {
+        return timeFrameBeginM;
     }
 
     public JComboBox getClientBox() {
@@ -109,9 +119,7 @@ public class DeliveryDialog extends JDialog {
         JLabel title = new JLabel("Livraison");
         title.setFont(new Font("Serif", Font.BOLD, 16));
         mainPanel.add(title, BorderLayout.PAGE_START);
-
         mainPanel.add(createForm(), BorderLayout.CENTER);
-
         mainPanel.add(createFooterButtons(), BorderLayout.PAGE_END);
 
         return mainPanel;
@@ -122,11 +130,12 @@ public class DeliveryDialog extends JDialog {
      * @return the panel
      */
     private JPanel createForm() {
-        JPanel form = new JPanel(new GridLayout(4,1));
+        JPanel form = new JPanel(new GridLayout(5,1));
         form.add(createRow1());
         form.add(createRow2());
         form.add(createRow3());
         form.add(createRow4());
+        form.add(createRow5());
         return form;
     }
 
@@ -154,10 +163,19 @@ public class DeliveryDialog extends JDialog {
 
     private JPanel createRow4() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Plage horaire : "));
-        row.add(timeFrameBegin);
+        row.add(new JLabel("Plage horaire (format hh:mm )"));
+        return row;
+    }
+
+    private JPanel createRow5() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row.add(timeFrameBeginH);
+        row.add(new JLabel(":"));
+        row.add(timeFrameBeginM);
         row.add(new JLabel("à"));
-        row.add(timeFrameEnd);
+        row.add(timeFrameEndH);
+        row.add(new JLabel(":"));
+        row.add(timeFrameEndM);
         return row;
     }
 

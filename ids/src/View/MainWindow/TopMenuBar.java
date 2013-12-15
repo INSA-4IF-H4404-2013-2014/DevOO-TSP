@@ -55,39 +55,73 @@ public class TopMenuBar extends JMenuBar{
      */
     protected JMenuItem redoButton;
 
-
+    /**
+     * Get the item openMap
+     * @return the item openMap
+     */
     public JMenuItem getOpenMap() {
         return openMap;
     }
 
+    /**
+     * Get the item fileExit
+     * @return the item fileExit
+     */
     public JMenuItem getFileExit() {
         return fileExit;
     }
 
+    /**
+     * Get the item openRound
+     * @return the item openRound
+     */
     public JMenuItem getOpenRound() {
         return openRound;
     }
 
+    /**
+     * Get the item saveRound
+     * @return the item saveRound
+     */
     public JMenuItem getSaveRound() {
         return saveRound;
     }
 
+    /**
+     * Get the item addButton
+     * @return the item addButton
+     */
     public JMenuItem getAddButton() {
         return addButton;
     }
 
+    /**
+     * Get the item delButton
+     * @return the item delButton
+     */
     public JMenuItem getDelButton() {
         return delButton;
     }
 
+    /**
+     * Get the item undoButton
+     * @return the item undoButton
+     */
     public JMenuItem getUndoButton() {
         return undoButton;
     }
 
+    /**
+     * Get the item redoButton
+     * @return the item redoButton
+     */
     public JMenuItem getRedoButton() {
         return redoButton;
     }
 
+    /**
+     * Constructor
+     */
     public TopMenuBar() {
         createFileMenu();
         createEditMenu();
@@ -181,6 +215,13 @@ public class TopMenuBar extends JMenuBar{
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.loadRound();
+            }
+        });
+
+        saveRound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exportRound();
             }
         });
 

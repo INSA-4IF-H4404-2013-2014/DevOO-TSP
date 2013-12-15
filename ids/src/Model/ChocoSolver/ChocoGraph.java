@@ -406,7 +406,6 @@ public class ChocoGraph implements Graph {
      * @param succ This list must contains warehouse/delivery node IDs. The search will be stopped when a shortest path
      *             from the source to every successors has been found
      * @param dict Dijkstra info structure which will permit to calculates the shortest path from the source to any node
-     * @return
      */
     private void runDijkstra(Network network, Integer source, List<Node> succ, Map<Integer, NodeInfo> dict) {
         //Variable declaration and initialization

@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class Delivery {
 
+    public static int freeId = 1;
+
     /** The delivery unique ID */
     private int id;
 
@@ -128,6 +130,6 @@ public class Delivery {
     }
 
     public String toString() {
-        return "Client " + client + " @ " + address;
+        return "Client " + client + ", " + address;
     }
 }

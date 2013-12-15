@@ -270,6 +270,32 @@ public class Round {
     }
 
     /**
+     * Find a delivery id that is not used yet
+     * @return the id
+     */
+    public int findAnId() {
+        int free = Delivery.freeId;
+        boolean freeFinded = false;
+        while ( ! freeFinded) {
+            freeFinded = true;
+            for(Schedule s : schedules) {
+                for(Delivery d :  s.getDeliveries()) {
+                    if(d.getId() == free) {
+                        freeFinded = false;
+                        free ++;
+                        break;
+                    }
+                }
+                if (!freeFinded){
+                    break;
+                }
+            }
+        }
+        Delivery.freeId = free;
+        return free;
+    }
+
+     /**
      * Return true if two deliveries deliver the same node, false else
      * @param node The node to check
      * @return @See description
