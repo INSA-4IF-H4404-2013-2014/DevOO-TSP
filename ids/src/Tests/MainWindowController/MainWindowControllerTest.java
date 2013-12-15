@@ -55,4 +55,22 @@ public class MainWindowControllerTest {
         assertTrue(mwc.getHistoryBackedOut().size() == 0);
 
     }
+
+    @Test
+    public void testUndo() throws UtilsException {
+        String idClient = new String();
+        AddDelivery add = new AddDelivery(mwc, idClient, 0, schedule.getEarliestBound(), schedule.getLatestBound());
+        mwc.historyDo(add);
+
+        assertTrue(mwc.getHistoryApplied().size() == 1);
+        assertTrue(mwc.getHistoryBackedOut().size() == 0);
+
+        mwc.historyUndo();
+
+        assertTrue(mwc.getHistoryApplied().size() == 0);
+        assertTrue(mwc.getHistoryBackedOut().size() == 1);
+
+
+
+    }
 }
