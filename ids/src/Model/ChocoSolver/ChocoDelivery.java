@@ -73,6 +73,9 @@ public class ChocoDelivery {
         return address;
     }
 
+    /**
+     * Set the number of successors and choco successors of delivery
+     */
     public void setSuccessorsNumber(int n) {
         successorsNode = new IntArrayList(n);
         successorsChocoNode = new IntArrayList(n);
