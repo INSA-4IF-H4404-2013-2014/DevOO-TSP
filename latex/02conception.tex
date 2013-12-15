@@ -300,7 +300,19 @@
     \caption{Diagramme UML du package Controller.Command}
     \label{diagram:uml_controller_command}
 \end{figure}
-\pagebreak
+
+Ce package implemente le disign pattern Commande affin de gerer le undo/redo pour l'ajout et
+suppression d'une livraison dans la tourn\'ee.
+
+On remarque alors que les class AddDelivery et
+RemoveDelivery on un code pour les methodes Apply() et Reverse() semblable a la difference
+qu'il sont inversee (La fonction Apply de RemoveDelivery est identique a Reverse() de
+AddDelivery par exemple). Pour un but de factorisation de code pour l'ajout
+et suppression, nous avons donc chosis d'implementer la class InverseCommand. Celle ci est donc une
+commande, effectuant les operations inverse d'une autre qu'on lui passe a l'instantiation.
+
+Ainsi nous pouvons implementer RemoveDelivery en faisant simplement l'inverse de la commande
+AddDelivery. Autrement dit, pour supprimer une livraison, a que \'a la d\'e-ajouter.
 
 
 % ----------------------------------------------------------------------------- Sequences
