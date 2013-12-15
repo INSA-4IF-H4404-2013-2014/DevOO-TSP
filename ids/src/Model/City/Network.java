@@ -25,7 +25,7 @@ import Utils.UtilsException;
  * Time: 13:53
  * To change this template use File | Settings | File Templates.
  */
-public class Graph {
+public class Network {
 
     /** the graph's streets */
     List<Street> streets;
@@ -37,7 +37,7 @@ public class Graph {
     /**
      * Constructs a empty graph
      */
-    public Graph() {
+    public Network() {
         this.streets = new LinkedList<Street>();
         this.nodes = new HashMap<Integer,Node>();
     }
@@ -252,20 +252,20 @@ public class Graph {
     }
 
     /**
-     * Creates a Graph from a given XML file
+     * Creates a Network from a given XML file
      * @param xmlPath the xml file 's path
      * @return
      *  - the graph that has just been created
      * @throws
      *  - UtilsException if failed with the reason why it has failed in it
      */
-    public static Graph createFromXml(String xmlPath) throws UtilsException {
+    public static Network createFromXml(String xmlPath) throws UtilsException {
         File fileXml = new File(xmlPath);
 
         Element root;
         Document document;
         DocumentBuilder factory;
-        Graph graph;
+        Network network;
 
         try {
             try {
@@ -286,19 +286,19 @@ public class Graph {
                 throw new UtilsException("Unexpected XML root name \"" + root.getNodeName() + "\"");
             }
 
-            graph = new Graph();
-            graph.loadNetworkFromXml(root);
+            network = new Network();
+            network.loadNetworkFromXml(root);
         }
         catch (UtilsException e) {
             throw  new UtilsException("File \"" + xmlPath + "\" > " + e);
         }
 
-        return graph;
+        return network;
     }
 
     public static void main(String [ ] args) {
         try {
-            Graph graph = createFromXml("../sujet/plan10x10.xml");
+            Network network = createFromXml("../sujet/plan10x10.xml");
         }
         catch (UtilsException e) {
             System.out.println(e);

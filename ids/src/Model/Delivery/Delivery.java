@@ -1,6 +1,10 @@
 package Model.Delivery;
 
+import Model.City.Network;
 import Model.City.Node;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -51,6 +55,44 @@ public class Delivery {
         this.client = client;
         this.address = address;
         this.schedule = schedule;
+    }
+
+    /**
+     * Constructor which parses XML nodes and attributes
+     * @param round Round containing every schedules
+     * @param element Delivery XML element
+     * @throws javax.xml.parsers.ParserConfigurationException If the parsing fails
+     */
+    public Delivery(Round round, Element element) throws ParserConfigurationException {
+        try {
+            this.id = Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_ID_ATTR));
+        } catch(Exception e) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_ID_ATTR +
+                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est invalide ou manquant (entier attendu).");
+        }
+
+        try {
+            this.client = round.getClient(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR));
+        } catch(Exception e) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR +
+                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est invalide ou manquant.");
+        }
+        if(this.client.getId().length() == 0) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR +
+                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est vide.");
+        }
+
+        try {
+            this.address = round.getNetwork().findNode(Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_NODE_ATTR)));
+        } catch(Exception e) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_NODE_ATTR +
+                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est invalide ou manquant (entier attendu).");
+        }
+        if(this.address == null) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_NODE_ATTR +
+                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> ne référence pas un noeud existant (" +
+                    Integer.parseInt(element.getAttribute(XMLConstants.DELIVERY_DELIVERY_NODE_ATTR)) +  ").");
+        }
     }
 
     /**
