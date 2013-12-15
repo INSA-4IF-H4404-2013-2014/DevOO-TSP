@@ -130,6 +130,6 @@ public class Delivery {
     }
 
     public String toString() {
-        return "Client " + client + " @ " + address;
+        return "Client " + client + ", " + address;
     }
 }
