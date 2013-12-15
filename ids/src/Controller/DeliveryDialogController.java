@@ -208,8 +208,6 @@ public class DeliveryDialogController {
      * @return true if everything ok, false and popup messages if not
      */
     private boolean checkEndField(){
-
-        // TODO comparer debut et fin
         DateFormat df = new SimpleDateFormat("hh:mm");
         Date parsed;
         String dateTxt;

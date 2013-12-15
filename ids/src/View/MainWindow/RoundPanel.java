@@ -132,14 +132,11 @@ public class RoundPanel extends JPanel {
     public void fillRoundPanel(CalculatedRound round){
         if(round != null)
         {
-            // TODO: There is a bug here!
-            /*
             this.delay.setText(CalculatedRound.conversionMSHM(round.getCumulatedDelay()));
-            this.distance.setText(""+round.getTotalLength());
+            this.distance.setText(""+((int)round.getTotalLength())+" m");
             // -1 because the warehouse is two times in this list
             this.deliveryCount.setText(""+(round.getOrderedItineraries().size()-1));
             this.duration.setText(CalculatedRound.conversionMSHM(round.getTotalDuration()));
-            */
         }
     }
 
