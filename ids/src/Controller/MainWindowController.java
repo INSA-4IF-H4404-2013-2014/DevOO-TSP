@@ -326,7 +326,31 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @return the file the user chose
      */
     private File saveFileDialog() {
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser() {
+            public void approveSelection() {
+                File f = getSelectedFile();
+                if(f.exists()) {
+                    int result = JOptionPane.showConfirmDialog
+                            (
+                                    this,
+                                    "Êtes-vous sûr de vouloir écraser le fichier sélectionné ?",
+                                    "Fichier existant",
+                                    JOptionPane.YES_NO_OPTION
+                            );
+                    switch(result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+
+                        case JOptionPane.NO_OPTION:
+                        default:
+                            return;
+                    }
+                } else {
+                    super.approveSelection();
+                }
+            }
+        };
         chooser.setCurrentDirectory(new File("../"));
         chooser.setAcceptAllFileFilterUsed(true);
 
