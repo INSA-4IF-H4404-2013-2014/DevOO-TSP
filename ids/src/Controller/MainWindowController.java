@@ -103,6 +103,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.setRound(null);
             mainWindow.setCalculatedRound(null);
 
+            selectNode(null);
             mainWindow.getRightPanel().getRoundPanel().emptyFields();
 
             // Map has been successfully loaded, we enable 'load round' feature.
@@ -152,10 +153,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
 
         try {
             computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
+
+            selectNode(null);
+
             mainWindow.getRightPanel().getRoundPanel().emptyFields();
-            mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
-            mainWindow.getMapPanel().setSelectedNode(null);
             mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+
             mainWindow.featureSaveRoundSetEnable(true);
             resetUndoRedo();
 

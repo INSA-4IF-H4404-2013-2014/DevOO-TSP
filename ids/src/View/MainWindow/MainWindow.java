@@ -94,7 +94,6 @@ public class MainWindow extends JFrame {
 
     /**
      * Sets the round.
-     * Asks the deliveryListPanel to display it.
      * @param round the round to set & display
      */
     public void setRound(Round round) {
