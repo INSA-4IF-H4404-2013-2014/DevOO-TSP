@@ -407,6 +407,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         };
         chooser.setCurrentDirectory(new File("../"));
         chooser.setAcceptAllFileFilterUsed(true);
+        chooser.setFileFilter(new FileNameExtensionFilter("Pages Web HTML (*.html)", "html"));
+        chooser.setDialogTitle("Exporter une tournée calculée");
+        chooser.setSelectedFile(new File(".html"));
 
         int feedback = chooser.showSaveDialog(mainWindow);
         if(feedback == JFileChooser.APPROVE_OPTION) {
@@ -432,42 +435,6 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         }
 
         return null;
-    }
-
-    /**
-     * Add an extension type to a JFileChooser
-     * @param type the type to add
-     * @param chooser the JFileChooser to be modified
-     * @return the modified JFileChooser
-     */
-    private JFileChooser addExtensionType(String type, JFileChooser chooser) {
-        if(type.length() != 0) {
-            FileNameExtensionFilter typeExtension = new FileNameExtensionFilter(type.toUpperCase() + " Files (*." + type.toLowerCase() + ")", type.toLowerCase());
-            chooser.addChoosableFileFilter(typeExtension);
-            chooser.setFileFilter(typeExtension);
-        }
-        return chooser;
-    }
-
-    /**
-     * Create a new file based on file or ask to user if he wants to erase it if it already exists
-     * @param file the file to be created
-     * @return true if file has been created, false otherwise
-     */
-    private Boolean createFile(File file) {
-        String message = "Êtes-vous sûr de vouloir écraser ce fichier ?";
-
-        if(!file.exists()) {
-            try {
-                file.createNewFile();
-                return true;
-            } catch(IOException e) {
-                System.out.println(e);
-                return false;
-            }
-        } else {
-            return askConfirmation(message);
-        }
     }
 
     /**
