@@ -22,16 +22,46 @@ import java.util.GregorianCalendar;
  * This class is the controller of the small dialog window which is opened when adding a delivery.
  */
 public class DeliveryDialogController {
+    /**
+     * the formular to add a client
+     */
     private DeliveryDialog dialog;
+    /**
+     * begin of the schedule
+     */
     private GregorianCalendar begin;
+    /**
+     * end of the schedule
+     */
     private GregorianCalendar end;
+    /**
+     * id (already here or new) of the client
+     */
     private String client;
+    /**
+     * id of the node selected
+     */
     private int address;
+    /**
+     * tells whether or not all the necessary fields are complete and right
+     */
     private boolean addReady;
 
+    /**
+     * hour of begin
+     */
     private int beginH;
+    /**
+     * minute of begin
+     */
     private int beginM;
+    /**
+     * hour of end
+     */
     private int endH;
+    /**
+     * minutes of end
+     */
     private int endM;
 
 

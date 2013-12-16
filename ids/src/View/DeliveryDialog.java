@@ -20,25 +20,68 @@ import java.awt.event.ActionListener;
 public class DeliveryDialog extends JDialog {
 
     public static final int PADDING = 10;
+    /**
+     * the title
+     */
     public static final String title = "Ajout d'une livraison";
+    /**
+     * the text for the row in the list to create a new client
+     */
     public static final String newCli = "nouveau client";
-
+    /**
+     * the controller of this dialog
+     */
     private DeliveryDialogController controller;
+    /**
+     * the main window linked to this dialog
+     */
     private MainWindow parent;
-    //private MainWindow parent;
+    /**
+     * list of client (with a row for a new)
+     */
     private JComboBox clientBox = new JComboBox();
-
+    /**
+     * field to set the id of a new client
+     */
     private JTextField newClient = new JTextField("", 4);
+    /**
+     * label to indicate the address of the node clicked
+     */
     private JLabel clientAddress = new JLabel("");
+    /**
+     * hour of the begining of the schedule
+     */
     private JTextField timeFrameBeginH = new JTextField("", 2);
+    /**
+     * minute of the begining of the schedule
+     */
     private JTextField timeFrameBeginM = new JTextField("", 2);
+    /**
+     * hours of the end of the schedule
+     */
     private JTextField timeFrameEndH = new JTextField("", 2);
+    /**
+     * minutes of the end of the schedule
+     */
     private JTextField timeFrameEndM = new JTextField("", 2);
+    /**
+     * confirmation button
+     */
     private JButton okButton = new JButton("Confirmer");
+    /**
+     * cancel button
+     */
     private JButton cancelButton = new JButton("Annuler");
+    /**
+     * label of the new client field
+     */
     private JLabel labelNewClient = new JLabel("Nouvel id : ");
 
-
+    /**
+     * constructor
+     * @param controller the controller of this view
+     * @param parent the main window which contains all the informations
+     */
     public DeliveryDialog(DeliveryDialogController controller, MainWindow parent) {
         super(parent, title, true);
         //this.parent = parent;
@@ -58,40 +101,73 @@ public class DeliveryDialog extends JDialog {
         addListener();
     }
 
+    /**
+     * get the padding
+     * @return the padding
+     */
     public static int getPadding() {
         return PADDING;
     }
 
+    /**
+     * getter
+     * @return hour schedule end
+     */
     public JTextField getTimeFrameEndH() {
         return timeFrameEndH;
     }
 
+    /**
+     * getter
+     * @return hour schedule begin
+     */
     public JTextField getTimeFrameBeginH() {
         return timeFrameBeginH;
     }
 
+    /**
+     * getter
+     * @return minute schedule end
+     */
     public JTextField getTimeFrameEndM() {
         return timeFrameEndM;
     }
 
+    /**
+     * getter
+     * @return minute schedule begin
+     */
     public JTextField getTimeFrameBeginM() {
         return timeFrameBeginM;
     }
 
+    /**
+     * getter
+     * @return the list of clients
+     */
     public JComboBox getClientBox() {
         return clientBox;
     }
 
+    /**
+     * getter
+     * @return the new client id
+     */
     public JTextField getNewClient() {
         return newClient;
     }
 
+    /**
+     * getter
+     * @return the mainwindow with the informations
+     */
     public MainWindow getParent() {
         return parent;
     }
 
     /**
-     *
+     * tells whether or not the user selected newClient in the list of client
+     * @return true if newClient is selected
      */
     public boolean newCliIsSelected(){
         return (clientBox.getSelectedItem().toString().compareTo(newCli) ==0);
