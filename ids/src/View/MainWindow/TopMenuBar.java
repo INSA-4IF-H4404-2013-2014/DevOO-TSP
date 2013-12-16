@@ -129,6 +129,9 @@ public class TopMenuBar extends JMenuBar{
         createHelpMenu();
     }
 
+    /**
+     * Create the "file" JMenu and add it to the JMenuBar
+     */
     private void createFileMenu() {
         JMenu file = new JMenu("Fichier");
         file.setMnemonic(KeyEvent.VK_F);
@@ -160,6 +163,9 @@ public class TopMenuBar extends JMenuBar{
         add(file);
     }
 
+    /**
+     * Create the "edit" JMenu and add it to the JMenuBar
+     */
     private void createEditMenu() {
         JMenu edit = new JMenu("Éditer");
         edit.setMnemonic(KeyEvent.VK_E);
@@ -191,6 +197,9 @@ public class TopMenuBar extends JMenuBar{
         add(edit);
     }
 
+    /**
+     * Create the "view" JMenu and add it to the JMenuBar
+     */
     private void createViewMenu() {
         JMenu view = new JMenu("Affichage");
         view.setMnemonic(KeyEvent.VK_A);
@@ -198,12 +207,19 @@ public class TopMenuBar extends JMenuBar{
         add(view);
     }
 
+    /**
+     * Create the "help" JMenu and add it to the JMenuBar
+     */
     private void createHelpMenu() {
         JMenu help = new JMenu("?");
         help.setEnabled(false);
         add(help);
     }
 
+    /**
+     * Requests this JMenuBar to bind all of its controls to real actions.
+     * @param controller A reference to our main controller
+     */
     public void addListener(final MainWindowController controller) {
         openMap.addActionListener(new ActionListener() {
             @Override

@@ -16,11 +16,22 @@ import java.awt.*;
  */
 public class RoundPanel extends JPanel {
 
+    /** Text field for number of deliveries */
     private JTextField deliveryCount;
+
+    /** Text field for the round's start time */
     private JTextField startTime ;
+
+    /** Text field for the round's end time */
     private JTextField endTime;
+
+    /** Text field for the round's duration */
     private JTextField duration;
+
+    /** Text field for the round's delay */
     private JTextField delay;
+
+    /** Text field for the round's total distance */
     private JTextField distance;
 
     /**

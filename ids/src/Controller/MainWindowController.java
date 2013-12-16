@@ -260,6 +260,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         selectNode(null);
     }
 
+    /**
+     * Asks the application to exit in a clean way.
+     */
     public void exit() {
         System.exit(0);
     }
