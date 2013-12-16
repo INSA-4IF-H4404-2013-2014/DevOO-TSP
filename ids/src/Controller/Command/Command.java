@@ -13,16 +13,31 @@ import View.MainWindow.MainWindow;
  */
 public class Command {
 
+    /** controller to apply the command */
     Controller.MainWindowController controller;
 
+    /**
+     * Apply the command
+     */
     public void Apply() {}
 
+    /**
+     * Apply the command. Must be the exact reverse of Apply()
+     */
     public void Reverse() {}
 
+    /**
+     * Constructor
+     * @param controller the controller to apply the command
+     */
     Command(MainWindowController controller) {
         this.controller = controller;
     }
 
+    /**
+     * Gets the controller  to apply the command
+     * @return the controller  to apply the command
+     */
     MainWindowController getController() {
         return controller;
     }

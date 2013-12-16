@@ -35,8 +35,13 @@ import java.util.*;
  */
 public class MainWindowController implements NodeListener, ListSelectionListener {
 
+    /** Commands that are currently applied */
     private Deque<Controller.Command.Command> historyApplied;
+
+    /** Commands that have been backed out by historyUndo */
     private Deque<Controller.Command.Command> historyBackedOut;
+
+    /** Main window */
     private MainWindow mainWindow;
 
     /**
@@ -207,6 +212,10 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         this.historyDo(remove);
     }
 
+    /**
+     * Adds a commands to the current applied history and clear the backed out history
+     * @param command the command to add
+     */
     public void historyDo(Command command){
         command.Apply();
         historyBackedOut.clear();
@@ -214,6 +223,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         updateUndoRedoButtons();
     }
 
+    /**
+     * Redo the first command available in the backed out history
+     */
     public void historyRedo(){
         Command command = historyBackedOut.pop();
 
@@ -226,6 +238,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         updateUndoRedoButtons();
     }
 
+    /**
+     * Undo the last command available in the applied history and move it to the front of the backed out history
+     */
     public void historyUndo(){
         Command command = historyApplied.pop();
 

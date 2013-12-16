@@ -11,21 +11,36 @@ import Controller.MainWindowController;
  */
 public class InverseCommand extends Command {
 
+    /** the command to inverse */
     private Command command;
 
+    /**
+     * implements Command.Apply() to reverse the command to inverse
+     */
     public void Apply() {
         command.Reverse();
     }
 
+    /**
+     * implements Command.Reverse() to Apply the command to inverse
+     */
     public void Reverse() {
         command.Apply();
     }
 
+    /**
+     * Constructor
+     * @param command the command to inverse
+     */
     public InverseCommand(Command command) {
         super(command.getController());
         this.command = command;
     }
 
+    /**
+     * Gets the command to inverse
+     * @return the command to inverse
+     */
     public Command getCommand() {
         return command;
     }
