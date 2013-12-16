@@ -103,6 +103,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.setRound(null);
             mainWindow.setCalculatedRound(null);
 
+            mainWindow.getRightPanel().getRoundPanel().emptyFields();
+
             // Map has been successfully loaded, we enable 'load round' feature.
             mainWindow.featureLoadRoundSetEnable(true);
 
