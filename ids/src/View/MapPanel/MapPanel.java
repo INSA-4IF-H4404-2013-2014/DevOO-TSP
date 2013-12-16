@@ -640,6 +640,10 @@ public class MapPanel extends JPanel {
             previousModelCenterPosY = panel.modelCenterPos.y;
         }
 
+        /**
+         * overrides dragging mouse event
+         * @param mouseEvent the mouse event
+         */
         @Override
         public void mouseDragged(MouseEvent mouseEvent) {
             MapPanel panel = (MapPanel) mouseEvent.getComponent();
@@ -654,9 +658,12 @@ public class MapPanel extends JPanel {
             panel.repaint();
         }
 
+        /**
+         * overrides motion mouse event
+         * @param mouseEvent the mouse event
+         */
         @Override
         public void mouseMoved(MouseEvent mouseEvent) {
-            mouseDragged(mouseEvent);
         }
     }
 
