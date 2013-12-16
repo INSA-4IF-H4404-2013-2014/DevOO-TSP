@@ -238,7 +238,7 @@ public class DeliveryDialogController {
      * @return true if everything ok, false and popup messages if not
      */
     private boolean checkEndField(){
-        DateFormat df = new SimpleDateFormat("hh:mm");
+        DateFormat df = new SimpleDateFormat("kk:mm");
         Date parsed;
         String dateTxt;
         try{

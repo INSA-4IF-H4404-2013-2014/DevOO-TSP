@@ -7,6 +7,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -162,6 +163,9 @@ public class RoundPanel extends JPanel {
             // -1 because the warehouse is two times in this list
             this.deliveryCount.setText(""+(round.getOrderedItineraries().size()-1));
             this.duration.setText(CalculatedRound.conversionMSHM(round.getTotalDuration()));
+            SimpleDateFormat formh = new SimpleDateFormat("kk"), formm = new SimpleDateFormat("mm");
+            this.startTime.setText(formh.format(round.getDepartureTime().getTime()) + "h" + formm.format(round.getDepartureTime().getTime()));
+            this.endTime.setText(formh.format(round.getArrivalTime().getTime()) + "h" + formm.format(round.getArrivalTime().getTime()));
         }
     }
 
