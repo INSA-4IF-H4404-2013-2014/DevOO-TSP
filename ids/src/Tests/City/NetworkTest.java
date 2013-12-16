@@ -73,12 +73,18 @@ public class NetworkTest {
         CH = network.createStreet("H").createArc(C, H, 10.0f, 1.0f);
     }
 
+    /**
+     * Checks if findOutgoingTo finds the right street
+     */
     @Test
     public void testNodeFindOutgoingTo() {
         assertTrue(CW == C.findOutgoingTo(W));
         assertTrue(CE == C.findOutgoingTo(2));
     }
 
+    /**
+     * Checks if getDirectionAngle gets the right angle
+     */
     @Test
     public void testArcDirectionAngle() {
         assertTrue(Math.abs(CN.getDirectionAngle() - 0.0) < 0.01);
@@ -88,6 +94,9 @@ public class NetworkTest {
         assertTrue(Math.abs(CW.getDirectionAngle() - 270.0) < 0.01);
     }
 
+    /**
+     * Checks if getDirectionTo gets the right direction
+     */
     @Test
     public void testGetDirectionTo() {
 

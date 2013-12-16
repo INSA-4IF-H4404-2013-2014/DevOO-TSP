@@ -40,6 +40,12 @@ public class ChocoGraphTest {
         ChocoGraph chocograph = new ChocoGraph(network, round);
     }
 
+    /**
+     * Checks if choco graph is correct
+     * @throws UtilsException
+     * @throws FileNotFoundException
+     * @throws ParserConfigurationException
+     */
     @Test
     public void testCreate() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");

@@ -41,7 +41,9 @@ public class MainWindowControllerTest {
 
     }
 
-
+    /**
+     * Checks that doing a command refresh history
+     */
     @Test
     public void testDo() throws UtilsException {
         assertTrue(mwc.getHistoryApplied().size() == 0);
@@ -56,6 +58,9 @@ public class MainWindowControllerTest {
 
     }
 
+    /**
+     * Checks that undoing a command refresh histories
+     */
     @Test
     public void testUndo() throws UtilsException {
         String idClient = new String();
@@ -71,6 +76,9 @@ public class MainWindowControllerTest {
         assertTrue(mwc.getHistoryBackedOut().size() == 1);
     }
 
+    /**
+     * Checks that redoing a command refresh histories
+     */
     @Test
     public void testRedo() throws UtilsException {
         String idClient = new String();
