@@ -51,6 +51,12 @@ public class CalculatedRoundTest {
             assertTrue("No solution found after 200 seconds...", false);
     }
 
+    /**
+     * Checks that <code>calculatedRound.calculateEstimatedSchedule()</code> returns the good delivery times
+     * @throws UtilsException
+     * @throws ParserConfigurationException
+     * @throws FileNotFoundException
+     */
     @Test
     public void testEstimatedSchedule() throws UtilsException, ParserConfigurationException, FileNotFoundException {
         MainWindowController main = new MainWindowController();
@@ -77,6 +83,13 @@ public class CalculatedRoundTest {
         assert(calculatedRound.getDepartureTime().get(Calendar.MINUTE) == 53);
     }
 
+    /**
+     * Checks that <code>calculatedRound.calculatedRoundToHtml()</code> returns a valid HTML file
+     * @throws UtilsException
+     * @throws ParserConfigurationException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     @Test
     public void testHtmlParser() throws UtilsException, ParserConfigurationException, FileNotFoundException, IOException {
         MainWindowController main = new MainWindowController();
