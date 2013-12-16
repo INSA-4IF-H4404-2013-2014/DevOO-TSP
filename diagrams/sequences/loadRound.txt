@@ -44,9 +44,9 @@ loop i from 0 to xmlNodeList.length()
 "s : Schedule"->+"eDeliveries : Element" : getElementsByTagName(XMLConstants.DELIVERY_DELIVERY_ELEMENT)
 "eDeliveries : Element"-->-"s : Schedule" : delivery
 
-loop i from 0 to delivery.length()
+loop j from 0 to delivery.length()
 
-"s : Schedule"->+"deliveriy : Nodelist" : item(i)
+"s : Schedule"->+"deliveriy : Nodelist" : item(j)
 "deliveriy : Nodelist"-->-"s : Schedule" : element2
 
 "s : Schedule"->"deliveriyD : Delivery" : create(aRound, s, element2)
