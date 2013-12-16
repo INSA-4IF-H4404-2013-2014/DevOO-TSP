@@ -36,6 +36,8 @@ public class MainWindow extends JFrame {
 
     private Network network;
     private Round round;
+
+    /** The round that contains the orderly deliveries */
     private CalculatedRound calculatedRound;
 
     private RightPanel rightPanel = new RightPanel();
