@@ -241,6 +241,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         command.Apply();
         historyApplied.push(command);
         updateUndoRedoButtons();
+        selectNode(null);
     }
 
     /**
@@ -256,6 +257,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         command.Reverse();
         historyBackedOut.push(command);
         updateUndoRedoButtons();
+        selectNode(null);
     }
 
     public void exit() {
