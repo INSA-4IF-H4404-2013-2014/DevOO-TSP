@@ -27,7 +27,7 @@ public class RoundPanel extends JPanel {
     public RoundPanel() {
         final int borderSize = 5;
         final int rowHeight = 30;
-        final int alignForms = 130 + 2 * borderSize;
+        final int alignForms = 140 + 2 * borderSize;
         final int textFieldOffset = -5;
 
         JLabel labelCount = new JLabel("Nombre de livraisons :");
