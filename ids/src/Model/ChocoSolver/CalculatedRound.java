@@ -444,7 +444,7 @@ public class CalculatedRound {
 
         hour = milisec/3600000;
         min = (milisec-(hour*3600000))/60000;
-        res += hour + ":" + min;
+        res += hour + "h" + min;
         return res;
     }
 }
