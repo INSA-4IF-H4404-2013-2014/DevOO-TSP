@@ -30,7 +30,7 @@ public class RoundPanel extends JPanel {
         final int alignForms = 130 + 2 * borderSize;
         final int textFieldOffset = -5;
 
-        JLabel labelCount = new JLabel("Nombre livraisons :");
+        JLabel labelCount = new JLabel("Nombre de livraisons :");
         JLabel labelDuration = new JLabel("Durée :");
         JLabel labelDelay = new JLabel("Retard cumulé :");
         JLabel labelDistance = new JLabel("Longueur :");
@@ -44,7 +44,7 @@ public class RoundPanel extends JPanel {
         setLayout(layout);
 
         Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-        TitledBorder title = BorderFactory.createTitledBorder(lowerEtched, "Informations de la tounrée");
+        TitledBorder title = BorderFactory.createTitledBorder(lowerEtched, "Informations de la tournée");
         setBorder(title);
 
         add(labelCount);
