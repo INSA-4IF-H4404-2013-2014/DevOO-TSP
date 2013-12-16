@@ -132,14 +132,38 @@ public class CalculatedRound {
      */
     private String translateDirections(Arc.Direction direction) {
         if(direction == Arc.Direction.TURN_LEFT) {
-            return "&agrave; gauche";
+            return "Gauche";
         } else if(direction == Arc.Direction.TURN_RIGHT) {
-            return "&agrave; droite";
+            return "Droite";
         } else if(direction == Arc.Direction.TURN_BACK) {
-            return "en sens inverse";
+            return "Demi-tour";
         } else {
-            return "tout droit";
+            return "Tout droit";
         }
+    }
+
+    /**
+     * Give the time of an GregorianCalendar using the HH:MM format
+     * @param calendar the calendar to "translate"
+     * @return HH:MM formated time
+     */
+    private String calendarToHourMinutes(GregorianCalendar calendar) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int min = calendar.get(Calendar.MINUTE);
+        String result = "";
+
+        if(hour < 10) {
+            result = "0";
+        }
+
+        result += hour + ":";
+
+        if(min < 10) {
+            result += "0";
+        }
+
+        result += min;
+        return result;
     }
 
     /**
@@ -334,16 +358,11 @@ public class CalculatedRound {
         return estimatedSchedule.after(chocoDeliveries.get(nodeId).getDelivery().getSchedule().getLatestBound());
     }
 
-
-    // TODO: to be tested!  to be prune !!!
     /**
      * Parse the round into a html format
      * @return the html text in a String
      */
     public String calculatedRoundToHtml() {
-
-        String earlyText = "Heure min : ";
-        String latestText = "Heure max : ";
 
         String htmlOpen = "<html>\n";
         String htmlClose = "\n</html>";
@@ -361,8 +380,9 @@ public class CalculatedRound {
         String tdClose = "</td><br/>\n";
 
         String html = htmlOpen;
+        html += "<head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" /></head>\n<body>";
 
-        html += hOpen + "D&eacute;part de l'entrep&ocirc;t &agrave; " + departureTime.get(Calendar.HOUR_OF_DAY) + "h" + departureTime.get(Calendar.MINUTE) + hClose;
+        html += hOpen + "D&eacute;part de l'entrep&ocirc;t &agrave; " + calendarToHourMinutes(departureTime) + hClose;
 
         List<Arc> arcList;
         Delivery delivery;
@@ -386,17 +406,19 @@ public class CalculatedRound {
                         html += trOpen + "Prendre rue " + arc.getStreet().getName() + trClose;
                         i++;
                     } else {
-                        html += trOpen + "Prendre " + translateDirections(arcList.get(i-1).getDirectionTo(arc)) + " sur rue " + arc.getStreet().getName() + trClose;
+                        html += trOpen + translateDirections(arcList.get(i-1).getDirectionTo(arc)) + " sur rue " + arc.getStreet().getName() + trClose;
                         i++;
                     }
 
-                    html += trOpen + arc.getLength() + "m" + trClose;
-                    html += trOpen + arc.getCost()/60 + "min" + trClose;
+                    html += trOpen + "sur " + arc.getLength() + "m" + trClose;
+                    html += trOpen + "(temps estimé : " + arc.getCost()/60 + "min)" + trClose;
                     html += tdClose;
                 }
 
-                html += hOpen + "Client n&deg;" + delivery.getClient().getId() + hClose;
-                html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound().getTime() +" | " + delivery.getSchedule().getLatestBound().getTime() + hClose;
+                html += hOpen + "Client n&deg;" + delivery.getClient().getId() + "<br/>";
+                html += "Adresse : " + delivery.getAddress() + "<br/>";
+                html += "Heure d'arrivée estimée : " + calendarToHourMinutes(estimatedSchedules.get(delivery.getAddress().getId())) + "<br/>";
+                html += "Livraison entre " + calendarToHourMinutes(delivery.getSchedule().getEarliestBound()) + " et " + calendarToHourMinutes(delivery.getSchedule().getLatestBound()) + hClose;
                 html += tableClose;
 
 
@@ -405,7 +427,7 @@ public class CalculatedRound {
             } while(itinerary != firstItinerary);
         }
 
-        html += htmlClose;
+        html += "</body>\n" + htmlClose;
 
         return html;
     }
