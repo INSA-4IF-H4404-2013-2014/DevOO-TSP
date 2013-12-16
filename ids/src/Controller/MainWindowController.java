@@ -109,9 +109,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.featureLoadRoundSetEnable(true);
 
             // Reset Undo/Redo features
-            historyApplied.clear();
-            historyBackedOut.clear();
-            updateUndoRedoButtons();
+            resetUndoRedo();
 
             // Disable export round feature
             mainWindow.featureSaveRoundSetEnable(false);
@@ -159,6 +157,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.getMapPanel().setSelectedNode(null);
             mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
             mainWindow.featureSaveRoundSetEnable(true);
+            resetUndoRedo();
+
         } catch(Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(mainWindow, "Une erreur est survenue lors du calcul de la tournée",
@@ -528,6 +528,16 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         mainWindow.featureUndoSetEnable(historyApplied.size() > 0);
         mainWindow.featureRedoSetEnable(historyBackedOut.size() > 0);
 
+    }
+
+    /**
+     * Clears undo/redo stacks
+     * Updates enable/disable state.
+     */
+    private void resetUndoRedo() {
+        historyApplied.clear();
+        historyBackedOut.clear();
+        updateUndoRedoButtons();
     }
 } // end of class MainWindowController --------------------------------------------------------------------
 
