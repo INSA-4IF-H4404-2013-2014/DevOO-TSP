@@ -14,12 +14,25 @@ import java.awt.event.ActionListener;
  * This class is the JToolBar at the top of the main window
  */
 public class TopToolBar extends JToolBar {
+    /** The 'open map' button */
     protected JButton loadMap = new JButton();
+
+    /** The 'open round' button */
     protected JButton loadRound = new JButton();
+
+    /** The 'save round' button */
     protected JButton saveRound = new JButton();
+
+    /** The 'add delivery' button */
     protected JButton add = new JButton();
+
+    /** The 'remove delivery' button */
     protected JButton delete = new JButton();
+
+    /** The 'undo' button */
     protected JButton undo = new JButton();
+
+    /** The 'redo' button */
     protected JButton redo = new JButton();
 
     /**
@@ -124,6 +137,10 @@ public class TopToolBar extends JToolBar {
         redo.setEnabled(false);
     }
 
+    /**
+     * Requests this toolbar to bind all of its controls to real actions.
+     * @param controller A reference to our main controller
+     */
     public void addListener(final MainWindowController controller) {
         add.addActionListener(new ActionListener() {
             @Override

@@ -389,6 +389,7 @@ public class CalculatedRound {
         Integer currentNodeId = warehouse.getId();
         Itinerary firstItinerary = getNextItinerary(currentNodeId), itinerary = firstItinerary;
         currentNodeId = getNextNodeId(currentNodeId);
+        GregorianCalendar departure;
 
         int i;
 
@@ -417,8 +418,13 @@ public class CalculatedRound {
 
                 html += hOpen + "Client n&deg;" + delivery.getClient().getId() + "<br/>";
                 html += "Adresse : " + delivery.getAddress() + "<br/>";
+                html += "Livraison entre " + calendarToHourMinutes(delivery.getSchedule().getEarliestBound()) + " et " + calendarToHourMinutes(delivery.getSchedule().getLatestBound()) + "<br/>";
                 html += "Heure d'arrivée estimée : " + calendarToHourMinutes(estimatedSchedules.get(delivery.getAddress().getId())) + "<br/>";
-                html += "Livraison entre " + calendarToHourMinutes(delivery.getSchedule().getEarliestBound()) + " et " + calendarToHourMinutes(delivery.getSchedule().getLatestBound()) + hClose;
+
+                departure = (GregorianCalendar) estimatedSchedules.get(delivery.getAddress().getId()).clone();
+                departure.add(Calendar.MINUTE, 10);
+
+                html += "Heure de départ estimée : " + calendarToHourMinutes(departure) + hClose;
                 html += tableClose;
 
 
