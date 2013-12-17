@@ -84,7 +84,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Action triggered when user wants to load a map
      */
     public void loadNetwork() {
-        File xmlFile = openXMLFile();
+        File xmlFile = openXMLFile("Ouvrir une carte");
 
         if(xmlFile == null) {
             return;
@@ -127,7 +127,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Action triggered when user wants to load a round
      */
     public void loadRound() {
-        File xmlFile = openXMLFile();
+        File xmlFile = openXMLFile("Ouvrir une tournée");
 
         if(xmlFile == null) {
             return;
@@ -433,10 +433,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
 
     /**
      * Displays a JFileChooser with an XmlFileFilter only.
+     * @param title The JFileChooser's title
      * @return the chosen XML file, or null if no valid file has been opened.
      */
-    private File openXMLFile() {
+    private File openXMLFile(String title) {
         JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(title);
         chooser.setCurrentDirectory(new File("../"));
         chooser.setFileFilter(new XmlFileFilter());
         chooser.setAcceptAllFileFilterUsed(false);

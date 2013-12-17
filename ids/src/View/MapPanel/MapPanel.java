@@ -81,7 +81,7 @@ public class MapPanel extends JPanel {
             public void mouseWheelMoved(MouseWheelEvent event) {
                 MapPanel panel = (MapPanel) event.getComponent();
 
-                double multiplier = Math.pow(0.5, (double) event.getWheelRotation());
+                double multiplier = Math.pow(0.5, 0.5 * (double) event.getWheelRotation());
 
                 panel.multiplyScaleFactor(multiplier, event.getX(), event.getY());
             }
@@ -186,7 +186,7 @@ public class MapPanel extends JPanel {
     public void setRound(CalculatedRound round) {
         modelRound = round;
 
-        this.refreshNodesColor();
+        this.refreshNodesDeliveries();
         this.refreshArcsItineraries();
         this.repaint();
     }
@@ -263,7 +263,7 @@ public class MapPanel extends JPanel {
         double scaleFactor = modelViewScaleFactor * multiplier;
         double smallestScaleFactor = this.smallestScaleFactor();
 
-        if (scaleFactor <= smallestScaleFactor) {
+        if (scaleFactor <= smallestScaleFactor || smallestScaleFactor > maxScaleFactor) {
             fitToView();
             return;
         }
@@ -290,7 +290,7 @@ public class MapPanel extends JPanel {
      * Fit the entire map in the available view.
      */
     public void fitToView() {
-        modelViewScaleFactor = this.smallestScaleFactor();
+        modelViewScaleFactor = Math.min(this.smallestScaleFactor(), maxScaleFactor);
         modelCenterPos.x = (modelMinPos.x + modelMaxPos.x) / 2;
         modelCenterPos.y = (modelMinPos.y + modelMaxPos.y) / 2;
         fittedScaleFactor = true;
@@ -322,7 +322,7 @@ public class MapPanel extends JPanel {
     public void centerOn(Model.City.Node node, double scaleFactor) {
         double smallestScaleFactor = smallestScaleFactor();
 
-        if (scaleFactor <= smallestScaleFactor) {
+        if (scaleFactor <= smallestScaleFactor || smallestScaleFactor > maxScaleFactor) {
             fitToView();
             return;
         }
@@ -535,9 +535,10 @@ public class MapPanel extends JPanel {
     /**
      * Refreshes view's nodes' deliveries from the calculated round
      */
-    private void refreshNodesColor() {
+    private void refreshNodesDeliveries() {
         for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
             entry.getValue().setColor(RenderContext.streetBorderColor);
+            entry.getValue().setDeliveryDelayed(false);
         }
 
         if(modelRound == null) {
@@ -549,7 +550,13 @@ public class MapPanel extends JPanel {
         int colorId = RenderContext.itineraryColors.length - 1;
 
         for(int deliveryNodeId : deliveryNodesId) {
-            findNode(deliveryNodeId).setColor(RenderContext.itineraryColors[colorId]);
+            Node node = findNode(deliveryNodeId);
+
+            node.setColor(RenderContext.itineraryColors[colorId]);
+
+            if(modelRound.isDelayed(deliveryNodeId)) {
+                node.setDeliveryDelayed(true);
+            }
 
             colorId++;
 
