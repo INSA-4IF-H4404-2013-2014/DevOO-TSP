@@ -416,20 +416,24 @@ public class CalculatedRound {
                     html += tdClose;
                 }
 
-                html += hOpen + "Client n&deg;" + delivery.getClient().getId() + "<br/>";
-                html += "Adresse : " + delivery.getAddress() + "<br/>";
-                html += "Livraison entre " + calendarToHourMinutes(delivery.getSchedule().getEarliestBound()) + " et " + calendarToHourMinutes(delivery.getSchedule().getLatestBound()) + "<br/>";
-                html += "Heure d'arrivée estimée : " + calendarToHourMinutes(estimatedSchedules.get(delivery.getAddress().getId())) + "<br/>";
 
-                departure = (GregorianCalendar) estimatedSchedules.get(delivery.getAddress().getId()).clone();
-                departure.add(Calendar.MINUTE, 10);
+                if(currentNodeId != warehouse.getId()) {
+                    html += hOpen + "Client n&deg;" + delivery.getClient().getId() + "<br/>";
+                    html += "Adresse : " + delivery.getAddress() + "<br/>";
+                    html += "Livraison entre " + calendarToHourMinutes(delivery.getSchedule().getEarliestBound()) + " et " + calendarToHourMinutes(delivery.getSchedule().getLatestBound()) + "<br/>";
+                    html += "Heure d'arrivée estimée : " + calendarToHourMinutes(estimatedSchedules.get(delivery.getAddress().getId())) + "<br/>";
 
-                html += "Heure de départ estimée : " + calendarToHourMinutes(departure) + hClose;
+                    departure = (GregorianCalendar) estimatedSchedules.get(delivery.getAddress().getId()).clone();
+                    departure.add(Calendar.MINUTE, 10);
+
+                    html += "Heure de départ estimée : " + calendarToHourMinutes(departure) + hClose;
+                } else { // If it is the itinerary to return to the warehouse
+                    html += hOpen + "Arrivée à l'entrepot vers : " + calendarToHourMinutes(estimatedSchedules.get(warehouse.getId())) + hClose;
+                }
                 html += tableClose;
 
-
-                currentNodeId = getNextNodeId(currentNodeId);
                 itinerary = getNextItinerary(currentNodeId);
+                currentNodeId = getNextNodeId(currentNodeId);
             } while(itinerary != firstItinerary);
         }
 
