@@ -7,7 +7,13 @@
 #VIM backup files
 *~
 
-
+#JAVA
+*.class
+*.jar
+*.idea
+*.iml
+*.java.orig
+*/out
 
 #LaTeX files!
 *.log
@@ -32,6 +38,7 @@
 *.acr
 *.alg
 *.ist
+*.synctex.gz
 
 
 #OpenOffice lock files
