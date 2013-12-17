@@ -231,6 +231,7 @@ public class RenderContext {
 
         if(mapPanel.selectedNode != null) {
             drawNodeOverlay(mapPanel.selectedNode);
+            drawNodeBorders(mapPanel.selectedNode);
         }
     }
 
