@@ -125,7 +125,6 @@ public class TopMenuBar extends JMenuBar{
     public TopMenuBar() {
         createFileMenu();
         createEditMenu();
-        createViewMenu();
         createHelpMenu();
     }
 
@@ -195,16 +194,6 @@ public class TopMenuBar extends JMenuBar{
         redoButton.setEnabled(false);
 
         add(edit);
-    }
-
-    /**
-     * Create the "view" JMenu and add it to the JMenuBar
-     */
-    private void createViewMenu() {
-        JMenu view = new JMenu("Affichage");
-        view.setMnemonic(KeyEvent.VK_A);
-        view.setEnabled(false);
-        add(view);
     }
 
     /**
