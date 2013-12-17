@@ -156,6 +156,7 @@ public class MainWindow extends JFrame {
         JSplitPane innerJsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapPanel, rightPanel);
         innerJsp.setDividerLocation(650);
         innerJsp.setBorder(null);
+        innerJsp.setResizeWeight(1.0);
         mapPanel.setMinimumSize(new Dimension(400, 400));
         mapPanel.setPreferredSize(new Dimension(500, 900));
 
