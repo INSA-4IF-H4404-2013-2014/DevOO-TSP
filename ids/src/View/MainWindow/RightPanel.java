@@ -11,9 +11,13 @@ import java.awt.*;
  */
 public class RightPanel extends JPanel {
 
+    /** Panel of the round summary (top right of the main window) */
     private RoundPanel roundPanel = new RoundPanel();
+
+    /** Panel of the delivery's info (bottom right of the main window) */
     private DeliveryInfoPanel deliveryInfoPanel = new DeliveryInfoPanel();
 
+    /** Ratio of main window's width this right panel will take */
     public static final float DEFAULT_WIDTH_RATIO = (float)0.30;
 
     /**

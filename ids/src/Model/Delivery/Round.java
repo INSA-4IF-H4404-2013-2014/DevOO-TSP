@@ -14,8 +14,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -274,7 +272,7 @@ public class Round {
      * @return the id
      */
     public int findAnId() {
-        int free = Delivery.freeId;
+        int free = Delivery.lastUsedId;
         boolean freeFinded = false;
         while ( ! freeFinded) {
             freeFinded = true;
@@ -291,7 +289,7 @@ public class Round {
                 }
             }
         }
-        Delivery.freeId = free;
+        Delivery.lastUsedId = free;
         return free;
     }
 

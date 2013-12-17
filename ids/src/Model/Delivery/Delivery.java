@@ -16,7 +16,8 @@ import java.util.List;
  */
 public class Delivery {
 
-    public static int freeId = 1;
+    /** Stores the last used delivery ID */
+    protected static int lastUsedId = 1;
 
     /** The delivery unique ID */
     private int id;
@@ -129,6 +130,11 @@ public class Delivery {
         return schedule;
     }
 
+    /**
+     * Computes the string representation of a delivery.
+     * A delivery can be represented by a client and address description.
+     * @return The string representation.
+     */
     public String toString() {
         return "Client " + client + ", " + address;
     }

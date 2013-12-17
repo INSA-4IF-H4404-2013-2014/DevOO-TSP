@@ -20,71 +20,57 @@ import java.awt.event.ActionListener;
 public class DeliveryDialog extends JDialog {
 
     public static final int PADDING = 10;
-    /**
-     * the title
-     */
+
+    /** The dialog's title */
     public static final String title = "Ajout d'une livraison";
-    /**
-     * the text for the row in the list to create a new client
-     */
+
+    /** The text for the row in the list to create a new client */
     public static final String newCli = "nouveau client";
-    /**
-     * the controller of this dialog
-     */
+
+    /** The controller of this dialog */
     private DeliveryDialogController controller;
-    /**
-     * the main window linked to this dialog
-     */
+
+    /** This dialog's parent window */
     private MainWindow parent;
-    /**
-     * list of client (with a row for a new)
-     */
+
+    /** List of client (with a row for a new) */
     private JComboBox clientBox = new JComboBox();
-    /**
-     * field to set the id of a new client
-     */
+
+    /** Field to set the id of a new client */
     private JTextField newClient = new JTextField("", 4);
-    /**
-     * label to indicate the address of the node clicked
-     */
+
+    /** Label to indicate the address of the node clicked */
     private JLabel clientAddress = new JLabel("");
-    /**
-     * hour of the begining of the schedule
-     */
+
+    /** Hour of the beginning of the schedule */
     private JTextField timeFrameBeginH = new JTextField("", 2);
-    /**
-     * minute of the begining of the schedule
-     */
+
+    /** Minute of the beginning of the schedule */
     private JTextField timeFrameBeginM = new JTextField("", 2);
-    /**
-     * hours of the end of the schedule
-     */
+
+    /** Hours of the end of the schedule */
     private JTextField timeFrameEndH = new JTextField("", 2);
-    /**
-     * minutes of the end of the schedule
-     */
+
+    /** Minutes of the end of the schedule */
     private JTextField timeFrameEndM = new JTextField("", 2);
-    /**
-     * confirmation button
-     */
+
+    /** Confirmation button */
     private JButton okButton = new JButton("Confirmer");
-    /**
-     * cancel button
-     */
+
+    /** Cancel button */
     private JButton cancelButton = new JButton("Annuler");
-    /**
-     * label of the new client field
-     */
+
+    /** Label of the new client field */
     private JLabel labelNewClient = new JLabel("Nouvel id : ");
 
     /**
      * constructor
      * @param controller the controller of this view
-     * @param parent the main window which contains all the informations
+     * @param parent the main window which contains all the information
      */
     public DeliveryDialog(DeliveryDialogController controller, MainWindow parent) {
         super(parent, title, true);
-        //this.parent = parent;
+
         this.controller = controller;
         this.parent = parent;
         setContentPane(createMainPanel());
@@ -92,21 +78,13 @@ public class DeliveryDialog extends JDialog {
         pack();
         setLocationRelativeTo(null);
 
-        for (Client cli :parent.getRound().getClients() ){
+        for (Client cli : parent.getRound().getClients() ){
             clientBox.addItem(cli);
         }
         clientBox.addItem(newCli);
         clientAddress.setText(parent.getMapPanel().getSelectedNode().toString());
         setNewClientEnabled(false);
         addListener();
-    }
-
-    /**
-     * get the padding
-     * @return the padding
-     */
-    public static int getPadding() {
-        return PADDING;
     }
 
     /**
@@ -159,25 +137,25 @@ public class DeliveryDialog extends JDialog {
 
     /**
      * getter
-     * @return the mainwindow with the informations
+     * @return the mainwindow with the information
      */
     public MainWindow getParent() {
         return parent;
     }
 
     /**
-     * tells whether or not the user selected newClient in the list of client
+     * Tells whether or not the user selected newClient in the list of client
      * @return true if newClient is selected
      */
-    public boolean newCliIsSelected(){
+    public boolean newCliIsSelected() {
         return (clientBox.getSelectedItem().toString().compareTo(newCli) ==0);
     }
 
     /**
-     * enable or disabled the label and text field for a new client
+     * Enables or disables the label and text field for a new client
      * @param b
      */
-    private void setNewClientEnabled( boolean b){
+    private void setNewClientEnabled( boolean b) {
         labelNewClient.setEnabled(b);
         labelNewClient.setVisible(b);
         newClient.setEnabled(b);
@@ -206,15 +184,20 @@ public class DeliveryDialog extends JDialog {
      * @return the panel
      */
     private JPanel createForm() {
-        JPanel form = new JPanel(new GridLayout(5,1));
+        JPanel form = new JPanel(new GridLayout(6,1));
         form.add(createRow1());
         form.add(createRow2());
         form.add(createRow3());
         form.add(createRow4());
         form.add(createRow5());
+        form.add(createRow6());
         return form;
     }
 
+    /**
+     * Create the first row of the form
+     * @return
+     */
     private JPanel createRow1() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Client : "));
@@ -223,6 +206,10 @@ public class DeliveryDialog extends JDialog {
         return row;
     }
 
+    /**
+     * Create the second row of the form
+     * @return
+     */
     private JPanel createRow2() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(labelNewClient);
@@ -230,20 +217,41 @@ public class DeliveryDialog extends JDialog {
         return row;
     }
 
+    /**
+     * Create the third row of the form
+     * @return
+     */
     private JPanel createRow3() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Adresse : "));
+        return row;
+    }
+
+    /**
+     * Create the third row of the form
+     * @return
+     */
+    private JPanel createRow4() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(clientAddress);
         return row;
     }
 
-    private JPanel createRow4() {
+    /**
+     * Create the forth row of the form
+     * @return
+     */
+    private JPanel createRow5() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Plage horaire (format hh:mm )"));
         return row;
     }
 
-    private JPanel createRow5() {
+    /**
+     * Create the fifth row of the form
+     * @return
+     */
+    private JPanel createRow6() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(timeFrameBeginH);
         row.add(new JLabel(":"));
@@ -270,6 +278,9 @@ public class DeliveryDialog extends JDialog {
         return footer;
     }
 
+    /**
+     * Binds all controls of this dialog to real actions.
+     */
     private void addListener() {
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -291,7 +302,6 @@ public class DeliveryDialog extends JDialog {
                 if (newCliIsSelected()) {
                     setNewClientEnabled(true);
                     repaint();
-                    // TODO check if repaint is relevant
                 }
                 else
                 {

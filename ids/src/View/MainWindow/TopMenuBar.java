@@ -56,6 +56,11 @@ public class TopMenuBar extends JMenuBar{
     protected JMenuItem redoButton;
 
     /**
+     * about
+     */
+    protected JMenuItem about;
+
+    /**
      * Get the item openMap
      * @return the item openMap
      */
@@ -120,15 +125,25 @@ public class TopMenuBar extends JMenuBar{
     }
 
     /**
+     * Get the item about
+     * @return the item about
+     */
+    public JMenuItem getAboutButton() {
+        return about;
+    }
+
+    /**
      * Constructor
      */
     public TopMenuBar() {
         createFileMenu();
         createEditMenu();
-        createViewMenu();
         createHelpMenu();
     }
 
+    /**
+     * Create the "file" JMenu and add it to the JMenuBar
+     */
     private void createFileMenu() {
         JMenu file = new JMenu("Fichier");
         file.setMnemonic(KeyEvent.VK_F);
@@ -160,6 +175,9 @@ public class TopMenuBar extends JMenuBar{
         add(file);
     }
 
+    /**
+     * Create the "edit" JMenu and add it to the JMenuBar
+     */
     private void createEditMenu() {
         JMenu edit = new JMenu("Éditer");
         edit.setMnemonic(KeyEvent.VK_E);
@@ -191,19 +209,23 @@ public class TopMenuBar extends JMenuBar{
         add(edit);
     }
 
-    private void createViewMenu() {
-        JMenu view = new JMenu("Affichage");
-        view.setMnemonic(KeyEvent.VK_A);
-        view.setEnabled(false);
-        add(view);
-    }
-
+    /**
+     * Create the "help" JMenu and add it to the JMenuBar
+     */
     private void createHelpMenu() {
         JMenu help = new JMenu("?");
-        help.setEnabled(false);
+
+        about = new JMenuItem("À propos");
+
+        help.add(about);
+
         add(help);
     }
 
+    /**
+     * Requests this JMenuBar to bind all of its controls to real actions.
+     * @param controller A reference to our main controller
+     */
     public void addListener(final MainWindowController controller) {
         openMap.addActionListener(new ActionListener() {
             @Override
@@ -257,6 +279,13 @@ public class TopMenuBar extends JMenuBar{
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.historyRedo();
+            }
+        });
+
+        about.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showAboutDialog();
             }
         });
     }
