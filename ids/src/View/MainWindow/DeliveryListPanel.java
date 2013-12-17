@@ -19,8 +19,13 @@ import java.util.Vector;
  */
 public class DeliveryListPanel extends JScrollPane {
 
+    /** JList view associated with this panel */
     private JList deliveryList = new JList();
+
+    /** Ratio of the full width this panel will take */
     public static final float DEFAULT_WIDTH_RATIO = (float)0.24;
+
+    /** Padding, so that this panel can breathe. :-) */
     public static final int PADDING = 6;
 
     /**

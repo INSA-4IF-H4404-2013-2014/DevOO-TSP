@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -22,16 +23,46 @@ import java.util.GregorianCalendar;
  * This class is the controller of the small dialog window which is opened when adding a delivery.
  */
 public class DeliveryDialogController {
+    /**
+     * the formular to add a client
+     */
     private DeliveryDialog dialog;
+    /**
+     * begin of the schedule
+     */
     private GregorianCalendar begin;
+    /**
+     * end of the schedule
+     */
     private GregorianCalendar end;
+    /**
+     * id (already here or new) of the client
+     */
     private String client;
+    /**
+     * id of the node selected
+     */
     private int address;
+    /**
+     * tells whether or not all the necessary fields are complete and right
+     */
     private boolean addReady;
 
+    /**
+     * hour of begin
+     */
     private int beginH;
+    /**
+     * minute of begin
+     */
     private int beginM;
+    /**
+     * hour of end
+     */
     private int endH;
+    /**
+     * minutes of end
+     */
     private int endM;
 
 
@@ -168,9 +199,6 @@ public class DeliveryDialogController {
      * @return true if everything ok, false and popup messages if not
      */
     private boolean checkBeginField(){
-        DateFormat df = new SimpleDateFormat("kk:mm");
-        Date parsed = new Date();
-        String dateTxt;
 
         try{
             if(dialog.getTimeFrameBeginH().getText().equals("")){
@@ -187,17 +215,17 @@ public class DeliveryDialogController {
             if ((beginH <0 ) || (beginM <0)||(beginH > 23) || (beginM > 59)){
                 throw new Exception();
             }
-            dateTxt ="" + beginH + ":" +beginM;
-            parsed = df.parse(dateTxt);
         }catch(Exception e){
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "veuillez entrer une heure entre 0 et 23h et des minutes en 0 et 59",
                     "Erreur horaire debut", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(parsed);
+        Calendar currentDate = GregorianCalendar.getInstance();
+        int year = currentDate.get(Calendar.YEAR);
+        int month = currentDate.get(Calendar.MONTH);
+        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+        GregorianCalendar cal = new GregorianCalendar(year, month, day, beginH, beginM, 0);
         begin = cal;
         return true;
     }
@@ -208,9 +236,6 @@ public class DeliveryDialogController {
      * @return true if everything ok, false and popup messages if not
      */
     private boolean checkEndField(){
-        DateFormat df = new SimpleDateFormat("hh:mm");
-        Date parsed;
-        String dateTxt;
         try{
             if(dialog.getTimeFrameEndH().getText().equals("")){
                 endH = 0;
@@ -236,16 +261,17 @@ public class DeliveryDialogController {
             if((endH < beginH) || ((endH == beginH)&&(endM <= beginM))){
                 throw new Exception();
             }
-            dateTxt ="" + endH + ":" +endM;
-            parsed = df.parse(dateTxt);
+
         } catch (Exception e) {
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "fin de plage horaire avant le debut", "Erreur", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-
-        GregorianCalendar cal = new GregorianCalendar();//parsed.toGregorianCalendar();
-        cal.setTime(parsed);
+        Calendar currentDate = GregorianCalendar.getInstance();
+        int year = currentDate.get(Calendar.YEAR);
+        int month = currentDate.get(Calendar.MONTH);
+        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+        GregorianCalendar cal = new GregorianCalendar(year, month, day, endH, endM, 0);//parsed.toGregorianCalendar();
         end = cal;
         return true;
     }

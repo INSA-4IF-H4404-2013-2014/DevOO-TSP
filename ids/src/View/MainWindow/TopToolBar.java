@@ -14,12 +14,25 @@ import java.awt.event.ActionListener;
  * This class is the JToolBar at the top of the main window
  */
 public class TopToolBar extends JToolBar {
+    /** The 'open map' button */
     protected JButton loadMap = new JButton();
+
+    /** The 'open round' button */
     protected JButton loadRound = new JButton();
+
+    /** The 'save round' button */
     protected JButton saveRound = new JButton();
+
+    /** The 'add delivery' button */
     protected JButton add = new JButton();
+
+    /** The 'remove delivery' button */
     protected JButton delete = new JButton();
+
+    /** The 'undo' button */
     protected JButton undo = new JButton();
+
+    /** The 'redo' button */
     protected JButton redo = new JButton();
 
     /**
@@ -85,25 +98,35 @@ public class TopToolBar extends JToolBar {
         setFloatable(false);
         //setRollover(true);
 
+        ToolTipManager.sharedInstance().setInitialDelay(200);
+        ToolTipManager.sharedInstance().setDismissDelay(2000);
+
         loadMap.setIcon(new ImageIcon("./src/img/open_map.png"));
+        loadMap.setToolTipText("Charger une carte");
         add(loadMap);
         loadRound.setIcon(new ImageIcon("./src/img/open_round.png"));
+        loadRound.setToolTipText("Charger une tournée");
         add(loadRound);
 
         addSeparator();
         saveRound.setIcon(new ImageIcon("./src/img/save_round.png"));
+        saveRound.setToolTipText("Exporter et enregistrer la feuille de route de la tournée");
         add(saveRound);
 
         addSeparator();
         add.setIcon(new ImageIcon("./src/img/add.png"));
+        add.setToolTipText("Ajouter une livraison et recalculer la tournée");
         add(add);
         delete.setIcon(new ImageIcon("./src/img/delete.png"));
+        delete.setToolTipText("Supprimer une livraison et recalculer la tournée");
         add(delete);
 
         addSeparator();
         undo.setIcon(new ImageIcon("./src/img/undo.png"));
+        undo.setToolTipText("Annuler la dernière action annulable (ajout ou suppression)");
         add(undo);
         redo.setIcon(new ImageIcon("./src/img/redo.png"));
+        redo.setToolTipText("Refaire la dernière action annulée (ajout ou suppression)");
         add(redo);
 
         loadRound.setEnabled(false);
@@ -114,6 +137,10 @@ public class TopToolBar extends JToolBar {
         redo.setEnabled(false);
     }
 
+    /**
+     * Requests this toolbar to bind all of its controls to real actions.
+     * @param controller A reference to our main controller
+     */
     public void addListener(final MainWindowController controller) {
         add.addActionListener(new ActionListener() {
             @Override

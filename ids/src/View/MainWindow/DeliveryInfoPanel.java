@@ -33,7 +33,7 @@ public class DeliveryInfoPanel extends JPanel {
     public DeliveryInfoPanel() {
         final int borderSize = 5;
         final int rowHeight = 30;
-        final int alignForms = 130 + 2 * borderSize;
+        final int alignForms = 140 + 2 * borderSize;
         final int textFieldOffset = -5;
 
         JLabel labelId = new JLabel("ID :");
@@ -140,13 +140,14 @@ public class DeliveryInfoPanel extends JPanel {
         deliveryID.setText(""+delivery.getId());
         clientName.setText(""+delivery.getClient().getId());
         address.setText((""+delivery.getAddress().getId()));
-        SimpleDateFormat form = new SimpleDateFormat("kk:mm");
-        timeFrameBegin.setText(""+form.format(delivery.getSchedule().getEarliestBound().getTime()));
-        timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
+        SimpleDateFormat formh = new SimpleDateFormat("kk");
+        SimpleDateFormat formm = new SimpleDateFormat("mm");
+        timeFrameBegin.setText(""+formh.format(delivery.getSchedule().getEarliestBound().getTime()) + "h"+ formm.format(delivery.getSchedule().getEarliestBound().getTime()));
+        timeFrameEnd.setText(""+formh.format(delivery.getSchedule().getLatestBound().getTime()) + "h" +formm.format(delivery.getSchedule().getLatestBound().getTime()));
          if(round != null)
          {
-            deliveryTime.setText(""+form.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()));
-            delay.setText(""+round.getDelay(delivery.getAddress().getId()));
+            deliveryTime.setText(""+formh.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()) + "h" + formm.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()) );
+            delay.setText(""+CalculatedRound.conversionMSHM(round.getDelay(delivery.getAddress().getId())));
          }
      }
 

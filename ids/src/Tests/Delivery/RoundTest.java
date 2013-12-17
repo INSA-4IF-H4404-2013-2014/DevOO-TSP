@@ -36,12 +36,18 @@ public class RoundTest {
     private Round round;
     private List<Schedule> schedules;
 
+    /**
+     * Constructor
+     */
     public RoundTest() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         network = Network.createFromXml("resources/tests/round/plan10x10.xml");
         round = Round.createFromXml("resources/tests/round/valid.xml", network);
         schedules = round.getSchedules();
     }
 
+    /**
+     * Checks that addition of a delivery changes the next delivery's ID and adds this delivery in the list
+     */
     @org.junit.Test
     public void testAdd() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         String idClient = new String();
@@ -53,8 +59,12 @@ public class RoundTest {
 
         assertTrue(schedules.get(0).getNextDeliveryId() == 4);
         assertTrue(schedules.get(0).getDeliveries().size() == 3);
+        assertTrue(schedules.get(0).getDeliveries().get(3).getAddress().getId() == 2);
     }
 
+    /**
+     * Checks that deletion of a delivery removes this delivery in the list
+     */
     @org.junit.Test
     public void testRemove() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         String idClient = new String();

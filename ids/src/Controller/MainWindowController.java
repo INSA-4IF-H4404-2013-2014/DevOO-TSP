@@ -11,6 +11,7 @@ import Model.Delivery.*;
 import Utils.UtilsException;
 import Utils.XmlFileFilter;
 
+import View.MainWindow.AboutDialog;
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
@@ -35,8 +36,13 @@ import java.util.*;
  */
 public class MainWindowController implements NodeListener, ListSelectionListener {
 
+    /** Commands that are currently applied */
     private Deque<Controller.Command.Command> historyApplied;
+
+    /** Commands that have been backed out by historyUndo */
     private Deque<Controller.Command.Command> historyBackedOut;
+
+    /** Main window */
     private MainWindow mainWindow;
 
     /**
@@ -98,13 +104,14 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.setRound(null);
             mainWindow.setCalculatedRound(null);
 
+            selectNode(null);
+            mainWindow.getRightPanel().getRoundPanel().emptyFields();
+
             // Map has been successfully loaded, we enable 'load round' feature.
             mainWindow.featureLoadRoundSetEnable(true);
 
             // Reset Undo/Redo features
-            historyApplied.clear();
-            historyBackedOut.clear();
-            updateUndoRedoButtons();
+            resetUndoRedo();
 
             // Disable export round feature
             mainWindow.featureSaveRoundSetEnable(false);
@@ -147,11 +154,15 @@ public class MainWindowController implements NodeListener, ListSelectionListener
 
         try {
             computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
+
+            selectNode(null);
+
             mainWindow.getRightPanel().getRoundPanel().emptyFields();
-            mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
-            mainWindow.getMapPanel().setSelectedNode(null);
             mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+
             mainWindow.featureSaveRoundSetEnable(true);
+            resetUndoRedo();
+
         } catch(Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(mainWindow, "Une erreur est survenue lors du calcul de la tournée",
@@ -207,6 +218,10 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         this.historyDo(remove);
     }
 
+    /**
+     * Adds a commands to the current applied history and clear the backed out history
+     * @param command the command to add
+     */
     public void historyDo(Command command){
         command.Apply();
         historyBackedOut.clear();
@@ -214,6 +229,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         updateUndoRedoButtons();
     }
 
+    /**
+     * Redo the first command available in the backed out history
+     */
     public void historyRedo(){
         Command command = historyBackedOut.pop();
 
@@ -224,8 +242,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         command.Apply();
         historyApplied.push(command);
         updateUndoRedoButtons();
+        selectNode(null);
     }
 
+    /**
+     * Undo the last command available in the applied history and move it to the front of the backed out history
+     */
     public void historyUndo(){
         Command command = historyApplied.pop();
 
@@ -236,8 +258,20 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         command.Reverse();
         historyBackedOut.push(command);
         updateUndoRedoButtons();
+        selectNode(null);
     }
 
+    /**
+     * Shows the 'about' dialog
+     */
+    public void showAboutDialog() {
+        AboutDialog aboutDialog = new AboutDialog(mainWindow);
+        aboutDialog.setVisible(true);
+    }
+
+    /**
+     * Asks the application to exit in a clean way.
+     */
     public void exit() {
         System.exit(0);
     }
@@ -385,6 +419,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         };
         chooser.setCurrentDirectory(new File("../"));
         chooser.setAcceptAllFileFilterUsed(true);
+        chooser.setFileFilter(new FileNameExtensionFilter("Pages Web HTML (*.html)", "html"));
+        chooser.setDialogTitle("Exporter une tournée calculée");
+        chooser.setSelectedFile(new File(".html"));
 
         int feedback = chooser.showSaveDialog(mainWindow);
         if(feedback == JFileChooser.APPROVE_OPTION) {
@@ -410,42 +447,6 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         }
 
         return null;
-    }
-
-    /**
-     * Add an extension type to a JFileChooser
-     * @param type the type to add
-     * @param chooser the JFileChooser to be modified
-     * @return the modified JFileChooser
-     */
-    private JFileChooser addExtensionType(String type, JFileChooser chooser) {
-        if(type.length() != 0) {
-            FileNameExtensionFilter typeExtension = new FileNameExtensionFilter(type.toUpperCase() + " Files (*." + type.toLowerCase() + ")", type.toLowerCase());
-            chooser.addChoosableFileFilter(typeExtension);
-            chooser.setFileFilter(typeExtension);
-        }
-        return chooser;
-    }
-
-    /**
-     * Create a new file based on file or ask to user if he wants to erase it if it already exists
-     * @param file the file to be created
-     * @return true if file has been created, false otherwise
-     */
-    private Boolean createFile(File file) {
-        String message = "Êtes-vous sûr de vouloir écraser ce fichier ?";
-
-        if(!file.exists()) {
-            try {
-                file.createNewFile();
-                return true;
-            } catch(IOException e) {
-                System.out.println(e);
-                return false;
-            }
-        } else {
-            return askConfirmation(message);
-        }
     }
 
     /**
@@ -511,6 +512,16 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         mainWindow.featureUndoSetEnable(historyApplied.size() > 0);
         mainWindow.featureRedoSetEnable(historyBackedOut.size() > 0);
 
+    }
+
+    /**
+     * Clears undo/redo stacks
+     * Updates enable/disable state.
+     */
+    private void resetUndoRedo() {
+        historyApplied.clear();
+        historyBackedOut.clear();
+        updateUndoRedoButtons();
     }
 } // end of class MainWindowController --------------------------------------------------------------------
 

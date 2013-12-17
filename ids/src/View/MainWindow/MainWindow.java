@@ -19,35 +19,50 @@ import java.util.Vector;
  * This class is the main window (JFrame) of the application.
  */
 public class MainWindow extends JFrame {
-    /**
-     * Default window size and ratios
-     */
+
+    /** Default window ratio */
     public static final double DEFAULT_RATIO = 16.0/9.0;
+
+    /** Default window width */
     public static final int DEFAULT_WIDTH = 1280;
+
+    /** Default window height */
     public static final int DEFAULT_HEIGHT = (int)(DEFAULT_WIDTH/DEFAULT_RATIO);
 
-    /**
-     * This is the padding of the "subMainWindow (the whole window but without the topMenuBar and TopToolBar)
-     */
+    /** Padding of the "subMainWindow" (the whole window but without the TopMenuBar and TopToolBar) */
     public static final int SUB_MAINPANEL_PADDING = 8;
 
+    /** Title of the main window (in the title bar). */
     private static final String TITLE = "Supervision des livraisons";
 
-
+    /** Network associated to this view */
     private Network network;
+
+    /** Round associated to this view */
     private Round round;
+
+    /** The round that contains the ordered deliveries */
     private CalculatedRound calculatedRound;
 
+    /** Right side of the window */
     private RightPanel rightPanel = new RightPanel();
+
+    /** Left side of the window */
     private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
 
+    /** The MapPanel, in the center of the window */
     private MapPanel mapPanel = new MapPanel();
 
+    /** The TopMenuBar, with "file", "edit", etc. menus at the top of the window */
     private TopMenuBar topMenuBar = new TopMenuBar();
+
+    /** The toolbar with buttons at the top of the window, but at the bottom of TopMenuBar */
     private TopToolBar topToolBar = new TopToolBar();
 
+    /** The main panel of this frame */
     private JPanel mainPanel = new JPanel(new BorderLayout());
 
+    /** A reference to our controller so we can request actions to be executed */
     protected MainWindowController mainWindowController;
 
     /**
@@ -92,7 +107,6 @@ public class MainWindow extends JFrame {
 
     /**
      * Sets the round.
-     * Asks the deliveryListPanel to display it.
      * @param round the round to set & display
      */
     public void setRound(Round round) {
