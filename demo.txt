@@ -32,7 +32,7 @@ La vraie demo
 	1. présenter les boutons sans "cliquer"
 		1. Présenter rapidement les boutons avec leur tooltip (passer au dessus d'eux un à un)
 		2. Montrer la correspondance avec la barre de menu et évoquer les raccourcis clavier
-				NE PAS FAIRE LA DEMO DE CNTL+Q, MEFIEZ VOUS DE CNTL +Z 
+				NE PAS FAIRE LA DEMO DE CTRL+Q, MEFIEZ VOUS DE CTRL +Z 
 				
 	2. reproduire une séquence de création
 		1. importer map
