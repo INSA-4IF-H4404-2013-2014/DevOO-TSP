@@ -177,6 +177,8 @@ public class RoundPanel extends JPanel {
         this.distance.setText("");
         this.deliveryCount.setText("");
         this.duration.setText("");
+        this.startTime.setText("");
+        this.endTime.setText("");
     }
 
 }
