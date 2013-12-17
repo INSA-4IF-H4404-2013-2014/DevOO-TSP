@@ -280,16 +280,24 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
     public int computeRound(Network network, Round round) {
+        /*
         if(round.getDeliveryList().size() == 0) {
             mainWindow.getMapPanel().setRound(null);
             mainWindow.setCalculatedRound(null);
             return 0;
         }
-
+        */
+        TSP tsp = null;
+        SolutionState solutionState;
         ChocoGraph graph = new ChocoGraph(network, round);
 
-        TSP tsp = solveTsp(graph, 10000);
-        SolutionState solutionState = tsp.getSolutionState();
+        if(round.getDeliveryList().size() != 0) {
+            tsp = solveTsp(graph, 10000);
+            solutionState = tsp.getSolutionState();
+        }
+        else {
+            solutionState = SolutionState.OPTIMAL_SOLUTION_FOUND;
+        }
 
         if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
             CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
@@ -504,7 +512,11 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @return the CalculatedRound
      */
     private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
-        return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
+        if(tsp != null) {
+            return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
+        }
+
+        return new CalculatedRound(mainWindow.getRound().getWarehouse(), null, chocoGraph);
     }
 
     /**

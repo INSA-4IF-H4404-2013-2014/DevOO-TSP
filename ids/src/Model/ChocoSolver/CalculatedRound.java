@@ -52,15 +52,15 @@ public class CalculatedRound {
         this.warehouse = warehouse;
         this.chocoDeliveries = chocoGraph.getDeliveries();
 
-        for(int i = 0; i < tspOrderedDeliveries.length; ++i) {
-            Integer srcId = chocoGraph.getNetworkIdFromChocoId(i);
-            Integer destId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
-            successors.put(srcId, destId);
+        if(tspOrderedDeliveries != null && tspOrderedDeliveries.length != 0) {
+            for(int i = 0; i < tspOrderedDeliveries.length; ++i) {
+                Integer srcId = chocoGraph.getNetworkIdFromChocoId(i);
+                Integer destId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
+                successors.put(srcId, destId);
+            }
         }
 
-        if(tspOrderedDeliveries.length != 0) {
-            calculateEstimatedSchedules();
-        }
+        calculateEstimatedSchedules();
     }
 
     /**
@@ -72,28 +72,33 @@ public class CalculatedRound {
         int warehouseId = getWarehouse().getId();
         departureTime = getFirstDepartureTime();
 
-        GregorianCalendar arrivalTime;
-        GregorianCalendar earlyBound;
+        if(chocoDeliveries.size() != 1) {
+            GregorianCalendar arrivalTime;
+            GregorianCalendar earlyBound;
 
-        // Initialisation
-        int nextId = getNextNodeId(warehouseId);
-        estimatedSchedules.put(nextId, getArrivalTime(warehouseId, 0));
-        int previousId = nextId;
+            // Initialisation
+            int nextId = getNextNodeId(warehouseId);
+            estimatedSchedules.put(nextId, getArrivalTime(warehouseId, 0));
+            int previousId = nextId;
 
-        for(nextId = getNextNodeId(previousId) ; nextId != warehouseId ; nextId = getNextNodeId(previousId))
-        {
-            arrivalTime = getArrivalTime(previousId, 600);
-            earlyBound = chocoDeliveries.get(nextId).getDelivery().getSchedule().getEarliestBound();
+            for(nextId = getNextNodeId(previousId) ; nextId != warehouseId ; nextId = getNextNodeId(previousId))
+            {
+                arrivalTime = getArrivalTime(previousId, 600);
+                earlyBound = chocoDeliveries.get(nextId).getDelivery().getSchedule().getEarliestBound();
 
-            if(arrivalTime.getTime().getTime() < earlyBound.getTime().getTime()) {
-                estimatedSchedules.put(nextId, earlyBound);
-            } else {
-                estimatedSchedules.put(nextId, arrivalTime);
+                if(arrivalTime.getTime().getTime() < earlyBound.getTime().getTime()) {
+                    estimatedSchedules.put(nextId, earlyBound);
+                } else {
+                    estimatedSchedules.put(nextId, arrivalTime);
+                }
+                previousId = nextId;
             }
-            previousId = nextId;
-        }
 
-        estimatedSchedules.put(warehouseId, getArrivalTime(previousId, 600));
+            estimatedSchedules.put(warehouseId, getArrivalTime(previousId, 600));
+        }
+        else {
+            estimatedSchedules.put(warehouseId, departureTime);
+        }
     }
 
 
@@ -102,27 +107,33 @@ public class CalculatedRound {
      * @return the departure time from the warehouse
      */
     private GregorianCalendar getFirstDepartureTime() {
+        GregorianCalendar departure;
         ChocoDelivery firstDelivery = chocoDeliveries.get(getNextNodeId(warehouse.getId()));
-        Date departureDate = firstDelivery.getDelivery().getSchedule().getEarliestBound().getTime();
 
+        if(firstDelivery != null) {
+            Date departureDate = firstDelivery.getDelivery().getSchedule().getEarliestBound().getTime();
 
-        int warehouseToDeliveryTime = getNextItinerary(warehouse.getId()).getCost();
+            int warehouseToDeliveryTime = getNextItinerary(warehouse.getId()).getCost();
 
-        long departureTime = departureDate.getTime() - (long)(warehouseToDeliveryTime * 1000);
+            long departureTime = departureDate.getTime() - (long)(warehouseToDeliveryTime * 1000);
 
-        departureDate.setTime(departureTime);
+            departureDate.setTime(departureTime);
 
-        GregorianCalendar departure = new GregorianCalendar();
-        departure.setTime(departureDate);
+            departure = new GregorianCalendar();
+            departure.setTime(departureDate);
 
-        // If the departure time is between 00:00am and 06:00am,
-        // we force the departure time to 06:00am
-        if(departure.get(Calendar.HOUR_OF_DAY) < 6) {
-            departure.set(Calendar.HOUR_OF_DAY, 6);
-            departure.set(Calendar.MINUTE, 0);
+            // If the departure time is between 00:00am and 06:00am,
+            // we force the departure time to 06:00am
+            if(departure.get(Calendar.HOUR_OF_DAY) < 6) {
+                departure.set(Calendar.HOUR_OF_DAY, 6);
+                departure.set(Calendar.MINUTE, 0);
+            }
+            return departure;
         }
-
-        return departure;
+        else {
+            Calendar today = GregorianCalendar.getInstance();
+            return new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 6, 0, 0);
+        }
     }
 
     /**
@@ -308,7 +319,7 @@ public class CalculatedRound {
         do {
             nodesId.add(currentNodeId);
             currentNodeId = successors.get(currentNodeId);
-        } while(currentNodeId != warehouse.getId());
+        } while(currentNodeId != null && warehouse.getId() != currentNodeId);
 
         return nodesId;
     }
@@ -319,17 +330,19 @@ public class CalculatedRound {
      */
     public List<Itinerary> getOrderedItineraries() {
         List<Itinerary> itineraries = new LinkedList<Itinerary>();
-        Integer currentNodeId = warehouse.getId();
-        Itinerary firstItinerary = getNextItinerary(currentNodeId), itinerary = firstItinerary;
 
-        if(itinerary != null) {
-            do {
-                itineraries.add(itinerary);
-                currentNodeId = getNextNodeId(currentNodeId);
-                itinerary = getNextItinerary(currentNodeId);
-            } while(itinerary != firstItinerary);
+        if(chocoDeliveries.size() > 1) {
+            Integer currentNodeId = warehouse.getId();
+            Itinerary firstItinerary = getNextItinerary(currentNodeId), itinerary = firstItinerary;
+
+            if(itinerary != null) {
+                do {
+                    itineraries.add(itinerary);
+                    currentNodeId = getNextNodeId(currentNodeId);
+                    itinerary = getNextItinerary(currentNodeId);
+                } while(itinerary != firstItinerary);
+            }
         }
-
         return itineraries;
     }
 
