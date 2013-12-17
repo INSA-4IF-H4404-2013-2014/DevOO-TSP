@@ -163,7 +163,7 @@ public class MainWindow extends JFrame {
         JSplitPane outerJsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, deliveryListPanel, innerJsp);
         deliveryListPanel.setMinimumSize(new Dimension(220, 200));
         deliveryListPanel.setPreferredSize(new Dimension(600, 200));
-        outerJsp.setDividerLocation(250);
+        outerJsp.setDividerLocation(270);
         outerJsp.setBorder(null);
 
         subMainPanel.add(outerJsp, BorderLayout.CENTER);
