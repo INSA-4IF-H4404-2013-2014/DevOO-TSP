@@ -11,6 +11,7 @@ import Model.Delivery.*;
 import Utils.UtilsException;
 import Utils.XmlFileFilter;
 
+import View.MainWindow.AboutDialog;
 import View.MainWindow.MainWindow;
 import View.MapPanel.MapPanel;
 import View.MapPanel.NodeListener;
@@ -258,6 +259,14 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         historyBackedOut.push(command);
         updateUndoRedoButtons();
         selectNode(null);
+    }
+
+    /**
+     * Shows the 'about' dialog
+     */
+    public void showAboutDialog() {
+        AboutDialog aboutDialog = new AboutDialog(mainWindow);
+        aboutDialog.setVisible(true);
     }
 
     /**

@@ -281,5 +281,12 @@ public class TopMenuBar extends JMenuBar{
                 controller.historyRedo();
             }
         });
+
+        about.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showAboutDialog();
+            }
+        });
     }
 }
