@@ -255,11 +255,11 @@ public class DeliveryDialog extends JDialog {
     private JPanel createRow6() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(timeFrameBeginH);
-        row.add(new JLabel(":"));
+        row.add(new JLabel("h"));
         row.add(timeFrameBeginM);
         row.add(new JLabel("à"));
         row.add(timeFrameEndH);
-        row.add(new JLabel(":"));
+        row.add(new JLabel("h"));
         row.add(timeFrameEndM);
         return row;
     }
