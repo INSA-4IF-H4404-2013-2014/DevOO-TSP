@@ -8,6 +8,7 @@ les grandes parties de l'appli à decrire
 		
 	2. La tournée 
 		2.a. expliquer les champs
+		2.b. sur l entrepot pas de tournée
 	
 	3. Listes des livraisons
 		3.a. decrire le texte
@@ -16,7 +17,7 @@ les grandes parties de l'appli à decrire
 	4. Description d'une livraison
 		4.a. decrire les champs, surtout schedule
 		
-	5. Description du fromulaire d ajout
+	5. Description du formulaire d ajout
 		5.a. list client / newCli
 		5.b. adresse
 		5.c. plage horaire
@@ -38,11 +39,13 @@ La vraie demo
 		1. importer map
 			1. cliquer sur bouton map
 			2. naviguer jusqu'aux maps
-			3. prendre la 20*20
+			3.1 essayer des prendre un tournée
+			3.2 prendre la 20*20
 			** 1.a.
 			** 1.b.			
 			
 		2. importer tournée
+rq: les tournée 10*10 peuvent marcher sur une 20*20 car parfois les noeud ont la meme ref
 			1. cliquer sur bouton tournée
 			2. naviguer jusqu'aux tournées
 			3. prendre la 20*20 1
@@ -52,25 +55,26 @@ La vraie demo
 		3. selectionner a tout va
 		le but est de montrer quela selection est facile, 
 		par plusieurs endroits et donne acces a tel ou tel bouton
-			1. cliquer sur une livraison dans la map //TODO
+			1. cliquer sur une livraison dans la map 
 			** 3.a.
-			2. cliquer sur une livraison dans la liste //TODO
+			2. cliquer sur une livraison dans la liste 
 			** 3.b. 
 			** 4.a.
-			3. cliquer sur un noeud vide //TODO
+			3. cliquer sur l entrepot
+			** 2.b.
+			4. cliquer sur un noeud vide 
 			
 		4. ajouter une livraison
 		malmener le formulaire et malmener la tournee ensuite
 			1. cliquer sur le bouton add
 			** 5.a.
 			** 5.b.
-			2. selectionner un client existant //TODO
+			2. selectionner un client existant 
 			3. chercher la merde 
 				1. selectionner new
-				2. entrer un client deja existant //TODO
+				2. entrer un client deja existant (309)
 				3. cliquer sur ok
 				--> erreur client deja existant 
-				--> erreur scheduler ? //TODO
 			4. entrer un client qui n existe pas encore
 				5. cliquer sur ok
 				--> erreur scheduler ( begin et fin trop proches)
@@ -78,42 +82,43 @@ La vraie demo
 				6. entrer une heure abberrante //TODO
 				7. cliquer sur ok
 				--> erreur scheduler ( erreur heure)
-			8. entrer un vrai scheduler
+				6. entrer une plage deja prise 7h à 15h
+				7. cliquer sur ok
+				--> erreur scheduler ( tagada)
+			8. entrer un vrai scheduler 12h à 13h
 			9. cliquer sur ok 
 			--> recalcul de tournée avec la new liv
 			10. recliquer sur add
-			11. remplir le schedule //TODO
-			12. cliquer sur annuler
-			13. recliquer sur add
-			14. choisir un client //TODO
-			15. remplir un schedule //TODO
+			11. remplir le schedule 12h à 13h
 			16. cliquer sur ok
 			
-		5. annuler /refaire
-			penser a dire que ceux ci deselectionnent pour eviter des problemes d incoherences
-			1. cliquer sur annuler
-			2. cliquer sur annuler
-			3. cliquer sur refaire
-			4. selectionner un noeud //TODO
-			5. cliquer sur refaire (deselection)
-			6. cliquer sur annuler
+		5. montrer les retards
+			ajouter un noeud toujours au meme client (celui par defaut)
+			et sur une meme plage horaire tres courte //TODO
+			1. charger une liv serrée //TODO
+			2. creer une liv sur plage ... //TODO
 			
-		6. supprimer
+		6. annuler /refaire
+			penser a dire que ceux ci deselectionnent pour eviter des problemes d incoherences
+			0. creer deux livraisons
+			1. cliquer sur annuler
+			--> liv suppr
+			2. cliquer sur annuler
+			--> 2e liv suppr
+			3. cliquer sur refaire
+			--> retour liv
+			4. selectionner un noeud 
+			5. cliquer sur refaire 
+			--> retour 2e liv + deselection
+			6. cliquer sur annuler
+			--> suppr liv
+			
+		7. supprimer
 			1. selectionner le premier noeud ajouté //TODO
 			2. cliquer sur supprimer
 			--> on ne peut plus refaire 
 			
-		6. montrer les retards
-			ajouter un noeud toujours au meme client (celui par defaut)
-			et sur une meme plage horaire tres courte //TODO
-			
-			1. ajouter un noeud NO //TODO
-			2. ajouter un noeud SO //TODO
-			3. ajouter un noeud SE //TODO
-			4. ajouter un noeud NE //TODO
-			etc.
-			
-			constater retard sur livraison et sur tournée.
+	
 			
 		
 			
