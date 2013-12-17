@@ -184,12 +184,13 @@ public class DeliveryDialog extends JDialog {
      * @return the panel
      */
     private JPanel createForm() {
-        JPanel form = new JPanel(new GridLayout(5,1));
+        JPanel form = new JPanel(new GridLayout(6,1));
         form.add(createRow1());
         form.add(createRow2());
         form.add(createRow3());
         form.add(createRow4());
         form.add(createRow5());
+        form.add(createRow6());
         return form;
     }
 
@@ -223,6 +224,15 @@ public class DeliveryDialog extends JDialog {
     private JPanel createRow3() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Adresse : "));
+        return row;
+    }
+
+    /**
+     * Create the third row of the form
+     * @return
+     */
+    private JPanel createRow4() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(clientAddress);
         return row;
     }
@@ -231,7 +241,7 @@ public class DeliveryDialog extends JDialog {
      * Create the forth row of the form
      * @return
      */
-    private JPanel createRow4() {
+    private JPanel createRow5() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Plage horaire (format hh:mm )"));
         return row;
@@ -241,7 +251,7 @@ public class DeliveryDialog extends JDialog {
      * Create the fifth row of the form
      * @return
      */
-    private JPanel createRow5() {
+    private JPanel createRow6() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(timeFrameBeginH);
         row.add(new JLabel(":"));
