@@ -20,6 +20,9 @@ public class Node {
     /** the node's color */
     private Color color;
 
+    /** is the node's delivery delayed */
+    private boolean deliveryDelayed;
+
 
     /**
      * Constructor
@@ -30,6 +33,7 @@ public class Node {
         this.mapPanel = mapPanel;
         this.modelNode = modelNode;
         this.color = RenderContext.streetBorderColor;
+        this.deliveryDelayed = false;
     }
 
     /**
@@ -73,10 +77,26 @@ public class Node {
     }
 
     /**
+     * Tests if the delivery is delayed
+     * @return true if the delivery is delayed
+     */
+    public boolean isDeliveryDelayed() {
+        return deliveryDelayed;
+    }
+
+    /**
      * Sets the node's color
      * @param color the new node's color
      */
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    /**
+     * Sets the node's delivery late
+     * @param deliveryDelayed the new delayed boolean to set
+     */
+    public void setDeliveryDelayed(boolean deliveryDelayed) {
+        this.deliveryDelayed = deliveryDelayed;
     }
 }

@@ -116,23 +116,36 @@ public class RenderContext {
     /**
      * Draws a given node's borders
      * @param node the node to draw
-     * @param selectOverlay defines if drawing the selection overlay
      */
-    protected void drawNodeBorders(Node node, boolean selectOverlay) {
+    protected void drawNodeBorders(Node node) {
         int nodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
         int x = node.getX() - nodeRadius;
         int y = node.getY() - nodeRadius;
 
-        if(node == mapPanel.selectedNode && selectOverlay) {
-            int nodeRadiusAdd = (int)Math.ceil((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
-            int overlayNodeRadius = nodeRadius + nodeRadiusAdd;
-
-            context.setColor(streetSelectedNodeOverlay);
-            context.fillOval(x - nodeRadiusAdd, y - nodeRadiusAdd, overlayNodeRadius * 2, overlayNodeRadius * 2);
-        }
-
         context.setColor(node.getColor());
         context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
+    }
+
+    /**
+     * Draws a given node's overlay (selection or delay)
+     * @param node the node to draw
+     */
+    protected void drawNodeOverlay(Node node) {
+        if(node == mapPanel.selectedNode) {
+            context.setColor(streetSelectedNodeOverlay);
+        } else if(node.isDeliveryDelayed()) {
+            context.setColor(itineraryDelayedDeliveryColor);
+        } else {
+            return;
+        }
+
+        int overlayNodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
+        overlayNodeRadius += (int)Math.ceil((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
+
+        int x = node.getX() - overlayNodeRadius;
+        int y = node.getY() - overlayNodeRadius;
+
+        context.fillOval(x, y, overlayNodeRadius * 2, overlayNodeRadius * 2);
     }
 
     /**
@@ -205,11 +218,20 @@ public class RenderContext {
         }
 
         for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
-            drawNodeBorders(entry.getValue(), false);
+            Node node = entry.getValue();
+
+            if(node != mapPanel.selectedNode) {
+                drawNodeOverlay(node);
+            }
+        }
+
+        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
+            drawNodeBorders(entry.getValue());
         }
 
         if(mapPanel.selectedNode != null) {
-            drawNodeBorders(mapPanel.selectedNode, true);
+            drawNodeOverlay(mapPanel.selectedNode);
+            drawNodeBorders(mapPanel.selectedNode);
         }
     }
 
@@ -545,6 +567,7 @@ public class RenderContext {
     protected static final Color itineraryWarehouseColor = new Color(0, 0, 0);
     private static final int itineraryThickness = 4;
     private static final int itineraryDotDistance = 4;
+    private static final Color itineraryDelayedDeliveryColor = new Color(255, 0, 0, 70);
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);
