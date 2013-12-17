@@ -81,7 +81,7 @@ public class MapPanel extends JPanel {
             public void mouseWheelMoved(MouseWheelEvent event) {
                 MapPanel panel = (MapPanel) event.getComponent();
 
-                double multiplier = Math.pow(0.5, (double) event.getWheelRotation());
+                double multiplier = Math.pow(0.5, 0.5 * (double) event.getWheelRotation());
 
                 panel.multiplyScaleFactor(multiplier, event.getX(), event.getY());
             }

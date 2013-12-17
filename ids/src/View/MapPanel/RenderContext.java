@@ -433,7 +433,12 @@ public class RenderContext {
             rect.setRect((double)streetNodeRadius, -0.5 * streetCenterLineThickness, arcInfo.length - 2.0 * (double)streetNodeRadius, streetCenterLineThickness);
 
             context.setColor(streetMarksColor);
-            context.fill(rect);
+            //context.fill(rect);
+
+            Stroke previousStrock = context.getStroke();
+            context.setStroke(streetCenterLineStrock);
+            context.drawLine(0, 0, (int)arcInfo.length, 0);
+            context.setStroke(previousStrock);
         } else {
             Path2D.Double path = new Path2D.Double();
 
@@ -549,6 +554,8 @@ public class RenderContext {
     private static final int streetThickness = 4;
     private static final int streetBorderThickness = 1;
     private static final double streetCenterLineThickness = 0.2;
+
+    private static final BasicStroke streetCenterLineStrock = new BasicStroke(0.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1}, 0);
 
     /** node color */
     protected static final int streetNodeRadius = 10;
