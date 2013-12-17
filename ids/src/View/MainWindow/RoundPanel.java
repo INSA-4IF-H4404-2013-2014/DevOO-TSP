@@ -1,13 +1,12 @@
 package View.MainWindow;
 
 import Model.ChocoSolver.CalculatedRound;
-import Model.Delivery.Delivery;
-import Model.Delivery.Round;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -22,10 +21,68 @@ public class RoundPanel extends JPanel {
     private JTextField delay = new JTextField("", 4);
     private JTextField distance = new JTextField("", 4);
 
+    /**
+     * Constructor
+     */
     public RoundPanel() {
-        setLayout(new GridBagLayout());
-        setBackground(Color.GRAY);
-        add(createRoundPanelContent());
+        final int borderSize = 5;
+        final int rowHeight = 30;
+        final int alignForms = 130 + 2 * borderSize;
+        final int textFieldOffset = -5;
+
+        JLabel labelCount = new JLabel("Nombre livraisons :");
+        JLabel labelDuration = new JLabel("Durée :");
+        JLabel labelDelay = new JLabel("Retard cumulé :");
+        JLabel labelDistance = new JLabel("Longueur :");
+
+        deliveryCount = new JTextField("", 4);
+        duration = new JTextField("", 4);
+        delay = new JTextField("", 4);
+        distance = new JTextField("", 4);
+
+        SpringLayout layout = new SpringLayout();
+        setLayout(layout);
+
+        Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+        TitledBorder title = BorderFactory.createTitledBorder(lowerEtched, "Informations de la tounrée");
+        setBorder(title);
+
+        add(labelCount);
+        add(labelDuration);
+        add(labelDelay);
+        add(labelDistance);
+
+        add(deliveryCount);
+        add(duration);
+        add(delay);
+        add(distance);
+
+        layout.putConstraint(SpringLayout.WEST, deliveryCount, alignForms, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, duration, alignForms, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, delay, alignForms, SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.WEST, distance, alignForms, SpringLayout.WEST, this);
+
+        layout.putConstraint(SpringLayout.EAST, deliveryCount, -borderSize, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, duration, -borderSize, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, delay, -borderSize, SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, distance, -borderSize, SpringLayout.EAST, this);
+
+        layout.putConstraint(SpringLayout.NORTH, deliveryCount, textFieldOffset, SpringLayout.NORTH, labelCount);
+        layout.putConstraint(SpringLayout.NORTH, duration, textFieldOffset, SpringLayout.NORTH, labelDuration);
+        layout.putConstraint(SpringLayout.NORTH, delay, textFieldOffset, SpringLayout.NORTH, labelDelay);
+        layout.putConstraint(SpringLayout.NORTH, distance, textFieldOffset, SpringLayout.NORTH, labelDistance);
+
+        layout.putConstraint(SpringLayout.EAST, labelCount, -borderSize, SpringLayout.WEST, deliveryCount);
+        layout.putConstraint(SpringLayout.EAST, labelDuration, -borderSize, SpringLayout.WEST, duration);
+        layout.putConstraint(SpringLayout.EAST, labelDelay, -borderSize, SpringLayout.WEST, delay);
+        layout.putConstraint(SpringLayout.EAST, labelDistance, -borderSize, SpringLayout.WEST, distance);
+
+        layout.putConstraint(SpringLayout.NORTH, labelCount, borderSize, SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.NORTH, labelDuration, rowHeight, SpringLayout.NORTH, labelCount);
+        layout.putConstraint(SpringLayout.NORTH, labelDelay, rowHeight, SpringLayout.NORTH, labelDuration);
+        layout.putConstraint(SpringLayout.NORTH, labelDistance, rowHeight, SpringLayout.NORTH, labelDelay);
+
+        setEnableAllFields(false);
     }
 
     /**
@@ -61,51 +118,6 @@ public class RoundPanel extends JPanel {
     }
 
     /**
-     * Creates the dialog of the round panel.
-     * @return the JPanel
-     */
-    private JPanel createRoundPanelContent() {
-        JPanel roundPanelContent = new JPanel(new BorderLayout());
-        roundPanelContent.setBorder(new EmptyBorder(10, 10, 10, 10));
-        roundPanelContent.add(new JLabel("Tournée"), BorderLayout.PAGE_START);
-
-        // We create here the small "form"
-        JPanel roundPanelContentForm = new JPanel(new GridLayout(3, 1));
-        roundPanelContentForm.add(createRow1());
-        roundPanelContentForm.add(createRow2());
-        roundPanelContentForm.add(createRow3());
-        setEnableAllFields(false);
-
-        // We add this "form" to our roundPanelContent
-        roundPanelContent.add(roundPanelContentForm, BorderLayout.CENTER);
-
-        return roundPanelContent;
-    }
-
-    private JPanel createRow1() {
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Nombre de livraisons : "));
-        row.add(deliveryCount);
-        return row;
-    }
-
-    private JPanel createRow2() {
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Durée : "));
-        row.add(duration);
-        row.add(new JLabel("Retard cumulé :"));
-        row.add(delay);
-        return row;
-    }
-
-    private JPanel createRow3() {
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Longueur : "));
-        row.add(distance);
-        return row;
-    }
-
-    /**
      * Enable or disable the fields
      * @param b whether to enable or disable the fields
      */
@@ -124,7 +136,7 @@ public class RoundPanel extends JPanel {
         if(round != null)
         {
             this.delay.setText(CalculatedRound.conversionMSHM(round.getCumulatedDelay()));
-            this.distance.setText(""+round.getTotalLength());
+            this.distance.setText(""+((int)round.getTotalLength())+" m");
             // -1 because the warehouse is two times in this list
             this.deliveryCount.setText(""+(round.getOrderedItineraries().size()-1));
             this.duration.setText(CalculatedRound.conversionMSHM(round.getTotalDuration()));

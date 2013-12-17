@@ -1,6 +1,7 @@
 package Tests.ChocoSolver;
 
 import Controller.MainWindowController;
+import Model.ChocoSolver.CalculatedRound;
 import Model.ChocoSolver.ChocoGraph;
 import Model.ChocoSolver.SolutionState;
 import Model.ChocoSolver.TSP;
@@ -13,10 +14,11 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Calendar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,29 +52,47 @@ public class CalculatedRoundTest {
     }
 
     @Test
-    public void testEstimatedSchedule() {
-        // TODO: test this function once computeRound() is ready
+    public void testEstimatedSchedule() throws UtilsException, ParserConfigurationException, FileNotFoundException {
+        MainWindowController main = new MainWindowController();
 
-        Network myNetwork = new Network();
+        main.loadNetwork("resources/tests/planTiny.xml");
+        main.loadRound("resources/tests/livraisonTiny.xml");
 
-        myNetwork.createNode(1, 5, 5);
-        myNetwork.createNode(2, 21, 10);
-        myNetwork.createNode(3, 30, 60);
+        CalculatedRound calculatedRound = main.getMainWindow().getCalculatedRound();
 
-        myNetwork.createStreet("1");
-        myNetwork.createStreet("2");
-        myNetwork.createStreet("3");
+        assert(calculatedRound.getEstimatedSchedules(7).get(Calendar.HOUR_OF_DAY) == 8);
+        assert(calculatedRound.getEstimatedSchedules(7).get(Calendar.MINUTE) == 00);
 
-        myNetwork.findStreet("1").createArc(myNetwork.findNode(1), myNetwork.findNode(2), 10, 100);
-        myNetwork.findStreet("2").createArc(myNetwork.findNode(2), myNetwork.findNode(3), 10, 200);
-        myNetwork.findStreet("3").createArc(myNetwork.findNode(3), myNetwork.findNode(1), 10, 100);
+        assert(calculatedRound.getEstimatedSchedules(5).get(Calendar.HOUR_OF_DAY) == 9);
+        assert(calculatedRound.getEstimatedSchedules(5).get(Calendar.MINUTE) == 30);
 
-        Client client = new Client("Toto");
+        assert(calculatedRound.getEstimatedSchedules(9).get(Calendar.HOUR_OF_DAY) == 9);
+        assert(calculatedRound.getEstimatedSchedules(9).get(Calendar.MINUTE) == 42);
 
+        main.loadNetwork("../sujet/plan10x10.xml");
+        main.loadRound("resources/tests/livraison10x10-3.xml");
+
+        calculatedRound = main.getMainWindow().getCalculatedRound();
+        assert(calculatedRound.getDepartureTime().get(Calendar.HOUR_OF_DAY) == 7);
+        assert(calculatedRound.getDepartureTime().get(Calendar.MINUTE) == 53);
     }
 
     @Test
-    public void testHtmlParser() {
-        // TODO: testHtmlParser()
+    public void testHtmlParser() throws UtilsException, ParserConfigurationException, FileNotFoundException, IOException {
+        MainWindowController main = new MainWindowController();
+
+        main.loadNetwork("../sujet/plan10x10.xml");
+        main.loadRound("resources/tests/livraison10x10-3.xml");
+
+        FileWriter output = new FileWriter("resources/tests/export.html", false);
+        output.write(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
+        output.close();
+
+        main.loadNetwork("resources/tests/planTiny.xml");
+        main.loadRound("resources/tests/livraisonTiny.xml");
+
+        output = new FileWriter("resources/tests/export2.html", false);
+        output.write(main.getMainWindow().getCalculatedRound().calculatedRoundToHtml());
+        output.close();
     }
 }

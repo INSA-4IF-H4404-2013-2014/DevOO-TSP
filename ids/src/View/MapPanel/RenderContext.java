@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -116,31 +116,22 @@ public class RenderContext {
     /**
      * Draws a given node's borders
      * @param node the node to draw
+     * @param selectOverlay defines if drawing the selection overlay
      */
-    protected void drawNodeBorders(Node node) {
+    protected void drawNodeBorders(Node node, boolean selectOverlay) {
         int nodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
         int x = node.getX() - nodeRadius;
         int y = node.getY() - nodeRadius;
 
-        if(node == mapPanel.selectedNode) {
-            int nodeRadiusAdd = (int)((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
+        if(node == mapPanel.selectedNode && selectOverlay) {
+            int nodeRadiusAdd = (int)Math.ceil((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
+            int overlayNodeRadius = nodeRadius + nodeRadiusAdd;
 
-            x -= nodeRadiusAdd;
-            y -= nodeRadiusAdd;
-
-            nodeRadius += nodeRadiusAdd;
-
-            context.setColor(streetSelectedNodeColor);
-        } else {
-            context.setColor(streetBorderColor);
+            context.setColor(streetSelectedNodeOverlay);
+            context.fillOval(x - nodeRadiusAdd, y - nodeRadiusAdd, overlayNodeRadius * 2, overlayNodeRadius * 2);
         }
 
-        if(node.getKind() == Node.Kind.DELIVERY) {
-            context.setColor(itineraryColor);
-        } else if(node.getKind() == Node.Kind.WAREHOUSE) {
-            context.setColor(itineraryWarehouseColor);
-        }
-
+        context.setColor(node.getColor());
         context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
     }
 
@@ -214,11 +205,11 @@ public class RenderContext {
         }
 
         for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
-            drawNodeBorders(entry.getValue());
+            drawNodeBorders(entry.getValue(), false);
         }
 
         if(mapPanel.selectedNode != null) {
-            drawNodeBorders(mapPanel.selectedNode);
+            drawNodeBorders(mapPanel.selectedNode, true);
         }
     }
 
@@ -361,6 +352,17 @@ public class RenderContext {
     }
 
     /**
+     * Draws MapPanel's borders
+     */
+    protected void drawPanelBorders() {
+        context.setColor(panelBorderColor);
+        context.drawLine(0, 0, mapPanel.getWidth(), 0);
+        context.drawLine(0, 0, 0, mapPanel.getHeight());
+        context.drawLine(0, mapPanel.getHeight() - 1, mapPanel.getWidth(), mapPanel.getHeight() - 1);
+        context.drawLine(mapPanel.getWidth() - 1, 0, mapPanel.getWidth() - 1, mapPanel.getHeight());
+    }
+
+    /**
      * Generates Arc's rendering informations
      * @param arc the given arc we want to render
      * @return an ArcInfo structure containing all informations
@@ -434,25 +436,45 @@ public class RenderContext {
      * @param arcLeaving the leaving node
      */
     private void drawModelArcItinerary(ArcInfo arcInfo, int arcLeaving) {
-        if(!arcInfo.arc.isItineraryFrom(arcLeaving)) {
+        int arrow1X[] = { -itineraryThickness / 2, -itineraryThickness / 2, itineraryThickness / 2 };
+        int arrow1Y[] = { itineraryThickness / 2, -itineraryThickness / 2, 0 };
+        int arrow2X[] = { -itineraryThickness / 2, itineraryThickness / 2, itineraryThickness / 2 };
+        int arrow2Y[] = { 0, -itineraryThickness / 2, +itineraryThickness / 2 };
+
+        java.util.List<Color> itineraryColors = arcInfo.arc.getItineraryColorsFrom(arcLeaving);
+
+        if(itineraryColors.isEmpty()) {
             return;
         }
 
-        int yOffset = 0;
-
+        double yOffset = 0.0;
         if(arcInfo.isBidirectional()) {
-            yOffset = ((3 - arcLeaving * 2) * streetThickness) / 2;
+            yOffset = 0.5 * (double)((arcLeaving * 2 - 3) * streetThickness);
         }
 
-        int dotCount = (int)Math.floor((arcInfo.length - 2.0 * (double)streetThickness) / (double)itineraryDotDistance);
+        int dotCount = (int)Math.ceil((arcInfo.length - 2.0 * (double)streetThickness) / (double)itineraryDotDistance);
+        double x = 0.5 * (arcInfo.length - (double)(dotCount - 1) * (double)itineraryDotDistance);
 
-        context.setColor(itineraryColor);
+        AffineTransform previousTransform = context.getTransform();
+        Iterator<Color> colorsIt = arcInfo.arc.getItineraryColorsFrom(arcLeaving).iterator();
 
         for(int i = 0; i < dotCount; i++) {
-            int x = streetThickness + i * itineraryDotDistance;
-            int y = (yOffset * streetThickness) / 4;
+            context.translate(x, yOffset);
+            context.setColor(colorsIt.next());
 
-            context.fillOval(x - itineraryThickness / 2, y - itineraryThickness / 2, itineraryThickness, itineraryThickness);
+            if(!colorsIt.hasNext()) {
+                colorsIt = arcInfo.arc.getItineraryColorsFrom(arcLeaving).iterator();
+            }
+
+            if(arcLeaving == 2) {
+                context.fillPolygon(arrow2X, arrow2Y, 3);
+            } else {
+                context.fillPolygon(arrow1X, arrow1Y, 3);
+            }
+
+            context.setTransform(previousTransform);
+
+            x += (double)itineraryDotDistance;
         }
     }
 
@@ -495,26 +517,34 @@ public class RenderContext {
 
     /** background color */
     private static final Color backgroundColor = new Color(236, 232, 223);
+    private static final Color panelBorderColor = new Color(160, 120, 100);
     private static final Color textColor = new Color(0, 0, 0, 150);
 
     /** street's constants */
     private static final Color streetColor = new Color(255, 255, 255);
     private static final Color streetMarksColor = new Color(200, 200, 200);
-    private static final Color streetBorderColor = new Color(210, 140, 100);
+    protected static final Color streetBorderColor = new Color(210, 140, 100);
     private static final int streetThickness = 4;
     private static final int streetBorderThickness = 1;
     private static final double streetCenterLineThickness = 0.2;
 
     /** node color */
     protected static final int streetNodeRadius = 10;
-    private static final Color streetSelectedNodeColor = new Color(240, 80, 80);
-    private static final int streetSelectedNodeRadiusPx = 4;
+    private static final Color streetSelectedNodeOverlay = new Color(0, 0, 0, 80);
+    private static final int streetSelectedNodeRadiusPx = 8;
 
     /** itinerary constants */
-    private static final Color itineraryColor = new Color(55, 122, 255);
-    private static final Color itineraryWarehouseColor = new Color(100, 100, 100);
-    private static final int itineraryThickness = 2;
-    private static final int itineraryDotDistance = 3;
+    protected static final Color[] itineraryColors = new Color[]{
+            new Color (255, 0, 0),
+            new Color (255, 107, 0),
+            new Color (250, 200, 0),
+            new Color (20, 180, 20),
+            new Color (30, 140, 255),
+            new Color (129, 0, 235)
+    };
+    protected static final Color itineraryWarehouseColor = new Color(0, 0, 0);
+    private static final int itineraryThickness = 4;
+    private static final int itineraryDotDistance = 4;
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);

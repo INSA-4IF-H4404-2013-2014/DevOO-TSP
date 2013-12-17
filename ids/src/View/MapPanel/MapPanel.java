@@ -186,7 +186,7 @@ public class MapPanel extends JPanel {
     public void setRound(CalculatedRound round) {
         modelRound = round;
 
-        this.refreshBodesDeliveries();
+        this.refreshNodesColor();
         this.refreshArcsItineraries();
         this.repaint();
     }
@@ -299,6 +299,63 @@ public class MapPanel extends JPanel {
     }
 
     /**
+     * Test if the network view fully fits
+     * @return true if the network view fully fits
+     */
+    public boolean isViewFitted() {
+        return fittedScaleFactor;
+    }
+
+    /**
+     * Center the view on a model node
+     * @param node the node we want to center on
+     */
+    public void centerOn(Model.City.Node node) {
+        centerOn(node, getModelViewScaleFactor());
+    }
+
+    /**
+     * Center the view on a model node
+     * @param node the node we want to center on
+     * @param scaleFactor the scale factor we want to apply
+     */
+    public void centerOn(Model.City.Node node, double scaleFactor) {
+        double smallestScaleFactor = smallestScaleFactor();
+
+        if (scaleFactor <= smallestScaleFactor) {
+            fitToView();
+            return;
+        }
+
+        modelViewScaleFactor = Math.min(scaleFactor, maxScaleFactor);
+        fittedScaleFactor = false;
+
+        setModelCenterPos(node.getX(), node.getY());
+
+        repaint();
+    }
+
+    /**
+     * Tests if the node is visible on the view
+     * @param node the node we want to test
+     * @return true if node is visible, false elsewhere
+     */
+    public boolean isVisible(Model.City.Node node) {
+        int x = viewCoordinateX(node.getX());
+        int y = viewCoordinateY(node.getY());
+
+        return (x >= 0 && x < getWidth() && y >= 0 && y < getHeight());
+    }
+
+    /**
+     * Gets the model/view scale factor
+     * @return the model/view scale factor (view = modelViewScaleFactor * model)
+     */
+    public double getModelViewScaleFactor() {
+        return modelViewScaleFactor;
+    }
+
+    /**
      * Paints map panel event
      * @param g the graphic context
      */
@@ -310,6 +367,7 @@ public class MapPanel extends JPanel {
 
         if(modelNetwork == null) {
             renderContext.drawEmptyMessage();
+            renderContext.drawPanelBorders();
             return;
         }
 
@@ -327,6 +385,8 @@ public class MapPanel extends JPanel {
         if (!fittedScaleFactor) {
             renderContext.drawGlobalView();
         }
+
+        renderContext.drawPanelBorders();
     }
 
     /**
@@ -341,6 +401,20 @@ public class MapPanel extends JPanel {
      */
     protected int modelCoordinateY(int y) {
         return (int)(modelCenterPos.y - (double)(y - this.getHeight() / 2) / modelViewScaleFactor);
+    }
+
+    /**
+     * Gets view X coordinate
+     */
+    protected int viewCoordinateX(int x) {
+        return (int)((double)(x - modelCenterPos.x) * modelViewScaleFactor + 0.5 * (double) this.getWidth());
+    }
+
+    /**
+     * Gets view Y coordinate
+     */
+    protected int viewCoordinateY(int y) {
+        return (int)(0.5 * (double)this.getHeight() - (double)(y - modelCenterPos.y) * modelViewScaleFactor);
     }
 
     /**
@@ -461,9 +535,9 @@ public class MapPanel extends JPanel {
     /**
      * Refreshes view's nodes' deliveries from the calculated round
      */
-    private void refreshBodesDeliveries() {
+    private void refreshNodesColor() {
         for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
-            entry.getValue().setKind(Node.Kind.DEFAULT);
+            entry.getValue().setColor(RenderContext.streetBorderColor);
         }
 
         if(modelRound == null) {
@@ -472,11 +546,19 @@ public class MapPanel extends JPanel {
 
         List<Integer> deliveryNodesId = modelRound.getOrderedNodesId();
 
+        int colorId = RenderContext.itineraryColors.length - 1;
+
         for(int deliveryNodeId : deliveryNodesId) {
-            findNode(deliveryNodeId).setKind(Node.Kind.DELIVERY);
+            findNode(deliveryNodeId).setColor(RenderContext.itineraryColors[colorId]);
+
+            colorId++;
+
+            if(colorId == RenderContext.itineraryColors.length) {
+                colorId = 0;
+            }
         }
 
-        findNode(modelRound.getWarehouse().getId()).setKind(Node.Kind.WAREHOUSE);
+        findNode(modelRound.getWarehouse().getId()).setColor(RenderContext.itineraryWarehouseColor);
     }
 
     /**
@@ -485,16 +567,15 @@ public class MapPanel extends JPanel {
     private void refreshArcsItineraries() {
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                Arc arc = entry.getValue();
-
-                arc.setItineraryFrom(1, false);
-                arc.setItineraryFrom(2, false);
+                entry.getValue().resetItineraryColors();
             }
         }
 
         if(modelRound == null) {
             return;
         }
+
+        int colorId = 0;
 
         for(Itinerary modelItinerary : modelRound.getOrderedItineraries()) {
             for(Model.City.Arc modelArc : modelItinerary.getArcs()) {
@@ -504,10 +585,16 @@ public class MapPanel extends JPanel {
                 Arc arc = findArc(from, to);
 
                 if (arc.getNode1().getModelNode() == modelArc.getFrom()) {
-                    arc.setItineraryFrom(1, true);
+                    arc.getItineraryColorsFrom(1).add(RenderContext.itineraryColors[colorId]);
                 } else {
-                    arc.setItineraryFrom(2, true);
+                    arc.getItineraryColorsFrom(2).add(RenderContext.itineraryColors[colorId]);
                 }
+            }
+
+            colorId++;
+
+            if(colorId == RenderContext.itineraryColors.length) {
+                colorId = 0;
             }
         }
     }

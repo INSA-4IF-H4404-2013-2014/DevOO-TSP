@@ -19,6 +19,7 @@
 
 \usepackage{multirow} %Gère les cecllules fusionnées dans les tableaux
 
+\usepackage{pdflscape}
 \usepackage{enumerate}
 \usepackage{eurosym}
 \usepackage{wrapfig}
@@ -73,13 +74,13 @@
 % ================== SOULIGNEMENT ================== %
 \usepackage[normalem]{ulem} %Package gérant le soulignement
 %Définition de commandes pour souligner en tirets
-\def\dashuline{\bgroup 
+\def\dashuline{\bgroup
   \ifdim\ULdepth=\maxdimen  % Set depth based on font, if not set already
    \settodepth\ULdepth{(j}\advance\ULdepth.4pt\fi
   \markoverwith{\kern.15em
   \vtop{\kern\ULdepth \hrule width .3em}%
   \kern.15em}\ULon}
-\def\dotuline{\bgroup 
+\def\dotuline{\bgroup
   \ifdim\ULdepth=\maxdimen  % Set depth based on font, if not set already
    \settodepth\ULdepth{(j}\advance\ULdepth.4pt\fi
   \markoverwith{\begingroup

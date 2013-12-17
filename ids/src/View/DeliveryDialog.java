@@ -1,6 +1,9 @@
 package View;
 
 import Controller.DeliveryDialogController;
+import Model.City.Node;
+import Model.Delivery.Client;
+import View.MainWindow.MainWindow;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,26 +21,91 @@ public class DeliveryDialog extends JDialog {
 
     public static final int PADDING = 10;
     public static final String title = "Ajout d'une livraison";
+    public static final String newCli = "nouveau client";
 
     private DeliveryDialogController controller;
+    private MainWindow parent;
+    //private MainWindow parent;
+    private JComboBox clientBox = new JComboBox();
 
-    private JComboBox client = new JComboBox();
-    private JTextField newClient = new JTextField("", 10);
-    private JTextField clientAddress = new JTextField("", 12);
-    private JTextField timeFrameBegin = new JTextField("", 4);
-    private JTextField timeFrameEnd = new JTextField("", 4);
+    private JTextField newClient = new JTextField("", 4);
+    private JLabel clientAddress = new JLabel("");
+    private JTextField timeFrameBeginH = new JTextField("", 2);
+    private JTextField timeFrameBeginM = new JTextField("", 2);
+    private JTextField timeFrameEndH = new JTextField("", 2);
+    private JTextField timeFrameEndM = new JTextField("", 2);
     private JButton okButton = new JButton("Confirmer");
     private JButton cancelButton = new JButton("Annuler");
+    private JLabel labelNewClient = new JLabel("Nouvel id : ");
 
-    public DeliveryDialog(DeliveryDialogController controller, JFrame parent) {
+
+    public DeliveryDialog(DeliveryDialogController controller, MainWindow parent) {
         super(parent, title, true);
+        //this.parent = parent;
         this.controller = controller;
+        this.parent = parent;
         setContentPane(createMainPanel());
         setResizable(false);
         pack();
         setLocationRelativeTo(null);
 
+        for (Client cli :parent.getRound().getClients() ){
+            clientBox.addItem(cli);
+        }
+        clientBox.addItem(newCli);
+        clientAddress.setText(parent.getMapPanel().getSelectedNode().toString());
+        setNewClientEnabled(false);
         addListener();
+    }
+
+    public static int getPadding() {
+        return PADDING;
+    }
+
+    public JTextField getTimeFrameEndH() {
+        return timeFrameEndH;
+    }
+
+    public JTextField getTimeFrameBeginH() {
+        return timeFrameBeginH;
+    }
+
+    public JTextField getTimeFrameEndM() {
+        return timeFrameEndM;
+    }
+
+    public JTextField getTimeFrameBeginM() {
+        return timeFrameBeginM;
+    }
+
+    public JComboBox getClientBox() {
+        return clientBox;
+    }
+
+    public JTextField getNewClient() {
+        return newClient;
+    }
+
+    public MainWindow getParent() {
+        return parent;
+    }
+
+    /**
+     *
+     */
+    public boolean newCliIsSelected(){
+        return (clientBox.getSelectedItem().toString().compareTo(newCli) ==0);
+    }
+
+    /**
+     * enable or disabled the label and text field for a new client
+     * @param b
+     */
+    private void setNewClientEnabled( boolean b){
+        labelNewClient.setEnabled(b);
+        labelNewClient.setVisible(b);
+        newClient.setEnabled(b);
+        newClient.setVisible(b);
     }
 
     /**
@@ -51,10 +119,9 @@ public class DeliveryDialog extends JDialog {
         JLabel title = new JLabel("Livraison");
         title.setFont(new Font("Serif", Font.BOLD, 16));
         mainPanel.add(title, BorderLayout.PAGE_START);
-
         mainPanel.add(createForm(), BorderLayout.CENTER);
-
         mainPanel.add(createFooterButtons(), BorderLayout.PAGE_END);
+
         return mainPanel;
     }
 
@@ -63,35 +130,52 @@ public class DeliveryDialog extends JDialog {
      * @return the panel
      */
     private JPanel createForm() {
-        JPanel form = new JPanel(new GridLayout(3,1));
+        JPanel form = new JPanel(new GridLayout(5,1));
         form.add(createRow1());
         form.add(createRow2());
         form.add(createRow3());
+        form.add(createRow4());
+        form.add(createRow5());
         return form;
     }
 
     private JPanel createRow1() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Client : "));
-        row.add(client);
+        row.add(clientBox);
 
-        row.add(newClient);
         return row;
     }
 
     private JPanel createRow2() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row.add(labelNewClient);
+        row.add(newClient);
+        return row;
+    }
+
+    private JPanel createRow3() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(new JLabel("Adresse : "));
         row.add(clientAddress);
         return row;
     }
 
-    private JPanel createRow3() {
+    private JPanel createRow4() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        row.add(new JLabel("Plage horaire : "));
-        row.add(timeFrameBegin);
+        row.add(new JLabel("Plage horaire (format hh:mm )"));
+        return row;
+    }
+
+    private JPanel createRow5() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row.add(timeFrameBeginH);
+        row.add(new JLabel(":"));
+        row.add(timeFrameBeginM);
         row.add(new JLabel("à"));
-        row.add(timeFrameEnd);
+        row.add(timeFrameEndH);
+        row.add(new JLabel(":"));
+        row.add(timeFrameEndM);
         return row;
     }
 
@@ -115,6 +199,29 @@ public class DeliveryDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.cancel();
+            }
+        });
+
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.confirm();
+            }
+        });
+
+        clientBox.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (newCliIsSelected()) {
+                    setNewClientEnabled(true);
+                    repaint();
+                    // TODO check if repaint is relevant
+                }
+                else
+                {
+                    setNewClientEnabled(false);
+                    repaint();
+                }
             }
         });
     }

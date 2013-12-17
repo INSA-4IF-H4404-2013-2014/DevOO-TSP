@@ -117,6 +117,12 @@ public class Node {
         return findOutgoingTo(node.getId());
     }
 
+    /**
+     * Returns true if an object is equals to the specified node, false else
+     * The object is equal if its class type is Node, and if its ID, X and Y coordinates are the same
+     * @param o the object to compare to the current
+     * @return @See description
+     */
     @Override
     public boolean equals(Object o) {
         if(!(o instanceof Node)) {
@@ -128,6 +134,10 @@ public class Node {
         return n.getId() == id && n.getX() == x && n.getY() == y;
     }
 
+    /**
+     * Returns an hash code which is the node id
+     * @return @See description
+     */
     @Override
     public int hashCode() {
         return id;
@@ -154,16 +164,22 @@ public class Node {
         }
 
         if(streetsNames.size() == 1) {
-            computedStringRepresentation = streetsNames.first();
+            computedStringRepresentation = "rue " + streetsNames.first();
         }
         else {
-            computedStringRepresentation = new String();
+            computedStringRepresentation = new String("entre les rues ");
+            int pos = 0;
             for(String streetName : streetsNames) {
+                if(streetName == streetsNames.last()) {
+                    computedStringRepresentation += " et ";
+                }
+
                 computedStringRepresentation += streetName;
 
-                if(streetName != streetsNames.last()) {
-                    computedStringRepresentation += " / ";
+                if(pos < streetsNames.size() - 2) {
+                    computedStringRepresentation += ", ";
                 }
+                ++pos;
             }
         }
         return computedStringRepresentation;

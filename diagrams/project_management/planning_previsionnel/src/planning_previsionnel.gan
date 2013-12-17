@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="DevOO" company="H4404" webLink="" view-date="2013-11-23" view-index="0" gantt-divider-location="838" resource-divider-location="481" version="2.0" locale="fr">
+<?xml version="1.0" encoding="UTF-8"?><project name="DevOO" company="H4404" webLink="" view-date="2013-11-25" view-index="0" gantt-divider-location="838" resource-divider-location="481" version="2.0" locale="fr">
     <description/>
     <view zooming-state="default:2" id="gantt-chart">
         <field id="tpd3" name="Nom" width="67" order="0"/>

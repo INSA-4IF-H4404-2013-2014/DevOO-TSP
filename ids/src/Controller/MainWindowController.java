@@ -1,6 +1,8 @@
 package Controller;
 
+import Controller.Command.AddDelivery;
 import Controller.Command.Command;
+import Controller.Command.RemoveDelivery;
 import Model.ChocoSolver.*;
 import Model.City.Network;
 import Model.City.Node;
@@ -22,10 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Deque;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,6 +39,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     private Deque<Controller.Command.Command> historyBackedOut;
     private MainWindow mainWindow;
 
+    /**
+     * Constructor
+     */
     public MainWindowController() {
         this.mainWindow = new MainWindow(this);
         this.mainWindow.getMapPanel().setNodeEventListener(this);
@@ -48,6 +50,26 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         historyBackedOut = new LinkedList<Controller.Command.Command>();
     }
 
+    /**
+     * Returns the history backed out
+     * @return the history backed out
+     */
+    public Deque<Controller.Command.Command> getHistoryBackedOut() {
+        return historyBackedOut;
+    }
+
+    /**
+     * Returns the history applied
+     * @return the history applied
+     */
+    public Deque<Controller.Command.Command> getHistoryApplied() {
+        return historyApplied;
+    }
+
+    /**
+     * Returns the controller's main window
+     * @return the controller's main window
+     */
     public MainWindow getMainWindow() {
         return mainWindow;
     }
@@ -73,9 +95,19 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         try {
             Network network = Network.createFromXml(xmlPath);
             mainWindow.setNetwork(network);
+            mainWindow.setRound(null);
+            mainWindow.setCalculatedRound(null);
 
             // Map has been successfully loaded, we enable 'load round' feature.
             mainWindow.featureLoadRoundSetEnable(true);
+
+            // Reset Undo/Redo features
+            historyApplied.clear();
+            historyBackedOut.clear();
+            updateUndoRedoButtons();
+
+            // Disable export round feature
+            mainWindow.featureSaveRoundSetEnable(false);
 
 
         } catch (UtilsException e) {
@@ -102,11 +134,15 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @param xmlPath the xml path
      */
     public void loadRound(String xmlPath) {
+        mainWindow.featureSaveRoundSetEnable(false);
+
         try {
             mainWindow.setRound(Round.createFromXml(xmlPath, mainWindow.getNetwork()));
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(mainWindow, "Le chargement de la tournée a retourné une erreur :\n" +
                     e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
         try {
@@ -115,6 +151,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
             mainWindow.getMapPanel().setSelectedNode(null);
             mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+            mainWindow.featureSaveRoundSetEnable(true);
         } catch(Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(mainWindow, "Une erreur est survenue lors du calcul de la tournée",
@@ -132,60 +169,73 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             String htmlRound = calculatedRound.calculatedRoundToHtml();
 
             try {
-                FileWriter outputWriter = new FileWriter(openFile("html"), false);
+                File file = saveFileDialog();
+                if(file == null) {
+                    return;
+                }
+
+                FileWriter outputWriter = new FileWriter(file, false);
                 outputWriter.write(htmlRound);
                 outputWriter.close();
             } catch (java.io.IOException e) {
                 System.out.println(e);
             }
         } else {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "Aucune tournée n'est active", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainWindow, "Aucune tournée n'est active", "Erreur d'export", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    /**
+     * Opens the add delivery window
+     */
     public void addDelivery() {
         DeliveryDialogController deliveryDialogController = new DeliveryDialogController(mainWindow);
         deliveryDialogController.show();
+        if(deliveryDialogController.addIsReady()) {
+            AddDelivery add = new AddDelivery(this, deliveryDialogController.getClient(), deliveryDialogController.getAddress(), deliveryDialogController.getBegin(), deliveryDialogController.getEnd());
+            this.historyDo(add);
+            selectNode(mainWindow.getMapPanel().getSelectedNode());
+        }
     }
 
+    /**
+     * Creates a removeDelivery command, adds it to the history and apply it
+     */
     public void removeDelivery() {
-
+        int idNode = this.mainWindow.getMapPanel().getSelectedNode().getId();
+        RemoveDelivery remove = RemoveDelivery.create(this, idNode);
+        this.historyDo(remove);
     }
 
     public void historyDo(Command command){
-        mainWindow.featureUndoSetEnable(true);
-        mainWindow.featureRedoSetEnable(false);
-        historyBackedOut.clear();
-
         command.Apply();
-        historyApplied.addLast(command);
+        historyBackedOut.clear();
+        historyApplied.push(command);
+        updateUndoRedoButtons();
     }
 
     public void historyRedo(){
-        mainWindow.featureUndoSetEnable(true);
-        mainWindow.featureRedoSetEnable(false);
-        Command command = historyBackedOut.pollFirst();
+        Command command = historyBackedOut.pop();
 
         if (command == null) {
             return;
         }
 
         command.Apply();
-        historyApplied.addLast(command);
+        historyApplied.push(command);
+        updateUndoRedoButtons();
     }
 
     public void historyUndo(){
-        mainWindow.featureUndoSetEnable(false);
-        mainWindow.featureRedoSetEnable(true);
-        Command command = historyApplied.pollLast();
+        Command command = historyApplied.pop();
 
         if (command == null) {
             return;
         }
 
         command.Reverse();
-        historyBackedOut.addFirst(command);
+        historyBackedOut.push(command);
+        updateUndoRedoButtons();
     }
 
     public void exit() {
@@ -196,6 +246,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
     public int computeRound(Network network, Round round) {
+        if(round.getDeliveryList().size() == 0) {
+            mainWindow.getMapPanel().setRound(null);
+            mainWindow.setCalculatedRound(null);
+            return 0;
+        }
+
         ChocoGraph graph = new ChocoGraph(network, round);
 
         TSP tsp = solveTsp(graph, 10000);
@@ -204,6 +260,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
             CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
             mainWindow.getMapPanel().setRound(calculatedRound);
+            mainWindow.setCalculatedRound(calculatedRound);
+            mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
             return 0;
         } else {
             JOptionPane.showMessageDialog(mainWindow, "Aucun trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -245,7 +303,13 @@ public class MainWindowController implements NodeListener, ListSelectionListener
 
         Delivery selectedDelivery = mainWindow.getDeliveryListPanel().getSelectedValue();
         if(selectedDelivery != null) {
-            selectNode(selectedDelivery.getAddress());
+            Node selectedNode = selectedDelivery.getAddress();
+            selectNode(selectedNode);
+
+            // We only want to move the map if the node is not already visible.
+            if(!mainWindow.getMapPanel().isVisible(selectedNode)) {
+                mainWindow.getMapPanel().centerOn(selectedNode);
+            }
         }
         else {
             selectNode(null);
@@ -259,24 +323,24 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     private void selectNode(Node node) {
         mainWindow.getMapPanel().setSelectedNode(node);
 
+        if(node == null) {
+            // No node is selected. So we don't want to let user add delivery to nowhere.
+            mainWindow.featureAddSetEnable(false);
+            mainWindow.featureDeleteSetEnable(false);
+            mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+
+            return;
+        }
+
         if (this.mainWindow.getRound() != null) {
+            Delivery del = mainWindow.getRound().findDelivered(node.getId());
 
-            Delivery del = null;
-            if(node != null) {
-                del = this.mainWindow.getRound().findDelivered(node.getId());
-            }
-
-            if(node == null) {
-                // No node is selected. So we don't want to let user add delivery to nowhere.
-                mainWindow.featureAddSetEnable(false);
+            if (del == null) {
+                // If the node doesn't contain a delivery, activate the "ajouter" button (only when not warehouse)
+                mainWindow.featureAddSetEnable(node.getId() != mainWindow.getRound().getWarehouse().getId());
                 mainWindow.featureDeleteSetEnable(false);
                 mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
-            }
-            else if (del == null) {
-                // If the node doesn't contain a delivery, activate the "ajouter" button
-                mainWindow.featureAddSetEnable(true);
-                mainWindow.featureDeleteSetEnable(false);
-                mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanelNonDeliveryNode(node);
             }
             else
             {
@@ -290,25 +354,44 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     }
 
     /**
-     * Allow user to choose a file from specified type
-     * @param type the type of file you want the user to be able to choose
-     * @return the file the user choosed
+     * Display a JFileChooser in 'save file' mode.
+     * @return the file the user chose
      */
-    private File openFile(String type) {
-        JFileChooser chooser = new JFileChooser();
+    private File saveFileDialog() {
+        JFileChooser chooser = new JFileChooser() {
+            public void approveSelection() {
+                File f = getSelectedFile();
+                if(f.exists()) {
+                    int result = JOptionPane.showConfirmDialog
+                            (
+                                    this,
+                                    "Êtes-vous sûr de vouloir écraser le fichier sélectionné ?",
+                                    "Fichier existant",
+                                    JOptionPane.YES_NO_OPTION
+                            );
+                    switch(result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
 
-        FileNameExtensionFilter allExtension = new FileNameExtensionFilter("All files (*.*)", "");
-        chooser.addChoosableFileFilter(allExtension);
+                        case JOptionPane.NO_OPTION:
+                        default:
+                            return;
+                    }
+                } else {
+                    super.approveSelection();
+                }
+            }
+        };
+        chooser.setCurrentDirectory(new File("../"));
+        chooser.setAcceptAllFileFilterUsed(true);
 
-        chooser = addExtensionType(type, chooser);
-
-        File file = chooser.getSelectedFile();
-
-        if(createFile(file)) {
-            return file;
-        } else {
-            return null;
+        int feedback = chooser.showSaveDialog(mainWindow);
+        if(feedback == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFile();
         }
+
+        return null;
     }
 
     /**
@@ -419,6 +502,15 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      */
     private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
         return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
+    }
+
+    /**
+     * Update the enable/disable status of undo & redo buttons.
+     */
+    private void updateUndoRedoButtons() {
+        mainWindow.featureUndoSetEnable(historyApplied.size() > 0);
+        mainWindow.featureRedoSetEnable(historyBackedOut.size() > 0);
+
     }
 } // end of class MainWindowController --------------------------------------------------------------------
 

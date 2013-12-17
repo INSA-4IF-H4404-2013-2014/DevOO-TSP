@@ -3,6 +3,7 @@ package View.MainWindow;
 import Controller.MainWindowController;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -18,75 +19,109 @@ public class TopMenuBar extends JMenuBar{
      * the exit option and shortcut
       */
     protected JMenuItem fileExit;
+
     /**
      * the import map option and shortcut
      */
     protected JMenuItem openMap;
+
     /**
      * the import round option and shortcut
      */
     protected JMenuItem openRound;
-    /**
-     * calculate the optimal round
-     */
-    protected JMenuItem computeRound;
+
     /**
      * save the actual round
      */
     protected JMenuItem saveRound;
+
     /**
      * add a delivery
      */
     protected JMenuItem addButton;
+
     /**
      * delete a delivery
      */
     protected JMenuItem delButton;
+
     /**
      * undo
      */
     protected JMenuItem undoButton;
+
     /**
      * redo
      */
     protected JMenuItem redoButton;
 
+    /**
+     * Get the item openMap
+     * @return the item openMap
+     */
     public JMenuItem getOpenMap() {
         return openMap;
     }
 
+    /**
+     * Get the item fileExit
+     * @return the item fileExit
+     */
     public JMenuItem getFileExit() {
         return fileExit;
     }
 
+    /**
+     * Get the item openRound
+     * @return the item openRound
+     */
     public JMenuItem getOpenRound() {
         return openRound;
     }
 
-    public JMenuItem getComputeRound() {
-        return computeRound;
-    }
-
+    /**
+     * Get the item saveRound
+     * @return the item saveRound
+     */
     public JMenuItem getSaveRound() {
         return saveRound;
     }
 
+    /**
+     * Get the item addButton
+     * @return the item addButton
+     */
     public JMenuItem getAddButton() {
         return addButton;
     }
 
+    /**
+     * Get the item delButton
+     * @return the item delButton
+     */
     public JMenuItem getDelButton() {
         return delButton;
     }
 
+    /**
+     * Get the item undoButton
+     * @return the item undoButton
+     */
     public JMenuItem getUndoButton() {
         return undoButton;
     }
 
+    /**
+     * Get the item redoButton
+     * @return the item redoButton
+     */
     public JMenuItem getRedoButton() {
         return redoButton;
     }
 
+    /**
+     * Constructor
+     */
     public TopMenuBar() {
         createFileMenu();
         createEditMenu();
@@ -98,30 +133,28 @@ public class TopMenuBar extends JMenuBar{
         JMenu file = new JMenu("Fichier");
         file.setMnemonic(KeyEvent.VK_F);
 
+        int eventMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
         fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("./../../img/door_out.png")));
-        fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+        fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, eventMask));
 
         openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("../../img/mini_open_map.png")));
-        openMap.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        openMap.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, eventMask));
 
         openRound = new JMenuItem("Ouvrir une tournée", new ImageIcon(getClass().getResource("../../img/mini_open_round.png")));
-        openRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
-
-        computeRound = new JMenuItem("Calculer une tournée");
+        openRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, eventMask));
 
         saveRound = new JMenuItem("Sauvegarder une tournée", new ImageIcon(getClass().getResource("../../img/mini_save_round.png")));
-        saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, eventMask));
 
         file.add(openMap);
         file.add(openRound);
         file.addSeparator();
-        file.add(computeRound);
         file.add(saveRound);
         file.addSeparator();
         file.add(fileExit);
 
         openRound.setEnabled(false);
-        computeRound.setEnabled(false);
         saveRound.setEnabled(false);
 
         add(file);
@@ -131,15 +164,18 @@ public class TopMenuBar extends JMenuBar{
         JMenu edit = new JMenu("Éditer");
         edit.setMnemonic(KeyEvent.VK_E);
 
+        int eventMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
         addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../img/mini_add.png")));
 
         delButton = new JMenuItem("Supprimer une livraison", new ImageIcon(getClass().getResource("../../img/mini_delete.png")));
+        delButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
         undoButton = new JMenuItem("Annuler", new ImageIcon(getClass().getResource("../../img/mini_undo.png")));
-        undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+        undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, eventMask));
 
         redoButton = new JMenuItem("Refaire", new ImageIcon(getClass().getResource("../../img/mini_redo.png")));
-        redoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+        redoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, eventMask));
 
         edit.add(addButton);
         edit.add(delButton);
@@ -179,6 +215,13 @@ public class TopMenuBar extends JMenuBar{
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.loadRound();
+            }
+        });
+
+        saveRound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exportRound();
             }
         });
 

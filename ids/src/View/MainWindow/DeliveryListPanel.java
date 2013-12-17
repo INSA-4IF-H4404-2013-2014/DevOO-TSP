@@ -20,9 +20,12 @@ import java.util.Vector;
 public class DeliveryListPanel extends JScrollPane {
 
     private JList deliveryList = new JList();
-    public static final float DEFAULT_WIDTH_RATIO = (float)0.2;
+    public static final float DEFAULT_WIDTH_RATIO = (float)0.24;
     public static final int PADDING = 6;
 
+    /**
+     * Constructor
+     */
     public DeliveryListPanel() {
         deliveryList.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
         deliveryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -39,7 +42,7 @@ public class DeliveryListPanel extends JScrollPane {
      */
     public void setModel(Vector<Delivery> list) {
         deliveryList.setListData(list);
-        Utils.enableJList(deliveryList, true);
+        Utils.enableJList(deliveryList, list.size() > 0);
     }
 
     /**

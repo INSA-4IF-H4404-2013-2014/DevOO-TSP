@@ -96,6 +96,13 @@ public class Round {
         }
     }
 
+    /**
+     * Add a delivery to the round
+     * @param clientId The client ID
+     * @param nodeId The targeted node to deliver
+     * @param earliestBound The earliest bound, the delivery cannot be delivered before
+     * @param latestBound The latest bound, the delivery cannot be delivered after
+     */
     public void addDelivery(String clientId, int nodeId, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
         Node node = network.findNode(nodeId);
 
@@ -108,6 +115,10 @@ public class Round {
         schedule.addDelivery(delivery);
     }
 
+    /**
+     * Remove a delivery from the round
+     * @param nodeId The targeted delivery node. This node MUST BE a delivery node
+     */
     public void removeDelivery(int nodeId) {
         Delivery delivery = findDelivered(nodeId);
 
@@ -122,6 +133,12 @@ public class Round {
         }
     }
 
+    /**
+     * Return true if the schedule described is not distinct from the others, false else
+     * @param earliestBound the earliest bound
+     * @param latestBound the latest bound
+     * @return @See description
+     */
     public boolean isScheduleOverlapping(GregorianCalendar earliestBound, GregorianCalendar latestBound) {
         for(Schedule s : schedules) {
             if((latestBound.before(s.getLatestBound()) && latestBound.after(s.getEarliestBound()))
@@ -149,6 +166,12 @@ public class Round {
         return deliveryList;
     }
 
+    /**
+     * Return the schedule to corresponding to the specified bounds
+     * @param earliestBound the earliest bound
+     * @param latestBound the latest bound
+     * @return the corresponding schedule
+     */
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
     {
         for(Schedule s : schedules) {
@@ -163,6 +186,11 @@ public class Round {
         return schedule;
     }
 
+    /**
+     * Return the client corresponding to its ID. If this ID does not exist, a new client is created.
+     * @param clientId the client ID
+     * @return The client corresponding to the specified ID
+     */
     public Client getClient(String clientId)
     {
         for(Client c : clients) {
@@ -174,6 +202,21 @@ public class Round {
         Client c = new Client(clientId);
         clients.add(c);
         return c;
+    }
+
+    /**
+     * search a client by its id and return the index of it
+     * @param clientId the client id searched
+     * @return the index in the list of client, -1 if the id isn't in
+     */
+    public int getIndexClient(String clientId)
+    {
+        for(Client c : clients) {
+            if(c.getId().equals(clientId)) {
+                return clients.indexOf(c);
+            }
+        }
+        return -1;
     }
 
     /**
@@ -226,10 +269,41 @@ public class Round {
         return null;
     }
 
+    /**
+     * Find a delivery id that is not used yet
+     * @return the id
+     */
+    public int findAnId() {
+        int free = Delivery.freeId;
+        boolean freeFinded = false;
+        while ( ! freeFinded) {
+            freeFinded = true;
+            for(Schedule s : schedules) {
+                for(Delivery d :  s.getDeliveries()) {
+                    if(d.getId() == free) {
+                        freeFinded = false;
+                        free ++;
+                        break;
+                    }
+                }
+                if (!freeFinded){
+                    break;
+                }
+            }
+        }
+        Delivery.freeId = free;
+        return free;
+    }
+
+     /**
+     * Return true if two deliveries deliver the same node, false else
+     * @param node The node to check
+     * @return @See description
+     */
     public boolean isTwiceDelivered(Node node) {
         boolean delivered = false;
         for(Schedule s : schedules) {
-            for(Delivery d :  s.getDeliveries()) {
+            for(Delivery d : s.getDeliveries()) {
                 if(d.getAddress().equals(node)) {
                     if(delivered) {
                         return true;

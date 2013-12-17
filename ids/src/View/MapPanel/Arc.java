@@ -1,5 +1,8 @@
 package View.MapPanel;
 
+import java.awt.*;
+import java.util.LinkedList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: gabadie
@@ -21,14 +24,14 @@ public class Arc {
     /** the model arc going from node2 to node1 */
     private Model.City.Arc modelArcFrom2To1;
 
-    /** arc from 1 to 2 is an itinerary  */
-    private boolean isItineraryFrom1To2;
-
-    /** arc from 2 to 1 is an itinerary  */
-    private boolean isItineraryFrom2To1;
-
     /** the parent map panel */
     private MapPanel mapPanel;
+
+    /** itinerary colors from 1 to 2 */
+    private LinkedList<Color> itineraryColorsFrom1To2;
+
+    /** itinerary colors from 2 to 1 */
+    private LinkedList<Color> itineraryColorsFrom2To1;
 
     /**
      * Constructor
@@ -50,8 +53,8 @@ public class Arc {
             modelArcFrom1To2 = to.findOutgoingTo(from);
         }
 
-        isItineraryFrom1To2 = false;
-        isItineraryFrom2To1 = false;
+        itineraryColorsFrom1To2 = new LinkedList<Color>();
+        itineraryColorsFrom2To1 = new LinkedList<Color>();
     }
 
     /**
@@ -119,27 +122,23 @@ public class Arc {
     }
 
     /**
-     * Tests if the arc going from node <leavingNode> to node 3 - <leavingNode> is an itinerary
+     * Gets the itinerary colors from node <leavingNode> to node 3 - <leavingNode> is an itinerary
      * @param leavingNode the leaving node id (bust me be 1 or 2)
-     * @return true if it is, no elsewhere
+     * @return the itinerary colors
      */
-    public boolean isItineraryFrom(int leavingNode) {
+    public LinkedList<Color> getItineraryColorsFrom(int leavingNode) {
         if(leavingNode == 2) {
-            return isItineraryFrom2To1;
+            return itineraryColorsFrom2To1;
         }
-        return isItineraryFrom1To2;
+
+        return itineraryColorsFrom1To2;
     }
 
     /**
-     * Sets if the arc going from node 1 to node 2 is an itinerary
-     * @param itinerary the new boolean to set
-     * @param leavingNode the leaving node id (bust me be 1 or 2)
+     * Resets the itinerary colors
      */
-    public void setItineraryFrom(int leavingNode, boolean itinerary) {
-        if(leavingNode == 2) {
-            isItineraryFrom1To2 = itinerary;
-        } else {
-            isItineraryFrom2To1 = itinerary;
-        }
+    public void resetItineraryColors() {
+        itineraryColorsFrom1To2.clear();
+        itineraryColorsFrom2To1.clear();
     }
 }

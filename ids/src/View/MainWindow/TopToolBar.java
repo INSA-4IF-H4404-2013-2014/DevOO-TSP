@@ -22,34 +22,65 @@ public class TopToolBar extends JToolBar {
     protected JButton undo = new JButton();
     protected JButton redo = new JButton();
 
+    /**
+     * Gets the loadMap button
+     * @return the loadMap button
+     */
     public JButton getLoadMap() {
         return loadMap;
     }
 
+    /**
+     * Gets the loadRound button
+     * @return the loadRound button
+     */
     public JButton getLoadRound() {
         return loadRound;
     }
 
+    /**
+     * Gets the saveRound button
+     * @return the saveround button
+     */
     public JButton getSaveRound() {
         return saveRound;
     }
 
+    /**
+     * Gets the add button
+     * @return the add button
+     */
     public JButton getAdd() {
         return add;
     }
 
+    /**
+     * Gets the delete button
+     * @return the delete button
+     */
     public JButton getDelete() {
         return delete;
     }
 
+    /**
+     * Gets the undo button
+     * @return the undo button
+     */
     public JButton getUndo() {
         return undo;
     }
 
+    /**
+     * Gets the redo button
+     * @return the redo button
+     */
     public JButton getRedo() {
         return redo;
     }
 
+    /**
+     * Constructor
+     */
     public TopToolBar() {
         setFloatable(false);
         //setRollover(true);
