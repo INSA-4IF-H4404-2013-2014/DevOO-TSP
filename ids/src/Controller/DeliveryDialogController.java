@@ -267,12 +267,22 @@ public class DeliveryDialogController {
             JOptionPane.showMessageDialog(frame, "fin de plage horaire avant le debut", "Erreur", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
+
         Calendar currentDate = GregorianCalendar.getInstance();
         int year = currentDate.get(Calendar.YEAR);
         int month = currentDate.get(Calendar.MONTH);
         int day = currentDate.get(Calendar.DAY_OF_MONTH);
         GregorianCalendar cal = new GregorianCalendar(year, month, day, endH, endM, 0);//parsed.toGregorianCalendar();
         end = cal;
+
+       if( this.dialog.getParent().getRound().isScheduleOverlapping(begin,end)){
+           JFrame frame = new JFrame();
+           JOptionPane.showMessageDialog(frame, "plage horaire a cheval sur d autres",
+                   "Erreur plage horaire", JOptionPane.ERROR_MESSAGE);
+           return false;
+       }
+
         return true;
     }
     /**
