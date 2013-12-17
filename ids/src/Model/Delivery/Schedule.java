@@ -101,8 +101,21 @@ public class Schedule {
             hour = Integer.parseInt(fields[0]);
             min = Integer.parseInt(fields[1]);
             sec = Integer.parseInt(fields[2]);
+
+            if(hour < 0 || hour > 23) {
+                throw new ParserConfigurationException("Le champ <heures> de l'attribut <" + attributeName + "> de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> doit être compris entre 0 et 23.");
+            }
+
+            if(min < 0 || min > 59) {
+                throw new ParserConfigurationException("Le champ <minutes> de l'attribut <" + attributeName + "> de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> doit être compris entre 0 et 59.");
+            }
+
+            if(sec < 0 || sec > 23) {
+                throw new ParserConfigurationException("Le champ <secondes> de l'attribut <" + attributeName + "> de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> doit être compris entre 0 et 59.");
+            }
+
             return new GregorianCalendar(year, month, day, hour, min, sec);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             throw new ParserConfigurationException("Un champ de l'attribut <" + attributeName + "> de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> ne contient pas un entier.");
         }
     }

@@ -26,10 +26,10 @@ public class ChocoDelivery {
     private Node address;
 
     /** The successors node of the delivery */
-    private IntArrayList successorsNode;
+    private IntArrayList successorsNode = new IntArrayList(0);
 
     /** The successors node of the delivery identified by their choco ID */
-    private IntArrayList successorsChocoNode;
+    private IntArrayList successorsChocoNode = new IntArrayList(0);
 
     /** The list of itineraries linked to the delivery */
     private List<Itinerary> successorsItinerary;
