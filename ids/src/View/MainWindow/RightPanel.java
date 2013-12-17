@@ -26,10 +26,16 @@ public class RightPanel extends JPanel {
     public RightPanel() {
         setPreferredSize(new Dimension((int)(MainWindow.DEFAULT_WIDTH*DEFAULT_WIDTH_RATIO), 0));
 
-        setLayout(new GridLayout(2,1));
+        roundPanel.setMinimumSize(new Dimension(200, 200));
+        deliveryInfoPanel.setMinimumSize(new Dimension(200, 200));
 
-        add(roundPanel);
-        add(deliveryInfoPanel);
+        JSplitPane jsp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, roundPanel, deliveryInfoPanel);
+        jsp.setMinimumSize(new Dimension(285, 100));
+        jsp.setPreferredSize(new Dimension(100, 100));
+        jsp.setDividerLocation(250);
+
+        setLayout(new BorderLayout());
+        add(jsp, BorderLayout.CENTER);
     }
 
     /**
