@@ -1,11 +1,17 @@
 package Tests.ChocoSolver;
 import static org.junit.Assert.*;
 
+import Model.ChocoSolver.ChocoGraph;
 import Model.ChocoSolver.Graph;
-import Model.ChocoSolver.RegularGraph;
 import Model.ChocoSolver.SolutionState;
 import Model.ChocoSolver.TSP;
+import Model.City.Network;
+import Model.Delivery.Round;
+import Utils.UtilsException;
 import org.junit.Test;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
 
 
 public class TSPTest {
@@ -13,12 +19,13 @@ public class TSPTest {
 	 * Checks that <code>tsp.getTotalCost()</code> is equal to the cost of the tour defined by <code>tsp.getPos()</code>
 	 */
 	@Test
-	public void testCost(){
-		int nbVertices = 10;
-		int degree = 9;
-		int minCost = 40;
-		int maxCost = 120;
-		Graph g = new RegularGraph(nbVertices, degree, minCost, maxCost);
+	public void testCost() throws UtilsException, ParserConfigurationException, FileNotFoundException {
+        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
+        Round round = Round.createFromXml("resources/tests/valid.xml", network);
+
+        ChocoGraph graph = new ChocoGraph(network, round);
+
+        /*
 		int totalCost = 0;
 		TSP tsp = new TSP(g);
 		tsp.solve(200000,g.getNbVertices()*g.getMaxArcCost()+1);
@@ -30,18 +37,18 @@ public class TSPTest {
 		}
 		else
 			assertTrue("No solution found after 200 seconds...", false);
+			*/
 	}
 
 	/**
 	 * Checks (with a Branch and Bound algorithm) that <code>tsp.getTotalCost()</code> is the best solution
 	 */
 	@Test
-	public void testBestSol(){
-		int nbVertices = 20;
-		int degree = 9;
-		int minCost = 40;
-		int maxCost = 120;
-		Graph g = new RegularGraph(nbVertices, degree, minCost, maxCost);
+	public void testBestSol() throws UtilsException, ParserConfigurationException, FileNotFoundException {
+        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
+        Round round = Round.createFromXml("resources/tests/valid.xml", network);
+
+        ChocoGraph g = new ChocoGraph(network, round);
 		TSP tsp = new TSP(g);
 		long tps = System.currentTimeMillis();
 		tsp.solve(200000,g.getNbVertices()*g.getMaxArcCost()+1);
@@ -61,12 +68,11 @@ public class TSPTest {
 	 * by increasing the CPU timeLimit after each call to <code>solve</code>
 	 */
 	@Test
-	public void testLargeGraph() {
-		int nbVertices = 30;
-		int degree = 9;
-		int minCost = 40;
-		int maxCost = 120;
-		Graph g = new RegularGraph(nbVertices, degree, minCost, maxCost);
+	public void testLargeGraph() throws UtilsException, ParserConfigurationException, FileNotFoundException {
+        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
+        Round round = Round.createFromXml("resources/tests/valid.xml", network);
+
+        ChocoGraph g = new ChocoGraph(network, round);
 		TSP tsp = new TSP(g);
 		int bound = g.getNbVertices()*g.getMaxArcCost() + 1;
 		long tps = System.currentTimeMillis();
@@ -96,8 +102,11 @@ public class TSPTest {
 	 * Case of a graph such that minArcCost = maxArcCost
 	 */
 	@Test
-	public void testConstantCosts(){
-		Graph g = new RegularGraph(10,9,4,4);
+	public void testConstantCosts() throws UtilsException, ParserConfigurationException, FileNotFoundException {
+        Network network = Network.createFromXml("resources/tests/plan10x10.xml");
+        Round round = Round.createFromXml("resources/tests/valid.xml", network);
+
+        ChocoGraph g = new ChocoGraph(network, round);
 		TSP tsp = new TSP(g);
 		int bound = g.getNbVertices()*g.getMaxArcCost() + 1;
 		tsp.solve(50000,bound);

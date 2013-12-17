@@ -2,6 +2,8 @@ package Utils;
 
 import org.w3c.dom.*;
 
+import java.io.File;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -90,6 +92,24 @@ public class Utils {
         String value = Utils.stringFromXmlAttribute(xmlElement, attribute);
 
         return Utils.parseUInt(value);
+    }
+
+    /**
+     * Gets file's extension
+     * @param f File whose extension is to be known
+     * @return The file extension
+     */
+    public static String getExtension(File f)
+    {
+        String ext = null;
+        String s = f.getName();
+        int i = s.lastIndexOf('.');
+
+        if (i > 0 &&  i < s.length() - 1)
+        {
+            ext = s.substring(i+1).toLowerCase();
+        }
+        return ext;
     }
 
 }

@@ -12,7 +12,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -30,6 +33,9 @@ public class Round {
 
     /** The schedules containing the deliveries */
     private List<Schedule> schedules = new LinkedList<Schedule>();
+
+    /** The clients delivered */
+    private List<Client> clients = new LinkedList<Client>();
 
     /**
      * Constructor
@@ -78,17 +84,69 @@ public class Round {
         }
 
         for (int i = 0; i < xmlNodeList.getLength(); ++i) {
-            schedules.add(new Schedule(this, (Element) xmlNodeList.item(i)));
+            Schedule s = new Schedule(this, (Element) xmlNodeList.item(i));
+            schedules.add(s);
+
+            for(Delivery d : s.getDeliveries())
+                if(isTwiceDelivered(d.getAddress())) {
+                    throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_NODE_ATTR +
+                            "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> référence un noeud déjà desservi (" +
+                            d.getAddress().getId() +  ").");
+            }
         }
     }
 
-    public void addDelivery(String clientId, Node address, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+    public void addDelivery(String clientId, int nodeId, GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+        Node node = network.findNode(nodeId);
+
         Client client = getClient(clientId);
         Schedule schedule = getSchedule(earliestBound, latestBound);
-        Delivery delivery = new Delivery(schedule.getNextDeliveryId(), client, address, schedule);
+
+        Delivery delivery = new Delivery(schedule.getNextDeliveryId(), client, node, schedule);
+
         client.addDelivery(delivery);
         schedule.addDelivery(delivery);
-        schedules.add(schedule);
+    }
+
+    public void removeDelivery(int nodeId) {
+        Delivery delivery = findDelivered(nodeId);
+
+        Client client = delivery.getClient();
+        Schedule schedule = delivery.getSchedule();
+
+        client.removeDelivery(delivery);
+        schedule.removeDelivery(delivery);
+
+        if(schedule.getDeliveries().isEmpty()) {
+            schedules.remove(schedule);
+        }
+    }
+
+    public boolean isScheduleOverlapping(GregorianCalendar earliestBound, GregorianCalendar latestBound) {
+        for(Schedule s : schedules) {
+            if((latestBound.before(s.getLatestBound()) && latestBound.after(s.getEarliestBound()))
+                    || (earliestBound.before(s.getLatestBound()) && earliestBound.after(s.getEarliestBound()))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets a list of deliveries for all deliveries.
+     * This is for the view which will call this to fill its list on the left.
+     * @return a vector of strings
+     */
+    public Vector<Delivery> getDeliveryList() {
+        Vector<Delivery> deliveryList = new Vector<Delivery>();
+        for(Schedule sched : schedules) {
+            for(Delivery deliver : sched.getDeliveries()) {
+                deliveryList.add(deliver);
+            }
+        }
+
+        return deliveryList;
     }
 
     private Schedule getSchedule(GregorianCalendar earliestBound, GregorianCalendar latestBound)
@@ -99,20 +157,23 @@ public class Round {
             }
         }
 
-        return new Schedule(earliestBound, latestBound);
+        Schedule schedule = new Schedule(earliestBound, latestBound);
+        schedules.add(schedule);
+
+        return schedule;
     }
 
     public Client getClient(String clientId)
     {
-        for(Schedule s : schedules) {
-            for(Delivery d :  s.getDeliveries()) {
-                if(d.getClient().getId().equals(clientId)) {
-                    return d.getClient();
-                }
+        for(Client c : clients) {
+            if(c.getId().equals(clientId)) {
+                return c;
             }
         }
 
-        return new Client(clientId);
+        Client c = new Client(clientId);
+        clients.add(c);
+        return c;
     }
 
     /**
@@ -139,11 +200,42 @@ public class Round {
         return schedules;
     }
 
-    public boolean isDelivered(Node node) {
+
+    /**
+     * Returns the clients delivered
+     * @return the clients delivered
+     */
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    /**
+     * Fins a delivery from a given node if
+     * @param nodeId the node id
+     * @return the node if found or null
+     */
+    public Delivery findDelivered(int nodeId) {
+        for(Schedule s : schedules) {
+            for(Delivery d :  s.getDeliveries()) {
+                if(d.getAddress().getId() == nodeId) {
+                    return d;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public boolean isTwiceDelivered(Node node) {
+        boolean delivered = false;
         for(Schedule s : schedules) {
             for(Delivery d :  s.getDeliveries()) {
                 if(d.getAddress().equals(node)) {
-                    return true;
+                    if(delivered) {
+                        return true;
+                    }
+
+                    delivered = true;
                 }
             }
         }
@@ -158,7 +250,7 @@ public class Round {
      * @throws UtilsException If the parsing returns an exception
      * @throws ParserConfigurationException If the XML file contains errors (missing or invalids elements or attributes)
      */
-    public static Round createFromXml(String xmlFilePath, Network network) throws UtilsException, ParserConfigurationException {
+    public static Round createFromXml(String xmlFilePath, Network network) throws UtilsException, ParserConfigurationException, FileNotFoundException {
         Element root;
         Document document;
         DocumentBuilder factory;
@@ -169,7 +261,7 @@ public class Round {
         File xmlFile = new File(xmlFilePath);
 
         if(!xmlFile.exists()) {
-            throw new ParserConfigurationException("Fichier <" + xmlFilePath + "> manquant.");
+            throw new FileNotFoundException("Fichier <" + xmlFilePath + "> manquant.");
         }
 
         try {

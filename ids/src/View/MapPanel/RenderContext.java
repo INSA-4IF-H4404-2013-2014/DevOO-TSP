@@ -1,6 +1,8 @@
 package View.MapPanel;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
@@ -16,36 +18,62 @@ public class RenderContext {
     /** view's center pos in the model basis */
     private Point modelCenterPos;
 
-    /** graph model's size in the model basis */
-    private Dimension modelSize;
-
     /** view/model scale factor */
     private double modelViewScaleFactor;
 
-    /** global view X offset */
-    int xGlobalOffset;
-
-    /** global view Y offset */
-    int yGlobalOffset;
-
     /** the map panel being rendered */
-    MapPanel mapPanel;
+    private MapPanel mapPanel;
 
     /** the java graphic context */
-    Graphics2D context;
+    private Graphics2D context;
 
+    /** parent transform */
+    private AffineTransform parentTransform;
+
+    /**
+     * Constructor
+     * @param context the swing graphic context
+     * @param mapPanel the MapPanel to draw
+     */
     public RenderContext(Graphics2D context, MapPanel mapPanel) {
         this.context = context;
         this.mapPanel = mapPanel;
 
         modelCenterPos = mapPanel.modelCenterPos;
-        modelSize = mapPanel.modelSize;
         modelViewScaleFactor = mapPanel.modelViewScaleFactor;
 
-        xGlobalOffset = mapPanel.getWidth() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.x);
-        yGlobalOffset = mapPanel.getHeight() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.y);
-
         context.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        parentTransform = context.getTransform();
+    }
+
+    /**
+     * set the transformation to the identity
+     */
+    protected void setTransformIdentity() {
+        context.setTransform(parentTransform);
+    }
+
+    /**
+     * set the transformation for the network drawing
+     */
+    protected void setTransformNetwork() {
+        /*
+         *  [ x']   [  m00  m01  m02  ] [ x ]
+         *  [ y'] = [  m10  m11  m12  ] [ y ]
+         *  [ 1 ]   [   0    0    1   ] [ 1 ]
+         */
+        double m00 = modelViewScaleFactor;
+        double m10 = 0.0;
+        double m01 = 0.0;
+        double m11 = -modelViewScaleFactor;
+        double m02 = (double)(mapPanel.getWidth() / 2 - (int)(modelViewScaleFactor * (double)modelCenterPos.x));
+        double m12 = (double)(mapPanel.getHeight() / 2 + (int)(modelViewScaleFactor * (double)modelCenterPos.y));
+
+        AffineTransform transform = new AffineTransform(m00, m10, m01, m11, m02, m12);
+
+        context.setTransform(parentTransform);
+        context.transform(transform);
     }
 
     /**
@@ -78,12 +106,11 @@ public class RenderContext {
      * @param node the node to draw
      */
     protected void drawNode(Node node) {
-        int nodeRadius = (int)(modelViewScaleFactor * (double)streetThickness);
-        int x = modelViewTransformX(node.getX()) - nodeRadius;
-        int y = modelViewTransformY(node.getY()) - nodeRadius;
+        int x = node.getX() - streetThickness;
+        int y = node.getY() - streetThickness;
 
         context.setColor(streetColor);
-        context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
+        context.fillOval(x, y, streetThickness * 2, streetThickness * 2);
     }
 
     /**
@@ -91,16 +118,19 @@ public class RenderContext {
      * @param node the node to draw
      */
     protected void drawNodeBorders(Node node) {
-        int nodeRadius = (int)(modelViewScaleFactor * (double)streetNodeRadius) + streetBorderThickness;
-        int x = modelViewTransformX(node.getX()) - nodeRadius;
-        int y = modelViewTransformY(node.getY()) - nodeRadius;
+        int nodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
+        int x = node.getX() - nodeRadius;
+        int y = node.getY() - nodeRadius;
 
         if(node == mapPanel.selectedNode) {
-            context.setColor(streetSelectedNodeColor);
+            int nodeRadiusAdd = (int)((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
 
-            x -= streetSelectedNodeRadiusPx;
-            y -= streetSelectedNodeRadiusPx;
-            nodeRadius += streetSelectedNodeRadiusPx;
+            x -= nodeRadiusAdd;
+            y -= nodeRadiusAdd;
+
+            nodeRadius += nodeRadiusAdd;
+
+            context.setColor(streetSelectedNodeColor);
         } else {
             context.setColor(streetBorderColor);
         }
@@ -113,31 +143,58 @@ public class RenderContext {
      * @param arc the arc to draw
      */
     protected void drawArc(Arc arc) {
-        Node node1 = arc.getNode1();
-        Node node2 = arc.getNode2();
-
-        int x1 = modelViewTransformX(node1.getX());
-        int y1 = modelViewTransformY(node1.getY());
-
-        int x2 = modelViewTransformX(node2.getX());
-        int y2 = modelViewTransformY(node2.getY());
-
-        int nx = x2 - x1;
-        int ny = y2 - y1;
-        double angle = Math.atan2((double)ny, (double)nx);
-        double nl = Math.sqrt((double)(nx * nx + ny * ny));
-
-        double arcThickness = modelViewScaleFactor * (double)streetThickness;
-
-        Rectangle2D.Double rect = new Rectangle2D.Double();
-        rect.setRect(0.0, - arcThickness, nl, 2.0 * arcThickness);
+        ArcInfo arcInfo = arcInfo(arc);
 
         context.setColor(streetColor);
-        context.translate(x1, y1);
+
+        drawArcInfo(arcInfo, true);
+    }
+
+    /**
+     * Draws a street name for a given arc
+     * @param arc the arc you want to draw the street
+     */
+    protected void drawArcStreetName(Arc arc) {
+        ArcInfo arcInfo = arcInfo(arc);
+
+        Model.City.Street street = arc.getModelStreet();
+
+        Font previousFont = context.getFont();
+
+        context.setFont(new Font("default", Font.BOLD, 4));
+
+        int streetNameWidth = context.getFontMetrics().stringWidth(street.getName());
+
+        if(arcInfo.length - 2.0 * streetNodeRadius < (double)streetNameWidth) {
+            context.setFont(previousFont);
+            return;
+        }
+
+        int centerX = (arcInfo.x1 + arc.getNode2().getX()) / 2;
+        int centerY = (arcInfo.y1 + arc.getNode2().getY()) / 2;
+
+        double angle = arcInfo.angle;
+        int streetNameYOffset = 2 * streetThickness;
+
+        if(angle > 0.5 * Math.PI || angle < -0.5 * Math.PI) {
+            angle += Math.PI;
+        }
+
+        if(arcInfo.isBidirectional()) {
+            streetNameYOffset += streetThickness / 2;
+        }
+
+        AffineTransform previousTransform = context.getTransform();
+
+        context.setColor(textColor);
+        context.translate(centerX, centerY);
         context.rotate(angle);
-        context.fill(rect);
-        context.rotate(-angle);
-        context.translate(-x1, -y1);
+        context.scale(1.0, -1.0);
+
+        context.drawString(street.getName(), - streetNameWidth / 2, streetNameYOffset);
+
+        context.setTransform(previousTransform);
+        context.setFont(previousFont);
     }
 
     /**
@@ -145,37 +202,43 @@ public class RenderContext {
      * @param arc the arc to draw
      */
     protected void drawArcBorders(Arc arc) {
-        Node node1 = arc.getNode1();
-        Node node2 = arc.getNode2();
+        ArcInfo arcInfo = arcInfo(arc);
 
-        int x1 = modelViewTransformX(node1.getX());
-        int y1 = modelViewTransformY(node1.getY());
-
-        int x2 = modelViewTransformX(node2.getX());
-        int y2 = modelViewTransformY(node2.getY());
-
-        int nx = x2 - x1;
-        int ny = y2 - y1;
-        double angle = Math.atan2((double)ny, (double)nx);
-        double nl = Math.sqrt((double)(nx * nx + ny * ny));
-
-        double arcThickness = modelViewScaleFactor * (double)streetThickness + (double)streetBorderThickness;
-
-        Rectangle2D.Double rect = new Rectangle2D.Double();
-        rect.setRect(0.0, - arcThickness, nl, 2.0 * arcThickness);
+        if(arcInfo.isBidirectional()) {
+            arcInfo.thickness += (double)streetBorderThickness / modelViewScaleFactor;
+        } else {
+            arcInfo.thickness += 2.0 * (double)streetBorderThickness / modelViewScaleFactor;
+        }
 
         context.setColor(streetBorderColor);
-        context.translate(x1, y1);
-        context.rotate(angle);
-        context.fill(rect);
-        context.rotate(-angle);
-        context.translate(-x1, -y1);
+
+        drawArcInfo(arcInfo, false);
+    }
+
+    /**
+     * Draws the given arc's itinerary
+     * @param arc the arc to draw
+     */
+    protected void drawArcItinerary(Arc arc) {
+        ArcInfo arcInfo = arcInfo(arc);
+
+        AffineTransform previousTransform = context.getTransform();
+
+        context.translate(arcInfo.x1, arcInfo.y1);
+        context.rotate(arcInfo.angle);
+
+        drawModelArcItinerary(arcInfo, 1);
+        drawModelArcItinerary(arcInfo, 2);
+
+        context.setTransform(previousTransform);
     }
 
     /**
      * Draw the global view of the map in the top right corner
      */
     protected void drawGlobalView() {
+        Dimension modelSize = mapPanel.getModelDimension();
+
         double graphDiagonal = Math.sqrt((double)(modelSize.width * modelSize.width + modelSize.height * modelSize.height));
         double graphViewFactor = globalViewMaxDiagonal / graphDiagonal;
 
@@ -183,11 +246,11 @@ public class RenderContext {
         int globalViewHeight = (int)((double)modelSize.height * graphViewFactor);
         int globalViewPosX = mapPanel.getWidth() - globalViewWidth - globalViewBorderOffset;
 
-        int modelMinX = (int)(graphViewFactor * (double)mapPanel.modelCoordinateX(0));
-        int modelMinY = (int)(graphViewFactor * (double)mapPanel.modelCoordinateY(0));
+        int modelMinX = (int)(graphViewFactor * (double)(mapPanel.modelCoordinateX(0) - mapPanel.modelMinPos.x));
+        int modelMinY = globalViewHeight - (int)(graphViewFactor * (double)(mapPanel.modelCoordinateY(0) - mapPanel.modelMinPos.y));
 
-        int modelMaxX = (int)(graphViewFactor * (double)mapPanel.modelCoordinateX(mapPanel.getWidth()));
-        int modelMaxY = (int)(graphViewFactor * (double)mapPanel.modelCoordinateY(mapPanel.getHeight()));
+        int modelMaxX = (int)(graphViewFactor * (double)(mapPanel.modelCoordinateX(mapPanel.getWidth()) - mapPanel.modelMinPos.x));
+        int modelMaxY = globalViewHeight - (int)(graphViewFactor * (double)(mapPanel.modelCoordinateY(mapPanel.getHeight()) - mapPanel.modelMinPos.y));
 
         modelMinX = Math.min(Math.max(modelMinX, 0), globalViewWidth);
         modelMinY = Math.min(Math.max(modelMinY, 0), globalViewHeight);
@@ -241,21 +304,132 @@ public class RenderContext {
     }
 
     /**
-     * Transforms a given X coordinate from the model basis to the view basis
-     * @param x the X coordinate in the model basis
-     * @return the Y coordinate in the view basis
+     * Generates Arc's rendering informations
+     * @param arc the given arc we want to render
+     * @return an ArcInfo structure containing all informations
      */
-    private int modelViewTransformX(int x) {
-        return xGlobalOffset + (int)(modelViewScaleFactor * (double)x);
+    private ArcInfo arcInfo(Arc arc) {
+        ArcInfo arcInfo = new ArcInfo();
+
+        arcInfo.arc = arc;
+
+        Node node1 = arc.getNode1();
+        Node node2 = arc.getNode2();
+
+        arcInfo.x1 = node1.getX();
+        arcInfo.y1 = node1.getY();
+
+        int nx = node2.getX() - arcInfo.x1;
+        int ny = node2.getY() - arcInfo.y1;
+
+        arcInfo.angle = Math.atan2((double)ny, (double)nx);
+        arcInfo.length = Math.sqrt((double)(nx * nx + ny * ny));
+        arcInfo.thickness = (double)streetThickness;
+
+        return arcInfo;
     }
 
     /**
-     * Transforms a given Y coordinate from the model basis to the view basis
-     * @param y the Y coordinate in the model basis
-     * @return the Y coordinate in the view basis
+     * Draws the given arc info
+     * @param arcInfo the arc's information to draw
+     * @param drawMarks boolean to say if you want to draw street marks
      */
-    private int modelViewTransformY(int y) {
-        return yGlobalOffset + (int)(modelViewScaleFactor * (double)y);
+    private void drawArcInfo(ArcInfo arcInfo, boolean drawMarks) {
+        Rectangle2D.Double rect = new Rectangle2D.Double();
+
+        if(arcInfo.isBidirectional()) {
+            rect.setRect(0.0, - arcInfo.thickness, arcInfo.length, 2.0 * arcInfo.thickness);
+        } else {
+            rect.setRect(0.0, -0.5 * arcInfo.thickness, arcInfo.length, arcInfo.thickness);
+        }
+
+        context.translate(arcInfo.x1, arcInfo.y1);
+        context.rotate(arcInfo.angle);
+
+        context.fill(rect);
+
+        if(arcInfo.isBidirectional() && drawMarks) {
+            rect.setRect((double)streetNodeRadius, -0.5 * streetCenterLineThickness, arcInfo.length - 2.0 * (double)streetNodeRadius, streetCenterLineThickness);
+
+            context.setColor(streetMarksColor);
+            context.fill(rect);
+        } else {
+            Path2D.Double path = new Path2D.Double();
+
+            path.moveTo(arcInfo.length - (double)streetNodeRadius, -0.5 * arcInfo.thickness);
+            path.lineTo(arcInfo.length, -0.5 * arcInfo.thickness);
+            path.lineTo(arcInfo.length, 0.5 * arcInfo.thickness);
+            path.lineTo(arcInfo.length - (double)streetNodeRadius, 0.5 * arcInfo.thickness);
+            path.lineTo(arcInfo.length - (double)streetNodeRadius + 0.5 * arcInfo.thickness, 0.0);
+            path.closePath();
+
+            context.setColor(streetMarksColor);
+            context.fill(path);
+        }
+
+        context.rotate(-arcInfo.angle);
+        context.translate(-arcInfo.x1, -arcInfo.y1);
+    }
+
+    /**
+     * Draws arc's itinerary symbols
+     * @param arcInfo the arc's drawing information
+     * @param arcLeaving the leaving node
+     */
+    private void drawModelArcItinerary(ArcInfo arcInfo, int arcLeaving) {
+        if(!arcInfo.arc.isItineraryFrom(arcLeaving)) {
+            return;
+        }
+
+        int yOffset = 0;
+
+        if(arcInfo.isBidirectional()) {
+            yOffset = ((3 - arcLeaving * 2) * streetThickness) / 2;
+        }
+
+        int dotCount = (int)Math.floor((arcInfo.length - 2.0 * (double)streetThickness) / (double)itineraryDotDistance);
+
+        context.setColor(itineraryColor);
+
+        for(int i = 0; i < dotCount; i++) {
+            int x = streetThickness + i * itineraryDotDistance;
+            int y = (yOffset * streetThickness) / 4;
+
+            context.fillOval(x - itineraryThickness / 2, y - itineraryThickness / 2, itineraryThickness, itineraryThickness);
+        }
+    }
+
+    /**
+     * Arc rendering information
+     */
+    private class ArcInfo {
+        /** the view arc */
+        public Arc arc;
+
+        /** the arc angle */
+        public double angle;
+
+        /** the arc view length (between the two nodes) in px */
+        public double length;
+
+        /** the arc's thickness in px */
+        public double thickness;
+
+        /** the arc's start X position on screen in px */
+        public int x1;
+
+        /** the arc's start Y position on screen in px */
+        public int y1;
+
+        /**
+         * Tests if the arc is a bidirectonal arc
+         * @return
+         *  - true if it is a bidirectional arc
+         *  - false if it is an unidirectional arc
+         */
+        public boolean isBidirectional() {
+            return (arc.getModelArcFrom1To2() != null && arc.getModelArcFrom2To1() != null);
+        }
     }
 
 
@@ -268,14 +442,21 @@ public class RenderContext {
 
     /** street's constants */
     private static final Color streetColor = new Color(255, 255, 255);
+    private static final Color streetMarksColor = new Color(200, 200, 200);
     private static final Color streetBorderColor = new Color(210, 140, 100);
     private static final int streetThickness = 4;
     private static final int streetBorderThickness = 1;
+    private static final double streetCenterLineThickness = 0.2;
 
     /** node color */
     protected static final int streetNodeRadius = 10;
     private static final Color streetSelectedNodeColor = new Color(240, 80, 80);
     private static final int streetSelectedNodeRadiusPx = 4;
+
+    /** itinerary constants */
+    private static final Color itineraryColor = new Color(55, 122, 255);
+    private static final int itineraryThickness = 2;
+    private static final int itineraryDotDistance = 3;
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);

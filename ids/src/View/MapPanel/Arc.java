@@ -21,6 +21,12 @@ public class Arc {
     /** the model arc going from node2 to node1 */
     private Model.City.Arc modelArcFrom2To1;
 
+    /** arc from 1 to 2 is an itinerary  */
+    private boolean isItineraryFrom1To2;
+
+    /** arc from 2 to 1 is an itinerary  */
+    private boolean isItineraryFrom2To1;
+
     /** the parent map panel */
     private MapPanel mapPanel;
 
@@ -43,11 +49,26 @@ public class Arc {
             modelArcFrom2To1 = modelArc;
             modelArcFrom1To2 = to.findOutgoingTo(from);
         }
+
+        isItineraryFrom1To2 = false;
+        isItineraryFrom2To1 = false;
+    }
+
+    /**
+     * Gets the model arc leaving node leavingNode
+     * @param leavingNode the leaving node id (bust me be 1 or 2)
+     * @return the model arc
+     */
+    protected Model.City.Arc getModelArcFrom(int leavingNode) {
+        if (leavingNode == 2) {
+            return modelArcFrom2To1;
+        }
+        return modelArcFrom1To2;
     }
 
     /**
      * Gets the model arc from node 1 to 2
-     * @return
+     * @return the model arc
      */
     protected Model.City.Arc getModelArcFrom1To2() {
         return modelArcFrom1To2;
@@ -55,10 +76,22 @@ public class Arc {
 
     /**
      * gets the model arc from node 2 to 1
-     * @return
+     * @return the model arc
      */
     protected Model.City.Arc getModelArcFrom2To1() {
         return modelArcFrom2To1;
+    }
+
+    /**
+     * gets the model street
+     * @return the model street
+     */
+    protected Model.City.Street getModelStreet() {
+        if(modelArcFrom2To1 != null) {
+            return modelArcFrom2To1.getStreet();
+        }
+
+        return modelArcFrom1To2.getStreet();
     }
 
     /**
@@ -85,4 +118,28 @@ public class Arc {
         return mapPanel.findNode(modelArcFrom1To2.getTo().getId());
     }
 
+    /**
+     * Tests if the arc going from node <leavingNode> to node 3 - <leavingNode> is an itinerary
+     * @param leavingNode the leaving node id (bust me be 1 or 2)
+     * @return true if it is, no elsewhere
+     */
+    public boolean isItineraryFrom(int leavingNode) {
+        if(leavingNode == 2) {
+            return isItineraryFrom2To1;
+        }
+        return isItineraryFrom1To2;
+    }
+
+    /**
+     * Sets if the arc going from node 1 to node 2 is an itinerary
+     * @param itinerary the new boolean to set
+     * @param leavingNode the leaving node id (bust me be 1 or 2)
+     */
+    public void setItineraryFrom(int leavingNode, boolean itinerary) {
+        if(leavingNode == 2) {
+            isItineraryFrom1To2 = itinerary;
+        } else {
+            isItineraryFrom2To1 = itinerary;
+        }
+    }
 }

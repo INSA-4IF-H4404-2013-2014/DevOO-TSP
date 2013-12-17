@@ -1,8 +1,15 @@
 package View.MainWindow;
 
+import Controller.MainWindowController;
+import Model.Delivery.Delivery;
+import View.Utils;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -17,24 +24,33 @@ public class DeliveryListPanel extends JScrollPane {
     public static final int PADDING = 6;
 
     public DeliveryListPanel() {
-
-        // This array is just test data.
-        // Of course we need to load data the controller gives us (fetched in the model).
-        String[] testList = new String[4];
-        testList[0] = "Mathieu";
-        testList[1] = "Marian";
-        testList[2] = "Christine";
-        testList[3] = "Jeannine";
-
-        // We bind the data structure to our JList and configure it
-        deliveryList.setListData(testList);
         deliveryList.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
         deliveryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+        Utils.enableJList(deliveryList, false);
 
         // We configure our JScrollPane
         setViewportView(deliveryList);
-        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
-        setPreferredSize(new Dimension((int)(MainWindow.DEFAULT_WIDTH*DEFAULT_WIDTH_RATIO), 0));
+        setPreferredSize(new Dimension((int) (MainWindow.DEFAULT_WIDTH * DEFAULT_WIDTH_RATIO), 0));
+    }
+
+    /**
+     * Asks the view to display the given list
+     * @param list to display
+     */
+    public void setModel(Vector<Delivery> list) {
+        deliveryList.setListData(list);
+        Utils.enableJList(deliveryList, true);
+    }
+
+    /**
+     * Adds the listener
+     * @param controller controller which will listen to the event
+     */
+    public void addListener(final MainWindowController controller) {
+        deliveryList.getSelectionModel().addListSelectionListener(controller);
+    }
+
+    public Delivery getSelectedValue() {
+        return (Delivery)deliveryList.getSelectedValue();
     }
 }

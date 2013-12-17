@@ -1,21 +1,26 @@
 title Selection Sequence
 
-Superviseur->+MapPanel : clic on a node
-MapPanel->+MapPanelController : mouseClicked(MouseEvent mouseEvent)
+Superviseur->+":MapPanel" : clic on a node
+":MapPanel"->+":MainWindowController" : mouseClicked(MouseEvent mouseEvent)
 
 
-MapPanelController->+"old:Node" : deselect()
-"old:Node"-->- MapPanelController: 
+":MainWindowController"->+"old:Node" : deselect()
+"old:Node"-->- ":MainWindowController": 
 
-MapPanelController->MapPanelController : nodeByPos(int x, int y)
+":MainWindowController"->":MainWindowController" : nodeByPos(int x, int y)
 
-alt node finded
-    MapPanelController->+"new:Node" : select()
-    "new:Node"-->- MapPanelController:
+loop node finded or all node tested
+	":MainWindowController"->+":Node" :getPos()
+	":Node"-->- ":MainWindowController":
 end
 
-MapPanelController-->- MapPanel: 
-MapPanel-->- Superviseur: repaint
+alt node finded
+    ":MainWindowController"->+"new:Node" : select()
+    "new:Node"-->- ":MainWindowController":
+end
+
+":MainWindowController"-->- ":MapPanel": 
+":MapPanel"-->- Superviseur: repaint
 
 
 

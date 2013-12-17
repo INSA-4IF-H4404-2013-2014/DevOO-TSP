@@ -92,12 +92,41 @@ public class Network {
      */
     public Street findStreet(String name) {
         for (Street i : this.streets) {
-            if (name == i.getName()) {
+            if (name.equals(i.getName())) {
                 return i;
             }
         }
 
         return null;
+    }
+
+    /**
+     * Finds a arc between two nodes
+     * @param from node id
+     * @param to node id
+     * @return
+     *  - null if there is no arc with the given parameters
+     *  - the existing arc
+     */
+    public Arc findArc(int from, int to) {
+        Node node = this.findNode(from);
+
+        if(node == null) {
+            return null;
+        }
+
+        return node.findOutgoingTo(to);
+    }
+
+    /**
+     * Returns the cost of an existing arc going from a source node to an end node
+     * Note : A call to this method with an unexisting arc will throw a null pointer exception
+     * @param source Source node
+     * @param target Target node
+     * @return The cost of an arc
+     */
+    public int getCost(int source, int target) {
+        return findArc(source, target).getCost();
     }
 
     /**
@@ -191,7 +220,7 @@ public class Network {
         try {
             streetName = Utils.stringFromXmlAttribute(xmlElement, "nomRue");
             speed = Utils.parsePositiveFloatFromXmlAttribute(xmlElement, "vitesse");
-            length = Utils.parsePositiveFloatFromXmlAttribute(xmlElement, "length");
+            length = Utils.parsePositiveFloatFromXmlAttribute(xmlElement, "longueur");
             int destinationId = Utils.parseUIntFromXmlAttribute(xmlElement, "destination");
 
             if (speed == 0.0) {
@@ -268,30 +297,25 @@ public class Network {
         Network network;
 
         try {
-            try {
-                factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            factory = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-                document = factory.parse(fileXml);
+            document = factory.parse(fileXml);
 
-                root = document.getDocumentElement();
-            } catch (ParserConfigurationException pce) {
-                throw new UtilsException("DOM parsor configuration exception");
-            } catch (SAXException se) {
-                throw new UtilsException("XML parse stage failed");
-            } catch (IOException ioe) {
-                throw new UtilsException("Error while reading file \"" + xmlPath + "\"");
-            }
-
-            if (!root.getNodeName().equals("Reseau")) {
-                throw new UtilsException("Unexpected XML root name \"" + root.getNodeName() + "\"");
-            }
-
-            network = new Network();
-            network.loadNetworkFromXml(root);
+            root = document.getDocumentElement();
+        } catch (ParserConfigurationException pce) {
+            throw new UtilsException("DOM parsor configuration exception");
+        } catch (SAXException se) {
+            throw new UtilsException("L'étape de parsing XML a échoué.");
+        } catch (IOException ioe) {
+            throw new UtilsException("Erreur lors de la lecture du fichier \"" + xmlPath + "\".");
         }
-        catch (UtilsException e) {
-            throw  new UtilsException("File \"" + xmlPath + "\" > " + e);
+
+        if (!root.getNodeName().equals("Reseau")) {
+            throw new UtilsException("Nom de racine inattendu : \"" + root.getNodeName() + "\"");
         }
+
+        network = new Network();
+        network.loadNetworkFromXml(root);
 
         return network;
     }

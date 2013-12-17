@@ -1,9 +1,6 @@
 package View.MainWindow;
 
-import View.TimeFramePanel;
-
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -26,5 +23,21 @@ public class RightPanel extends JPanel {
 
         add(roundPanel);
         add(deliveryInfoPanel);
+    }
+
+    /**
+     * Gets the round panel (the one on the top right)
+     * @return the round panel
+     */
+    public RoundPanel getRoundPanel() {
+        return roundPanel;
+    }
+
+    /**
+     * Gets the delivery info panel (the one on the bottom right)
+     * @return the delivery info panel
+     */
+    public DeliveryInfoPanel getDeliveryInfoPanel() {
+        return deliveryInfoPanel;
     }
 }

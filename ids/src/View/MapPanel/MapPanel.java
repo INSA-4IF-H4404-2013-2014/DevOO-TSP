@@ -1,6 +1,8 @@
 package View.MapPanel;
 
+import Model.ChocoSolver.CalculatedRound;
 import Model.City.Network;
+import Model.Delivery.Itinerary;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +22,9 @@ public class MapPanel extends JPanel {
     /** associated model graph */
     private Network modelNetwork;
 
+    /** the model round */
+    CalculatedRound modelRound;
+
     /** nodes map */
     private Map<Integer,Node> nodes;
 
@@ -29,8 +34,11 @@ public class MapPanel extends JPanel {
     /** view's center pos in the model basis */
     protected Point modelCenterPos;
 
-    /** graph model's size in the model basis */
-    protected Dimension modelSize;
+    /** view's center pos in the model basis */
+    protected Point modelMinPos;
+
+    /** view's center pos in the model basis */
+    protected Point modelMaxPos;
 
     /** view/model scale factor */
     protected double modelViewScaleFactor;
@@ -51,7 +59,8 @@ public class MapPanel extends JPanel {
         this.nodes = new HashMap<Integer,Node>();
         this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
         this.modelCenterPos = new Point();
-        this.modelSize = new Dimension();
+        this.modelMinPos = new Point();
+        this.modelMaxPos = new Point();
         this.nodeEventListener = null;
 
         this.addComponentListener(new ComponentAdapter() {
@@ -90,7 +99,7 @@ public class MapPanel extends JPanel {
                 int x = panel.modelCoordinateX(mouseEvent.getX());
                 int y = panel.modelCoordinateY(mouseEvent.getY());
 
-                int minDistancePow = Math.max(panel.modelSize.width, panel.modelSize.height);
+                int minDistancePow = Math.max(modelMaxPos.x - modelMinPos.x, modelMaxPos.y - modelMinPos.y);
                 minDistancePow *= minDistancePow;
 
                 Model.City.Node nearestNode = null;
@@ -140,15 +149,24 @@ public class MapPanel extends JPanel {
 
     /**
      * Sets the model
-     * @param modelNetwork the model we want to set
+     * @param network the model we want to set
      */
-    public void setModel(Network modelNetwork) {
-        nodes.clear();
-        arcs.clear();
+    public void setModel(Network network) {
+        modelNetwork = network;
+        modelRound = null;
+        selectedNode = null;
 
-        this.modelNetwork = modelNetwork;
+        this.refreshNodeAndArcs();
+    }
 
-        this.buildView();
+    /**
+     * Sets the calculated round to show
+     * @param round the calculated round to show
+     */
+    public void setRound(CalculatedRound round) {
+        modelRound = round;
+
+        this.refreshArcsItineraries();
         this.repaint();
     }
 
@@ -164,9 +182,12 @@ public class MapPanel extends JPanel {
      * Sets the currently selected node. This assumes that selectedNode is in the current model
      */
     public void setSelectedNode(Model.City.Node node) {
-        int nodeId = node.getId();
-
-        selectedNode = this.findNode(nodeId);
+        if(node == null) {
+            selectedNode = null;
+        } else {
+            int nodeId = node.getId();
+            selectedNode = this.findNode(nodeId);
+        }
 
         this.repaint();
     }
@@ -191,8 +212,8 @@ public class MapPanel extends JPanel {
      * Gets smallest scale factor
      */
     public double smallestScaleFactor() {
-        double graphWidth = (double)(modelSize.width);
-        double graphHeight = (double)(modelSize.height);
+        double graphWidth = (double)(getModelDimension().width);
+        double graphHeight = (double)(getModelDimension().height);
 
         double panelWidth = (double)(this.getWidth() - 2 * RenderContext.borderPadding);
         double panelHeight = (double)(this.getHeight() - 2 * RenderContext.borderPadding);
@@ -226,13 +247,13 @@ public class MapPanel extends JPanel {
         multiplier = scaleFactor / modelViewScaleFactor;
 
         double xModelMoveVector = (double)(x - this.getWidth() / 2) / modelViewScaleFactor;
-        double yModelMoveVector = (double)(y - this.getHeight() / 2) / modelViewScaleFactor;
+        double yModelMoveVector = (double)(this.getHeight() / 2 - y) / modelViewScaleFactor;
 
         modelCenterPos.x += (int)(xModelMoveVector * (1.0 - 1.0 / multiplier));
         modelCenterPos.y += (int)(yModelMoveVector * (1.0 - 1.0 / multiplier));
 
-        modelCenterPos.x = Math.min(Math.max(modelCenterPos.x, 0), modelSize.width);
-        modelCenterPos.y = Math.min(Math.max(modelCenterPos.y, 0), modelSize.height);
+        modelCenterPos.x = Math.min(Math.max(modelCenterPos.x, modelMinPos.x), modelMaxPos.x);
+        modelCenterPos.y = Math.min(Math.max(modelCenterPos.y, modelMinPos.y), modelMaxPos.y);
 
         modelViewScaleFactor = scaleFactor;
         fittedScaleFactor = false;
@@ -245,8 +266,8 @@ public class MapPanel extends JPanel {
      */
     public void fitToView() {
         modelViewScaleFactor = this.smallestScaleFactor();
-        modelCenterPos.x = modelSize.width / 2;
-        modelCenterPos.y = modelSize.height / 2;
+        modelCenterPos.x = (modelMinPos.x + modelMaxPos.x) / 2;
+        modelCenterPos.y = (modelMinPos.y + modelMaxPos.y) / 2;
         fittedScaleFactor = true;
 
         this.repaint();
@@ -267,6 +288,14 @@ public class MapPanel extends JPanel {
             return;
         }
 
+        renderContext.setTransformNetwork();
+
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                renderContext.drawArcStreetName(entry.getValue());
+            }
+        }
+
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
             for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
                 renderContext.drawArcBorders(entry.getValue());
@@ -275,6 +304,10 @@ public class MapPanel extends JPanel {
 
         for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
             renderContext.drawNodeBorders(entry.getValue());
+        }
+
+        if(selectedNode != null) {
+            renderContext.drawNodeBorders(selectedNode);
         }
 
         for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
@@ -287,6 +320,14 @@ public class MapPanel extends JPanel {
             renderContext.drawNode(entry.getValue());
         }
 
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                renderContext.drawArcItinerary(entry.getValue());
+            }
+        }
+
+        renderContext.setTransformIdentity();
+
         renderContext.drawScale();
         renderContext.drawNorthArrow();
 
@@ -296,14 +337,17 @@ public class MapPanel extends JPanel {
     }
 
     /**
-     * Gets model coordinate
+     * Gets model X coordinate
      */
     protected int modelCoordinateX(int x) {
         return (int)((double)(x - this.getWidth() / 2) / modelViewScaleFactor + modelCenterPos.x);
     }
 
+    /**
+     * Gets model Y coordinate
+     */
     protected int modelCoordinateY(int y) {
-        return (int)((double)(y - this.getHeight() / 2) / modelViewScaleFactor + modelCenterPos.y);
+        return (int)(modelCenterPos.y - (double)(y - this.getHeight() / 2) / modelViewScaleFactor);
     }
 
     /**
@@ -342,13 +386,21 @@ public class MapPanel extends JPanel {
     }
 
     /**
-     * Builds view from the model graph
+     * Gets model's dimension
+     * @return the model dimension (modelMaxPos - modelMinPos)
      */
-    private void buildView() {
-        int xModelMin = 0x7FFFFFFF;
-        int yModelMin = 0x7FFFFFFF;
-        int xModelMax = -0x7FFFFFFF;
-        int yModelMax = -0x7FFFFFFF;
+    protected Dimension getModelDimension() {
+        return new Dimension(modelMaxPos.x - modelMinPos.x, modelMaxPos.y - modelMinPos.y);
+    }
+
+    /**
+     * refreshes model's min/max coordinates
+     */
+    private void refreshModelMinMax() {
+        modelMinPos.x = 0x7FFFFFFF;
+        modelMinPos.y = 0x7FFFFFFF;
+        modelMaxPos.x = -0x7FFFFFFF;
+        modelMaxPos.y = -0x7FFFFFFF;
 
         for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
             Model.City.Node modelNode = entry.getValue();
@@ -356,30 +408,30 @@ public class MapPanel extends JPanel {
             int x = modelNode.getX();
             int y = modelNode.getY();
 
-            if (x < xModelMin) {
-                xModelMin = x;
-            }
-            if (y < yModelMin) {
-                yModelMin = y;
-            }
-            if (x > xModelMax) {
-                xModelMax = x;
-            }
-            if (y > yModelMax) {
-                yModelMax = y;
-            }
+            modelMinPos.x = Math.min(modelMinPos.x, x);
+            modelMinPos.y = Math.min(modelMinPos.y, y);
+            modelMaxPos.x = Math.max(modelMaxPos.x, x);
+            modelMaxPos.y = Math.max(modelMaxPos.y, y);
+        }
+    }
+
+    /**
+     * Refreshes view nodes/arcs from the model
+     */
+    private void refreshNodeAndArcs() {
+        nodes.clear();
+        arcs.clear();
+
+        if(modelNetwork == null) {
+            return;
         }
 
-        modelSize.width = xModelMax - xModelMin;
-        modelSize.height = yModelMax - yModelMin;
+        refreshModelMinMax();
 
         for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
             Model.City.Node modelNode = entry.getValue();
 
-            int x = modelNode.getX() - xModelMin;
-            int y = modelSize.height - (modelNode.getY() - yModelMin);
-
-            Node node = new Node(this, modelNode, x, y);
+            Node node = new Node(this, modelNode);
 
             nodes.put(entry.getValue().getId(), node);
         }
@@ -411,6 +463,39 @@ public class MapPanel extends JPanel {
         }
 
         this.fitToView();
+    }
+
+    /**
+     * Refreshes view's arcs' itineraries from the calculated round
+     */
+    private void refreshArcsItineraries() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                Arc arc = entry.getValue();
+
+                arc.setItineraryFrom(1, false);
+                arc.setItineraryFrom(2, false);
+            }
+        }
+
+        if(modelRound == null) {
+            return;
+        }
+
+        for(Itinerary modelItinerary : modelRound.getOrderedItineraries()) {
+            for(Model.City.Arc modelArc : modelItinerary.getArcs()) {
+                int from = modelArc.getFrom().getId();
+                int to = modelArc.getTo().getId();
+
+                Arc arc = findArc(from, to);
+
+                if (arc.getNode1().getModelNode() == modelArc.getFrom()) {
+                    arc.setItineraryFrom(1, true);
+                } else {
+                    arc.setItineraryFrom(2, true);
+                }
+            }
+        }
     }
 
 

@@ -1,35 +1,60 @@
 User->+MainWindowController: Clique sur le bouton "Demande de livraison"
 
-MainWindowController->+Round : createFromXml(String xmlPath)
-Round->"aRound : Round" : create
+MainWindowController->+Round : createFromXml(String xmlPath, Network network)
 
-Round->"root : Element" : create
+Round->"root : Element" : create()
 
-Round->+"aRound : Round": loadDeliveriesFromXml(root)
+Round->+"aRound : Round" : create(root, network)
 
-"aRound : Round"->+"root : Element" : getElementsByTagName("Livraisons")
-"root : Element" -->- "aRound : Round" : DeliveriesList xmlDeliveriesList
+"aRound : Round"->"xmlNodeList : NodeList" : create()
 
-loop i from 0 to xmlDeliveriesList.length()
-"aRound : Round"->+"xmlDeliveriesList : DeliveriesList" : item(i)
-"xmlDeliveriesList : DeliveriesList" -->- "aRound : Round" : Element xmlDeliveries
+"aRound : Round"->+"root : Element" : getElementsByTagName(XMLConstants.DELIVERY_WAREHOUSE_ELEMENT)
+"root : Element"-->-"aRound : Round" : xmlNodeList
+
+"aRound : Round"->+"root : Element" : getElementsByTagName(XMLConstants.DELIVERY_SCHEDULES_ELEMENT)
+"root : Element"-->-"aRound : Round" : xmlNodeList
+
+"aRound : Round"->"eSchedules : Element" : create()
+
+"aRound : Round"->+"xmlNodeList : NodeList" : item(0)
+"xmlNodeList : NodeList"-->-"aRound : Round" : eSchedules
+
+"aRound : Round"->+"eSchedules : Element" : getElementsByTagName(XMLConstants.DELIVERY_SCHEDULE_ELEMENT)
+"eSchedules : Element"-->-"aRound : Round" : xmlNodeList
+
+loop i from 0 to xmlNodeList.length()
+
+"aRound : Round"->+"xmlNodeList : NodeList" : item(0)
+"xmlNodeList : NodeList"-->-"aRound : Round" : element
+
+"aRound : Round"->+"s : Schedule" : create(aRound, element)
+
+"s : Schedule"->"deliveries : Nodelist" : create()
+
+"s : Schedule"->+"element : Element" : etElementsByTagName(XMLConstants.DELIVERY_DELIVERIES_ELEMENT)
+"element : Element"-->-"s : Schedule" : deliveries
+
+"s : Schedule"->"eDeliveries : Element" : create()
+"s : Schedule"->+"deliveries : Nodelist" : item(0)
+"deliveries : Nodelist"-->-"s : Schedule" : eDeliveries
 
 
-"aRound : Round"->+"xmlDeliveries : Element" : getElementsByTagName("Livraison")
-"xmlDeliveries : Element" -->- "aRound : Round" : DeliveryList xmlDeliveryList
+"s : Schedule"->"deliveriy : Nodelist" : create()
 
-loop j from 0 to xmlDeliveryList.length()
-"aRound : Round"->+"xmlDeliveryList : DeliveryList" : item(j)
-"xmlDeliveryList : DeliveryList" -->- "aRound : Round" : Element xmlDelivery
+"s : Schedule"->+"eDeliveries : Element" : getElementsByTagName(XMLConstants.DELIVERY_DELIVERY_ELEMENT)
+"eDeliveries : Element"-->-"s : Schedule" : delivery
 
-"aRound : Round" ->+ "aRound : Round" : loadDeliveryFromXml(xmlDelivery)
+loop i from 0 to delivery.length()
 
-"aRound : Round" -->- "aRound : Round" : delivery
+"s : Schedule"->+"deliveriy : Nodelist" : item(i)
+"deliveriy : Nodelist"-->-"s : Schedule" : element2
+
+"s : Schedule"->"deliveriyD : Delivery" : create(aRound, s, element2)
+
+"s : Schedule"->+"s : Schedule" : add(deliveryD)
 
 end
 
+"aRound : Round"->+"aRound : Round" : add(s)
+
 end
-
-"aRound : Round" -->- "Round" : 
-
-Round -->- MainWindowController : aRound

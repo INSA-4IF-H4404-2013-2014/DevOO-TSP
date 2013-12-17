@@ -1,8 +1,11 @@
 package Model.ChocoSolver;
 
+import Model.City.Arc;
 import Model.City.Node;
+import Model.Delivery.Client;
 import Model.Delivery.Delivery;
 import Model.Delivery.Itinerary;
+import Model.Delivery.Schedule;
 import Utils.UtilsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,7 +35,7 @@ public class CalculatedRound {
     private List<Itinerary> orderedItineraries = new LinkedList<Itinerary>();
 
     /** A dictionary linking a delivery to its estimated arrival hour at the delivery point */
-    private Dictionary<Delivery, GregorianCalendar> estimatedSchedules = new Hashtable<Delivery, GregorianCalendar>();
+    private Dictionary<Integer, GregorianCalendar> estimatedSchedules = new Hashtable<Integer, GregorianCalendar>();
 
     /**
      * Constructor
@@ -44,7 +47,9 @@ public class CalculatedRound {
         this.warehouse = warehouse;
         this.orderedDeliveries = orderedDeliveries;
         this.orderedItineraries = orderedItineraries;
-        calculateEstimatedSchedules();
+        if(!orderedDeliveries.isEmpty()) {
+            calculateEstimatedSchedules();
+        }
     }
 
     /**
@@ -53,7 +58,75 @@ public class CalculatedRound {
      */
     private void calculateEstimatedSchedules()
     {
-        //TODO : CALCULATIONS (10 minutes are required in order to deliver a package)
+        GregorianCalendar firstDepartureTime = getFirstDepartureTime();
+
+        estimatedSchedules.put(warehouse.getId(), firstDepartureTime);
+
+        GregorianCalendar arrivalTime;
+
+        long timeLapse;
+        int deliveryTime = 0;
+
+        int nodeId = warehouse.getId();
+
+        for(Delivery delivery:orderedDeliveries) {
+
+            arrivalTime = getArrivalTime(nodeId, delivery, deliveryTime);
+
+            nodeId = delivery.getAddress().getId();
+            deliveryTime = 600;
+
+            estimatedSchedules.put(nodeId, arrivalTime);
+        }
+    }
+
+    /**
+     * Get the departure time at the warehouse
+     * @return the departure time at the warehouse
+     */
+    private GregorianCalendar getFirstDepartureTime() {
+        Date departureDate = orderedDeliveries.get(0).getSchedule().getEarliestBound().getGregorianChange();
+
+        int warehouseToDeliveryTime = getNextItinerary(warehouse).getCost();
+
+        long departureTime = departureDate.getTime() - (long)(warehouseToDeliveryTime * 1000);
+
+        departureDate.setTime(departureTime);
+
+        GregorianCalendar departure = new GregorianCalendar();
+        departure.setTime(departureDate);
+
+        // If the departure time is between 00:00am and 06:00am,
+        // we force the departure time to 06:00am
+        if(departure.get(Calendar.HOUR_OF_DAY) < 6) {
+            departure.set(Calendar.HOUR_OF_DAY, 6);
+            departure.set(Calendar.MINUTE, 0);
+        }
+
+        return departure;
+    }
+
+    /**
+     * Get the arrival time of the currentDelivery
+     * @param previousNodeId the id of the node that is before the currentDelivery
+     * @param currentDelivery the delivery we want the arrival time
+     * @param deliveryTime the time spend by the delivery man on the last delivery
+     * @return the arrival time at the currentDelivery
+     */
+    private GregorianCalendar getArrivalTime(int previousNodeId, Delivery currentDelivery, int deliveryTime) {
+        GregorianCalendar arrivalTime;
+        Date arrivalDate;
+        long timeLapse;
+
+        arrivalTime = (GregorianCalendar) estimatedSchedules.get(previousNodeId).clone();
+        arrivalDate = arrivalTime.getGregorianChange();
+
+        timeLapse = arrivalDate.getTime() + (long) ((getNextItinerary(currentDelivery).getCost() + deliveryTime) * 1000);
+
+        arrivalDate.setTime(timeLapse);
+        arrivalTime.setTime(arrivalDate);
+
+        return arrivalTime;
     }
 
     /**
@@ -141,5 +214,67 @@ public class CalculatedRound {
         }
 
         return estimatedSchedule.after(delivery.getSchedule().getLatestBound());
+    }
+
+
+    // TODO: to be tested!
+    /**
+     * Parse the round into a html format
+     * @return the html text in a String
+     */
+    public String calculatedRoundToHtml() {
+
+        String earlyText = "Heure min : ";
+        String latestText = "Heure max : ";
+
+        String htmlOpen = "<html>\n";
+        String htmlClose = "\n</html>";
+
+        String tableOpen = "\n<table>\n";
+        String tableClose = "\n</table>\n<br/>\n";
+
+        String hOpen = "\n<h5>";
+        String hClose = "</h5>\n";
+
+        String trOpen = "\n<tr>\n";
+        String trClose = "\n</tr>\n";
+
+        String tdOpen = "\n<td>";
+        String tdClose = "</td>\n";
+
+        String html;
+
+        int i = 0;
+
+        html = htmlOpen;
+
+        html += hOpen + "Départ de l'entrepôt à " + getFirstDepartureTime().get(Calendar.HOUR_OF_DAY) + "h" + getFirstDepartureTime().get(Calendar.MINUTE) + hClose;
+
+        List<Arc> arcList;
+        Delivery delivery;
+
+        for(Itinerary itinerary:orderedItineraries) {
+            arcList = itinerary.getArcs();
+            delivery = orderedDeliveries.get(i++);
+
+            html += tableOpen;
+            for(Arc arc:arcList) {
+                html += tdOpen;
+
+                //TODO: add "Turn left/right/etc..." to indications (use Arc.getDirection(Arc arc))
+
+                html += trOpen + "Prendre rue " + arc.getStreet().getName() + trClose;
+                html += trOpen + arc.getLength() + "m" + trClose;
+                html += trOpen + arc.getCost()/60 + "min" + trClose;
+                html += tdClose;
+            }
+            html += tableClose;
+            html += hOpen + "Client n°" + delivery.getClient().getId() + hClose;
+            html += hOpen + "Plage horaire : " + delivery.getSchedule().getEarliestBound() +" | " + delivery.getSchedule().getLatestBound() + hClose;
+        }
+
+        html += htmlClose;
+
+        return html;
     }
 }

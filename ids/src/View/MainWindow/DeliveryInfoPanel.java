@@ -1,10 +1,12 @@
 package View.MainWindow;
 
+import Model.Delivery.Delivery;
 import View.TimeFramePanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -44,7 +46,7 @@ public class DeliveryInfoPanel extends JPanel {
         deliveryInfoPanelContentForm.add(createRow3());
         deliveryInfoPanelContentForm.add(createRow4());
         deliveryInfoPanelContentForm.add(createRow5());
-        disableAllFields();
+        setEnableAllFields(false);
 
         // We add this "form" to deliveryInfoPanelContent
         deliveryInfoPanelContent.add(deliveryInfoPanelContentForm, BorderLayout.CENTER);
@@ -91,15 +93,45 @@ public class DeliveryInfoPanel extends JPanel {
     }
 
     /**
-     * Disables all JTextFields.
+     * Enable or disable the fields
+     * @param b whether to enable or disable the fields
      */
-    private void disableAllFields() {
-        View.Utils.enableJTextField(deliveryID, false);
-        View.Utils.enableJTextField(timeFrameBegin, false);
-        View.Utils.enableJTextField(timeFrameEnd, false);
-        View.Utils.enableJTextField(clientName, false);
-        View.Utils.enableJTextField(address, false);
-        View.Utils.enableJTextField(deliveryTime, false);
-        View.Utils.enableJTextField(delay, false);
+    private void setEnableAllFields(boolean b) {
+        View.Utils.enableJTextField(deliveryID, b);
+        View.Utils.enableJTextField(timeFrameBegin, b);
+        View.Utils.enableJTextField(timeFrameEnd, b);
+        View.Utils.enableJTextField(clientName, b);
+        View.Utils.enableJTextField(address, b);
+        View.Utils.enableJTextField(deliveryTime, b);
+        View.Utils.enableJTextField(delay, b);
     }
+
+    /**
+     * fill all the fields with the information in the Delivery given
+     * @param delivery the delivery which should be described
+     */
+     public void fillDeliveryInfoPanel(Delivery delivery){
+        deliveryID.setText(""+delivery.getId());
+        clientName.setText(""+delivery.getClient().getId());
+        address.setText((""+delivery.getAddress().getId()));
+        SimpleDateFormat form = new SimpleDateFormat("hh");
+        timeFrameBegin.setText(""+form.format(delivery.getSchedule().getEarliestBound().getTime()));
+        timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
+        deliveryTime.setText(" unable to do it now ");
+        delay.setText(" unable to do it now");
+     }
+
+    /**
+    * empty all the fields
+    */
+    public void emptyFields(){
+        deliveryID.setText("");
+        clientName.setText("");
+        address.setText("");
+        timeFrameBegin.setText("");
+        timeFrameEnd.setText("");
+        deliveryTime.setText("");
+        delay.setText("");
+    }
+
 }
