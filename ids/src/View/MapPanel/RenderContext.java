@@ -135,6 +135,12 @@ public class RenderContext {
             context.setColor(streetBorderColor);
         }
 
+        if(node.getKind() == Node.Kind.DELIVERY) {
+            context.setColor(itineraryColor);
+        } else if(node.getKind() == Node.Kind.WAREHOUSE) {
+            context.setColor(itineraryWarehouseColor);
+        }
+
         context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
     }
 
@@ -195,6 +201,57 @@ public class RenderContext {
 
         context.setTransform(previousTransform);
         context.setFont(previousFont);
+    }
+
+    /**
+     * Draws a streets and nodes' borders
+     */
+    protected void drawBorders() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                drawArcBorders(entry.getValue());
+            }
+        }
+
+        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
+            drawNodeBorders(entry.getValue());
+        }
+
+        if(mapPanel.selectedNode != null) {
+            drawNodeBorders(mapPanel.selectedNode);
+        }
+    }
+
+    /**
+     * Draws streets
+     */
+    protected void drawStreets() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                drawArc(entry.getValue());
+            }
+        }
+
+        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
+            drawNode(entry.getValue());
+        }
+
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                drawArcItinerary(entry.getValue());
+            }
+        }
+    }
+
+    /**
+     * Draws a street names
+     */
+    protected void drawStreetNames() {
+        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+                drawArcStreetName(entry.getValue());
+            }
+        }
     }
 
     /**
@@ -455,6 +512,7 @@ public class RenderContext {
 
     /** itinerary constants */
     private static final Color itineraryColor = new Color(55, 122, 255);
+    private static final Color itineraryWarehouseColor = new Color(100, 100, 100);
     private static final int itineraryThickness = 2;
     private static final int itineraryDotDistance = 3;
 

@@ -54,25 +54,25 @@ public class TopToolBar extends JToolBar {
         setFloatable(false);
         //setRollover(true);
 
-        loadMap.setIcon(new ImageIcon("./src/open_map.png"));
+        loadMap.setIcon(new ImageIcon("./src/img/open_map.png"));
         add(loadMap);
-        loadRound.setIcon(new ImageIcon("./src/open_round.png"));
+        loadRound.setIcon(new ImageIcon("./src/img/open_round.png"));
         add(loadRound);
 
         addSeparator();
-        saveRound.setIcon(new ImageIcon("./src/save_round.png"));
+        saveRound.setIcon(new ImageIcon("./src/img/save_round.png"));
         add(saveRound);
 
         addSeparator();
-        add.setIcon(new ImageIcon("./src/add.png"));
+        add.setIcon(new ImageIcon("./src/img/add.png"));
         add(add);
-        delete.setIcon(new ImageIcon("./src/delete.png"));
+        delete.setIcon(new ImageIcon("./src/img/delete.png"));
         add(delete);
 
         addSeparator();
-        undo.setIcon(new ImageIcon("./src/undo.png"));
+        undo.setIcon(new ImageIcon("./src/img/undo.png"));
         add(undo);
-        redo.setIcon(new ImageIcon("./src/redo.png"));
+        redo.setIcon(new ImageIcon("./src/img/redo.png"));
         add(redo);
 
         loadRound.setEnabled(false);
@@ -100,6 +100,32 @@ public class TopToolBar extends JToolBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.loadRound();
+            }
+        });
+        saveRound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exportRound();
+            }
+        });
+        delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.removeDelivery();
+            }
+        });
+
+        undo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.historyUndo();
+            }
+        });
+
+        redo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.historyRedo();
             }
         });
     }

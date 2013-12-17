@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,6 +31,9 @@ public class Node {
 
     /** the node's incoming arcs */
     private List<Arc> incoming;
+
+    /** Computed string representation */
+    private String computedStringRepresentation;
 
     /**
      * Constructor
@@ -127,5 +131,41 @@ public class Node {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    /**
+     * Represents a node in a string.
+     * If the node is at a crossroads, the string will contain all street's names.
+     * @return The string
+     */
+    public String toString() {
+        if(computedStringRepresentation != null) {
+            return computedStringRepresentation;
+        }
+
+        TreeSet<String> streetsNames = new TreeSet<String>();
+
+        for(Arc out : outgoing) {
+            streetsNames.add(out.getStreet().getName());
+        }
+
+        for(Arc in : incoming) {
+            streetsNames.add(in.getStreet().getName());
+        }
+
+        if(streetsNames.size() == 1) {
+            computedStringRepresentation = streetsNames.first();
+        }
+        else {
+            computedStringRepresentation = new String();
+            for(String streetName : streetsNames) {
+                computedStringRepresentation += streetName;
+
+                if(streetName != streetsNames.last()) {
+                    computedStringRepresentation += " / ";
+                }
+            }
+        }
+        return computedStringRepresentation;
     }
 }

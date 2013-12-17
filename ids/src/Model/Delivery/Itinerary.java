@@ -72,11 +72,22 @@ public class Itinerary {
      */
     public int getCost() {
         int cost = 0;
-        for(Arc arc:this.arcs) {
+
+        for(Arc arc : this.arcs) {
             cost += arc.getCost();
         }
 
         return cost;
+    }
+
+    public float getLength() {
+        float length = 0;
+
+        for(Arc arc : this.arcs) {
+            length += arc.getLength();
+        }
+
+        return length;
     }
 }
 

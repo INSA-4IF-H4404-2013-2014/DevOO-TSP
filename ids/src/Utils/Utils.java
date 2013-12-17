@@ -15,17 +15,10 @@ import java.io.File;
 public class Utils {
 
     public static String stringFromXmlAttribute(Element xmlElement, String attribute) throws UtilsException {
-        String value;
+        String value = xmlElement.getAttribute(attribute);
 
-        try {
-            value = xmlElement.getAttribute(attribute);
-        }
-        catch (Exception e) {
-            throw new UtilsException("missing attribute '" +  attribute + "'");
-        }
-
-        if (value == null) {
-            throw new UtilsException("missing attribute '" +  attribute + "'");
+        if(value.equals("")) {
+            throw new UtilsException("attribut '" +  attribute + "' manquant");
         }
 
         return value;
@@ -51,7 +44,7 @@ public class Utils {
                 value = value * 10.0f + (float)(c - '0');
             }
             else {
-                throw new UtilsException("unexpected character '" + c + "'");
+                throw new UtilsException("character '" + c + "' inatendu");
             }
         }
 
@@ -81,7 +74,7 @@ public class Utils {
                 value = newValue;
             }
             else {
-                throw new UtilsException("unexpected character '" + c + "'");
+                throw new UtilsException("character '" + c + "' inatendu");
             }
         }
 

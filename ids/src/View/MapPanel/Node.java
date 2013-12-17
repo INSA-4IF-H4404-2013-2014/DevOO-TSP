@@ -17,6 +17,10 @@ public class Node {
     /** the associated model node */
     private Model.City.Node modelNode;
 
+    /** the node's kind */
+    private Kind kind;
+
+
     /**
      * Constructor
      * @param mapPanel the parent map panel
@@ -25,6 +29,7 @@ public class Node {
     protected Node(MapPanel mapPanel, Model.City.Node modelNode) {
         this.mapPanel = mapPanel;
         this.modelNode = modelNode;
+        this.kind = Kind.DEFAULT;
     }
 
     /**
@@ -57,5 +62,30 @@ public class Node {
      */
     protected int getY() {
         return modelNode.getY();
+    }
+
+    /**
+     * Gets the view node's kind
+     * @return the view node's kind
+     */
+    public Kind getKind() {
+        return kind;
+    }
+
+    /**
+     * Sets the view node's kind
+     * @param kind the kind to set
+     */
+    public void setKind(Kind kind) {
+        this.kind = kind;
+    }
+
+    /**
+     * Defines the node's kind
+     */
+    protected enum Kind {
+        DEFAULT,
+        DELIVERY,
+        WAREHOUSE
     }
 }

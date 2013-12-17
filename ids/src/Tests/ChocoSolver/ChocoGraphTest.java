@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.FileNotFoundException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -25,6 +26,12 @@ import static org.junit.Assert.fail;
  */
 public class ChocoGraphTest {
 
+    /**
+     * Tests the creation of a choco graph and checks that this one is correct
+     * @throws UtilsException
+     * @throws FileNotFoundException
+     * @throws ParserConfigurationException
+     */
     @Test
     public void testCreate() throws UtilsException, FileNotFoundException, ParserConfigurationException {
         Network network = Network.createFromXml("resources/tests/chocograph/plan-test.xml");
@@ -32,9 +39,17 @@ public class ChocoGraphTest {
 
         ChocoGraph chocograph = new ChocoGraph(network, round);
 
-        assertTrue(chocograph.getMaxArcCost() == 9);
-        assertTrue(chocograph.getMinArcCost() == 1);
+        int chocoId = chocograph.getChocoIdFromNetworkId(5);
+        assertTrue(chocograph.getNbSucc(chocoId) == 2);
+        int[] succ = chocograph.getSucc(chocoId);
+        assertTrue(succ[0] == chocograph.getChocoIdFromNetworkId(7));
+        assertTrue(succ[1] == chocograph.getChocoIdFromNetworkId(9));
+
+
+
         assertTrue(chocograph.getNbVertices() == 7);
+        assertTrue(chocograph.getMinArcCost() == 1);
+        assertTrue(chocograph.getMaxArcCost() == 9);
 
         int[][] testCost = chocograph.getCost();
         assertTrue(testCost[3][7] == 4);
@@ -50,8 +65,20 @@ public class ChocoGraphTest {
         assertTrue(testSucc[0] == 5 || testSucc[0] == 7);
         testSucc = chocograph.getSucc(9);
         assertTrue(testSucc[0] == 0);
+    }
 
+    /**
+     * Checks a bigger choco graph creation
+     * @throws UtilsException
+     * @throws FileNotFoundException
+     * @throws ParserConfigurationException
+     */
+    @Test
+    public void testCreate2() throws UtilsException, FileNotFoundException, ParserConfigurationException {
+        Network network = Network.createFromXml("resources/tests/plan20x20.xml");
+        Round round = Round.createFromXml("resources/tests/livraison20x20-2.xml", network);
 
-
+        ChocoGraph chocograph = new ChocoGraph(network, round);
+        assertEquals(chocograph.getNbVertices(), 13);
     }
 }

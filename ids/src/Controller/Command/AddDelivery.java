@@ -32,12 +32,14 @@ public class AddDelivery extends Command {
         Round round = this.getController().getMainWindow().getRound();
 
         round.addDelivery(clientId, nodeId, earliestBound, latestBound);
+        this.controller.computeRound(controller.getMainWindow().getNetwork(),round);
     }
 
     public void Reverse() {
         Round round = this.getController().getMainWindow().getRound();
 
         round.removeDelivery(nodeId);
+        this.controller.computeRound(controller.getMainWindow().getNetwork(),round);
     }
 
 }

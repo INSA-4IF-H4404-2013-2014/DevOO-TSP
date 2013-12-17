@@ -71,32 +71,6 @@ public class MainWindow extends JFrame {
         addListener();
 
         setVisible(true);
-
-        // automatic load for map testing
-        try {
-            network = Network.createFromXml("../sujet/planTiny.xml");
-
-            Model.City.Node warHouse = network.findNode(0);
-            LinkedList<Arc> arcList = new LinkedList<Arc>();
-
-            arcList.add(network.findArc(0, 2));
-            arcList.add(network.findArc(2, 1));
-            arcList.add(network.findArc(1, 0));
-
-            LinkedList<Itinerary> itineraryList = new LinkedList<Itinerary>();
-
-            Model.Delivery.Itinerary itinerary = new Model.Delivery.Itinerary(null, null, arcList);
-            itineraryList.add(itinerary);
-
-            CalculatedRound calculatedRound = new CalculatedRound(warHouse, new LinkedList<Delivery>(), itineraryList);
-
-            mapPanel.setModel(network);
-            mapPanel.setRound(calculatedRound);
-        }
-        catch (UtilsException e) {
-            System.out.println(e);
-            //TODO: prety load
-        }
     }
 
     /**
@@ -112,7 +86,7 @@ public class MainWindow extends JFrame {
      * @return the calculated round of the main window
      */
     public CalculatedRound getCalculatedRound() {
-        return getCalculatedRound();
+        return this.calculatedRound;
     }
 
     /**
@@ -217,7 +191,7 @@ public class MainWindow extends JFrame {
      * Enable or disable the feature 'load a map'
      * @param b whether to enable or disable the feature
      */
-    public void featureLoadRMapSetEnable(boolean b) {
+    public void featureLoadMapSetEnable(boolean b) {
         topMenuBar.openMap.setEnabled(b);
         topToolBar.loadMap.setEnabled(b);
     }

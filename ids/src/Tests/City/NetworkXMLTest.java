@@ -47,17 +47,66 @@ public class NetworkXMLTest {
 
     }
 
-    @Test
-    public void testInvalidCreate() throws UtilsException {
+    private void testInvalidCreate(String xmlPath, boolean supposedToSuccess) {
+        final String testDir = "resources/tests/network/";
 
-        for(int i = 1; i < 8; ++i) {
-            try {
-                Network.createFromXml("resources/tests/invalidNet" + i + ".xml");
-                fail();
-            } catch(UtilsException e) {
+        try {
+            Network.createFromXml(testDir + xmlPath);
+
+            if(supposedToSuccess) {
+                return;
             }
+
+            System.out.println("unexpected success");
+        } catch(UtilsException e) {
+            if(!supposedToSuccess) {
+                return;
+            }
+
+            System.out.println("exception");
+        } catch(Exception e) {
+            System.out.println("unexpected exception");
         }
 
+        fail("test " + xmlPath + " has failed");
+    }
+
+    /**
+     * Tests all xml
+     * @throws UtilsException
+     */
+    @Test
+    public void testInvalidCreateAll() {
+        testInvalidCreate("networkWorking.xml", true);
+
+        testInvalidCreate("networkNonExisting.xml", false);
+        testInvalidCreate("networkInvalidSyntax0.xml", false);
+        testInvalidCreate("networkInvalidSyntax1.xml", false);
+        testInvalidCreate("networkInvalidRoot.xml", false);
+        testInvalidCreate("networkMissingAttrDestination.xml", false);
+        testInvalidCreate("networkMissingAttrLongueur.xml", false);
+        testInvalidCreate("networkMissingAttrNodeId.xml", false);
+        testInvalidCreate("networkMissingAttrNomRue.xml", false);
+        testInvalidCreate("networkMissingAttrVitesse.xml", false);
+        testInvalidCreate("networkMissingAttrX.xml", false);
+        testInvalidCreate("networkMissingAttrY.xml", false);
+        testInvalidCreate("networkDuplicatedNoeud.xml", false);
+        testInvalidCreate("networkDuplicatedTroncon.xml", false);
+        testInvalidCreate("networkNegaviteAttrLongueur.xml", false);
+        testInvalidCreate("networkNegaviteAttrVitesse.xml", false);
+        testInvalidCreate("networkNullAttrVitesse.xml", false);
+        testInvalidCreate("networkUnmatchingStreetName.xml", false);
+        testInvalidCreate("networkWrongAttrDestination.xml", false);
+        testInvalidCreate("networkWrongAttrLongueur.xml", false);
+        testInvalidCreate("networkWrongAttrNodeId.xml", false);
+        testInvalidCreate("networkWrongAttrVitesse.xml", false);
+        testInvalidCreate("networkWrongAttrX.xml", false);
+        testInvalidCreate("networkWrongAttrY.xml", false);
+        testInvalidCreate("networkWrongNoeud.xml", false);
+        testInvalidCreate("networkWrongTroncon.xml", true);
+        testInvalidCreate("networkEmptyTroncon.xml", true);
+
+        System.out.println("testInvalidCreateAll: OK");
     }
 
 }

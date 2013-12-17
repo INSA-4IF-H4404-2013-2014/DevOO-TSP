@@ -58,19 +58,29 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     public void loadNetwork() {
         File xmlFile = openXMLFile();
 
-        if(xmlFile != null) {
-            try {
-                Network network = Network.createFromXml(xmlFile.getAbsolutePath());
-                mainWindow.setNetwork(network);
+        if(xmlFile == null) {
+            return;
+        }
 
-                // Map has been successfully loaded, we enable 'load round' feature.
-                mainWindow.featureLoadRoundSetEnable(true);
+        loadNetwork(xmlFile.getAbsolutePath());
+    }
+
+    /**
+     * Loads a network form a given XML path
+     * @param xmlPath the xml path
+     */
+    public void loadNetwork(String xmlPath) {
+        try {
+            Network network = Network.createFromXml(xmlPath);
+            mainWindow.setNetwork(network);
+
+            // Map has been successfully loaded, we enable 'load round' feature.
+            mainWindow.featureLoadRoundSetEnable(true);
 
 
-            } catch (UtilsException e) {
-                JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
-                        e.getMessage(), "Erreur lors du chargement de la carte", JOptionPane.ERROR_MESSAGE);
-            }
+        } catch (UtilsException e) {
+            JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la carte.\n" +
+                    e.getMessage(), "Erreur lors du chargement de la carte", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -80,13 +90,35 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     public void loadRound() {
         File xmlFile = openXMLFile();
 
-        if(xmlFile != null) {
-            try {
-                mainWindow.setRound(Round.createFromXml(xmlFile.getAbsolutePath(), mainWindow.getNetwork()));
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(mainWindow, "Il y a eu une erreur lors du chargement de la tournée.\n" +
-                        e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
-            }
+        if(xmlFile == null) {
+            return;
+        }
+
+        loadRound(xmlFile.getAbsolutePath());
+    }
+
+    /**
+     * Loads a deliveries round form a given XML path
+     * @param xmlPath the xml path
+     */
+    public void loadRound(String xmlPath) {
+        try {
+            mainWindow.setRound(Round.createFromXml(xmlPath, mainWindow.getNetwork()));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(mainWindow, "Le chargement de la tournée a retourné une erreur :\n" +
+                    e.getMessage(), "Erreur lors du chargement de la tournée", JOptionPane.ERROR_MESSAGE);
+        }
+
+        try {
+            computeRound(this.getMainWindow().getNetwork(), this.getMainWindow().getRound());
+            mainWindow.getRightPanel().getRoundPanel().emptyFields();
+            mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+            mainWindow.getMapPanel().setSelectedNode(null);
+            mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+        } catch(Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(mainWindow, "Une erreur est survenue lors du calcul de la tournée",
+                    "Erreur lors du calcul de la tournée", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -122,6 +154,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     }
 
     public void historyDo(Command command){
+        mainWindow.featureUndoSetEnable(true);
+        mainWindow.featureRedoSetEnable(false);
         historyBackedOut.clear();
 
         command.Apply();
@@ -129,6 +163,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     }
 
     public void historyRedo(){
+        mainWindow.featureUndoSetEnable(true);
+        mainWindow.featureRedoSetEnable(false);
         Command command = historyBackedOut.pollFirst();
 
         if (command == null) {
@@ -140,6 +176,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     }
 
     public void historyUndo(){
+        mainWindow.featureUndoSetEnable(false);
+        mainWindow.featureRedoSetEnable(true);
         Command command = historyApplied.pollLast();
 
         if (command == null) {
@@ -157,37 +195,96 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     /**
      * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
-    public void computeRound(Network network, Round round) {
+    public int computeRound(Network network, Round round) {
         ChocoGraph graph = new ChocoGraph(network, round);
 
-        TSP tsp = solveTsp(graph, 100);
+        TSP tsp = solveTsp(graph, 10000);
         SolutionState solutionState = tsp.getSolutionState();
 
         if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
             CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
             mainWindow.getMapPanel().setRound(calculatedRound);
+            return 0;
         } else {
-            JOptionPane.showMessageDialog(mainWindow, "Aucune trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainWindow, "Aucun trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return 1;
         }
     }
 
+    /**
+     * Gets triggered when a node has been clicked.
+     * @param node the model node that has been clicked
+     */
     @Override
     public void nodeClicked(MapPanel panel, Node node) {
-        panel.setSelectedNode(node);
-        if (!(null == this.mainWindow.getRound())) {
-            Delivery del;
-            if (null == (del =this.mainWindow.getRound().findDelivered(node.getId()))) {
-                //if the node doesnt contains a delivery activate the "ajouter" button
+        mainWindow.getDeliveryListPanel().clearSelection();
+
+        selectNode(node);
+    }
+
+    /**
+     * Gets triggered when the map panel's background has been clicked.
+     * @param panel the map panel that has received the mouse clicked event
+     */
+    @Override
+    public void backgroundClicked(MapPanel panel) {
+        mainWindow.getDeliveryListPanel().clearSelection();
+
+        selectNode(null);
+    }
+
+    /**
+     * Gets triggered when the selection changes in DeliveryListPanel's JList
+     * @param e event
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if(e.getValueIsAdjusting()) {
+            return;
+        }
+
+        Delivery selectedDelivery = mainWindow.getDeliveryListPanel().getSelectedValue();
+        if(selectedDelivery != null) {
+            selectNode(selectedDelivery.getAddress());
+        }
+        else {
+            selectNode(null);
+        }
+    }
+
+    /**
+     * Apply actions following a node selection from the DeliveryListPanel or MapPanel
+     * @param node
+     */
+    private void selectNode(Node node) {
+        mainWindow.getMapPanel().setSelectedNode(node);
+
+        if (this.mainWindow.getRound() != null) {
+
+            Delivery del = null;
+            if(node != null) {
+                del = this.mainWindow.getRound().findDelivered(node.getId());
+            }
+
+            if(node == null) {
+                // No node is selected. So we don't want to let user add delivery to nowhere.
+                mainWindow.featureAddSetEnable(false);
+                mainWindow.featureDeleteSetEnable(false);
+                mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
+            }
+            else if (del == null) {
+                // If the node doesn't contain a delivery, activate the "ajouter" button
                 mainWindow.featureAddSetEnable(true);
                 mainWindow.featureDeleteSetEnable(false);
                 mainWindow.getRightPanel().getDeliveryInfoPanel().emptyFields();
             }
             else
             {
-                //if the node contains a delivery activate the "supprimer" button and maj delivery info panel
+                // If the node contains a delivery, activate the "supprimer" button and maj delivery info panel
                 mainWindow.featureAddSetEnable(false);
                 mainWindow.featureDeleteSetEnable(true);
-                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del);
+                mainWindow.getRightPanel().getDeliveryInfoPanel().fillDeliveryInfoPanel(del, mainWindow.getCalculatedRound());
+                mainWindow.getDeliveryListPanel().setSelectedValue(del);
             }
         }
     }
@@ -299,7 +396,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
 
         int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
 
-        tsp.solve(baseTime, bound);
+        tsp.solve(baseTime, bound-1);
         SolutionState solutionState = tsp.getSolutionState();
 
         for( ; (solutionState != SolutionState.OPTIMAL_SOLUTION_FOUND) && (solutionState != SolutionState.INCONSISTENT) && (baseTime <= 400) ; baseTime *= 2) {
@@ -321,45 +418,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @return the CalculatedRound
      */
     private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
-        int[] nodeList = tsp.getNext(); // ordered node list
-        List<Delivery> deliveriesList = new ArrayList<Delivery>();
-        List<Itinerary> itinerariesList = new ArrayList<Itinerary>();
-
-        // Temporary variables
-        ChocoDelivery chocoDelivery;
-        Delivery delivery;
-
-        for(int i = 0 ; i <= nodeList.length ; i++) {
-
-            //TODO: be sure that the delivery added to deliveriesList is not erased at each iteration (Java pointers...)
-            chocoDelivery = chocoGraph.getDelivery(nodeList[i]);
-            delivery = chocoDelivery.getDelivery();
-            deliveriesList.add(delivery);
-
-            itinerariesList.add(chocoDelivery.getItinerary(delivery.getAddress().getId()));
-        }
-
-        CalculatedRound calculatedRound = new CalculatedRound(mainWindow.getRound().getWarehouse(), deliveriesList, itinerariesList);
-        return calculatedRound;
-    }
-
-    /**
-     * Gets triggered when the selection changes in DeliveryListPanel's JList
-     * @param e event
-     */
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        if(e.getValueIsAdjusting()) {
-            return;
-        }
-
-        Delivery selectedDelivery = mainWindow.getDeliveryListPanel().getSelectedValue();
-        if(selectedDelivery != null) {
-            mainWindow.getMapPanel().setSelectedNode(selectedDelivery.getAddress());
-        }
-        else {
-            mainWindow.getMapPanel().setSelectedNode(null);
-        }
+        return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
     }
 } // end of class MainWindowController --------------------------------------------------------------------
 

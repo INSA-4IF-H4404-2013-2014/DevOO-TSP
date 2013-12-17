@@ -1,6 +1,8 @@
 package View.MainWindow;
 
+import Model.ChocoSolver.CalculatedRound;
 import Model.Delivery.Delivery;
+import Model.Delivery.Round;
 import View.TimeFramePanel;
 
 import javax.swing.*;
@@ -110,15 +112,19 @@ public class DeliveryInfoPanel extends JPanel {
      * fill all the fields with the information in the Delivery given
      * @param delivery the delivery which should be described
      */
-     public void fillDeliveryInfoPanel(Delivery delivery){
-        deliveryID.setText(""+delivery.getId());
-        clientName.setText(""+delivery.getClient().getId());
-        address.setText((""+delivery.getAddress().getId()));
-        SimpleDateFormat form = new SimpleDateFormat("hh");
-        timeFrameBegin.setText(""+form.format(delivery.getSchedule().getEarliestBound().getTime()));
-        timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
-        deliveryTime.setText(" unable to do it now ");
-        delay.setText(" unable to do it now");
+     public void fillDeliveryInfoPanel(Delivery delivery, CalculatedRound round){
+
+            deliveryID.setText(""+delivery.getId());
+            clientName.setText(""+delivery.getClient().getId());
+            address.setText((""+delivery.getAddress().getId()));
+            SimpleDateFormat form = new SimpleDateFormat("hh");
+            timeFrameBegin.setText(""+form.format(delivery.getSchedule().getEarliestBound().getTime()));
+            timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
+         if(round != null)
+         {
+            deliveryTime.setText(""+form.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()));
+            delay.setText(""+round.getDelay(delivery.getId()));
+         }
      }
 
     /**
@@ -130,6 +136,14 @@ public class DeliveryInfoPanel extends JPanel {
         address.setText("");
         timeFrameBegin.setText("");
         timeFrameEnd.setText("");
+        deliveryTime.setText("");
+        delay.setText("");
+    }
+
+    /**
+     * empty the fields  concerned by a round
+     */
+    public void emptyRoundFields(){
         deliveryTime.setText("");
         delay.setText("");
     }

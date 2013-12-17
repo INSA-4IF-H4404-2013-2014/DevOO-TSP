@@ -2,12 +2,12 @@
 <Reseau>
 <Noeud id="0" x="63" y="100">
 <TronconSortant nomRue="v0" vitesse="3,900000" longueur="602,100000" destination="1"/>
+<TronconSortant nomRue="f0" vitesse="3,600000" longueur="6,100000" destination="1"/>
 <TronconSortant nomRue="h0" vitesse="4,200000" longueur="729,000000" destination="10"/>
 </Noeud>
 <Noeud id="1" x="88" y="171">
-<TronconSortant nomRue="v0" vitesse="4,100000" longueur="-602,100000" destination="0"/>
+<TronconSortant nomRue="v0" vitesse="4,100000" longueur="602,100000" destination="0"/>
 </Noeud>
-
 <Noeud id="10" x="154" y="95">
 <TronconSortant nomRue="h0" vitesse="4,500000" longueur="729,000000" destination="0"/>
 </Noeud>

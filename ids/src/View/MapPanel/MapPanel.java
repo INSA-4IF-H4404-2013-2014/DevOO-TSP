@@ -7,8 +7,8 @@ import Model.Delivery.Itinerary;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,10 +26,10 @@ public class MapPanel extends JPanel {
     CalculatedRound modelRound;
 
     /** nodes map */
-    private Map<Integer,Node> nodes;
+    protected Map<Integer,Node> nodes;
 
     /** arcs map */
-    private Map<Integer,Map<Integer,Arc>> arcs;
+    protected Map<Integer,Map<Integer,Arc>> arcs;
 
     /** view's center pos in the model basis */
     protected Point modelCenterPos;
@@ -92,7 +92,11 @@ public class MapPanel extends JPanel {
             public void mouseClicked(MouseEvent mouseEvent) {
                 MapPanel panel = (MapPanel) mouseEvent.getComponent();
 
-                if(panel.nodeEventListener == null) {
+                if(mouseEvent.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
+
+                if (panel.nodeEventListener == null) {
                     return;
                 }
 
@@ -104,7 +108,7 @@ public class MapPanel extends JPanel {
 
                 Model.City.Node nearestNode = null;
 
-                for(Map.Entry<Integer,Node> entry : panel.nodes.entrySet()) {
+                for (Map.Entry<Integer, Node> entry : panel.nodes.entrySet()) {
                     Node node = entry.getValue();
 
                     int dx = node.getX() - x;
@@ -112,17 +116,15 @@ public class MapPanel extends JPanel {
 
                     int distancePow = dx * dx + dy * dy;
 
-                    if(distancePow < minDistancePow) {
+                    if (distancePow < minDistancePow) {
                         minDistancePow = distancePow;
                         nearestNode = node.getModelNode();
                     }
                 }
 
-                if(nearestNode == null) {
-                    return;
-                }
-
-                if(minDistancePow >= RenderContext.streetNodeRadius * RenderContext.streetNodeRadius) {
+                if (nearestNode == null ||
+                        minDistancePow >= RenderContext.streetNodeRadius * RenderContext.streetNodeRadius) {
+                    panel.nodeEventListener.backgroundClicked(panel);
                     return;
                 }
 
@@ -131,10 +133,28 @@ public class MapPanel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
+                if(mouseEvent.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
+
+                MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+                if(!panel.fittedScaleFactor) {
+                    panel.addMouseMotionListener(new MouseDragging(mouseEvent));
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent mouseEvent) {
+                if(mouseEvent.getButton() != MouseEvent.BUTTON1) {
+                    return;
+                }
+
+                MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+                for(MouseMotionListener e : panel.getMouseMotionListeners()) {
+                    panel.removeMouseMotionListener(e);
+                }
             }
 
             @Override
@@ -166,6 +186,7 @@ public class MapPanel extends JPanel {
     public void setRound(CalculatedRound round) {
         modelRound = round;
 
+        this.refreshBodesDeliveries();
         this.refreshArcsItineraries();
         this.repaint();
     }
@@ -175,6 +196,10 @@ public class MapPanel extends JPanel {
      * @return the model selected node or null if any are selected
      */
     public Model.City.Node getSelectedNode() {
+        if(selectedNode == null) {
+            return null;
+        }
+
         return selectedNode.getModelNode();
     }
 
@@ -289,43 +314,11 @@ public class MapPanel extends JPanel {
         }
 
         renderContext.setTransformNetwork();
-
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                renderContext.drawArcStreetName(entry.getValue());
-            }
+        {
+            renderContext.drawStreetNames();
+            renderContext.drawBorders();
+            renderContext.drawStreets();
         }
-
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                renderContext.drawArcBorders(entry.getValue());
-            }
-        }
-
-        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
-            renderContext.drawNodeBorders(entry.getValue());
-        }
-
-        if(selectedNode != null) {
-            renderContext.drawNodeBorders(selectedNode);
-        }
-
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                renderContext.drawArc(entry.getValue());
-            }
-        }
-
-        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
-            renderContext.drawNode(entry.getValue());
-        }
-
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
-                renderContext.drawArcItinerary(entry.getValue());
-            }
-        }
-
         renderContext.setTransformIdentity();
 
         renderContext.drawScale();
@@ -466,6 +459,27 @@ public class MapPanel extends JPanel {
     }
 
     /**
+     * Refreshes view's nodes' deliveries from the calculated round
+     */
+    private void refreshBodesDeliveries() {
+        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
+            entry.getValue().setKind(Node.Kind.DEFAULT);
+        }
+
+        if(modelRound == null) {
+            return;
+        }
+
+        List<Integer> deliveryNodesId = modelRound.getOrderedNodesId();
+
+        for(int deliveryNodeId : deliveryNodesId) {
+            findNode(deliveryNodeId).setKind(Node.Kind.DELIVERY);
+        }
+
+        findNode(modelRound.getWarehouse().getId()).setKind(Node.Kind.WAREHOUSE);
+    }
+
+    /**
      * Refreshes view's arcs' itineraries from the calculated round
      */
     private void refreshArcsItineraries() {
@@ -495,6 +509,67 @@ public class MapPanel extends JPanel {
                     arc.setItineraryFrom(2, true);
                 }
             }
+        }
+    }
+
+    /**
+     * Sets the new model center position
+     * @param x the new model center X position
+     * @param y the new model center Y position
+     * @caution it doesn't redraw the view
+     */
+    public void setModelCenterPos(int x, int y) {
+        modelCenterPos.x = Math.min(Math.max(x, modelMinPos.x), modelMaxPos.x);
+        modelCenterPos.y = Math.min(Math.max(y, modelMinPos.y), modelMaxPos.y);
+    }
+
+    /**
+     * MapPanel's mouse dragging class instantiated to drag the map panel view
+     */
+    private class MouseDragging implements MouseMotionListener {
+
+        /** cursor start X position */
+        private int startX;
+
+        /** cursor start Y position */
+        private int startY;
+
+        /** previous center X position */
+        private int previousModelCenterPosX;
+
+        /** previous center Y position */
+        private int previousModelCenterPosY;
+
+        /**
+         * Constructor
+         * @param mouseEvent the mouseEvent
+         */
+        public MouseDragging(MouseEvent mouseEvent) {
+            MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+            startX = mouseEvent.getX();
+            startY = mouseEvent.getY();
+            previousModelCenterPosX = panel.modelCenterPos.x;
+            previousModelCenterPosY = panel.modelCenterPos.y;
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+            MapPanel panel = (MapPanel) mouseEvent.getComponent();
+
+            double modelMoveVectorX = (double)(startX - mouseEvent.getX()) / modelViewScaleFactor;
+            double modelMoveVectorY = (double)(mouseEvent.getY() - startY) / modelViewScaleFactor;
+
+            int modelCenterPosX = previousModelCenterPosX + (int)modelMoveVectorX;
+            int modelCenterPosY = previousModelCenterPosY + (int)modelMoveVectorY;
+
+            panel.setModelCenterPos(modelCenterPosX, modelCenterPosY);
+            panel.repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            mouseDragged(mouseEvent);
         }
     }
 

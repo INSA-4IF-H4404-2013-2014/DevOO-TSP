@@ -185,17 +185,17 @@ public class Network {
             int y = Utils.parseUIntFromXmlAttribute(xmlElement, "y");
 
             if (this.findNode(id) != null) {
-                throw new UtilsException("node '" + id + "' already exists");
+                throw new UtilsException("le noeud '" + id + "' existe deja");
             }
 
             node = this.createNode(id, x, y);
         }
         catch (UtilsException e) {
             if (id != -1) {
-                throw new UtilsException("failed to parse " + xmlElement.getNodeName() + " id=\"" + id + "\": " + e);
+                throw new UtilsException("Element XML " + xmlElement.getNodeName() + " id=\"" + id + "\": " + e);
             }
             else {
-                throw new UtilsException("failed to parse " + xmlElement.getNodeName() + ": " + e);
+                throw new UtilsException("Element XML " + xmlElement.getNodeName() + ": " + e);
             }
         }
 
@@ -224,23 +224,28 @@ public class Network {
             int destinationId = Utils.parseUIntFromXmlAttribute(xmlElement, "destination");
 
             if (speed == 0.0) {
-                throw new UtilsException("null speed");
+                throw new UtilsException("vitesse nule");
             }
 
             to = this.findNode(destinationId);
 
             if (to == null) {
-                throw new UtilsException("unknown node id");
+                throw new UtilsException("destination inconnue");
+            }
+
+            if (from.findOutgoingTo(to) != null) {
+                throw new UtilsException("le troncon a distination de '" + destinationId + "' existe deja");
             }
 
             Arc goingBackArc = to.findOutgoingTo(from);
 
             if (goingBackArc != null && !goingBackArc.getStreet().getName().equals(streetName)) {
-                throw new UtilsException("doesn't have same street name (\"" + streetName + "\") as the arc going from " + to.getId() + " to " + from.getId() + "(\"" + streetName + "\")");
+                throw new UtilsException("ne possede pas le meme nom de rue (\"" + streetName + "\") que l'arc " +
+                        to.getId() + " a " + from.getId() + "(\"" + goingBackArc.getStreet().getName() + "\")");
             }
         }
         catch (UtilsException e) {
-            throw new UtilsException("failed to parse " + xmlElement.getNodeName() + " leaving node \"" + from.getId() + "\": " + e);
+            throw new UtilsException("Element XML " + xmlElement.getNodeName() + " quitant le noeud \"" + from.getId() + "\": " + e);
         }
 
         Street street = this.createStreet(streetName);
