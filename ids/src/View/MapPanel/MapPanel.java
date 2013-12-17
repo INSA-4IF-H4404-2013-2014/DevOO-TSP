@@ -186,7 +186,7 @@ public class MapPanel extends JPanel {
     public void setRound(CalculatedRound round) {
         modelRound = round;
 
-        this.refreshNodesColor();
+        this.refreshNodesDeliveries();
         this.refreshArcsItineraries();
         this.repaint();
     }
@@ -535,9 +535,10 @@ public class MapPanel extends JPanel {
     /**
      * Refreshes view's nodes' deliveries from the calculated round
      */
-    private void refreshNodesColor() {
+    private void refreshNodesDeliveries() {
         for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
             entry.getValue().setColor(RenderContext.streetBorderColor);
+            entry.getValue().setDeliveryDelayed(false);
         }
 
         if(modelRound == null) {
@@ -549,7 +550,13 @@ public class MapPanel extends JPanel {
         int colorId = RenderContext.itineraryColors.length - 1;
 
         for(int deliveryNodeId : deliveryNodesId) {
-            findNode(deliveryNodeId).setColor(RenderContext.itineraryColors[colorId]);
+            Node node = findNode(deliveryNodeId);
+
+            node.setColor(RenderContext.itineraryColors[colorId]);
+
+            if(modelRound.isDelayed(deliveryNodeId)) {
+                node.setDeliveryDelayed(true);
+            }
 
             colorId++;
 
