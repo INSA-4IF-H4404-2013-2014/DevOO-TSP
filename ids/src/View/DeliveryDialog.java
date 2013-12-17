@@ -25,7 +25,7 @@ public class DeliveryDialog extends JDialog {
     public static final String title = "Ajout d'une livraison";
 
     /** The text for the row in the list to create a new client */
-    public static final String newCli = "nouveau client";
+    public static final String newCli = "Nouveau";
 
     /** The controller of this dialog */
     private DeliveryDialogController controller;
