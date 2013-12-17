@@ -431,13 +431,15 @@ public class RenderContext {
         context.fill(rect);
 
         if(arcInfo.isBidirectional() && drawMarks) {
-            Stroke previousStrock = context.getStroke();
+            if(arcInfo.length > 2.0 * (double)streetNodeRadius) {
+                Stroke previousStroke = context.getStroke();
 
-            context.setStroke(streetCenterLineStrocke);
-            context.setColor(streetMarksColor);
-            context.draw(new Line2D.Double((double)streetNodeRadius, 0.0, arcInfo.length - (double)streetNodeRadius, 0.0));
+                context.setStroke(streetCenterLineStroke);
+                context.setColor(streetMarksColor);
+                context.draw(new Line2D.Double((double)streetNodeRadius, 0.0, arcInfo.length - (double)streetNodeRadius, 0.0));
 
-            context.setStroke(previousStrock);
+                context.setStroke(previousStroke);
+            }
         } else {
             Path2D.Double path = new Path2D.Double();
 
@@ -552,7 +554,7 @@ public class RenderContext {
     protected static final Color streetBorderColor = new Color(210, 140, 100);
     private static final int streetThickness = 4;
     private static final int streetBorderThickness = 1;
-    private static final BasicStroke streetCenterLineStrocke =
+    private static final BasicStroke streetCenterLineStroke =
             new BasicStroke(0.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1}, 0);
 
     /** node color */
