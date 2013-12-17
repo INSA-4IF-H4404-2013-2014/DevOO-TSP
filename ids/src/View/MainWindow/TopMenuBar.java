@@ -56,6 +56,11 @@ public class TopMenuBar extends JMenuBar{
     protected JMenuItem redoButton;
 
     /**
+     * about
+     */
+    protected JMenuItem about;
+
+    /**
      * Get the item openMap
      * @return the item openMap
      */
@@ -117,6 +122,14 @@ public class TopMenuBar extends JMenuBar{
      */
     public JMenuItem getRedoButton() {
         return redoButton;
+    }
+
+    /**
+     * Get the item about
+     * @return the item about
+     */
+    public JMenuItem getAboutButton() {
+        return about;
     }
 
     /**
@@ -201,7 +214,11 @@ public class TopMenuBar extends JMenuBar{
      */
     private void createHelpMenu() {
         JMenu help = new JMenu("?");
-        help.setEnabled(false);
+
+        about = new JMenuItem("À propos");
+
+        help.add(about);
+
         add(help);
     }
 
