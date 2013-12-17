@@ -159,7 +159,11 @@ public class Arc {
             return Direction.GO_ON;
         }
 
-        double rotatingAngle = (arc.getDirectionAngle() - getDirectionAngle()) % 360.0;
+        double rotatingAngle = (arc.getDirectionAngle() - getDirectionAngle());
+
+        if(rotatingAngle < 0.0) {
+            rotatingAngle += 360.0;
+        }
 
         if (rotatingAngle < 180.0) {
             return Direction.TURN_RIGHT;

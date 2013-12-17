@@ -33,7 +33,7 @@ public class DeliveryInfoPanel extends JPanel {
     public DeliveryInfoPanel() {
         final int borderSize = 5;
         final int rowHeight = 30;
-        final int alignForms = 140 + 2 * borderSize;
+        final int alignForms = 160 + 2 * borderSize;
         final int textFieldOffset = -5;
 
         JLabel labelId = new JLabel("ID :");

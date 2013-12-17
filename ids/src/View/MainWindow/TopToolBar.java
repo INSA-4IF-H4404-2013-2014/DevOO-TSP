@@ -95,7 +95,7 @@ public class TopToolBar extends JToolBar {
      * Constructor
      */
     public TopToolBar() {
-        setFloatable(false);
+        setFloatable(true);
         //setRollover(true);
 
         ToolTipManager.sharedInstance().setInitialDelay(200);

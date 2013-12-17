@@ -262,6 +262,10 @@ public class Network {
     private void loadNetworkFromXml(Element xmlElement) throws UtilsException {
         NodeList xmlNodeList = xmlElement.getElementsByTagName("Noeud");
 
+        if(xmlNodeList.getLength() == 0) {
+            throw new UtilsException("XML vide");
+        }
+
         for (int i = 0; i < xmlNodeList.getLength(); i++) {
             Element xmlNode = (Element) xmlNodeList.item(i);
 

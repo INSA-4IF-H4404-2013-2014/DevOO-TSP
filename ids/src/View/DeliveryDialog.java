@@ -82,8 +82,9 @@ public class DeliveryDialog extends JDialog {
             clientBox.addItem(cli);
         }
         clientBox.addItem(newCli);
-        clientAddress.setText(parent.getMapPanel().getSelectedNode().toString());
-        setNewClientEnabled(false);
+        clientBox.setSelectedItem(newCli);
+        clientAddress.setText(parent.getMapPanel().getSelectedNode().toString() + " (" + parent.getMapPanel().getSelectedNode().getId() + ")");
+        setNewClientEnabled(true);
         addListener();
     }
 

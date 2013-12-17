@@ -263,7 +263,7 @@ public class MapPanel extends JPanel {
         double scaleFactor = modelViewScaleFactor * multiplier;
         double smallestScaleFactor = this.smallestScaleFactor();
 
-        if (scaleFactor <= smallestScaleFactor) {
+        if (scaleFactor <= smallestScaleFactor || smallestScaleFactor > maxScaleFactor) {
             fitToView();
             return;
         }
@@ -290,7 +290,7 @@ public class MapPanel extends JPanel {
      * Fit the entire map in the available view.
      */
     public void fitToView() {
-        modelViewScaleFactor = this.smallestScaleFactor();
+        modelViewScaleFactor = Math.min(this.smallestScaleFactor(), maxScaleFactor);
         modelCenterPos.x = (modelMinPos.x + modelMaxPos.x) / 2;
         modelCenterPos.y = (modelMinPos.y + modelMaxPos.y) / 2;
         fittedScaleFactor = true;
@@ -322,7 +322,7 @@ public class MapPanel extends JPanel {
     public void centerOn(Model.City.Node node, double scaleFactor) {
         double smallestScaleFactor = smallestScaleFactor();
 
-        if (scaleFactor <= smallestScaleFactor) {
+        if (scaleFactor <= smallestScaleFactor || smallestScaleFactor > maxScaleFactor) {
             fitToView();
             return;
         }
