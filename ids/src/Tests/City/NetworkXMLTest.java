@@ -80,6 +80,7 @@ public class NetworkXMLTest {
         testInvalidCreate("networkWorking.xml", true);
 
         testInvalidCreate("networkNonExisting.xml", false);
+        testInvalidCreate("networkEmpty.xml", false);
         testInvalidCreate("networkInvalidSyntax0.xml", false);
         testInvalidCreate("networkInvalidSyntax1.xml", false);
         testInvalidCreate("networkInvalidRoot.xml", false);
