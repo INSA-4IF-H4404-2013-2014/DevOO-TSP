@@ -240,7 +240,13 @@ public class CalculatedRound {
             return 0;
         }
 
-        long delay = estimatedSchedules.get(nodeId).getTimeInMillis() - chocoDeliveries.get(nodeId).getDelivery().getSchedule().getLatestBound().getTimeInMillis();
+        GregorianCalendar estimated = estimatedSchedules.get(nodeId);
+
+        if(estimated == null) {
+            return 0;
+        }
+
+        long delay = estimated.getTimeInMillis() - chocoDeliveries.get(nodeId).getDelivery().getSchedule().getLatestBound().getTimeInMillis();
 
         if(delay < 0) {
             return 0;
@@ -325,6 +331,10 @@ public class CalculatedRound {
         return nodesId;
     }
 
+    /**
+     * Returns the deliveries + warehouse ID without any order consideration
+     * @return @See description
+     */
     public List<Integer> getNodesId() {
         List nodesId =  new LinkedList<Integer>();
         nodesId.addAll(chocoDeliveries.keySet());
@@ -374,6 +384,10 @@ public class CalculatedRound {
         }
 
         GregorianCalendar estimatedSchedule = estimatedSchedules.get(nodeId);
+
+        if(estimatedSchedule == null) {
+            return false;
+        }
 
         return estimatedSchedule.after(chocoDeliveries.get(nodeId).getDelivery().getSchedule().getLatestBound());
     }
