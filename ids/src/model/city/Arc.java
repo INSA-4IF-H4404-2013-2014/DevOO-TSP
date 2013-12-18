@@ -119,13 +119,12 @@ public class Arc {
 
     /**
      * Gets direction from this arcView to the next given arcView
+     * asserts arcView in this.to.getOutgoing()
      * @param arc the next arcView you are going
      * @return
      *  - Direction.TURN_BACK if arcView is going backward
      *  - Direction.KEEP_GOING if arcView on the same street but not going backward
      *  - Direction.GO_ON if arcView
-     * @asserts
-     *  - arcView in this.to.getOutgoing()
      */
     public Direction getDirectionTo(Arc arc) {
         if(arc.getTo() == from) {

@@ -196,7 +196,7 @@ public class DeliveryDialog extends JDialog {
 
     /**
      * Create the first row of the form
-     * @return
+     * @return row
      */
     private JPanel createRow1() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -208,7 +208,7 @@ public class DeliveryDialog extends JDialog {
 
     /**
      * Create the second row of the form
-     * @return
+     * @return  row
      */
     private JPanel createRow2() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -219,7 +219,7 @@ public class DeliveryDialog extends JDialog {
 
     /**
      * Create the third row of the form
-     * @return
+     * @return row
      */
     private JPanel createRow3() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -229,7 +229,7 @@ public class DeliveryDialog extends JDialog {
 
     /**
      * Create the third row of the form
-     * @return
+     * @return row
      */
     private JPanel createRow4() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -239,7 +239,7 @@ public class DeliveryDialog extends JDialog {
 
     /**
      * Create the forth row of the form
-     * @return
+     * @return row
      */
     private JPanel createRow5() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -249,7 +249,7 @@ public class DeliveryDialog extends JDialog {
 
     /**
      * Create the fifth row of the form
-     * @return
+     * @return row
      */
     private JPanel createRow6() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));

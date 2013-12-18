@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import model.delivery.Client;
 import model.delivery.Schedule;
@@ -61,7 +61,7 @@ public class DeliveryDialogController {
 
     /**
      * Creates the controller.
-     * @param mainWindow: the parent window (for the modal mode)
+     * @param mainWindow : the parent window (for the modal mode)
      */
     public DeliveryDialogController(MainWindow mainWindow) {
         dialog = new DeliveryDialog(this, mainWindow);

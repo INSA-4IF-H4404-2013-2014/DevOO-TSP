@@ -612,9 +612,9 @@ public class MapPanel extends JPanel {
 
     /**
      * Sets the new model center position
+     * it doesn't redraw the view
      * @param x the new model center X position
      * @param y the new model center Y position
-     * @caution it doesn't redraw the view
      */
     public void setModelCenterPos(int x, int y) {
         modelCenterPos.x = Math.min(Math.max(x, modelMinPos.x), modelMaxPos.x);
