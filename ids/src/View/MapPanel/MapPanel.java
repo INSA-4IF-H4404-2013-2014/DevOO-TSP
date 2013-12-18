@@ -547,6 +547,10 @@ public class MapPanel extends JPanel {
 
         List<Integer> deliveryNodesId = modelRound.getOrderedNodesId();
 
+        if(deliveryNodesId.size() <= 1) {
+            deliveryNodesId = modelRound.getNodesId();
+        }
+
         int colorId = RenderContext.itineraryColors.length - 1;
 
         for(int deliveryNodeId : deliveryNodesId) {
