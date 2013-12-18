@@ -1,12 +1,12 @@
-package tests.MainWindowController;
+package tests.mainWindowController;
 
-import controller.Command.AddDelivery;
+import controller.command.AddDelivery;
 import controller.MainWindowController;
-import model.City.Network;
-import model.Delivery.Round;
-import model.Delivery.Schedule;
+import model.city.Network;
+import model.delivery.Round;
+import model.delivery.Schedule;
 import utils.UtilsException;
-import view.MainWindow.MainWindow;
+import view.mainWindow.MainWindow;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;

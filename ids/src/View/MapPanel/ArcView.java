@@ -1,4 +1,4 @@
-package view.MapPanel;
+package view.mapPanel;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -19,10 +19,10 @@ public class ArcView {
      */
 
     /** the model arcView going from node1 to node2 */
-    private model.City.Arc modelArcFrom1To2;
+    private model.city.Arc modelArcFrom1To2;
 
     /** the model arcView going from node2 to node1 */
-    private model.City.Arc modelArcFrom2To1;
+    private model.city.Arc modelArcFrom2To1;
 
     /** the parent map panel */
     private MapPanel mapPanel;
@@ -38,11 +38,11 @@ public class ArcView {
      * @param mapPanel the map panel
      * @param modelArc the associated model arcView
      */
-    protected ArcView(MapPanel mapPanel, model.City.Arc modelArc) {
+    protected ArcView(MapPanel mapPanel, model.city.Arc modelArc) {
         this.mapPanel = mapPanel;
 
-        model.City.Node from = modelArc.getFrom();
-        model.City.Node to = modelArc.getTo();
+        model.city.Node from = modelArc.getFrom();
+        model.city.Node to = modelArc.getTo();
 
         if (from.getId() < to.getId()) {
             modelArcFrom1To2 = modelArc;
@@ -62,7 +62,7 @@ public class ArcView {
      * @param leavingNode the leaving node id (bust me be 1 or 2)
      * @return the model arcView
      */
-    protected model.City.Arc getModelArcFrom(int leavingNode) {
+    protected model.city.Arc getModelArcFrom(int leavingNode) {
         if (leavingNode == 2) {
             return modelArcFrom2To1;
         }
@@ -73,7 +73,7 @@ public class ArcView {
      * Gets the model arcView from node 1 to 2
      * @return the model arcView
      */
-    protected model.City.Arc getModelArcFrom1To2() {
+    protected model.city.Arc getModelArcFrom1To2() {
         return modelArcFrom1To2;
     }
 
@@ -81,7 +81,7 @@ public class ArcView {
      * gets the model arcView from node 2 to 1
      * @return the model arcView
      */
-    protected model.City.Arc getModelArcFrom2To1() {
+    protected model.city.Arc getModelArcFrom2To1() {
         return modelArcFrom2To1;
     }
 
@@ -89,7 +89,7 @@ public class ArcView {
      * gets the model street
      * @return the model street
      */
-    protected model.City.Street getModelStreet() {
+    protected model.city.Street getModelStreet() {
         if(modelArcFrom2To1 != null) {
             return modelArcFrom2To1.getStreet();
         }

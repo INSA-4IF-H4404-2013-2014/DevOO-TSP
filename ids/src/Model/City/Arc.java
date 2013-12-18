@@ -1,4 +1,4 @@
-package model.City;
+package model.city;
 
 /**
  * Created with IntelliJ IDEA.

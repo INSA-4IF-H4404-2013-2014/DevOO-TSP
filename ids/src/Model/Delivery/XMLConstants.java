@@ -1,4 +1,4 @@
-package model.Delivery;
+package model.delivery;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,15 +36,15 @@ public class XMLConstants {
     /** Deliveries element */
     public static final String DELIVERY_DELIVERIES_ELEMENT = "Livraisons";
 
-    /** Delivery element */
+    /** delivery element */
     public static final String DELIVERY_DELIVERY_ELEMENT = "Livraison";
 
-    /** Delivery's ID attribute */
+    /** delivery's ID attribute */
     public static final String DELIVERY_DELIVERY_ID_ATTR = "id";
 
-    /** Delivery's client's ID attribute */
+    /** delivery's client's ID attribute */
     public static final String DELIVERY_DELIVERY_CLIENT_ATTR = "client";
 
-    /** Delivery's address (node's ID) attribute */
+    /** delivery's address (node's ID) attribute */
     public static final String DELIVERY_DELIVERY_NODE_ATTR = "adresse";
 }

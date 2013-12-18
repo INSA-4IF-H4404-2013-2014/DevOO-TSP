@@ -1,7 +1,7 @@
-package model.Delivery;
+package model.delivery;
 
-import model.City.Arc;
-import model.City.Node;
+import model.city.Arc;
+import model.city.Node;
 
 import java.util.List;
 

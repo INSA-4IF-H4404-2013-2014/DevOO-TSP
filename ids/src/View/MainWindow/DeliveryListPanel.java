@@ -1,7 +1,7 @@
-package view.MainWindow;
+package view.mainWindow;
 
 import controller.MainWindowController;
-import model.Delivery.Delivery;
+import model.delivery.Delivery;
 import view.Utils;
 
 import javax.swing.*;

@@ -1,12 +1,12 @@
-package tests.ChocoSolver;
+package tests.chocoSolver;
 
 import controller.MainWindowController;
-import model.ChocoSolver.CalculatedRound;
-import model.ChocoSolver.ChocoGraph;
-import model.ChocoSolver.SolutionState;
-import model.ChocoSolver.TSP;
-import model.City.Network;
-import model.Delivery.Round;
+import model.chocoSolver.CalculatedRound;
+import model.chocoSolver.ChocoGraph;
+import model.chocoSolver.SolutionState;
+import model.chocoSolver.TSP;
+import model.city.Network;
+import model.delivery.Round;
 import utils.UtilsException;
 import org.junit.Test;
 

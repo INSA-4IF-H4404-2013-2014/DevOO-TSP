@@ -1,4 +1,4 @@
-package model.Delivery;
+package model.delivery;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

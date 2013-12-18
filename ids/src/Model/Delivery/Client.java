@@ -1,4 +1,4 @@
-package model.Delivery;
+package model.delivery;
 
 import java.util.LinkedList;
 import java.util.List;

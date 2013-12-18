@@ -1,4 +1,4 @@
-package view.MainWindow;
+package view.mainWindow;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

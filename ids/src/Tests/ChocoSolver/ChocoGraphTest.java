@@ -1,8 +1,8 @@
-package tests.ChocoSolver;
+package tests.chocoSolver;
 
-import model.ChocoSolver.ChocoGraph;
-import model.City.Network;
-import model.Delivery.Round;
+import model.chocoSolver.ChocoGraph;
+import model.city.Network;
+import model.delivery.Round;
 import utils.UtilsException;
 import org.junit.Test;
 

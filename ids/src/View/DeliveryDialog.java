@@ -1,8 +1,8 @@
 package view;
 
 import controller.DeliveryDialogController;
-import model.Delivery.Client;
-import view.MainWindow.MainWindow;
+import model.delivery.Client;
+import view.mainWindow.MainWindow;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

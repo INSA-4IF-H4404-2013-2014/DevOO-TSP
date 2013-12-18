@@ -1,4 +1,4 @@
-package view.MapPanel;
+package view.mapPanel;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -34,7 +34,7 @@ public class RenderContext {
     /**
      * Constructor
      * @param context the swing graphic context
-     * @param mapPanel the MapPanel to draw
+     * @param mapPanel the mapPanel to draw
      */
     public RenderContext(Graphics2D context, MapPanel mapPanel) {
         this.context = context;
@@ -168,7 +168,7 @@ public class RenderContext {
     protected void drawArcStreetName(ArcView arcView) {
         ArcInfo arcInfo = arcInfo(arcView);
 
-        model.City.Street street = arcView.getModelStreet();
+        model.city.Street street = arcView.getModelStreet();
 
         Font previousFont = context.getFont();
 
@@ -375,7 +375,7 @@ public class RenderContext {
     }
 
     /**
-     * Draws MapPanel's borders
+     * Draws mapPanel's borders
      */
     protected void drawPanelBorders() {
         context.setColor(panelBorderColor);

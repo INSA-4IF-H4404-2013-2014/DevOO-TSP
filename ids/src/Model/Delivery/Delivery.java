@@ -1,6 +1,6 @@
-package model.Delivery;
+package model.delivery;
 
-import model.City.Node;
+import model.city.Node;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,7 +48,7 @@ public class Delivery {
      * Constructor which parses XML nodes and attributes
      * @param round Round containing every schedules
      * @param schedule delivery's time frame
-     * @param element Delivery XML element
+     * @param element delivery XML element
      * @throws javax.xml.parsers.ParserConfigurationException If the parsing fails
      */
     public Delivery(Round round, Schedule schedule, Element element) throws ParserConfigurationException {

@@ -1,4 +1,4 @@
-package tests.Controller;
+package tests.controller;
 
 import controller.MainWindowController;
 import org.junit.Test;

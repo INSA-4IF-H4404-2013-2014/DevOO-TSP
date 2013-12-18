@@ -1,4 +1,4 @@
-package controller.Command;
+package controller.command;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,14 +13,14 @@ public class InverseCommand extends Command {
     private Command command;
 
     /**
-     * implements Command.Apply() to reverse the command to inverse
+     * implements command.Apply() to reverse the command to inverse
      */
     public void Apply() {
         command.Reverse();
     }
 
     /**
-     * implements Command.Reverse() to Apply the command to inverse
+     * implements command.Reverse() to Apply the command to inverse
      */
     public void Reverse() {
         command.Apply();

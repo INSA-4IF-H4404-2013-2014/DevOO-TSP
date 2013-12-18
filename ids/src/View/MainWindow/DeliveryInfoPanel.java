@@ -1,8 +1,8 @@
-package view.MainWindow;
+package view.mainWindow;
 
-import model.ChocoSolver.CalculatedRound;
-import model.City.Node;
-import model.Delivery.Delivery;
+import model.chocoSolver.CalculatedRound;
+import model.city.Node;
+import model.delivery.Delivery;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -133,7 +133,7 @@ public class DeliveryInfoPanel extends JPanel {
     }
 
     /**
-     * fill all the fields with the information in the Delivery given
+     * fill all the fields with the information in the delivery given
      * @param delivery the delivery which should be described
      */
      public void fillDeliveryInfoPanel(Delivery delivery, CalculatedRound round){

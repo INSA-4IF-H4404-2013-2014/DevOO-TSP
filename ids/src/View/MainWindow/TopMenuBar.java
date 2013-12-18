@@ -1,4 +1,4 @@
-package view.MainWindow;
+package view.mainWindow;
 
 import controller.MainWindowController;
 

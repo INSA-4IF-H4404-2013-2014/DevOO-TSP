@@ -1,4 +1,4 @@
-package model.City;
+package model.city;
 
 import java.util.List;
 import java.util.LinkedList;

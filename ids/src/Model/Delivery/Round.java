@@ -1,7 +1,7 @@
-package model.Delivery;
+package model.delivery;
 
-import model.City.Network;
-import model.City.Node;
+import model.city.Network;
+import model.city.Node;
 import utils.UtilsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

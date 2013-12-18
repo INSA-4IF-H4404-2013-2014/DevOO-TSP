@@ -1,9 +1,9 @@
 package controller;
 
-import model.Delivery.Client;
-import model.Delivery.Schedule;
+import model.delivery.Client;
+import model.delivery.Schedule;
 import view.DeliveryDialog;
-import view.MainWindow.MainWindow;
+import view.mainWindow.MainWindow;
 
 import javax.swing.*;
 import java.util.Calendar;

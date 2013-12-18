@@ -1,20 +1,20 @@
 package controller;
 
-import controller.Command.AddDelivery;
-import controller.Command.Command;
-import controller.Command.RemoveDelivery;
-import model.ChocoSolver.*;
-import model.City.Network;
-import model.City.Node;
-import model.Delivery.*;
+import controller.command.AddDelivery;
+import controller.command.Command;
+import controller.command.RemoveDelivery;
+import model.chocoSolver.*;
+import model.city.Network;
+import model.city.Node;
+import model.delivery.*;
 
 import utils.UtilsException;
 import utils.XmlFileFilter;
 
-import view.MainWindow.AboutDialog;
-import view.MainWindow.MainWindow;
-import view.MapPanel.MapPanel;
-import view.MapPanel.NodeListener;
+import view.mainWindow.AboutDialog;
+import view.mainWindow.MainWindow;
+import view.mapPanel.MapPanel;
+import view.mapPanel.NodeListener;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -34,10 +34,10 @@ import java.util.*;
 public class MainWindowController implements NodeListener, ListSelectionListener {
 
     /** Commands that are currently applied */
-    private Deque<controller.Command.Command> historyApplied;
+    private Deque<controller.command.Command> historyApplied;
 
     /** Commands that have been backed out by historyUndo */
-    private Deque<controller.Command.Command> historyBackedOut;
+    private Deque<controller.command.Command> historyBackedOut;
 
     /** main.Main window */
     private MainWindow mainWindow;
@@ -49,15 +49,15 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         this.mainWindow = new MainWindow(this);
         this.mainWindow.getMapPanel().setNodeEventListener(this);
 
-        historyApplied = new LinkedList<controller.Command.Command>();
-        historyBackedOut = new LinkedList<controller.Command.Command>();
+        historyApplied = new LinkedList<controller.command.Command>();
+        historyBackedOut = new LinkedList<controller.command.Command>();
     }
 
     /**
      * Returns the history backed out
      * @return the history backed out
      */
-    public Deque<controller.Command.Command> getHistoryBackedOut() {
+    public Deque<controller.command.Command> getHistoryBackedOut() {
         return historyBackedOut;
     }
 
@@ -65,7 +65,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Returns the history applied
      * @return the history applied
      */
-    public Deque<controller.Command.Command> getHistoryApplied() {
+    public Deque<controller.command.Command> getHistoryApplied() {
         return historyApplied;
     }
 
@@ -356,7 +356,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     }
 
     /**
-     * Apply actions following a node selection from the DeliveryListPanel or MapPanel
+     * Apply actions following a node selection from the DeliveryListPanel or mapPanel
      * @param node
      */
     private void selectNode(Node node) {
@@ -538,5 +538,5 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         historyBackedOut.clear();
         updateUndoRedoButtons();
     }
-} // end of class MainWindowController --------------------------------------------------------------------
+} // end of class mainWindowController --------------------------------------------------------------------
 

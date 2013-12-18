@@ -1,8 +1,8 @@
-package controller.Command;
+package controller.command;
 
 import controller.MainWindowController;
-import model.Delivery.Delivery;
-import model.Delivery.Round;
+import model.delivery.Delivery;
+import model.delivery.Round;
 
 import java.util.GregorianCalendar;
 

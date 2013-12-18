@@ -1,4 +1,4 @@
-package model.ChocoSolver;
+package model.chocoSolver;
 
 import solver.ResolutionPolicy;
 import solver.Solver;

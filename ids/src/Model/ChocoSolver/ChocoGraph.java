@@ -1,12 +1,12 @@
-package model.ChocoSolver;
+package model.chocoSolver;
 
-import model.City.Arc;
-import model.City.Network;
-import model.City.Node;
-import model.Delivery.Delivery;
-import model.Delivery.Itinerary;
-import model.Delivery.Round;
-import model.Delivery.Schedule;
+import model.city.Arc;
+import model.city.Network;
+import model.city.Node;
+import model.delivery.Delivery;
+import model.delivery.Itinerary;
+import model.delivery.Round;
+import model.delivery.Schedule;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ public class ChocoGraph implements Graph {
 
     /**
      * Key : real network node ID
-     * Value : Choco Delivery => targeted delivery node + itinerary in order to go to successors delivery nodes
+     * Value : Choco delivery => targeted delivery node + itinerary in order to go to successors delivery nodes
      */
     private Map<Integer, ChocoDelivery> deliveries = new HashMap<Integer, ChocoDelivery>();
 
@@ -571,7 +571,7 @@ public class ChocoGraph implements Graph {
     /**
      * Returns a choco deliveries dictionary
      * Key : real network node ID
-     * Value : Choco Delivery => targeted delivery node + itinerary in order to go to successors delivery nodes
+     * Value : Choco delivery => targeted delivery node + itinerary in order to go to successors delivery nodes
      * @return @See description
      */
     public Map<Integer, ChocoDelivery> getDeliveries() {

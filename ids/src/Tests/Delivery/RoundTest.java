@@ -1,8 +1,8 @@
-package tests.Delivery;
+package tests.delivery;
 
-import model.City.Network;
-import model.Delivery.Round;
-import model.Delivery.Schedule;
+import model.city.Network;
+import model.delivery.Round;
+import model.delivery.Schedule;
 import utils.UtilsException;
 
 import javax.xml.parsers.ParserConfigurationException;

@@ -1,4 +1,4 @@
-package view.MapPanel;
+package view.mapPanel;
 
 import java.awt.*;
 
@@ -15,7 +15,7 @@ public class NodeView {
     private MapPanel mapPanel;
 
     /** the associated model node */
-    private model.City.Node modelNode;
+    private model.city.Node modelNode;
 
     /** the node's color */
     private Color color;
@@ -29,7 +29,7 @@ public class NodeView {
      * @param mapPanel the parent map panel
      * @param modelNode the model node
      */
-    protected NodeView(MapPanel mapPanel, model.City.Node modelNode) {
+    protected NodeView(MapPanel mapPanel, model.city.Node modelNode) {
         this.mapPanel = mapPanel;
         this.modelNode = modelNode;
         this.color = RenderContext.streetBorderColor;
@@ -40,7 +40,7 @@ public class NodeView {
      * Gets associated model node
      * @return the associated model node
      */
-    protected model.City.Node getModelNode() {
+    protected model.city.Node getModelNode() {
         return modelNode;
     }
 

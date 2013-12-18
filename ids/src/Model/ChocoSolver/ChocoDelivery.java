@@ -1,8 +1,8 @@
-package model.ChocoSolver;
+package model.chocoSolver;
 
-import model.City.Node;
-import model.Delivery.Delivery;
-import model.Delivery.Itinerary;
+import model.city.Node;
+import model.delivery.Delivery;
+import model.delivery.Itinerary;
 import cern.colt.list.IntArrayList;
 
 import java.util.ArrayList;

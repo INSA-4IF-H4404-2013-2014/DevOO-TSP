@@ -1,4 +1,4 @@
-package controller.Command;
+package controller.command;
 
 import controller.MainWindowController;
 

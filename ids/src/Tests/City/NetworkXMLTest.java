@@ -1,9 +1,9 @@
-package tests.City;
+package tests.city;
 
 
-import model.City.Arc;
-import model.City.Network;
-import model.City.Node;
+import model.city.Arc;
+import model.city.Network;
+import model.city.Node;
 import utils.UtilsException;
 import org.junit.Test;
 

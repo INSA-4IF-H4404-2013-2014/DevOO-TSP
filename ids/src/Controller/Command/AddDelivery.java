@@ -1,7 +1,7 @@
-package controller.Command;
+package controller.command;
 
 import controller.MainWindowController;
-import model.Delivery.Round;
+import model.delivery.Round;
 
 import java.util.GregorianCalendar;
 
@@ -43,7 +43,7 @@ public class AddDelivery extends Command {
     }
 
     /**
-     * implements Command.Apply() to add a delivery
+     * implements command.Apply() to add a delivery
      */
     public void Apply() {
         Round round = this.getController().getMainWindow().getRound();
@@ -53,7 +53,7 @@ public class AddDelivery extends Command {
     }
 
     /**
-     * implements Command.Reverse() to un-add/remove a delivery
+     * implements command.Reverse() to un-add/remove a delivery
      */
     public void Reverse() {
         Round round = this.getController().getMainWindow().getRound();

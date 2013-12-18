@@ -1,6 +1,6 @@
-package view.MainWindow;
+package view.mainWindow;
 
-import model.ChocoSolver.CalculatedRound;
+import model.chocoSolver.CalculatedRound;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -162,7 +162,7 @@ public class RoundPanel extends JPanel {
     }
 
     /**
-     * fill all the fields with the information in the Delivery given
+     * fill all the fields with the information in the delivery given
      * @param round the round which should be described
      */
     public void fillRoundPanel(CalculatedRound round){

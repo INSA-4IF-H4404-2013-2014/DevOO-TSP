@@ -1,11 +1,11 @@
-package view.MainWindow;
+package view.mainWindow;
 
 import controller.MainWindowController;
-import model.ChocoSolver.CalculatedRound;
-import model.City.Network;
-import model.Delivery.Delivery;
-import model.Delivery.Round;
-import view.MapPanel.MapPanel;
+import model.chocoSolver.CalculatedRound;
+import model.city.Network;
+import model.delivery.Delivery;
+import model.delivery.Round;
+import view.mapPanel.MapPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -50,7 +50,7 @@ public class MainWindow extends JFrame {
     /** Left side of the window */
     private DeliveryListPanel deliveryListPanel = new DeliveryListPanel();
 
-    /** The MapPanel, in the center of the window */
+    /** The mapPanel, in the center of the window */
     private MapPanel mapPanel = new MapPanel();
 
     /** The TopMenuBar, with "file", "edit", etc. menus at the top of the window */
