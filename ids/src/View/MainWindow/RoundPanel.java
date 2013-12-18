@@ -172,7 +172,7 @@ public class RoundPanel extends JPanel {
             this.delay.setText(CalculatedRound.conversionMSHM(round.getCumulatedDelay()));
             this.distance.setText(""+((int)round.getTotalLength())+" m");
             // -1 because the warehouse is two times in this list
-            this.deliveryCount.setText(""+(round.getOrderedItineraries().size()-1));
+            this.deliveryCount.setText(""+(round.getNodesId().size()-1));
             this.duration.setText(CalculatedRound.conversionMSHM(round.getTotalDuration()));
             SimpleDateFormat formh = new SimpleDateFormat("kk"), formm = new SimpleDateFormat("mm");
             this.startTime.setText(formh.format(round.getDepartureTime().getTime()) + "h" + formm.format(round.getDepartureTime().getTime()));

@@ -294,6 +294,10 @@ public class MainWindow extends JFrame {
         }
 
         java.util.List<Integer> orderedNodesId = calculatedRound.getOrderedNodesId();
+        if(orderedNodesId.size() <= 1) {
+            orderedNodesId = calculatedRound.getNodesId();
+        }
+
         Vector<Delivery> orderedDeliveryList = new Vector<Delivery>();
 
         for(Integer nodeId : orderedNodesId) {

@@ -10,6 +10,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -145,8 +146,11 @@ public class DeliveryInfoPanel extends JPanel {
         timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
          if(round != null)
          {
-            deliveryTime.setText(""+form.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()));
-            delay.setText(""+CalculatedRound.conversionMSHM(round.getDelay(delivery.getAddress().getId())));
+            GregorianCalendar schedule = round.getEstimatedSchedules(delivery.getAddress().getId());
+            if(schedule != null) {
+                deliveryTime.setText(""+form.format(schedule.getTime()));
+                delay.setText(""+CalculatedRound.conversionMSHM(round.getDelay(delivery.getAddress().getId())));
+            }
          }
      }
 

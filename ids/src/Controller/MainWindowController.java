@@ -467,7 +467,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     private Boolean askConfirmation(String message) {
         int selectedOption = JOptionPane.showConfirmDialog(null,
                 message,
-                "Choose",
+                "Temps insuffisant",
                 JOptionPane.YES_NO_OPTION);
 
         if (selectedOption == JOptionPane.YES_OPTION) {
@@ -488,8 +488,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     private TSP solveTsp(Graph graph, int baseTime) {
         TSP tsp = new TSP(graph);
 
-        String messageNotFound = "Aucun trajet n'a été trouvé. Continuer à chercher un trajet ?";
-        String messageNotOptimal = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
+        String messageNotFound = "Aucun trajet n'a été trouvé dans le temps imparti. Continuer à chercher un trajet ?";
+        String messageNotOptimal = "Un trajet non optimal a été trouvé dans le temps imparti. Continuer à chercher un trajet optimal ?";
 
         int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
 
