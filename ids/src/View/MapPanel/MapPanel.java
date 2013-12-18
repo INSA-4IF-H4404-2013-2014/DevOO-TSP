@@ -562,6 +562,8 @@ public class MapPanel extends JPanel {
                 node.setDeliveryDelayed(true);
             }
 
+            //hello world
+
             colorId++;
 
             if(colorId == RenderContext.itineraryColors.length) {
