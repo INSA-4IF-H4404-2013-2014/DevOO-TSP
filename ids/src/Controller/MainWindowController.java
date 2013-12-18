@@ -287,7 +287,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         ChocoGraph graph = new ChocoGraph(network, round);
 
         if(round.getDeliveryList().size() != 0) {
-            tsp = solveTsp(graph, 1);
+            tsp = solveTsp(graph, 100);
             solutionState = tsp.getSolutionState();
         }
         else {
@@ -496,7 +496,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         tsp.solve(baseTime, bound-1);
         SolutionState solutionState = tsp.getSolutionState();
 
-        for( ; (solutionState != SolutionState.OPTIMAL_SOLUTION_FOUND) && (solutionState != SolutionState.INCONSISTENT) && (baseTime <= 4) ; baseTime *= 2) {
+        for( ; (solutionState != SolutionState.OPTIMAL_SOLUTION_FOUND) && (solutionState != SolutionState.INCONSISTENT) && (baseTime <= 400) ; baseTime *= 2) {
             tsp.solve(baseTime, bound);
             solutionState = tsp.getSolutionState();
         }
