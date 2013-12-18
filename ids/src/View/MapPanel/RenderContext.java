@@ -2,6 +2,7 @@ package View.MapPanel;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
@@ -116,23 +117,36 @@ public class RenderContext {
     /**
      * Draws a given node's borders
      * @param node the node to draw
-     * @param selectOverlay defines if drawing the selection overlay
      */
-    protected void drawNodeBorders(Node node, boolean selectOverlay) {
+    protected void drawNodeBorders(Node node) {
         int nodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
         int x = node.getX() - nodeRadius;
         int y = node.getY() - nodeRadius;
 
-        if(node == mapPanel.selectedNode && selectOverlay) {
-            int nodeRadiusAdd = (int)Math.ceil((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
-            int overlayNodeRadius = nodeRadius + nodeRadiusAdd;
-
-            context.setColor(streetSelectedNodeOverlay);
-            context.fillOval(x - nodeRadiusAdd, y - nodeRadiusAdd, overlayNodeRadius * 2, overlayNodeRadius * 2);
-        }
-
         context.setColor(node.getColor());
         context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
+    }
+
+    /**
+     * Draws a given node's overlay (selection or delay)
+     * @param node the node to draw
+     */
+    protected void drawNodeOverlay(Node node) {
+        if(node == mapPanel.selectedNode) {
+            context.setColor(streetSelectedNodeOverlay);
+        } else if(node.isDeliveryDelayed()) {
+            context.setColor(itineraryDelayedDeliveryColor);
+        } else {
+            return;
+        }
+
+        int overlayNodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
+        overlayNodeRadius += (int)Math.ceil((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
+
+        int x = node.getX() - overlayNodeRadius;
+        int y = node.getY() - overlayNodeRadius;
+
+        context.fillOval(x, y, overlayNodeRadius * 2, overlayNodeRadius * 2);
     }
 
     /**
@@ -205,11 +219,20 @@ public class RenderContext {
         }
 
         for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
-            drawNodeBorders(entry.getValue(), false);
+            Node node = entry.getValue();
+
+            if(node != mapPanel.selectedNode) {
+                drawNodeOverlay(node);
+            }
+        }
+
+        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
+            drawNodeBorders(entry.getValue());
         }
 
         if(mapPanel.selectedNode != null) {
-            drawNodeBorders(mapPanel.selectedNode, true);
+            drawNodeOverlay(mapPanel.selectedNode);
+            drawNodeBorders(mapPanel.selectedNode);
         }
     }
 
@@ -408,10 +431,15 @@ public class RenderContext {
         context.fill(rect);
 
         if(arcInfo.isBidirectional() && drawMarks) {
-            rect.setRect((double)streetNodeRadius, -0.5 * streetCenterLineThickness, arcInfo.length - 2.0 * (double)streetNodeRadius, streetCenterLineThickness);
+            if(arcInfo.length > 2.0 * (double)streetNodeRadius) {
+                Stroke previousStroke = context.getStroke();
 
-            context.setColor(streetMarksColor);
-            context.fill(rect);
+                context.setStroke(streetCenterLineStroke);
+                context.setColor(streetMarksColor);
+                context.draw(new Line2D.Double((double)streetNodeRadius, 0.0, arcInfo.length - (double)streetNodeRadius, 0.0));
+
+                context.setStroke(previousStroke);
+            }
         } else {
             Path2D.Double path = new Path2D.Double();
 
@@ -526,7 +554,8 @@ public class RenderContext {
     protected static final Color streetBorderColor = new Color(210, 140, 100);
     private static final int streetThickness = 4;
     private static final int streetBorderThickness = 1;
-    private static final double streetCenterLineThickness = 0.2;
+    private static final BasicStroke streetCenterLineStroke =
+            new BasicStroke(0.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1}, 0);
 
     /** node color */
     protected static final int streetNodeRadius = 10;
@@ -545,6 +574,7 @@ public class RenderContext {
     protected static final Color itineraryWarehouseColor = new Color(0, 0, 0);
     private static final int itineraryThickness = 4;
     private static final int itineraryDotDistance = 4;
+    private static final Color itineraryDelayedDeliveryColor = new Color(255, 0, 0, 70);
 
     /** global view's constants */
     private static final Color globalViewBackgroundColor = new Color(0, 0, 0, 150);

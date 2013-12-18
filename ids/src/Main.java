@@ -10,9 +10,13 @@ public class Main {
         MainWindowController controller = new MainWindowController();
 
         // automatic load for map testing
+        /*
         {
             controller.loadNetwork("../sujet/plan20x20.xml");
             controller.loadRound("../sujet/livraison20x20-1.xml");
         }
+
+        */
+
     }
 }

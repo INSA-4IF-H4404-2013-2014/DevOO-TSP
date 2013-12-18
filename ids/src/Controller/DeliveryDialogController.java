@@ -129,7 +129,7 @@ public class DeliveryDialogController {
                 this.addReady =true;
             }catch(Exception e){
                 JFrame frame = new JFrame();
-                JOptionPane.showMessageDialog(frame, "problème lors de la création de la livraison", "Erreur", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Problème lors de la création de la livraison", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -172,12 +172,12 @@ public class DeliveryDialogController {
                 if(testInt == 0)
                 {
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame, "l'id 0 n'est pas disponible pour un client", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "L'id 0 n'est pas disponible pour un client", "Erreur", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
                 if(dialog.getParent().getRound().getIndexClient( dialog.getNewClient().getText()) != -1 ){
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame, "le numéro d'id du client que vous voulez ajouter existe déjà", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Le numéro d'id du client que vous voulez ajouter existe déjà", "Erreur", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
                 client = dialog.getNewClient().getText();
@@ -217,7 +217,7 @@ public class DeliveryDialogController {
             }
         }catch(Exception e){
             JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "veuillez entrer une heure entre 0 et 23h et des minutes en 0 et 59",
+            JOptionPane.showMessageDialog(frame, "Veuillez entrer une heure entre 0 et 23h et des minutes en 0 et 59",
                     "Erreur horaire debut", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -253,7 +253,7 @@ public class DeliveryDialogController {
             }
         }catch(Exception e){
             JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "veuillez entrer une heure entre 0 et 23h et des minutes en 0 et 59",
+            JOptionPane.showMessageDialog(frame, "Veuillez entrer une heure entre 0 et 23h et des minutes en 0 et 59",
                     "Erreur horaire fin", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -264,15 +264,25 @@ public class DeliveryDialogController {
 
         } catch (Exception e) {
             JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "fin de plage horaire avant le debut", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Fin de plage horaire avant le début", "Erreur", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
+
         Calendar currentDate = GregorianCalendar.getInstance();
         int year = currentDate.get(Calendar.YEAR);
         int month = currentDate.get(Calendar.MONTH);
         int day = currentDate.get(Calendar.DAY_OF_MONTH);
         GregorianCalendar cal = new GregorianCalendar(year, month, day, endH, endM, 0);//parsed.toGregorianCalendar();
         end = cal;
+
+       if( this.dialog.getParent().getRound().isScheduleOverlapping(begin,end)){
+           JFrame frame = new JFrame();
+           JOptionPane.showMessageDialog(frame, "Plage horaire à cheval sur d'autres",
+                   "Erreur plage horaire", JOptionPane.ERROR_MESSAGE);
+           return false;
+       }
+
         return true;
     }
     /**

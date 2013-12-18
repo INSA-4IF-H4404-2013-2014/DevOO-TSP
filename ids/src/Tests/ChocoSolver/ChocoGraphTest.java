@@ -78,7 +78,7 @@ public class ChocoGraphTest {
         assertTrue(chocograph.getNbSucc(chocograph.getChocoIdFromNetworkId(9)) == 1);
 
         int[] testSucc = chocograph.getSucc(chocograph.getChocoIdFromNetworkId(3));
-        assertTrue(testSucc[0] == 5 || testSucc[0] == 7);
+        assertTrue(testSucc[0] == chocograph.getChocoIdFromNetworkId(5) || testSucc[0] == chocograph.getChocoIdFromNetworkId(7));
         testSucc = chocograph.getSucc(chocograph.getChocoIdFromNetworkId(9));
         assertTrue(testSucc[0] == 0);
     }

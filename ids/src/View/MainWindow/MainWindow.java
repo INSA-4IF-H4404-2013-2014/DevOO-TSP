@@ -146,9 +146,27 @@ public class MainWindow extends JFrame {
     private JPanel createSubMainPanel() {
         JPanel subMainPanel = new JPanel(new BorderLayout());
         subMainPanel.setBorder(new EmptyBorder(SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING, SUB_MAINPANEL_PADDING));
+
+        /*
         subMainPanel.add(mapPanel, BorderLayout.CENTER);
         subMainPanel.add(deliveryListPanel, BorderLayout.WEST);
         subMainPanel.add(rightPanel, BorderLayout.EAST);
+        */
+
+        JSplitPane innerJsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapPanel, rightPanel);
+        innerJsp.setDividerLocation(650);
+        innerJsp.setBorder(null);
+        innerJsp.setResizeWeight(1.0);
+        mapPanel.setMinimumSize(new Dimension(400, 400));
+        mapPanel.setPreferredSize(new Dimension(500, 900));
+
+        JSplitPane outerJsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, deliveryListPanel, innerJsp);
+        deliveryListPanel.setMinimumSize(new Dimension(220, 200));
+        deliveryListPanel.setPreferredSize(new Dimension(600, 200));
+        outerJsp.setDividerLocation(270);
+        outerJsp.setBorder(null);
+
+        subMainPanel.add(outerJsp, BorderLayout.CENTER);
 
         return subMainPanel;
     }
@@ -276,6 +294,10 @@ public class MainWindow extends JFrame {
         }
 
         java.util.List<Integer> orderedNodesId = calculatedRound.getOrderedNodesId();
+        if(orderedNodesId.size() <= 1) {
+            orderedNodesId = calculatedRound.getNodesId();
+        }
+
         Vector<Delivery> orderedDeliveryList = new Vector<Delivery>();
 
         for(Integer nodeId : orderedNodesId) {

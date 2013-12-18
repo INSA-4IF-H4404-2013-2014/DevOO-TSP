@@ -25,7 +25,7 @@ public class DeliveryDialog extends JDialog {
     public static final String title = "Ajout d'une livraison";
 
     /** The text for the row in the list to create a new client */
-    public static final String newCli = "nouveau client";
+    public static final String newCli = "Nouveau";
 
     /** The controller of this dialog */
     private DeliveryDialogController controller;
@@ -82,8 +82,9 @@ public class DeliveryDialog extends JDialog {
             clientBox.addItem(cli);
         }
         clientBox.addItem(newCli);
-        clientAddress.setText(parent.getMapPanel().getSelectedNode().toString());
-        setNewClientEnabled(false);
+        clientBox.setSelectedItem(newCli);
+        clientAddress.setText(parent.getMapPanel().getSelectedNode().toString() + " (" + parent.getMapPanel().getSelectedNode().getId() + ")");
+        setNewClientEnabled(true);
         addListener();
     }
 
@@ -254,11 +255,11 @@ public class DeliveryDialog extends JDialog {
     private JPanel createRow6() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
         row.add(timeFrameBeginH);
-        row.add(new JLabel(":"));
+        row.add(new JLabel("h"));
         row.add(timeFrameBeginM);
         row.add(new JLabel("à"));
         row.add(timeFrameEndH);
-        row.add(new JLabel(":"));
+        row.add(new JLabel("h"));
         row.add(timeFrameEndM);
         return row;
     }

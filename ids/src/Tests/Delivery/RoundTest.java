@@ -55,11 +55,11 @@ public class RoundTest {
         assertTrue(schedules.get(0).getNextDeliveryId() == 3);
         assertTrue(schedules.get(0).getDeliveries().size() == 2);
 
-        round.addDelivery(idClient, 2, schedules.get(0).getEarliestBound(), schedules.get(0).getLatestBound());
+        round.addDelivery(idClient, 5, schedules.get(0).getEarliestBound(), schedules.get(0).getLatestBound());
 
         assertTrue(schedules.get(0).getNextDeliveryId() == 4);
         assertTrue(schedules.get(0).getDeliveries().size() == 3);
-        assertTrue(schedules.get(0).getDeliveries().get(3).getAddress().getId() == 2);
+        assertTrue(schedules.get(0).getDeliveries().get(2).getAddress().getId() == 5);
     }
 
     /**

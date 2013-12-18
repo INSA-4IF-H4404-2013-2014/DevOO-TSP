@@ -84,7 +84,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Action triggered when user wants to load a map
      */
     public void loadNetwork() {
-        File xmlFile = openXMLFile();
+        File xmlFile = openXMLFile("Ouvrir une carte");
 
         if(xmlFile == null) {
             return;
@@ -127,7 +127,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Action triggered when user wants to load a round
      */
     public void loadRound() {
-        File xmlFile = openXMLFile();
+        File xmlFile = openXMLFile("Ouvrir une tournée");
 
         if(xmlFile == null) {
             return;
@@ -205,7 +205,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         if(deliveryDialogController.addIsReady()) {
             AddDelivery add = new AddDelivery(this, deliveryDialogController.getClient(), deliveryDialogController.getAddress(), deliveryDialogController.getBegin(), deliveryDialogController.getEnd());
             this.historyDo(add);
-            selectNode(mainWindow.getMapPanel().getSelectedNode());
+            try {
+                selectNode(mainWindow.getMapPanel().getSelectedNode());
+            } catch(Exception e) {}
         }
     }
 
@@ -280,16 +282,17 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
     public int computeRound(Network network, Round round) {
-        if(round.getDeliveryList().size() == 0) {
-            mainWindow.getMapPanel().setRound(null);
-            mainWindow.setCalculatedRound(null);
-            return 0;
-        }
-
+        TSP tsp = null;
+        SolutionState solutionState;
         ChocoGraph graph = new ChocoGraph(network, round);
 
-        TSP tsp = solveTsp(graph, 10000);
-        SolutionState solutionState = tsp.getSolutionState();
+        if(round.getDeliveryList().size() != 0) {
+            tsp = solveTsp(graph, 100);
+            solutionState = tsp.getSolutionState();
+        }
+        else {
+            solutionState = SolutionState.OPTIMAL_SOLUTION_FOUND;
+        }
 
         if((solutionState == SolutionState.SOLUTION_FOUND) || (solutionState == SolutionState.OPTIMAL_SOLUTION_FOUND)) {
             CalculatedRound calculatedRound = createCalculatedRound(tsp, graph);
@@ -297,10 +300,15 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.setCalculatedRound(calculatedRound);
             mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
             return 0;
-        } else {
-            JOptionPane.showMessageDialog(mainWindow, "Aucun trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
-            return 1;
         }
+
+        JOptionPane.showMessageDialog(mainWindow, "Aucun trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
+        CalculatedRound calculatedRound = createCalculatedRound(null, graph);
+        mainWindow.getMapPanel().setRound(calculatedRound);
+        mainWindow.setCalculatedRound(calculatedRound);
+        mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+
+        return 1;
     }
 
     /**
@@ -433,10 +441,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
 
     /**
      * Displays a JFileChooser with an XmlFileFilter only.
+     * @param title The JFileChooser's title
      * @return the chosen XML file, or null if no valid file has been opened.
      */
-    private File openXMLFile() {
+    private File openXMLFile(String title) {
         JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(title);
         chooser.setCurrentDirectory(new File("../"));
         chooser.setFileFilter(new XmlFileFilter());
         chooser.setAcceptAllFileFilterUsed(false);
@@ -455,14 +465,16 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @return true if YES is selected, false otherwise
      */
     private Boolean askConfirmation(String message) {
-        JOptionPane confirmationWindow = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
-        Object value = confirmationWindow.getValue();
+        int selectedOption = JOptionPane.showConfirmDialog(null,
+                message,
+                "Temps insuffisant",
+                JOptionPane.YES_NO_OPTION);
 
-        if(value == (Object) JOptionPane.YES_OPTION) {
+        if (selectedOption == JOptionPane.YES_OPTION) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -476,7 +488,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     private TSP solveTsp(Graph graph, int baseTime) {
         TSP tsp = new TSP(graph);
 
-        String message = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
+        String messageNotFound = "Aucun trajet n'a été trouvé dans le temps imparti. Continuer à chercher un trajet ?";
+        String messageNotOptimal = "Un trajet non optimal a été trouvé dans le temps imparti. Continuer à chercher un trajet optimal ?";
 
         int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
 
@@ -488,7 +501,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             solutionState = tsp.getSolutionState();
         }
 
-        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) && (askConfirmation(message)) ; baseTime *= 2) {
+        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND && askConfirmation(messageNotOptimal)) ||
+                (tsp.getSolutionState() == SolutionState.NO_SOLUTION_FOUND && askConfirmation(messageNotFound)) ; baseTime *= 2) {
             tsp.solve(baseTime, bound);
         }
 
@@ -502,7 +516,11 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @return the CalculatedRound
      */
     private CalculatedRound createCalculatedRound(TSP tsp, ChocoGraph chocoGraph) {
-        return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
+        if(tsp != null) {
+            return new CalculatedRound(mainWindow.getRound().getWarehouse(), tsp.getNext(), chocoGraph);
+        }
+
+        return new CalculatedRound(mainWindow.getRound().getWarehouse(), null, chocoGraph);
     }
 
     /**

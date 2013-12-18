@@ -10,6 +10,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin
@@ -33,7 +34,7 @@ public class DeliveryInfoPanel extends JPanel {
     public DeliveryInfoPanel() {
         final int borderSize = 5;
         final int rowHeight = 30;
-        final int alignForms = 140 + 2 * borderSize;
+        final int alignForms = 160 + 2 * borderSize;
         final int textFieldOffset = -5;
 
         JLabel labelId = new JLabel("ID :");
@@ -140,14 +141,16 @@ public class DeliveryInfoPanel extends JPanel {
         deliveryID.setText(""+delivery.getId());
         clientName.setText(""+delivery.getClient().getId());
         address.setText((""+delivery.getAddress().getId()));
-        SimpleDateFormat formh = new SimpleDateFormat("kk");
-        SimpleDateFormat formm = new SimpleDateFormat("mm");
-        timeFrameBegin.setText(""+formh.format(delivery.getSchedule().getEarliestBound().getTime()) + "h"+ formm.format(delivery.getSchedule().getEarliestBound().getTime()));
-        timeFrameEnd.setText(""+formh.format(delivery.getSchedule().getLatestBound().getTime()) + "h" +formm.format(delivery.getSchedule().getLatestBound().getTime()));
+        SimpleDateFormat form = new SimpleDateFormat("kk'h'mm");
+        timeFrameBegin.setText(""+form.format(delivery.getSchedule().getEarliestBound().getTime()) );
+        timeFrameEnd.setText(""+form.format(delivery.getSchedule().getLatestBound().getTime()));
          if(round != null)
          {
-            deliveryTime.setText(""+formh.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()) + "h" + formm.format(round.getEstimatedSchedules(delivery.getAddress().getId()).getTime()) );
-            delay.setText(""+CalculatedRound.conversionMSHM(round.getDelay(delivery.getAddress().getId())));
+            GregorianCalendar schedule = round.getEstimatedSchedules(delivery.getAddress().getId());
+            if(schedule != null) {
+                deliveryTime.setText(""+form.format(schedule.getTime()));
+                delay.setText(""+CalculatedRound.conversionMSHM(round.getDelay(delivery.getAddress().getId())));
+            }
          }
      }
 

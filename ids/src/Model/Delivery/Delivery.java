@@ -73,13 +73,18 @@ public class Delivery {
 
         try {
             clientId = element.getAttribute(XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR);
+            if(clientId.length() == 0) {
+                throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR +
+                        "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est vide.");
+            }
+
+            Integer i = Integer.parseInt(clientId);
+        } catch(NumberFormatException e) {
+            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR +
+                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> n'est pas un entier.");
         } catch(Exception e) {
             throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR +
                     "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est manquant.");
-        }
-        if(clientId.length() == 0) {
-            throw new ParserConfigurationException("L'attribut <" + XMLConstants.DELIVERY_DELIVERY_CLIENT_ATTR +
-                    "> de l'élément <" + XMLConstants.DELIVERY_DELIVERY_ELEMENT + "> est vide.");
         }
         this.client = round.getClient(clientId);
 
