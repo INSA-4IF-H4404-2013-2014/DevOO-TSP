@@ -280,19 +280,12 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Compute the actual round to find the best delivery plan. Calls the view to print it if it has been found.
      */
     public int computeRound(Network network, Round round) {
-        /*
-        if(round.getDeliveryList().size() == 0) {
-            mainWindow.getMapPanel().setRound(null);
-            mainWindow.setCalculatedRound(null);
-            return 0;
-        }
-        */
         TSP tsp = null;
         SolutionState solutionState;
         ChocoGraph graph = new ChocoGraph(network, round);
 
         if(round.getDeliveryList().size() != 0) {
-            tsp = solveTsp(graph, 10000);
+            tsp = solveTsp(graph, 100);
             solutionState = tsp.getSolutionState();
         }
         else {
@@ -465,14 +458,16 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @return true if YES is selected, false otherwise
      */
     private Boolean askConfirmation(String message) {
-        JOptionPane confirmationWindow = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
-        Object value = confirmationWindow.getValue();
+        int selectedOption = JOptionPane.showConfirmDialog(null,
+                message,
+                "Choose",
+                JOptionPane.YES_NO_OPTION);
 
-        if(value == (Object) JOptionPane.YES_OPTION) {
+        if (selectedOption == JOptionPane.YES_OPTION) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -486,7 +481,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
     private TSP solveTsp(Graph graph, int baseTime) {
         TSP tsp = new TSP(graph);
 
-        String message = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
+        String messageNotFound = "Aucun trajet n'a été trouvé. Continuer à chercher un trajet ?";
+        String messageNotOptimal = "Un trajet non optimal a été trouvé. Continuer à chercher un trajet optimal ?";
 
         int bound = graph.getNbVertices() * graph.getMaxArcCost() + 1;
 
@@ -498,7 +494,8 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             solutionState = tsp.getSolutionState();
         }
 
-        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND) && (askConfirmation(message)) ; baseTime *= 2) {
+        for( ; (tsp.getSolutionState() == SolutionState.SOLUTION_FOUND && askConfirmation(messageNotOptimal)) ||
+                (tsp.getSolutionState() == SolutionState.NO_SOLUTION_FOUND && askConfirmation(messageNotFound)) ; baseTime *= 2) {
             tsp.solve(baseTime, bound);
         }
 
