@@ -51,18 +51,14 @@ public class CalculatedRound {
     public CalculatedRound(Node warehouse, int[] tspOrderedDeliveries, ChocoGraph chocoGraph) {
         this.warehouse = warehouse;
 
-        if(tspOrderedDeliveries != null) {
-            this.chocoDeliveries = chocoGraph.getDeliveries();
+        this.chocoDeliveries = chocoGraph.getDeliveries();
 
-            if(tspOrderedDeliveries.length != 0) {
-                for(int i = 0; i < tspOrderedDeliveries.length; ++i) {
-                    Integer srcId = chocoGraph.getNetworkIdFromChocoId(i);
-                    Integer destId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
-                    successors.put(srcId, destId);
-                }
+        if(tspOrderedDeliveries != null && tspOrderedDeliveries.length != 0) {
+            for(int i = 0; i < tspOrderedDeliveries.length; ++i) {
+                Integer srcId = chocoGraph.getNetworkIdFromChocoId(i);
+                Integer destId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
+                successors.put(srcId, destId);
             }
-        } else {
-            this.chocoDeliveries.put(warehouse.getId(), chocoGraph.getChocoDeliveryFromNetworkId(warehouse.getId()));
         }
 
         calculateEstimatedSchedules();
@@ -77,7 +73,7 @@ public class CalculatedRound {
         int warehouseId = getWarehouse().getId();
         departureTime = getFirstDepartureTime();
 
-        if(chocoDeliveries.size() != 1) {
+        if(successors.size() != 0) {
             GregorianCalendar arrivalTime;
             GregorianCalendar earlyBound;
 
@@ -329,6 +325,12 @@ public class CalculatedRound {
         return nodesId;
     }
 
+    public List<Integer> getNodesId() {
+        List nodesId =  new LinkedList<Integer>();
+        nodesId.addAll(chocoDeliveries.keySet());
+        return nodesId;
+    }
+
     /**
      * Returns a TSP defined by an ordered itineraries list, from the warehouse to the warehouse, goind to every delivery node
      * @return @see description
@@ -336,7 +338,7 @@ public class CalculatedRound {
     public List<Itinerary> getOrderedItineraries() {
         List<Itinerary> itineraries = new LinkedList<Itinerary>();
 
-        if(chocoDeliveries.size() > 1) {
+        if(successors.size() != 0) {
             Integer currentNodeId = warehouse.getId();
             Itinerary firstItinerary = getNextItinerary(currentNodeId), itinerary = firstItinerary;
 
