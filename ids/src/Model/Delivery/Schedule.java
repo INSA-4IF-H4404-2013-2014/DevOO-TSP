@@ -110,7 +110,7 @@ public class Schedule {
                 throw new ParserConfigurationException("Le champ <minutes> de l'attribut <" + attributeName + "> de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> doit être compris entre 0 et 59.");
             }
 
-            if(sec < 0 || sec > 23) {
+            if(sec < 0 || sec > 59) {
                 throw new ParserConfigurationException("Le champ <secondes> de l'attribut <" + attributeName + "> de l'élément <" + XMLConstants.DELIVERY_SCHEDULE_ELEMENT + "> doit être compris entre 0 et 59.");
             }
 
