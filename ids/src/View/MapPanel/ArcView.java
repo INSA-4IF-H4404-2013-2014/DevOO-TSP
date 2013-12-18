@@ -1,4 +1,4 @@
-package View.MapPanel;
+package view.MapPanel;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -10,19 +10,19 @@ import java.util.LinkedList;
  * Time: 08:49
  * To change this template use File | Settings | File Templates.
  */
-public class Arc {
+public class ArcView {
 
     /**
-     * An arc is between two node: node1 and node2.
+     * An arcView is between two node: node1 and node2.
      *
      * Contention: node1.id < node2.id
      */
 
-    /** the model arc going from node1 to node2 */
-    private Model.City.Arc modelArcFrom1To2;
+    /** the model arcView going from node1 to node2 */
+    private model.City.Arc modelArcFrom1To2;
 
-    /** the model arc going from node2 to node1 */
-    private Model.City.Arc modelArcFrom2To1;
+    /** the model arcView going from node2 to node1 */
+    private model.City.Arc modelArcFrom2To1;
 
     /** the parent map panel */
     private MapPanel mapPanel;
@@ -36,13 +36,13 @@ public class Arc {
     /**
      * Constructor
      * @param mapPanel the map panel
-     * @param modelArc the associated model arc
+     * @param modelArc the associated model arcView
      */
-    protected Arc(MapPanel mapPanel, Model.City.Arc modelArc) {
+    protected ArcView(MapPanel mapPanel, model.City.Arc modelArc) {
         this.mapPanel = mapPanel;
 
-        Model.City.Node from = modelArc.getFrom();
-        Model.City.Node to = modelArc.getTo();
+        model.City.Node from = modelArc.getFrom();
+        model.City.Node to = modelArc.getTo();
 
         if (from.getId() < to.getId()) {
             modelArcFrom1To2 = modelArc;
@@ -58,11 +58,11 @@ public class Arc {
     }
 
     /**
-     * Gets the model arc leaving node leavingNode
+     * Gets the model arcView leaving node leavingNode
      * @param leavingNode the leaving node id (bust me be 1 or 2)
-     * @return the model arc
+     * @return the model arcView
      */
-    protected Model.City.Arc getModelArcFrom(int leavingNode) {
+    protected model.City.Arc getModelArcFrom(int leavingNode) {
         if (leavingNode == 2) {
             return modelArcFrom2To1;
         }
@@ -70,18 +70,18 @@ public class Arc {
     }
 
     /**
-     * Gets the model arc from node 1 to 2
-     * @return the model arc
+     * Gets the model arcView from node 1 to 2
+     * @return the model arcView
      */
-    protected Model.City.Arc getModelArcFrom1To2() {
+    protected model.City.Arc getModelArcFrom1To2() {
         return modelArcFrom1To2;
     }
 
     /**
-     * gets the model arc from node 2 to 1
-     * @return the model arc
+     * gets the model arcView from node 2 to 1
+     * @return the model arcView
      */
-    protected Model.City.Arc getModelArcFrom2To1() {
+    protected model.City.Arc getModelArcFrom2To1() {
         return modelArcFrom2To1;
     }
 
@@ -89,7 +89,7 @@ public class Arc {
      * gets the model street
      * @return the model street
      */
-    protected Model.City.Street getModelStreet() {
+    protected model.City.Street getModelStreet() {
         if(modelArcFrom2To1 != null) {
             return modelArcFrom2To1.getStreet();
         }
@@ -101,7 +101,7 @@ public class Arc {
      * Gets the node 1
      * @return the node 1
      */
-    protected Node getNode1() {
+    protected NodeView getNode1() {
         if (modelArcFrom1To2 != null) {
             return mapPanel.findNode(modelArcFrom1To2.getFrom().getId());
         }
@@ -113,7 +113,7 @@ public class Arc {
      * Gets the node 2
      * @return the node 2
      */
-    protected Node getNode2() {
+    protected NodeView getNode2() {
         if (modelArcFrom2To1 != null) {
             return mapPanel.findNode(modelArcFrom2To1.getFrom().getId());
         }

@@ -1,4 +1,4 @@
-package Model.City;
+package model.City;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -45,12 +45,12 @@ public class Street {
     }
 
     /**
-     * Creates a new street's arc
-     * @param from the arc's leaving node
-     * @param to the arc's destination node
-     * @param length the arc's length
-     * @param speed the arc's speed
-     * @return the arc that has just been created
+     * Creates a new street's arcView
+     * @param from the arcView's leaving node
+     * @param to the arcView's destination node
+     * @param length the arcView's length
+     * @param speed the arcView's speed
+     * @return the arcView that has just been created
      */
     public Arc createArc(Node from, Node to, float length, float speed){
         Arc arc = new Arc(this, from, to, length, speed);

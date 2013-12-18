@@ -1,4 +1,4 @@
-package View.MainWindow;
+package view.MainWindow;
 
 import javax.swing.*;
 import java.awt.*;

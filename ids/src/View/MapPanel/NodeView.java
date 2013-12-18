@@ -1,4 +1,4 @@
-package View.MapPanel;
+package view.MapPanel;
 
 import java.awt.*;
 
@@ -9,13 +9,13 @@ import java.awt.*;
  * Time: 08:49
  * To change this template use File | Settings | File Templates.
  */
-public class Node {
+public class NodeView {
 
     /** the parent map panel */
     private MapPanel mapPanel;
 
     /** the associated model node */
-    private Model.City.Node modelNode;
+    private model.City.Node modelNode;
 
     /** the node's color */
     private Color color;
@@ -29,7 +29,7 @@ public class Node {
      * @param mapPanel the parent map panel
      * @param modelNode the model node
      */
-    protected Node(MapPanel mapPanel, Model.City.Node modelNode) {
+    protected NodeView(MapPanel mapPanel, model.City.Node modelNode) {
         this.mapPanel = mapPanel;
         this.modelNode = modelNode;
         this.color = RenderContext.streetBorderColor;
@@ -40,7 +40,7 @@ public class Node {
      * Gets associated model node
      * @return the associated model node
      */
-    protected Model.City.Node getModelNode() {
+    protected model.City.Node getModelNode() {
         return modelNode;
     }
 
@@ -77,7 +77,7 @@ public class Node {
     }
 
     /**
-     * Tests if the delivery is delayed
+     * tests if the delivery is delayed
      * @return true if the delivery is delayed
      */
     public boolean isDeliveryDelayed() {

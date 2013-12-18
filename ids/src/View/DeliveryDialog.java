@@ -1,9 +1,8 @@
-package View;
+package view;
 
-import Controller.DeliveryDialogController;
-import Model.City.Node;
-import Model.Delivery.Client;
-import View.MainWindow.MainWindow;
+import controller.DeliveryDialogController;
+import model.Delivery.Client;
+import view.MainWindow.MainWindow;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -83,7 +82,7 @@ public class DeliveryDialog extends JDialog {
         }
         clientBox.addItem(newCli);
         clientBox.setSelectedItem(newCli);
-        clientAddress.setText(parent.getMapPanel().getSelectedNode().toString() + " (" + parent.getMapPanel().getSelectedNode().getId() + ")");
+        clientAddress.setText(parent.getMapPanel().getSelectedNodeView().toString() + " (" + parent.getMapPanel().getSelectedNodeView().getId() + ")");
         setNewClientEnabled(true);
         addListener();
     }

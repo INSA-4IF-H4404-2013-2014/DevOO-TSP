@@ -1,6 +1,4 @@
-package Controller.Command;
-
-import Controller.MainWindowController;
+package controller.Command;
 
 /**
  * Created with IntelliJ IDEA.

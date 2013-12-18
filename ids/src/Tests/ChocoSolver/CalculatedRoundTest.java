@@ -1,15 +1,13 @@
-package Tests.ChocoSolver;
+package tests.ChocoSolver;
 
-import Controller.MainWindowController;
-import Model.ChocoSolver.CalculatedRound;
-import Model.ChocoSolver.ChocoGraph;
-import Model.ChocoSolver.SolutionState;
-import Model.ChocoSolver.TSP;
-import Model.City.Network;
-import Model.City.Node;
-import Model.Delivery.Client;
-import Model.Delivery.Round;
-import Utils.UtilsException;
+import controller.MainWindowController;
+import model.ChocoSolver.CalculatedRound;
+import model.ChocoSolver.ChocoGraph;
+import model.ChocoSolver.SolutionState;
+import model.ChocoSolver.TSP;
+import model.City.Network;
+import model.Delivery.Round;
+import utils.UtilsException;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;

@@ -1,8 +1,8 @@
-package Model.Delivery;
+package model.Delivery;
 
-import Model.City.Network;
-import Model.City.Node;
-import Utils.UtilsException;
+import model.City.Network;
+import model.City.Node;
+import utils.UtilsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

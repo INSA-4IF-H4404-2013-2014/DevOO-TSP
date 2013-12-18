@@ -1,4 +1,4 @@
-package Model.ChocoSolver;
+package model.ChocoSolver;
 
 import solver.ResolutionPolicy;
 import solver.Solver;
@@ -46,7 +46,7 @@ public class TSP {
 		IntVar[] xNext = new IntVar[n];
 		for (int i = 0; i < n; i++)
 			xNext[i] = VariableFactory.enumerated("Next " + i, graph.getSucc(i), solver);
-		// xCost[i] = cost of arc (i,xNext[i])
+		// xCost[i] = cost of arcView (i,xNext[i])
 		IntVar[] xCost = VariableFactory.boundedArray("Cost ", n, minCost, maxCost, solver);
 		// xTotalCost = total cost of the solution
 		IntVar xTotalCost = VariableFactory.bounded("Total cost ", n*minCost, bound - 1, solver);

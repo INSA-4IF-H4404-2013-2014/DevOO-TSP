@@ -1,4 +1,4 @@
-package Model.City;
+package model.City;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -14,8 +14,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import Utils.Utils;
-import Utils.UtilsException;
+import utils.Utils;
+import utils.UtilsException;
 
 
 /**
@@ -101,12 +101,12 @@ public class Network {
     }
 
     /**
-     * Finds a arc between two nodes
+     * Finds a arcView between two nodes
      * @param from node id
      * @param to node id
      * @return
-     *  - null if there is no arc with the given parameters
-     *  - the existing arc
+     *  - null if there is no arcView with the given parameters
+     *  - the existing arcView
      */
     public Arc findArc(int from, int to) {
         Node node = this.findNode(from);
@@ -119,11 +119,11 @@ public class Network {
     }
 
     /**
-     * Returns the cost of an existing arc going from a source node to an end node
-     * Note : A call to this method with an unexisting arc will throw a null pointer exception
+     * Returns the cost of an existing arcView going from a source node to an end node
+     * Note : A call to this method with an unexisting arcView will throw a null pointer exception
      * @param source Source node
      * @param target Target node
-     * @return The cost of an arc
+     * @return The cost of an arcView
      */
     public int getCost(int source, int target) {
         return findArc(source, target).getCost();
@@ -203,11 +203,11 @@ public class Network {
     }
 
     /**
-     * Loads an arc from a given XML element
+     * Loads an arcView from a given XML element
      * @param xmlElement the node's element
      * @param from the leaving node
      * @return
-     *  - the arc that has just been created
+     *  - the arcView that has just been created
      * @throws
      *  - UtilsException if failed with the reason why it has failed in it
      */
@@ -240,7 +240,7 @@ public class Network {
             Arc goingBackArc = to.findOutgoingTo(from);
 
             if (goingBackArc != null && !goingBackArc.getStreet().getName().equals(streetName)) {
-                throw new UtilsException("ne possede pas le meme nom de rue (\"" + streetName + "\") que l'arc " +
+                throw new UtilsException("ne possede pas le meme nom de rue (\"" + streetName + "\") que l'arcView " +
                         to.getId() + " a " + from.getId() + "(\"" + goingBackArc.getStreet().getName() + "\")");
             }
         }

@@ -1,4 +1,4 @@
-package View.MapPanel;
+package view.MapPanel;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -103,38 +103,38 @@ public class RenderContext {
     }
 
     /**
-     * Draws a given node
-     * @param node the node to draw
+     * Draws a given nodeView
+     * @param nodeView the nodeView to draw
      */
-    protected void drawNode(Node node) {
-        int x = node.getX() - streetThickness;
-        int y = node.getY() - streetThickness;
+    protected void drawNode(NodeView nodeView) {
+        int x = nodeView.getX() - streetThickness;
+        int y = nodeView.getY() - streetThickness;
 
         context.setColor(streetColor);
         context.fillOval(x, y, streetThickness * 2, streetThickness * 2);
     }
 
     /**
-     * Draws a given node's borders
-     * @param node the node to draw
+     * Draws a given nodeView's borders
+     * @param nodeView the nodeView to draw
      */
-    protected void drawNodeBorders(Node node) {
+    protected void drawNodeBorders(NodeView nodeView) {
         int nodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
-        int x = node.getX() - nodeRadius;
-        int y = node.getY() - nodeRadius;
+        int x = nodeView.getX() - nodeRadius;
+        int y = nodeView.getY() - nodeRadius;
 
-        context.setColor(node.getColor());
+        context.setColor(nodeView.getColor());
         context.fillOval(x, y, nodeRadius * 2, nodeRadius * 2);
     }
 
     /**
-     * Draws a given node's overlay (selection or delay)
-     * @param node the node to draw
+     * Draws a given nodeView's overlay (selection or delay)
+     * @param nodeView the nodeView to draw
      */
-    protected void drawNodeOverlay(Node node) {
-        if(node == mapPanel.selectedNode) {
+    protected void drawNodeOverlay(NodeView nodeView) {
+        if(nodeView == mapPanel.selectedNodeView) {
             context.setColor(streetSelectedNodeOverlay);
-        } else if(node.isDeliveryDelayed()) {
+        } else if(nodeView.isDeliveryDelayed()) {
             context.setColor(itineraryDelayedDeliveryColor);
         } else {
             return;
@@ -143,18 +143,18 @@ public class RenderContext {
         int overlayNodeRadius = streetNodeRadius + (int)((double)streetBorderThickness / modelViewScaleFactor);
         overlayNodeRadius += (int)Math.ceil((double)streetSelectedNodeRadiusPx / modelViewScaleFactor);
 
-        int x = node.getX() - overlayNodeRadius;
-        int y = node.getY() - overlayNodeRadius;
+        int x = nodeView.getX() - overlayNodeRadius;
+        int y = nodeView.getY() - overlayNodeRadius;
 
         context.fillOval(x, y, overlayNodeRadius * 2, overlayNodeRadius * 2);
     }
 
     /**
-     * Draws a given arc
-     * @param arc the arc to draw
+     * Draws a given arcView
+     * @param arcView the arcView to draw
      */
-    protected void drawArc(Arc arc) {
-        ArcInfo arcInfo = arcInfo(arc);
+    protected void drawArc(ArcView arcView) {
+        ArcInfo arcInfo = arcInfo(arcView);
 
         context.setColor(streetColor);
 
@@ -162,13 +162,13 @@ public class RenderContext {
     }
 
     /**
-     * Draws a street name for a given arc
-     * @param arc the arc you want to draw the street
+     * Draws a street name for a given arcView
+     * @param arcView the arcView you want to draw the street
      */
-    protected void drawArcStreetName(Arc arc) {
-        ArcInfo arcInfo = arcInfo(arc);
+    protected void drawArcStreetName(ArcView arcView) {
+        ArcInfo arcInfo = arcInfo(arcView);
 
-        Model.City.Street street = arc.getModelStreet();
+        model.City.Street street = arcView.getModelStreet();
 
         Font previousFont = context.getFont();
 
@@ -181,8 +181,8 @@ public class RenderContext {
             return;
         }
 
-        int centerX = (arcInfo.x1 + arc.getNode2().getX()) / 2;
-        int centerY = (arcInfo.y1 + arc.getNode2().getY()) / 2;
+        int centerX = (arcInfo.x1 + arcView.getNode2().getX()) / 2;
+        int centerY = (arcInfo.y1 + arcView.getNode2().getY()) / 2;
 
         double angle = arcInfo.angle;
         int streetNameYOffset = 2 * streetThickness;
@@ -212,27 +212,27 @@ public class RenderContext {
      * Draws a streets and nodes' borders
      */
     protected void drawBorders() {
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+        for(Map.Entry<Integer, Map<Integer, ArcView>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, ArcView> entry : entryTree.getValue().entrySet()) {
                 drawArcBorders(entry.getValue());
             }
         }
 
-        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
-            Node node = entry.getValue();
+        for(Map.Entry<Integer, NodeView> entry : mapPanel.nodes.entrySet()) {
+            NodeView nodeView = entry.getValue();
 
-            if(node != mapPanel.selectedNode) {
-                drawNodeOverlay(node);
+            if(nodeView != mapPanel.selectedNodeView) {
+                drawNodeOverlay(nodeView);
             }
         }
 
-        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
+        for(Map.Entry<Integer, NodeView> entry : mapPanel.nodes.entrySet()) {
             drawNodeBorders(entry.getValue());
         }
 
-        if(mapPanel.selectedNode != null) {
-            drawNodeOverlay(mapPanel.selectedNode);
-            drawNodeBorders(mapPanel.selectedNode);
+        if(mapPanel.selectedNodeView != null) {
+            drawNodeOverlay(mapPanel.selectedNodeView);
+            drawNodeBorders(mapPanel.selectedNodeView);
         }
     }
 
@@ -240,18 +240,18 @@ public class RenderContext {
      * Draws streets
      */
     protected void drawStreets() {
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+        for(Map.Entry<Integer, Map<Integer, ArcView>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, ArcView> entry : entryTree.getValue().entrySet()) {
                 drawArc(entry.getValue());
             }
         }
 
-        for(Map.Entry<Integer, Node> entry : mapPanel.nodes.entrySet()) {
+        for(Map.Entry<Integer, NodeView> entry : mapPanel.nodes.entrySet()) {
             drawNode(entry.getValue());
         }
 
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+        for(Map.Entry<Integer, Map<Integer, ArcView>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, ArcView> entry : entryTree.getValue().entrySet()) {
                 drawArcItinerary(entry.getValue());
             }
         }
@@ -261,19 +261,19 @@ public class RenderContext {
      * Draws a street names
      */
     protected void drawStreetNames() {
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : mapPanel.arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+        for(Map.Entry<Integer, Map<Integer, ArcView>> entryTree : mapPanel.arcs.entrySet()) {
+            for(Map.Entry<Integer, ArcView> entry : entryTree.getValue().entrySet()) {
                 drawArcStreetName(entry.getValue());
             }
         }
     }
 
     /**
-     * Draws a given arc
-     * @param arc the arc to draw
+     * Draws a given arcView
+     * @param arcView the arcView to draw
      */
-    protected void drawArcBorders(Arc arc) {
-        ArcInfo arcInfo = arcInfo(arc);
+    protected void drawArcBorders(ArcView arcView) {
+        ArcInfo arcInfo = arcInfo(arcView);
 
         if(arcInfo.isBidirectional()) {
             arcInfo.thickness += (double)streetBorderThickness / modelViewScaleFactor;
@@ -287,11 +287,11 @@ public class RenderContext {
     }
 
     /**
-     * Draws the given arc's itinerary
-     * @param arc the arc to draw
+     * Draws the given arcView's itinerary
+     * @param arcView the arcView to draw
      */
-    protected void drawArcItinerary(Arc arc) {
-        ArcInfo arcInfo = arcInfo(arc);
+    protected void drawArcItinerary(ArcView arcView) {
+        ArcInfo arcInfo = arcInfo(arcView);
 
         AffineTransform previousTransform = context.getTransform();
 
@@ -386,23 +386,23 @@ public class RenderContext {
     }
 
     /**
-     * Generates Arc's rendering informations
-     * @param arc the given arc we want to render
+     * Generates ArcView's rendering informations
+     * @param arcView the given arcView we want to render
      * @return an ArcInfo structure containing all informations
      */
-    private ArcInfo arcInfo(Arc arc) {
+    private ArcInfo arcInfo(ArcView arcView) {
         ArcInfo arcInfo = new ArcInfo();
 
-        arcInfo.arc = arc;
+        arcInfo.arcView = arcView;
 
-        Node node1 = arc.getNode1();
-        Node node2 = arc.getNode2();
+        NodeView nodeView1 = arcView.getNode1();
+        NodeView nodeView2 = arcView.getNode2();
 
-        arcInfo.x1 = node1.getX();
-        arcInfo.y1 = node1.getY();
+        arcInfo.x1 = nodeView1.getX();
+        arcInfo.y1 = nodeView1.getY();
 
-        int nx = node2.getX() - arcInfo.x1;
-        int ny = node2.getY() - arcInfo.y1;
+        int nx = nodeView2.getX() - arcInfo.x1;
+        int ny = nodeView2.getY() - arcInfo.y1;
 
         arcInfo.angle = Math.atan2((double)ny, (double)nx);
         arcInfo.length = Math.sqrt((double)(nx * nx + ny * ny));
@@ -412,8 +412,8 @@ public class RenderContext {
     }
 
     /**
-     * Draws the given arc info
-     * @param arcInfo the arc's information to draw
+     * Draws the given arcView info
+     * @param arcInfo the arcView's information to draw
      * @param drawMarks boolean to say if you want to draw street marks
      */
     private void drawArcInfo(ArcInfo arcInfo, boolean drawMarks) {
@@ -459,8 +459,8 @@ public class RenderContext {
     }
 
     /**
-     * Draws arc's itinerary symbols
-     * @param arcInfo the arc's drawing information
+     * Draws arcView's itinerary symbols
+     * @param arcInfo the arcView's drawing information
      * @param arcLeaving the leaving node
      */
     private void drawModelArcItinerary(ArcInfo arcInfo, int arcLeaving) {
@@ -469,7 +469,7 @@ public class RenderContext {
         int arrow2X[] = { -itineraryThickness / 2, itineraryThickness / 2, itineraryThickness / 2 };
         int arrow2Y[] = { 0, -itineraryThickness / 2, +itineraryThickness / 2 };
 
-        java.util.List<Color> itineraryColors = arcInfo.arc.getItineraryColorsFrom(arcLeaving);
+        java.util.List<Color> itineraryColors = arcInfo.arcView.getItineraryColorsFrom(arcLeaving);
 
         if(itineraryColors.isEmpty()) {
             return;
@@ -484,14 +484,14 @@ public class RenderContext {
         double x = 0.5 * (arcInfo.length - (double)(dotCount - 1) * (double)itineraryDotDistance);
 
         AffineTransform previousTransform = context.getTransform();
-        Iterator<Color> colorsIt = arcInfo.arc.getItineraryColorsFrom(arcLeaving).iterator();
+        Iterator<Color> colorsIt = arcInfo.arcView.getItineraryColorsFrom(arcLeaving).iterator();
 
         for(int i = 0; i < dotCount; i++) {
             context.translate(x, yOffset);
             context.setColor(colorsIt.next());
 
             if(!colorsIt.hasNext()) {
-                colorsIt = arcInfo.arc.getItineraryColorsFrom(arcLeaving).iterator();
+                colorsIt = arcInfo.arcView.getItineraryColorsFrom(arcLeaving).iterator();
             }
 
             if(arcLeaving == 2) {
@@ -507,35 +507,35 @@ public class RenderContext {
     }
 
     /**
-     * Arc rendering information
+     * ArcView rendering information
      */
     private class ArcInfo {
-        /** the view arc */
-        public Arc arc;
+        /** the view arcView */
+        public ArcView arcView;
 
-        /** the arc angle */
+        /** the arcView angle */
         public double angle;
 
-        /** the arc view length (between the two nodes) in px */
+        /** the arcView view length (between the two nodes) in px */
         public double length;
 
-        /** the arc's thickness in px */
+        /** the arcView's thickness in px */
         public double thickness;
 
-        /** the arc's start X position on screen in px */
+        /** the arcView's start X position on screen in px */
         public int x1;
 
-        /** the arc's start Y position on screen in px */
+        /** the arcView's start Y position on screen in px */
         public int y1;
 
         /**
-         * Tests if the arc is a bidirectonal arc
+         * tests if the arcView is a bidirectonal arcView
          * @return
-         *  - true if it is a bidirectional arc
-         *  - false if it is an unidirectional arc
+         *  - true if it is a bidirectional arcView
+         *  - false if it is an unidirectional arcView
          */
         public boolean isBidirectional() {
-            return (arc.getModelArcFrom1To2() != null && arc.getModelArcFrom2To1() != null);
+            return (arcView.getModelArcFrom1To2() != null && arcView.getModelArcFrom2To1() != null);
         }
     }
 

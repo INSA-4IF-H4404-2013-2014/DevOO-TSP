@@ -1,6 +1,6 @@
-package Tests.City;
+package tests.City;
 
-import Model.City.*;
+import model.City.*;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;

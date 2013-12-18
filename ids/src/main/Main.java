@@ -1,4 +1,6 @@
-import Controller.MainWindowController;
+package main;
+
+import controller.MainWindowController;
 
 public class Main {
     public static void main ( String[] args) {

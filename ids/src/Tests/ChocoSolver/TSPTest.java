@@ -1,13 +1,13 @@
-package Tests.ChocoSolver;
+package tests.ChocoSolver;
 import static org.junit.Assert.*;
 
-import Model.ChocoSolver.ChocoGraph;
-import Model.ChocoSolver.Graph;
-import Model.ChocoSolver.SolutionState;
-import Model.ChocoSolver.TSP;
-import Model.City.Network;
-import Model.Delivery.Round;
-import Utils.UtilsException;
+import model.ChocoSolver.ChocoGraph;
+import model.ChocoSolver.Graph;
+import model.ChocoSolver.SolutionState;
+import model.ChocoSolver.TSP;
+import model.City.Network;
+import model.Delivery.Round;
+import utils.UtilsException;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;

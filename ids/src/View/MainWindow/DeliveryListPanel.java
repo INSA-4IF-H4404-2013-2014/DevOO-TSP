@@ -1,13 +1,11 @@
-package View.MainWindow;
+package view.MainWindow;
 
-import Controller.MainWindowController;
-import Model.Delivery.Delivery;
-import View.Utils;
+import controller.MainWindowController;
+import model.Delivery.Delivery;
+import view.Utils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Vector;
 

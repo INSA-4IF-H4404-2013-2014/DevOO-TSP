@@ -1,8 +1,6 @@
-package Controller.Command;
+package controller.Command;
 
-import Controller.MainWindowController;
-import Model.Delivery.Round;
-import View.MainWindow.MainWindow;
+import controller.MainWindowController;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +12,7 @@ import View.MainWindow.MainWindow;
 public class Command {
 
     /** controller to apply the command */
-    Controller.MainWindowController controller;
+    controller.MainWindowController controller;
 
     /**
      * Apply the command

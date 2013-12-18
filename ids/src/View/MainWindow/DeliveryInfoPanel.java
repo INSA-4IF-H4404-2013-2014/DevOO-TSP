@@ -1,14 +1,13 @@
-package View.MainWindow;
+package view.MainWindow;
 
-import Model.ChocoSolver.CalculatedRound;
-import Model.City.Node;
-import Model.Delivery.Delivery;
+import model.ChocoSolver.CalculatedRound;
+import model.City.Node;
+import model.Delivery.Delivery;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
@@ -124,13 +123,13 @@ public class DeliveryInfoPanel extends JPanel {
      * @param b whether to enable or disable the fields
      */
     private void setEnableAllFields(boolean b) {
-        View.Utils.enableJTextField(deliveryID, b);
-        View.Utils.enableJTextField(timeFrameBegin, b);
-        View.Utils.enableJTextField(timeFrameEnd, b);
-        View.Utils.enableJTextField(clientName, b);
-        View.Utils.enableJTextField(address, b);
-        View.Utils.enableJTextField(deliveryTime, b);
-        View.Utils.enableJTextField(delay, b);
+        view.Utils.enableJTextField(deliveryID, b);
+        view.Utils.enableJTextField(timeFrameBegin, b);
+        view.Utils.enableJTextField(timeFrameEnd, b);
+        view.Utils.enableJTextField(clientName, b);
+        view.Utils.enableJTextField(address, b);
+        view.Utils.enableJTextField(deliveryTime, b);
+        view.Utils.enableJTextField(delay, b);
     }
 
     /**

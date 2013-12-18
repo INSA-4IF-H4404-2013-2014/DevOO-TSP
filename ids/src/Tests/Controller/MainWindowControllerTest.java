@@ -1,6 +1,6 @@
-package Tests.Controller;
+package tests.Controller;
 
-import Controller.MainWindowController;
+import controller.MainWindowController;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;

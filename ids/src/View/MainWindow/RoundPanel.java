@@ -1,12 +1,11 @@
-package View.MainWindow;
+package view.MainWindow;
 
-import Model.ChocoSolver.CalculatedRound;
+import model.ChocoSolver.CalculatedRound;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
 import java.text.SimpleDateFormat;
 
 /**
@@ -154,12 +153,12 @@ public class RoundPanel extends JPanel {
      * @param b whether to enable or disable the fields
      */
     private void setEnableAllFields(boolean b) {
-        View.Utils.enableJTextField(deliveryCount, b);
-        View.Utils.enableJTextField(startTime, b);
-        View.Utils.enableJTextField(endTime, b);
-        View.Utils.enableJTextField(duration, b);
-        View.Utils.enableJTextField(delay, b);
-        View.Utils.enableJTextField(distance, b);
+        view.Utils.enableJTextField(deliveryCount, b);
+        view.Utils.enableJTextField(startTime, b);
+        view.Utils.enableJTextField(endTime, b);
+        view.Utils.enableJTextField(duration, b);
+        view.Utils.enableJTextField(delay, b);
+        view.Utils.enableJTextField(distance, b);
     }
 
     /**

@@ -1,9 +1,9 @@
-package Tests.Delivery;
+package tests.Delivery;
 
-import Model.City.Network;
-import Model.Delivery.Round;
-import Model.Delivery.Schedule;
-import Utils.UtilsException;
+import model.City.Network;
+import model.Delivery.Round;
+import model.Delivery.Schedule;
+import utils.UtilsException;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -54,7 +54,7 @@ public class RoundXMLTest {
 
     /**
      * Checks that a set of invalid XML delivery files cannot be parsed
-     * @throws Utils.UtilsException If the network parser fails
+     * @throws utils.UtilsException If the network parser fails
      */
     @Test
     public void testInvalidCreate() throws UtilsException, FileNotFoundException {

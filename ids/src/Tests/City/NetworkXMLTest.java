@@ -1,14 +1,11 @@
-package Tests.City;
+package tests.City;
 
 
-import Model.City.Arc;
-import Model.City.Network;
-import Model.City.Node;
-import Model.Delivery.Round;
-import Utils.UtilsException;
+import model.City.Arc;
+import model.City.Network;
+import model.City.Node;
+import utils.UtilsException;
 import org.junit.Test;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -72,7 +69,7 @@ public class NetworkXMLTest {
     }
 
     /**
-     * Tests all xml
+     * tests all xml
      * @throws UtilsException
      */
     @Test

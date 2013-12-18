@@ -1,12 +1,9 @@
-package Tests.ChocoSolver;
+package tests.ChocoSolver;
 
-import Model.ChocoSolver.ChocoDelivery;
-import Model.ChocoSolver.ChocoGraph;
-import Model.City.Network;
-import Model.City.Node;
-import Model.Delivery.Round;
-import Model.ChocoSolver.ChocoGraph;
-import Utils.UtilsException;
+import model.ChocoSolver.ChocoGraph;
+import model.City.Network;
+import model.Delivery.Round;
+import utils.UtilsException;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,7 +23,7 @@ import static org.junit.Assert.fail;
  */
 public class ChocoGraphTest {
     /**
-     * Tests the creation of a choco graph and checks that this one is correct
+     * tests the creation of a choco graph and checks that this one is correct
      * @throws UtilsException
      * @throws FileNotFoundException
      * @throws ParserConfigurationException

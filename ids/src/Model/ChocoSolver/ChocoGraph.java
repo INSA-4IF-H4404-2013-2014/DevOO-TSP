@@ -1,24 +1,24 @@
-package Model.ChocoSolver;
+package model.ChocoSolver;
 
-import Model.City.Arc;
-import Model.City.Network;
-import Model.City.Node;
-import Model.Delivery.Delivery;
-import Model.Delivery.Itinerary;
-import Model.Delivery.Round;
-import Model.Delivery.Schedule;
+import model.City.Arc;
+import model.City.Network;
+import model.City.Node;
+import model.Delivery.Delivery;
+import model.Delivery.Itinerary;
+import model.Delivery.Round;
+import model.Delivery.Schedule;
 
 import java.util.*;
 
 /**
  * @author Rémi Domingues
  * This class aims at creating a graph defined as follow, from a network parsed from an XML file :
- * - Node : warehouse and delivery node from the XML network
- * - Arc : shortest path from a delivery/warehouse node to an other delivery/warehouse node
+ * - NodeView : warehouse and delivery node from the XML network
+ * - ArcView : shortest path from a delivery/warehouse node to an other delivery/warehouse node
  */
 public class ChocoGraph implements Graph {
     /**
-     * Node information used by the Dijkstra algorithm
+     * NodeView information used by the Dijkstra algorithm
      * */
     class NodeInfo {
         /** true if the node has been visited by Dijkstra, false else */
@@ -47,16 +47,16 @@ public class ChocoGraph implements Graph {
     /** The number of verticies (warehouse included) of the choco graph */
 	private int nbVertices;
 
-    /** The maximal arc cost in this graph */
+    /** The maximal arcView cost in this graph */
 	private int maxArcCost;
 
-    /** The minimal arc cost in this graph */
+    /** The minimal arcView cost in this graph */
 	private int minArcCost;
 
     /**
      * A cost matrix
-     * cost[i][j] is the cost of the(i,j) arc (from i to j)
-     * If an arc does not exist, the cost is maxArcCost + 1
+     * cost[i][j] is the cost of the(i,j) arcView (from i to j)
+     * If an arcView does not exist, the cost is maxArcCost + 1
      */
 	private int[][] cost;
 
@@ -83,7 +83,7 @@ public class ChocoGraph implements Graph {
 
         cost = new int[nbVertices][];
 
-        //Initializing cost matrix and calculating max arc cost
+        //Initializing cost matrix and calculating max arcView cost
         //Unexisting arcs are initialized with -1
         for(int i = 0; i < nbVertices; ++i) {
             cost[i] = new int[nbVertices];
@@ -173,7 +173,7 @@ public class ChocoGraph implements Graph {
      * Initializes the warehouse's successors (every delivery node of the first schedule)
      * and its itineraries (choco arcs) using Dijkstra
      * @param network The initial network
-     * @param dict Node information dictionary used by Dijkstra
+     * @param dict NodeView information dictionary used by Dijkstra
      * @param schedules A temporary schedules list
      * @param warehouse The warehouse
      * @return The first schedule of the round
@@ -199,7 +199,7 @@ public class ChocoGraph implements Graph {
      * For each delivery node of each schedule of the round, its successors (every delivery node of the same and next schedule)
      * and its itineraries (choco arcs) are initialized using Dijkstra
      * @param network The initial network
-     * @param dict Node information dictionary used by Dijkstra
+     * @param dict NodeView information dictionary used by Dijkstra
      * @param schedules A temporary schedules list
      * @param currentSchedule The first schedule of the round
      * @return The last schedule of the round
@@ -238,7 +238,7 @@ public class ChocoGraph implements Graph {
      * For each delivery node of the last schedule of the round, its successors (every delivery node of the same schedule and the warehouse)
      * and its itineraries (choco arcs) are initialized using Dijkstra
      * @param network The initial network
-     * @param dict Node information dictionary used by Dijkstra
+     * @param dict NodeView information dictionary used by Dijkstra
      * @param lastSchedule The last schedule of the round
      * @param warehouse The warehouse
      */
@@ -401,7 +401,7 @@ public class ChocoGraph implements Graph {
      * any node of the network
      * Note : for calculation time reasons, this algorithm is stopped as soon as we have found the shortest path of every
      * node in the succ list
-     * @param network The network containing every node and arc
+     * @param network The network containing every node and arcView
      * @param source The source node. Every shortest path will go from this node to any node
      * @param succ This list must contains warehouse/delivery node IDs. The search will be stopped when a shortest path
      *             from the source to every successors has been found
@@ -516,7 +516,7 @@ public class ChocoGraph implements Graph {
     }
 
     /**
-     * Returns the maximal arc cost of the choco graph
+     * Returns the maximal arcView cost of the choco graph
      * @return @See description
      */
     public int getMaxArcCost() {
@@ -524,7 +524,7 @@ public class ChocoGraph implements Graph {
 	}
 
     /**
-     * Returns the minimal arc cost of the choco graph
+     * Returns the minimal arcView cost of the choco graph
      * @return @See description
      */
 	public int getMinArcCost() {
@@ -542,8 +542,8 @@ public class ChocoGraph implements Graph {
 
     /**
      * Returns the cost matrix of the graph
-     * cost[i][j] is the cost of the(i,j) arc (from i to j)
-     * If an arc does not exist, the cost is maxArcCost + 1
+     * cost[i][j] is the cost of the(i,j) arcView (from i to j)
+     * If an arcView does not exist, the cost is maxArcCost + 1
      * @return @See description
      */
 	public int[][] getCost(){

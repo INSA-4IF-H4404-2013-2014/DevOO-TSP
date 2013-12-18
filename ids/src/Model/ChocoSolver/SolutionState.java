@@ -1,4 +1,4 @@
-package Model.ChocoSolver;
+package model.ChocoSolver;
 
 /**
  * @author Christine Solnon

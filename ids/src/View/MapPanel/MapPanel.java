@@ -1,8 +1,8 @@
-package View.MapPanel;
+package view.MapPanel;
 
-import Model.ChocoSolver.CalculatedRound;
-import Model.City.Network;
-import Model.Delivery.Itinerary;
+import model.ChocoSolver.CalculatedRound;
+import model.City.Network;
+import model.Delivery.Itinerary;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,10 +26,10 @@ public class MapPanel extends JPanel {
     CalculatedRound modelRound;
 
     /** nodes map */
-    protected Map<Integer,Node> nodes;
+    protected Map<Integer,NodeView> nodes;
 
     /** arcs map */
-    protected Map<Integer,Map<Integer,Arc>> arcs;
+    protected Map<Integer,Map<Integer,ArcView>> arcs;
 
     /** view's center pos in the model basis */
     protected Point modelCenterPos;
@@ -47,7 +47,7 @@ public class MapPanel extends JPanel {
     private boolean fittedScaleFactor;
 
     /** selected node */
-    protected Node selectedNode;
+    protected NodeView selectedNodeView;
 
     /** node event listener */
     private NodeListener nodeEventListener;
@@ -56,8 +56,8 @@ public class MapPanel extends JPanel {
      * Constructor
      */
     public MapPanel() {
-        this.nodes = new HashMap<Integer,Node>();
-        this.arcs = new HashMap<Integer,Map<Integer,Arc>>();
+        this.nodes = new HashMap<Integer,NodeView>();
+        this.arcs = new HashMap<Integer,Map<Integer,ArcView>>();
         this.modelCenterPos = new Point();
         this.modelMinPos = new Point();
         this.modelMaxPos = new Point();
@@ -106,19 +106,19 @@ public class MapPanel extends JPanel {
                 int minDistancePow = Math.max(modelMaxPos.x - modelMinPos.x, modelMaxPos.y - modelMinPos.y);
                 minDistancePow *= minDistancePow;
 
-                Model.City.Node nearestNode = null;
+                model.City.Node nearestNode = null;
 
-                for (Map.Entry<Integer, Node> entry : panel.nodes.entrySet()) {
-                    Node node = entry.getValue();
+                for (Map.Entry<Integer, NodeView> entry : panel.nodes.entrySet()) {
+                    NodeView nodeView = entry.getValue();
 
-                    int dx = node.getX() - x;
-                    int dy = node.getY() - y;
+                    int dx = nodeView.getX() - x;
+                    int dy = nodeView.getY() - y;
 
                     int distancePow = dx * dx + dy * dy;
 
                     if (distancePow < minDistancePow) {
                         minDistancePow = distancePow;
-                        nearestNode = node.getModelNode();
+                        nearestNode = nodeView.getModelNode();
                     }
                 }
 
@@ -174,7 +174,7 @@ public class MapPanel extends JPanel {
     public void setModel(Network network) {
         modelNetwork = network;
         modelRound = null;
-        selectedNode = null;
+        selectedNodeView = null;
 
         this.refreshNodeAndArcs();
     }
@@ -195,23 +195,23 @@ public class MapPanel extends JPanel {
      * Gets the currently selected node
      * @return the model selected node or null if any are selected
      */
-    public Model.City.Node getSelectedNode() {
-        if(selectedNode == null) {
+    public model.City.Node getSelectedNodeView() {
+        if(selectedNodeView == null) {
             return null;
         }
 
-        return selectedNode.getModelNode();
+        return selectedNodeView.getModelNode();
     }
 
     /**
-     * Sets the currently selected node. This assumes that selectedNode is in the current model
+     * Sets the currently selected node. This assumes that selectedNodeView is in the current model
      */
-    public void setSelectedNode(Model.City.Node node) {
+    public void setSelectedNodeView(model.City.Node node) {
         if(node == null) {
-            selectedNode = null;
+            selectedNodeView = null;
         } else {
             int nodeId = node.getId();
-            selectedNode = this.findNode(nodeId);
+            selectedNodeView = this.findNode(nodeId);
         }
 
         this.repaint();
@@ -310,7 +310,7 @@ public class MapPanel extends JPanel {
      * Center the view on a model node
      * @param node the node we want to center on
      */
-    public void centerOn(Model.City.Node node) {
+    public void centerOn(model.City.Node node) {
         centerOn(node, getModelViewScaleFactor());
     }
 
@@ -319,7 +319,7 @@ public class MapPanel extends JPanel {
      * @param node the node we want to center on
      * @param scaleFactor the scale factor we want to apply
      */
-    public void centerOn(Model.City.Node node, double scaleFactor) {
+    public void centerOn(model.City.Node node, double scaleFactor) {
         double smallestScaleFactor = smallestScaleFactor();
 
         if (scaleFactor <= smallestScaleFactor || smallestScaleFactor > maxScaleFactor) {
@@ -336,11 +336,11 @@ public class MapPanel extends JPanel {
     }
 
     /**
-     * Tests if the node is visible on the view
+     * tests if the node is visible on the view
      * @param node the node we want to test
      * @return true if node is visible, false elsewhere
      */
-    public boolean isVisible(Model.City.Node node) {
+    public boolean isVisible(model.City.Node node) {
         int x = viewCoordinateX(node.getX());
         int y = viewCoordinateY(node.getY());
 
@@ -424,26 +424,26 @@ public class MapPanel extends JPanel {
      *  - null not found
      *  - the view node
      */
-    protected Node findNode(int nodeId) {
+    protected NodeView findNode(int nodeId) {
         return nodes.get(nodeId);
     }
 
     /**
-     * Gets a view arc from two nodes' id
+     * Gets a view arcView from two nodes' id
      * @param from a node id
      * @param to an other node id
      * @return
-     *  - null if no arc exists between the given nodes
-     *  - the arc if found
+     *  - null if no arcView exists between the given nodes
+     *  - the arcView if found
      */
-    protected Arc findArc(int from, int to) {
+    protected ArcView findArc(int from, int to) {
         if (to < from) {
             int temp = to;
             to = from;
             from = temp;
         }
 
-        Map<Integer,Arc> tree = arcs.get(from);
+        Map<Integer,ArcView> tree = arcs.get(from);
 
         if (tree == null) {
             return null;
@@ -469,8 +469,8 @@ public class MapPanel extends JPanel {
         modelMaxPos.x = -0x7FFFFFFF;
         modelMaxPos.y = -0x7FFFFFFF;
 
-        for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
-            Model.City.Node modelNode = entry.getValue();
+        for(Map.Entry<Integer, model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
+            model.City.Node modelNode = entry.getValue();
 
             int x = modelNode.getX();
             int y = modelNode.getY();
@@ -495,15 +495,15 @@ public class MapPanel extends JPanel {
 
         refreshModelMinMax();
 
-        for(Map.Entry<Integer,Model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
-            Model.City.Node modelNode = entry.getValue();
+        for(Map.Entry<Integer, model.City.Node> entry : modelNetwork.getNodes().entrySet()) {
+            model.City.Node modelNode = entry.getValue();
 
-            Node node = new Node(this, modelNode);
+            NodeView nodeView = new NodeView(this, modelNode);
 
-            nodes.put(entry.getValue().getId(), node);
+            nodes.put(entry.getValue().getId(), nodeView);
         }
 
-        for(Model.City.Arc modelArc : modelNetwork.getArcs()) {
+        for(model.City.Arc modelArc : modelNetwork.getArcs()) {
             int from = modelArc.getFrom().getId();
             int to = modelArc.getTo().getId();
 
@@ -517,16 +517,16 @@ public class MapPanel extends JPanel {
                 continue;
             }
 
-            Arc arc = new Arc(this, modelArc);
+            ArcView arcView = new ArcView(this, modelArc);
 
-            Map<Integer,Arc> tree = arcs.get(from);
+            Map<Integer,ArcView> tree = arcs.get(from);
 
             if (arcs.get(from) == null) {
-                tree = new HashMap<Integer,Arc>();
+                tree = new HashMap<Integer,ArcView>();
                 arcs.put(from, tree);
             }
 
-            tree.put(to, arc);
+            tree.put(to, arcView);
         }
 
         this.fitToView();
@@ -536,7 +536,7 @@ public class MapPanel extends JPanel {
      * Refreshes view's nodes' deliveries from the calculated round
      */
     private void refreshNodesDeliveries() {
-        for(Map.Entry<Integer, Node> entry : nodes.entrySet()) {
+        for(Map.Entry<Integer, NodeView> entry : nodes.entrySet()) {
             entry.getValue().setColor(RenderContext.streetBorderColor);
             entry.getValue().setDeliveryDelayed(false);
         }
@@ -554,12 +554,12 @@ public class MapPanel extends JPanel {
         int colorId = RenderContext.itineraryColors.length - 1;
 
         for(int deliveryNodeId : deliveryNodesId) {
-            Node node = findNode(deliveryNodeId);
+            NodeView nodeView = findNode(deliveryNodeId);
 
-            node.setColor(RenderContext.itineraryColors[colorId]);
+            nodeView.setColor(RenderContext.itineraryColors[colorId]);
 
             if(modelRound.isDelayed(deliveryNodeId)) {
-                node.setDeliveryDelayed(true);
+                nodeView.setDeliveryDelayed(true);
             }
 
             colorId++;
@@ -576,8 +576,8 @@ public class MapPanel extends JPanel {
      * Refreshes view's arcs' itineraries from the calculated round
      */
     private void refreshArcsItineraries() {
-        for(Map.Entry<Integer, Map<Integer, Arc>> entryTree : arcs.entrySet()) {
-            for(Map.Entry<Integer, Arc> entry : entryTree.getValue().entrySet()) {
+        for(Map.Entry<Integer, Map<Integer, ArcView>> entryTree : arcs.entrySet()) {
+            for(Map.Entry<Integer, ArcView> entry : entryTree.getValue().entrySet()) {
                 entry.getValue().resetItineraryColors();
             }
         }
@@ -589,16 +589,16 @@ public class MapPanel extends JPanel {
         int colorId = 0;
 
         for(Itinerary modelItinerary : modelRound.getOrderedItineraries()) {
-            for(Model.City.Arc modelArc : modelItinerary.getArcs()) {
+            for(model.City.Arc modelArc : modelItinerary.getArcs()) {
                 int from = modelArc.getFrom().getId();
                 int to = modelArc.getTo().getId();
 
-                Arc arc = findArc(from, to);
+                ArcView arcView = findArc(from, to);
 
-                if (arc.getNode1().getModelNode() == modelArc.getFrom()) {
-                    arc.getItineraryColorsFrom(1).add(RenderContext.itineraryColors[colorId]);
+                if (arcView.getNode1().getModelNode() == modelArc.getFrom()) {
+                    arcView.getItineraryColorsFrom(1).add(RenderContext.itineraryColors[colorId]);
                 } else {
-                    arc.getItineraryColorsFrom(2).add(RenderContext.itineraryColors[colorId]);
+                    arcView.getItineraryColorsFrom(2).add(RenderContext.itineraryColors[colorId]);
                 }
             }
 

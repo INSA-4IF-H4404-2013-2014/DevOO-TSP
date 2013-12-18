@@ -1,23 +1,13 @@
-package Tests.Delivery;
+package tests.Delivery;
 
-import Model.City.Arc;
-import Model.City.Network;
-import Model.City.Node;
-import Model.Delivery.Delivery;
-import Model.Delivery.Round;
-import Model.Delivery.Schedule;
-import Tests.City.NetworkTest;
-import Utils.UtilsException;
-import org.junit.Test;
+import model.City.Network;
+import model.Delivery.Round;
+import model.Delivery.Schedule;
+import utils.UtilsException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;

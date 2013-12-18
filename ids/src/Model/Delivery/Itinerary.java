@@ -1,7 +1,7 @@
-package Model.Delivery;
+package model.Delivery;
 
-import Model.City.Arc;
-import Model.City.Node;
+import model.City.Arc;
+import model.City.Node;
 
 import java.util.List;
 
@@ -34,8 +34,8 @@ public class Itinerary {
     }
 
     /**
-     * Adds and arc at the end of the itinerary
-     * @param arc the arc to add
+     * Adds and arcView at the end of the itinerary
+     * @param arc the arcView to add
      */
     public void addArc(Arc arc)
     {

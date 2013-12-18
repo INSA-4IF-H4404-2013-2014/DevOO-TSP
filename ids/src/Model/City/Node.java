@@ -1,8 +1,4 @@
-package Model.City;
-
-import Utils.Utils;
-import Utils.UtilsException;
-import org.w3c.dom.Element;
+package model.City;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -90,11 +86,11 @@ public class Node {
     }
 
     /**
-     * Gets the outgoing arc to a given node id
+     * Gets the outgoing arcView to a given node id
      * @param destinationId the destination node's id
      * @return
-     *  - null if no such arc exists
-     *  - the arc going to destination node
+     *  - null if no such arcView exists
+     *  - the arcView going to destination node
      */
     public Arc findOutgoingTo(int destinationId) {
         for(Arc outgoingArc : this.outgoing) {
@@ -107,11 +103,11 @@ public class Node {
     }
 
     /**
-     * Gets the outgoing arc to a given node
+     * Gets the outgoing arcView to a given node
      * @param node the destination node
      * @return
-     *  - null if no such arc exists
-     *  - the arc going to destination node
+     *  - null if no such arcView exists
+     *  - the arcView going to destination node
      */
     public Arc findOutgoingTo(Node node) {
         return findOutgoingTo(node.getId());
@@ -119,7 +115,7 @@ public class Node {
 
     /**
      * Returns true if an object is equals to the specified node, false else
-     * The object is equal if its class type is Node, and if its ID, X and Y coordinates are the same
+     * The object is equal if its class type is NodeView, and if its ID, X and Y coordinates are the same
      * @param o the object to compare to the current
      * @return @See description
      */

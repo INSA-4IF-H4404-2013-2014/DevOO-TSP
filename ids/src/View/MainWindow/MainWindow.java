@@ -1,11 +1,11 @@
-package View.MainWindow;
+package view.MainWindow;
 
-import Controller.MainWindowController;
-import Model.ChocoSolver.CalculatedRound;
-import Model.City.Network;
-import Model.Delivery.Delivery;
-import Model.Delivery.Round;
-import View.MapPanel.MapPanel;
+import controller.MainWindowController;
+import model.ChocoSolver.CalculatedRound;
+import model.City.Network;
+import model.Delivery.Delivery;
+import model.Delivery.Round;
+import view.MapPanel.MapPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

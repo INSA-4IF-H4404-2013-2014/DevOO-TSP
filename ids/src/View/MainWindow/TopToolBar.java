@@ -1,7 +1,6 @@
-package View.MainWindow;
+package view.MainWindow;
 
-import Controller.MainWindowController;
-import View.DeliveryDialog;
+import controller.MainWindowController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

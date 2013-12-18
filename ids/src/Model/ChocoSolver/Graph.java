@@ -1,4 +1,4 @@
-package Model.ChocoSolver;
+package model.ChocoSolver;
 
 /**
  * @author Christine Solnon
@@ -7,12 +7,12 @@ package Model.ChocoSolver;
 public interface Graph {
 
 	/**
-	 * @return the maximal cost of an arc of <code>this</code>
+	 * @return the maximal cost of an arcView of <code>this</code>
 	 */
 	public abstract int getMaxArcCost();
 
 	/**
-	 * @return the minimal cost of an arc of <code>this</code>
+	 * @return the minimal cost of an arcView of <code>this</code>
 	 */
 	public abstract int getMinArcCost();
 
@@ -23,7 +23,7 @@ public interface Graph {
 
 	/**
 	 * @return the <code>cost</code> matrix of <code>this</code>: for all vertices <code>i</code> and <code>j</code>,
-	 * if <code>(i,j)</code> is an arc of <code>this</code>, then <code>cost[i][j]</code> = cost of <code>(i,j)</code>, 
+	 * if <code>(i,j)</code> is an arcView of <code>this</code>, then <code>cost[i][j]</code> = cost of <code>(i,j)</code>,
 	 * otherwise <code>cost[i][j] = this.getMaxArcCost()+1</code>
 	 */
 	public abstract int[][] getCost();

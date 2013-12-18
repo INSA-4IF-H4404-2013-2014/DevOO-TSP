@@ -1,6 +1,4 @@
-package Model.Delivery;
-
-import Model.City.Node;
+package model.Delivery;
 
 import java.util.LinkedList;
 import java.util.List;

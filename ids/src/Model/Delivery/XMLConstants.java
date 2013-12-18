@@ -1,4 +1,4 @@
-package Model.Delivery;
+package model.Delivery;
 
 /**
  * Created with IntelliJ IDEA.

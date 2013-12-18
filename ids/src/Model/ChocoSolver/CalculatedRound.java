@@ -1,9 +1,9 @@
-package Model.ChocoSolver;
+package model.ChocoSolver;
 
-import Model.City.Arc;
-import Model.City.Node;
-import Model.Delivery.Delivery;
-import Model.Delivery.Itinerary;
+import model.City.Arc;
+import model.City.Node;
+import model.Delivery.Delivery;
+import model.Delivery.Itinerary;
 
 import java.util.*;
 
@@ -138,7 +138,7 @@ public class CalculatedRound {
     }
 
     /**
-     * Convert an Arc.Direction to an String directly usable in the HTML parser
+     * Convert an ArcView.Direction to an String directly usable in the HTML parser
      * @param direction the direction to translate
      * @return the translation
      */

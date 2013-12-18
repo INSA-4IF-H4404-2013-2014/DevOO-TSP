@@ -1,19 +1,12 @@
-package Controller;
+package controller;
 
-import Model.City.Node;
-import Model.Delivery.Client;
-import Model.Delivery.Delivery;
-import Model.Delivery.Schedule;
-import View.DeliveryDialog;
-import View.MainWindow.MainWindow;
+import model.Delivery.Client;
+import model.Delivery.Schedule;
+import view.DeliveryDialog;
+import view.MainWindow.MainWindow;
 
 import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -124,7 +117,7 @@ public class DeliveryDialogController {
             try{
                 Schedule schedule = new Schedule(begin, end);
                 int id = dialog.getParent().getRound().findAnId();
-                address = dialog.getParent().getMapPanel().getSelectedNode().getId();
+                address = dialog.getParent().getMapPanel().getSelectedNodeView().getId();
                 dialog.dispose();
                 this.addReady =true;
             }catch(Exception e){

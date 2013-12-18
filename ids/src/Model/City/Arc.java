@@ -1,4 +1,4 @@
-package Model.City;
+package model.City;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,19 +9,19 @@ package Model.City;
  */
 public class Arc {
 
-    /** the arc's street */
+    /** the arcView's street */
     private Street street;
 
-    /** the arc's leaving node */
+    /** the arcView's leaving node */
     private Node from;
 
-    /** the arc's destination node */
+    /** the arcView's destination node */
     private Node to;
 
-    /** the arc's length (in meters) */
+    /** the arcView's length (in meters) */
     private float length;
 
-    /** the arc's speed (in meters per seconds) */
+    /** the arcView's speed (in meters per seconds) */
     private float speed;
 
     /**
@@ -29,8 +29,8 @@ public class Arc {
      * @param street the street's name
      * @param from the node being leaved
      * @param to the destination node
-     * @param length the arc's length
-     * @param speed the arc's speed
+     * @param length the arcView's length
+     * @param speed the arcView's speed
      */
     protected Arc(Street street, Node from, Node to, float length, float speed) {
         this.street = street;
@@ -69,32 +69,32 @@ public class Arc {
     }
 
     /**
-     * Gets the arc's length
-     * @return the arc's length
+     * Gets the arcView's length
+     * @return the arcView's length
      */
     public float getLength() {
         return length;
     }
 
     /**
-     * Gets the arc's speed
-     * @return the arc's speed
+     * Gets the arcView's speed
+     * @return the arcView's speed
      */
     public float getSpeed() {
         return speed;
     }
 
     /**
-     * Get the arc's cost in seconds
-     * @return the arc's cost
+     * Get the arcView's cost in seconds
+     * @return the arcView's cost
      */
     public int getCost() {
         return (int) (length / speed);
     }
 
     /**
-     * Gets arc's direction angle
-     * @return the arc's orientation angle
+     * Gets arcView's direction angle
+     * @return the arcView's orientation angle
      *  - 0.0 is indicating the north
      *  - 90 is indicating the est
      *  - 180 is indicating the south
@@ -111,21 +111,21 @@ public class Arc {
     }
 
     /**
-     * Give the type of direction from an arc to another arc.
+     * Give the type of direction from an arcView to another arcView.
      */
     public enum Direction {
         GO_ON, KEEP_GOING, TURN_LEFT, TURN_RIGHT, TURN_BACK
     }
 
     /**
-     * Gets direction from this arc to the next given arc
-     * @param arc the next arc you are going
+     * Gets direction from this arcView to the next given arcView
+     * @param arc the next arcView you are going
      * @return
-     *  - Direction.TURN_BACK if arc is going backward
-     *  - Direction.KEEP_GOING if arc on the same street but not going backward
-     *  - Direction.GO_ON if arc
+     *  - Direction.TURN_BACK if arcView is going backward
+     *  - Direction.KEEP_GOING if arcView on the same street but not going backward
+     *  - Direction.GO_ON if arcView
      * @asserts
-     *  - arc in this.to.getOutgoing()
+     *  - arcView in this.to.getOutgoing()
      */
     public Direction getDirectionTo(Arc arc) {
         if(arc.getTo() == from) {

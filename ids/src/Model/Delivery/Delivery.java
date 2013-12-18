@@ -1,11 +1,9 @@
-package Model.Delivery;
+package model.Delivery;
 
-import Model.City.Network;
-import Model.City.Node;
+import model.City.Node;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.List;
 
 /**
  * @author H4404 - ABADIE Guillaume, BUISSON Nicolas, CREPET Louise, DOMINGUES Rémi, MARTIN Aline, WETTERWALD Martin

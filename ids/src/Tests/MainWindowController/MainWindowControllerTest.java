@@ -1,17 +1,16 @@
-package Tests.MainWindowController;
+package tests.MainWindowController;
 
-import Controller.Command.AddDelivery;
-import Controller.MainWindowController;
-import Model.City.Network;
-import Model.Delivery.Round;
-import Model.Delivery.Schedule;
-import Utils.UtilsException;
-import View.MainWindow.MainWindow;
+import controller.Command.AddDelivery;
+import controller.MainWindowController;
+import model.City.Network;
+import model.Delivery.Round;
+import model.Delivery.Schedule;
+import utils.UtilsException;
+import view.MainWindow.MainWindow;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 

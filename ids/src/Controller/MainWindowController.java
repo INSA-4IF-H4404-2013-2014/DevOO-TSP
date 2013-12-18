@@ -1,30 +1,27 @@
-package Controller;
+package controller;
 
-import Controller.Command.AddDelivery;
-import Controller.Command.Command;
-import Controller.Command.RemoveDelivery;
-import Model.ChocoSolver.*;
-import Model.City.Network;
-import Model.City.Node;
-import Model.Delivery.*;
+import controller.Command.AddDelivery;
+import controller.Command.Command;
+import controller.Command.RemoveDelivery;
+import model.ChocoSolver.*;
+import model.City.Network;
+import model.City.Node;
+import model.Delivery.*;
 
-import Utils.UtilsException;
-import Utils.XmlFileFilter;
+import utils.UtilsException;
+import utils.XmlFileFilter;
 
-import View.MainWindow.AboutDialog;
-import View.MainWindow.MainWindow;
-import View.MapPanel.MapPanel;
-import View.MapPanel.NodeListener;
+import view.MainWindow.AboutDialog;
+import view.MainWindow.MainWindow;
+import view.MapPanel.MapPanel;
+import view.MapPanel.NodeListener;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -37,12 +34,12 @@ import java.util.*;
 public class MainWindowController implements NodeListener, ListSelectionListener {
 
     /** Commands that are currently applied */
-    private Deque<Controller.Command.Command> historyApplied;
+    private Deque<controller.Command.Command> historyApplied;
 
     /** Commands that have been backed out by historyUndo */
-    private Deque<Controller.Command.Command> historyBackedOut;
+    private Deque<controller.Command.Command> historyBackedOut;
 
-    /** Main window */
+    /** main.Main window */
     private MainWindow mainWindow;
 
     /**
@@ -52,15 +49,15 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         this.mainWindow = new MainWindow(this);
         this.mainWindow.getMapPanel().setNodeEventListener(this);
 
-        historyApplied = new LinkedList<Controller.Command.Command>();
-        historyBackedOut = new LinkedList<Controller.Command.Command>();
+        historyApplied = new LinkedList<controller.Command.Command>();
+        historyBackedOut = new LinkedList<controller.Command.Command>();
     }
 
     /**
      * Returns the history backed out
      * @return the history backed out
      */
-    public Deque<Controller.Command.Command> getHistoryBackedOut() {
+    public Deque<controller.Command.Command> getHistoryBackedOut() {
         return historyBackedOut;
     }
 
@@ -68,7 +65,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Returns the history applied
      * @return the history applied
      */
-    public Deque<Controller.Command.Command> getHistoryApplied() {
+    public Deque<controller.Command.Command> getHistoryApplied() {
         return historyApplied;
     }
 
@@ -206,7 +203,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             AddDelivery add = new AddDelivery(this, deliveryDialogController.getClient(), deliveryDialogController.getAddress(), deliveryDialogController.getBegin(), deliveryDialogController.getEnd());
             this.historyDo(add);
             try {
-                selectNode(mainWindow.getMapPanel().getSelectedNode());
+                selectNode(mainWindow.getMapPanel().getSelectedNodeView());
             } catch(Exception e) {}
         }
     }
@@ -215,7 +212,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * Creates a removeDelivery command, adds it to the history and apply it
      */
     public void removeDelivery() {
-        int idNode = this.mainWindow.getMapPanel().getSelectedNode().getId();
+        int idNode = this.mainWindow.getMapPanel().getSelectedNodeView().getId();
         RemoveDelivery remove = RemoveDelivery.create(this, idNode);
         this.historyDo(remove);
     }
@@ -363,7 +360,7 @@ public class MainWindowController implements NodeListener, ListSelectionListener
      * @param node
      */
     private void selectNode(Node node) {
-        mainWindow.getMapPanel().setSelectedNode(node);
+        mainWindow.getMapPanel().setSelectedNodeView(node);
 
         if(node == null) {
             // No node is selected. So we don't want to let user add delivery to nowhere.

@@ -1,6 +1,4 @@
-package View.MapPanel;
-
-import Model.City.*;
+package view.MapPanel;
 
 /**
  * MapPanel node's event listener.
@@ -12,7 +10,7 @@ public interface NodeListener {
      * @param panel the map panel that has received the mouse clicked event
      * @param node the model node that has been clicked
      */
-    public void nodeClicked(MapPanel panel, Model.City.Node node);
+    public void nodeClicked(MapPanel panel, model.City.Node node);
 
     /**
      * Click event on the background in a given map panel
