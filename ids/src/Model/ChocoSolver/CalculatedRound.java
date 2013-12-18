@@ -50,14 +50,19 @@ public class CalculatedRound {
      */
     public CalculatedRound(Node warehouse, int[] tspOrderedDeliveries, ChocoGraph chocoGraph) {
         this.warehouse = warehouse;
-        this.chocoDeliveries = chocoGraph.getDeliveries();
 
-        if(tspOrderedDeliveries != null && tspOrderedDeliveries.length != 0) {
-            for(int i = 0; i < tspOrderedDeliveries.length; ++i) {
-                Integer srcId = chocoGraph.getNetworkIdFromChocoId(i);
-                Integer destId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
-                successors.put(srcId, destId);
+        if(tspOrderedDeliveries != null) {
+            this.chocoDeliveries = chocoGraph.getDeliveries();
+
+            if(tspOrderedDeliveries.length != 0) {
+                for(int i = 0; i < tspOrderedDeliveries.length; ++i) {
+                    Integer srcId = chocoGraph.getNetworkIdFromChocoId(i);
+                    Integer destId = chocoGraph.getNetworkIdFromChocoId(tspOrderedDeliveries[i]);
+                    successors.put(srcId, destId);
+                }
             }
+        } else {
+            this.chocoDeliveries.put(warehouse.getId(), chocoGraph.getChocoDeliveryFromNetworkId(warehouse.getId()));
         }
 
         calculateEstimatedSchedules();

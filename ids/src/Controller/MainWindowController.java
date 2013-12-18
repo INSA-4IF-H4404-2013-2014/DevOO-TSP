@@ -205,7 +205,9 @@ public class MainWindowController implements NodeListener, ListSelectionListener
         if(deliveryDialogController.addIsReady()) {
             AddDelivery add = new AddDelivery(this, deliveryDialogController.getClient(), deliveryDialogController.getAddress(), deliveryDialogController.getBegin(), deliveryDialogController.getEnd());
             this.historyDo(add);
-            selectNode(mainWindow.getMapPanel().getSelectedNode());
+            try {
+                selectNode(mainWindow.getMapPanel().getSelectedNode());
+            } catch(Exception e) {}
         }
     }
 
@@ -298,10 +300,15 @@ public class MainWindowController implements NodeListener, ListSelectionListener
             mainWindow.setCalculatedRound(calculatedRound);
             mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
             return 0;
-        } else {
-            JOptionPane.showMessageDialog(mainWindow, "Aucun trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
-            return 1;
         }
+
+        JOptionPane.showMessageDialog(mainWindow, "Aucun trajet trouvé", "Erreur", JOptionPane.ERROR_MESSAGE);
+        CalculatedRound calculatedRound = createCalculatedRound(null, graph);
+        mainWindow.getMapPanel().setRound(calculatedRound);
+        mainWindow.setCalculatedRound(calculatedRound);
+        mainWindow.getRightPanel().getRoundPanel().fillRoundPanel(this.mainWindow.getCalculatedRound());
+
+        return 1;
     }
 
     /**
