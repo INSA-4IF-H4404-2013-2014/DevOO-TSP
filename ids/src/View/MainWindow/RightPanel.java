@@ -34,6 +34,7 @@ public class RightPanel extends JPanel {
         jsp.setPreferredSize(new Dimension(100, 100));
         jsp.setDividerLocation(250);
         jsp.setBorder(null);
+        jsp.setResizeWeight(0.5);
 
         setLayout(new BorderLayout());
         add(jsp, BorderLayout.CENTER);
