@@ -1,4 +1,4 @@
-package controller;
+package Controller;
 
 import model.delivery.Client;
 import model.delivery.Schedule;
