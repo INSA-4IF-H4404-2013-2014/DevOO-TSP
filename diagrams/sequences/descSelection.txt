@@ -14,9 +14,24 @@ loop node finded or all node tested
 	":Node"-->- ":MainWindowController":
 end
 
-alt node finded
+opt node finded
     ":MainWindowController"->+"new:Node" : select()
     "new:Node"-->- ":MainWindowController":
+	opt node contains delivery
+		note over ":MainWindowController"
+			desactivate add and 
+			activate delete buttons
+		end note
+	else
+		note over ":MainWindowController"
+			desactivate delete and 
+			activate add buttons
+		end note
+	end
+else 
+	note over ":MainWindowController"
+		desactivate add and delete buttons
+	end note
 end
 
 ":MainWindowController"-->- ":MapPanel": 
