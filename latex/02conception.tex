@@ -3,7 +3,7 @@
 
 % ----------------------------------------------------------------------------- Cas d'utilisations
 
-\section{Description d\'etaill\'ee des cas d’ utilisation}
+\section{Description d\'etaill\'ee des cas d’utilisation}
 
 \subsection{Charger un plan}
 \begin{description}
@@ -135,7 +135,7 @@
     \begin{description}
         \item[Ajouter] ~
         \begin{enumerate}
-            \item Le superviseur selectionne un noeud disponible
+            \item Le superviseur s\'electionne un noeud disponible
             \item Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout (plage horaire, client, etc.)
             \item Le superviseur clique sur "annuler" pendant qu'il remplit le formulaire
             \begin{enumerate}
@@ -218,11 +218,11 @@
 \begin{figure}[h]
     \centering
     \includegraphics[width=80mm]{../diagrams/classes_packages/classes_packages/packages.png}
-    \caption{Diagramme UML de package principale}
+    \caption{Diagramme UML de l'architecture générale}
     \label{diagram:uml_global}
 \end{figure}
 
-\subsection{Mod\`ele (Model)}
+\subsection{Package Mod\`ele (Model)}
 
 \begin{figure}[h]
     \centering
@@ -232,7 +232,7 @@
 \end{figure}
 \pagebreak
 
-\subsubsection{Mod\`ele Ville (Model.City)}
+\subsubsection{Package Mod\`ele.Ville (Model.City)}
 
 \begin{figure}[h]
     \centering
@@ -242,7 +242,7 @@
 \end{figure}
 \pagebreak
 
-\subsubsection{Mod\`ele Livraison (Model.Delivery)}
+\subsubsection{Package Mod\`ele.Livraison (Model.Delivery)}
 
 \begin{figure}[h]
     \centering
@@ -253,7 +253,7 @@
 \pagebreak
 
 \begin{landscape}
-\subsubsection{Mod\`ele Resolution Choco (Model.ChocoSolver)}
+\subsubsection{Package Mod\`ele.ChocoSolver (Model.ChocoSolver)}
 
 \begin{figure}[h]
     \centering
@@ -264,7 +264,7 @@
 \end{landscape}
 \pagebreak
 
-\subsection{Vue (View)}
+\subsection{Package Vue (View)}
 
 \begin{figure}[h]
     \centering
@@ -274,7 +274,7 @@
 \end{figure}
 \pagebreak
 
-\subsubsection{Vue Carte (View.MapPanel)}
+\subsubsection{Package Vue.Carte (View.MapPanel)}
 
 \begin{figure}[h]
     \centering
@@ -284,7 +284,7 @@
 \end{figure}
 \pagebreak
 
-\subsection{Controlleur (Controller)}
+\subsection{Package Controlleur (Controller)}
 
 \begin{figure}[h]
     \centering
@@ -294,7 +294,7 @@
 \end{figure}
 \pagebreak
 
-\subsubsection{Commande (Controller.Command)}
+\subsubsection{Package Controleur.Commande (Controller.Command)}
 
 \begin{figure}[h]
     \centering
@@ -303,7 +303,7 @@
     \label{diagram:uml_controller_command}
 \end{figure}
 
-Ce package implemente le design pattern Commande afin de g\'erer le undo/redo pour l'ajout et
+Ce package impl\'emente le design pattern Commande afin de g\'erer le undo/redo pour l'ajout et
 suppression d'une livraison dans la tourn\'ee.
 
 On remarque alors que les classes AddDelivery et
@@ -320,26 +320,34 @@ AddDelivery. Autrement dit, pour supprimer une livraison, il suffit de la "d\'es
 % ----------------------------------------------------------------------------- Sequences
 
 \begin{landscape}
-    \section{Diagramme de s\'equences}
+    \section{Diagrammes de s\'equences}
 
-    \subsection{Chargement d'un tourn\'ee}
+    \subsection{Chargement d'une tourn\'ee}
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=240mm]{../diagrams/sequences/loadRound.png}
+        \includegraphics[width=0.8\linewidth]{../diagrams/sequences/loadRound1.png}
         \caption{Diagramme de sequence du chargement de la tourn\'ee}
+        \label{diagram:seq_load_round}
+    \end{figure}
+\pagebreak
+
+	\begin{figure}[h]
+        \centering
+        \includegraphics[width=0.6\linewidth]{../diagrams/sequences/loadRound2.png}
+        \caption{Additif au diagramme de sequence du chargement de la tourn\'ee}
         \label{diagram:seq_load_round}
     \end{figure}
 \end{landscape}
 \pagebreak
 
 \begin{landscape}
-    \subsection{Calcul d'un tourn\'ee}
+    \subsection{Calcul d'une tourn\'ee}
 
     \begin{figure}[h]
         \centering
         \includegraphics[width=240mm]{../diagrams/sequences/computeRound.png}
-        \caption{Diagramme de sequence de calcul de la tourn\'ee}
+        \caption{Diagramme de s\'equence de calcul de la tourn\'ee}
         \label{diagram:seq_compute_round}
     \end{figure}
 \end{landscape}
@@ -350,7 +358,7 @@ AddDelivery. Autrement dit, pour supprimer une livraison, il suffit de la "d\'es
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=190mm]{../diagrams/sequences/selsequence.png}
+        \includegraphics[width=0.5\linewidth]{../diagrams/sequences/selsequence.png}
         \caption{Diagramme de sequence d'ajout d'une livraison}
         \label{diagram:seq_add_delivery}
     \end{figure}
@@ -362,7 +370,7 @@ AddDelivery. Autrement dit, pour supprimer une livraison, il suffit de la "d\'es
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=190mm]{../diagrams/sequences/addsequence.png}
+        \includegraphics[width=0.7\linewidth]{../diagrams/sequences/addsequence.png}
         \caption{Diagramme de sequence d'ajout d'une livraison}
         \label{diagram:seq_add_delivery}
     \end{figure}
