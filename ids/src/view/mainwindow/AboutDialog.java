@@ -17,7 +17,7 @@ public class AboutDialog extends JDialog {
     public final static String TITLE = "À propos";
 
     /** The path of the image to load */
-    public final static String IMAGE_PATH = "../../img/leMagnifique.png";
+    public final static String IMAGE_PATH = "/img/leMagnifique.png";
 
     /**
      * constructor

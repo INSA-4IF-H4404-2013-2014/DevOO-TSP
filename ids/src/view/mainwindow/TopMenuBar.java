@@ -150,16 +150,16 @@ public class TopMenuBar extends JMenuBar{
 
         int eventMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
-        fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("./../../img/door_out.png")));
+        fileExit = new JMenuItem("Quitter", new ImageIcon(getClass().getResource("/img/door_out.png")));
         fileExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, eventMask));
 
-        openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("../../img/mini_open_map.png")));
+        openMap = new JMenuItem("Ouvrir une carte", new ImageIcon(getClass().getResource("/img/mini_open_map.png")));
         openMap.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, eventMask));
 
-        openRound = new JMenuItem("Ouvrir une tournée", new ImageIcon(getClass().getResource("../../img/mini_open_round.png")));
+        openRound = new JMenuItem("Ouvrir une tournée", new ImageIcon(getClass().getResource("/img/mini_open_round.png")));
         openRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, eventMask));
 
-        saveRound = new JMenuItem("Sauvegarder une tournée", new ImageIcon(getClass().getResource("../../img/mini_save_round.png")));
+        saveRound = new JMenuItem("Sauvegarder une tournée", new ImageIcon(getClass().getResource("/img/mini_save_round.png")));
         saveRound.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, eventMask));
 
         file.add(openMap);
@@ -184,15 +184,15 @@ public class TopMenuBar extends JMenuBar{
 
         int eventMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
-        addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("../../img/mini_add.png")));
+        addButton = new JMenuItem("Ajouter une livraison", new ImageIcon(getClass().getResource("/img/mini_add.png")));
 
-        delButton = new JMenuItem("Supprimer une livraison", new ImageIcon(getClass().getResource("../../img/mini_delete.png")));
+        delButton = new JMenuItem("Supprimer une livraison", new ImageIcon(getClass().getResource("/img/mini_delete.png")));
         delButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
-        undoButton = new JMenuItem("Annuler", new ImageIcon(getClass().getResource("../../img/mini_undo.png")));
+        undoButton = new JMenuItem("Annuler", new ImageIcon(getClass().getResource("/img/mini_undo.png")));
         undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, eventMask));
 
-        redoButton = new JMenuItem("Refaire", new ImageIcon(getClass().getResource("../../img/mini_redo.png")));
+        redoButton = new JMenuItem("Refaire", new ImageIcon(getClass().getResource("/img/mini_redo.png")));
         redoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, eventMask));
 
         edit.add(addButton);

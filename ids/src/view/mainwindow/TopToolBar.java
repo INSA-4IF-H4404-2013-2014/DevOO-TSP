@@ -100,31 +100,31 @@ public class TopToolBar extends JToolBar {
         ToolTipManager.sharedInstance().setInitialDelay(200);
         ToolTipManager.sharedInstance().setDismissDelay(2000);
 
-        loadMap.setIcon(new ImageIcon("./src/img/open_map.png"));
+        loadMap.setIcon(new ImageIcon(getClass().getResource("/img/open_map.png")));
         loadMap.setToolTipText("Charger une carte");
         add(loadMap);
-        loadRound.setIcon(new ImageIcon("./src/img/open_round.png"));
+        loadRound.setIcon(new ImageIcon(getClass().getResource("/img/open_round.png")));
         loadRound.setToolTipText("Charger une tournée");
         add(loadRound);
 
         addSeparator();
-        saveRound.setIcon(new ImageIcon("./src/img/save_round.png"));
+        saveRound.setIcon(new ImageIcon(getClass().getResource("/img/save_round.png")));
         saveRound.setToolTipText("Exporter et enregistrer la feuille de route de la tournée");
         add(saveRound);
 
         addSeparator();
-        add.setIcon(new ImageIcon("./src/img/add.png"));
+        add.setIcon(new ImageIcon(getClass().getResource("/img/add.png")));
         add.setToolTipText("Ajouter une livraison et recalculer la tournée");
         add(add);
-        delete.setIcon(new ImageIcon("./src/img/delete.png"));
+        delete.setIcon(new ImageIcon(getClass().getResource("/img/delete.png")));
         delete.setToolTipText("Supprimer une livraison et recalculer la tournée");
         add(delete);
 
         addSeparator();
-        undo.setIcon(new ImageIcon("./src/img/undo.png"));
+        undo.setIcon(new ImageIcon(getClass().getResource("/img/undo.png")));
         undo.setToolTipText("Annuler la dernière action annulable (ajout ou suppression)");
         add(undo);
-        redo.setIcon(new ImageIcon("./src/img/redo.png"));
+        redo.setIcon(new ImageIcon(getClass().getResource("/img/redo.png")));
         redo.setToolTipText("Refaire la dernière action annulée (ajout ou suppression)");
         add(redo);
 
