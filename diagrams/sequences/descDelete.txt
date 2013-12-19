@@ -1,23 +1,33 @@
 title Delete Sequence
 
 note over Superviseur
-    one node already 
+    one node which contains
+	a delivery already 
     been selected
 end note
 
 Superviseur->+ ":MainWindow": clic on "supprimer" button
 ":MainWindow" ->+ ":DeleteController": actionPerformed(ActionEvent e)
 
-":DeleteController" ->+ ":Round" : isPartOf(Delivery d)
-opt selected delivery is a part of the round
-	":Round" --> ":DeleteController" : false
-else 
-	":Round" -->- ":DeleteController" : true
-	":DeleteController" ->+ ":RemoveDelivery" : new(MainWindowController controller, Delivery d)
-	":RemoveDelivery" -->- ":DeleteController" :
-	":DeleteController" ->+ ":RemoveDelivery" : apply
-	":RemoveDelivery" -->- ":DeleteController" :
-end
 
+":DeleteController" ->+ ":MainWindowController": removeDelivery()
+
+":MainWindowController" ->+ "rm:RemoveDelivery" : new(MainWindowController cnt, Node selected)
+"rm:RemoveDelivery" ->+ ":AddDelivery": new(MainWindowController cnt, info on delivery)
+":AddDelivery" -->- "rm:RemoveDelivery": 
+
+"rm:RemoveDelivery" -->- ":MainWindowController" :
+":MainWindowController" -> ":MainWindowController" : historyDo(Commande rm)
+
+":MainWindowController" ->+ "rm:RemoveDelivery" : Apply()
+"rm:RemoveDelivery" ->+ ":AddDelivery": Reverse()
+":AddDelivery" ->+ ":Round" : removeDelivery(int nodeId)
+":Round" -->-":AddDelivery" : 
+":AddDelivery" -> ":MainWindowController" : computeRound(Round round)
+":MainWindowController" -->":AddDelivery" : 
+":AddDelivery" -->- "rm:RemoveDelivery": 
+"rm:RemoveDelivery" -->- ":MainWindowController":
+
+":MainWindowController" -->- ":DeleteController" :
 ":DeleteController" -->- ":MainWindow" :
 ":MainWindow" -->- Superviseur : repaint

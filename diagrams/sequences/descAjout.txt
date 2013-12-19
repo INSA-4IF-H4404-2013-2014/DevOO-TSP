@@ -6,38 +6,47 @@ note over Superviseur
 end note
 
 Superviseur->+ ":MainWindow": clic on "ajouter" button
-":MainWindow" ->+ ":AddController": actionPerformed(ActionEvent e)
+":MainWindow" ->+ ":MainWindowController": actionPerformed(ActionEvent e)
 
-":AddController"->+ ":DeliveryWindow" : new()
+":MainWindowController"->+ ":DeliveryWindow" : new()
 
 loop informations ok or annulation
 ":DeliveryWindow" -> Superviseur : ask client id, schedulerEarliestBound, schedulerLatestBound
 	opt ok
 		Superviseur -> ":DeliveryWindow" : clic on "valider" button
-		":DeliveryWindow" ->+ ":DeliveryValidateController" : actionPerformed(ActionEvent e)
-		":DeliveryValidateController" ->+ ":Round" : getClient(int id)
-		":Round" -->- ":DeliveryValidateController": client
+		":DeliveryWindow" ->+ ":DeliveryDialogController" : actionPerformed(ActionEvent e)	
+		":DeliveryDialogController" -->- ":DeliveryWindow" : 
+		":DeliveryWindow" -->- ":MainWindowController" : 
+		":MainWindowController" ->+ "add:AddDelivery" : new(MainWindowController controller, info sur delivery)
+		"add:AddDelivery" -->- ":MainWindowController" :
+		":MainWindowController" -> ":MainWindowController" : historyDo(Command add)
+		":MainWindowController" ->+ "add:AddDelivery" : apply()
 		
-		":DeliveryValidateController" ->+ ":Delivery" : new(id, earlier, latest)
-			":Delivery" ->+ ":Client" : addDelivery(this)
-			":Client" -->- ":Delivery" :
-			":Delivery" ->+ ":Schedule" : addDelivery(this)
-			":Schedule" -->- ":Delivery" :
-				
-		":Delivery" -->- ":DeliveryValidateController" : deliv
-		":DeliveryValidateController" ->+ ":AddDelivery" : new(MainWindowController controller, Delivery deliv)
-		":AddDelivery" -->- ":DeliveryValidateController" :
-		":DeliveryValidateController" ->+ ":AddDelivery" : apply()
-		":AddDelivery" -->- ":DeliveryValidateController" :
-		":DeliveryValidateController" -->- ":DeliveryWindow" : 	
+		"add:AddDelivery" ->+ "round:Round" : addDelivery(infos sur delivery)
+		"round:Round" ->+ "del:Delivery" : new(id, client, node,schedule)
+		"del:Delivery" -->-"round:Round" :
+		"round:Round" ->+ ":Client" : addDelivery(del)
+		":Client" -->- "round:Round" :
+		"round:Round" ->+ ":Schedule" : addDelivery(del)
+		":Schedule" -->- "round:Round" :
+		"round:Round" -->-"add:AddDelivery" : 
+		
+		
+		"add:AddDelivery" -> ":MainWindowController" : computeRound(round)
+		":MainWindowController" --> "add:AddDelivery":
+		
+		
+		"add:AddDelivery" -->- ":MainWindowController" :
+		
+			
 	else undo
-		Superviseur -> ":DeliveryWindow" : clic on "annuler" button
-		":DeliveryWindow" ->+ ":DeliveryUndoController" : actionPerformed(ActionEvent e)
-		":DeliveryUndoController" -->- ":DeliveryWindow" : 
+		Superviseur ->+ ":DeliveryWindow" : clic on "annuler" button
+		":DeliveryWindow" ->+ ":DeliveryDialogController" : actionPerformed(ActionEvent e)
+		":DeliveryDialogController" -->- ":DeliveryWindow" : 
 	end
 end
-":DeliveryWindow" -->- ":AddController" : 
+":DeliveryWindow" -->- ":MainWindowController" : 
 destroy ":DeliveryWindow"
-":AddController" -->- ":MainWindow" :
-":MainWindow" -->- ":Superviseur" : repaint
+":MainWindowController" -->- ":MainWindow" :
+":MainWindow" -->- Superviseur : repaint
 
