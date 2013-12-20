@@ -1,8 +1,0 @@
-Le système doit permettre plusieurs ensembles d’actions:
-
-Le superviseur peut à tout moment visualiser le plan d’une zone de la ville, il peut alors y voir les points de livraison de la zone, ainsi que leur détails (adresse, état de livraison, etc …).
-
-D’autre part, il peut charger une demande de livraison, celle ci est ajoutée au système et sera traitée dans les futures tournées.
-
-Enfin il peut générer une feuille de route multi-support (papier et électronique) à la destination d’un des livreurs. Pour cela il peut demander au système de calculer une tournée, et de la visualiser sur un plan. Il peut alors y faire d’éventuelles modifications avant la génération de la feuille et lancer cette dernière.
-Une fois la feuille de route générée, le superviseur pourra à tout moment modifier une tournée en cours. Le livreur de cette tournée modifiée en sera alors informé par le système.

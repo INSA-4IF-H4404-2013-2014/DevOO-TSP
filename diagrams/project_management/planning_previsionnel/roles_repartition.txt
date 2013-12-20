@@ -1,6 +1,0 @@
-ABADIE Guillaume		Concepteur / Développeur
-BUISSON Nicolas			Concepteur / Développeur
-CREPET Louise			Concepteur / Développeur
-DOMINGUES Rémi			Chef de projet / Concepteur / Développeur
-MARTIN Aline			Responsable qualité / Concepteur / Développeur
-WETTERWALD MARTIN		Responsable Git / Concepteur / Développeur
