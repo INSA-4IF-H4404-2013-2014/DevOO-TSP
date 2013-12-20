@@ -1,0 +1,155 @@
+CdU : Charger un plan
+Contexte : le superviseur veut visualiser le plan d'une zone de la ville
+Acteur principal : Superviseur
+Précondition : -
+Postconditions : Le plan doit être affiché
+Scénario principal : 
+	1. Le superviseur demande le chargement d'un plan pour une zone de la ville
+	2. Le système demande au SGBD si la zone existe bien, ainsi que les données correspondantes
+	3. Le système affiche le plan à l'écran, le cas d'utilisation se termine par un succès.
+Extensions :
+	2a. La zone n'existe pas :
+		2a1. Le système renvoie une erreur, le CdU reprend à l'étape 1, le cas d'utilisation se termine par un echec.
+		
+	2b. Erreur syntaxique, le cas d'utilisation se termine par un echec.
+	
+	2c. Erreur sémantique, le cas d'utilisation se termine par un echec.
+	
+
+	
+CdU : Charger une demande de livraison
+Contexte : Le superviseur veut charger une demande de livraison, c'est-à-dire un ensemble de points à livrer avec, pour chaque point, sa
+plage horaire
+Acteur principal : Superviseur
+Précondition : Le plan doit être chargé
+Postconditions : Les points doivent être affichés sur le plan
+Scénario principal : 
+	1. Le superviseur sélectionne une demande de livraison
+	2. Le système demande au SGBD si la demande de livraison existe bien, ainsi que les données correspondantes
+	3. Le système affiche les points de livraison sur le plan, le cas d'utilisation se termine par un succès.
+Extensions :
+	2a. La demande de livraison n'existe pas :
+		2a1. Le système renvoie une erreur, le CdU reprend à l'étape 1, le cas d'utilisation se termine par un echec.
+		
+	2b. Erreur syntaxique, le cas d'utilisation se termine par un echec.
+	
+	2c. Erreur sémantique, le cas d'utilisation se termine par un echec.
+
+
+CdU : Calculer une tournée
+Contexte : Le superviseur veut calculer une tournée pour la dernière demande de livraisons chargée
+Acteur principal : Superviseur
+Précondition : Une tournée doit être selectionnée, les demandes de livraisons doivent être chargées
+Postconditions : -
+Scénario principal : 
+	1. Le superviseur clique sur "calculer tournée" pour la demande de livraison
+	2. Le système calcule la tournée et l'envoie au SGBD
+	3. Le système affiche la tournée sur le plan, le cas d'utilisation se termine par un succès.
+Extensions :
+	2a. Il n'est pas possible de tout faire dans les temps, le système notifie l'utilisateur qu'il y aura forcément des retards, 
+		le cas d'utilisation se termine par un succès.
+		
+	2b. Une livraison n'est pas accessible, le cas d'utilisation se termine par un echec.
+
+
+CDU : Visualiser une tournée
+Contexte : 	Le superviseur veut visualiser une tournée sur un plan avec les différents états des livraisons (fait, à l'heure, en retard, etc.)
+			Possibilité de visualiser les details de la tournée.
+Acteur principal :	Superviseur
+Précondition :	La tournée existe et est dans une liste de tournées disponnibles
+postcondition :	La tournée existe, est dans une liste de tournées disponnibles, est selectionnée et est affichée
+Scénario principal :	
+	1) Le superviseur clique sur la tournée dans la liste
+	2) La tournée s'affiche dans la zone prévue à cet effet
+Extension :
+	3) Le superviseur clique sur "détail"
+		3a) Les informations complémentaires s'affichent dans la zone prévue à cet effet, le cas d'utilisation se termine par un succès.
+		
+		3b) Les informations par défaut s'affichent si la tournée est vide, le cas d'utilisation se termine par un succès.
+
+	
+	
+CDU : Modifier une tournée en temps réel
+Contexte :	Le superviseur veut modifier une tournée le jour même en ajoutant ou retirant une livraison. 
+			Il doit être possible d'annuler la dernière action, mais aussi de la refaire.
+Acteur principal : Superviseur
+Préconditions : 
+	Générale : 		Il y a une tournée sélectionnée, il est possible de communiquer avec le livreur
+	Pour ajouter : 	Il y a au moins un noeud libre sur le plan
+	Pour enlever : 	Il y a au moins une livraison dans la tournée
+postcondition :
+	Générale : 		La tournée sélectionnée est modifiée et les changements ont été envoyés au livreur
+	Pour ajouter : 	La livraison est ajoutée à la tournée à la bonne place 
+	Pour enlever : 	La livraison est enlevée de la tournée qui est automatiquement recalculée
+Scénario principal :
+	ajouter :
+		1a) Le superviseur selectionne un noeud disponnible
+		2a) Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client, etc.)
+		3a) Le supervieur clique sur "ok"
+		4a) La livraison est ajoutée et la tournée recalculée
+		5a) L'ajout est envoyé au livreur, le cas d'utilisation se termine par un succès.
+	enlever :
+		1b) Le superviseur selectionne une livraison sur la tournée
+		2b) Le superviseur clique sur "enlever"
+		3b) La livraison est enlevée et la tournée recalculée
+		4b) La suppression est envoyée au livreur, le cas d'utilisation se termine par un succès.
+Extension :
+		4c) La connexion au livreur échoue, le cas d'utilisation se termine par un echec.
+	ajouter :
+		3d) Le superviseur clique sur "annuler" pendant qu'il remplit le formulaire 
+		4d)	L'ajout est annulé et le superviseur perda ce qu'il avait pré-rempli, le cas d'utilisation se termine par un echec.
+		
+		4e) Une aberration est dans la livraison à ajouter, le système signale une erreur, le cas d'utilisation se termine par un echec.
+	enlever :
+		3f) La livraison est enlevée et la tournée est vide, le système continue à l'étape 4b)
+		
+	
+	
+CDU : Pré-modifier une tournée
+Contexte :	Le superviseur veut modifier une tournée la veille en ajoutant ou retirant une livraison. 
+			Il doit être possible d'annuler la dernière action, mais aussi de la refaire.
+Acteur principal : Superviseur
+Préconditions : 
+	Générale : 		Il y a une tournée sélectionnée, il est possible de communiquer avec le livreur
+	Pour ajouter : 	Il y a au moins un noeud libre sur le plan
+	Pour enlever : 	Il y a au moins une livraison dans la tournée
+postcondition :
+	Générale : 		La tournée sélectionnée est modifiée
+	Pour ajouter : 	La livraison est ajoutée à la tournée à la bonne place 
+	Pour enlever : 	La livraison est enlevée de la tournée qui est automatiquement recalculée
+Scénario principal :
+	ajouter :
+		1a) Le superviseur selectionne un noeud disponnible
+		2a) Le superviseur clique sur "ajouter" et remplit le forumlaire d'ajout(plage horaire, client)
+		    La plage horaire se decompose en deux champs chiffrés qui doivent être cohérents avec la notion de plage horaire
+		3a) Le supervieur clique sur "ok"
+		4a) La livraison est ajoutée et la tournée recalculée, le cas d'utilisation se termine par un succès.
+	enlever :
+		1b) Le superviseur selectionne une livraison sur la tournée
+		2b) Le superviseur clique sur "enlever"
+		3b) La livraison est enlevée et la tournée recalculée, le cas d'utilisation se termine par un succès.
+Extension :
+	ajouter :
+		3c) Le superviseur clique sur "annuler" pendant qu'il remplit le formulaire 
+		4c)	L'ajout est annulé et le superviseur perda ce qu'il avait pré-rempli, le cas d'utilisation se termine par un echec.
+		
+		4d) Une aberration est dans la livraison à ajouter, le système signale une erreur, le cas d'utilisation se termine par un echec.
+	enlever :
+		3e) La livraison est enlevée et la tournée est vide, le cas d'utilisation se termine par un succès.
+
+
+CDU : générer d'une feuille de route
+Contexte : Le superviseur veut générer une feuille de route d'un livreur contenant les itinéraires de chaque livraisons
+Acteur principal : Superviseur
+Précondition : La tournée du livreur est prête.
+postcondition : La feuille de route a été générée et la version papier imprimée
+Scénario principal : 
+	1) Le superviseur clique sur "générer feuille de route"
+	2) La feuille de route est générée et sauvegardée, le cas d'utilisation se termine par un succès.
+Extension :
+	2a) Pas de livraison pour la tournée
+	2b) Problème avec l'ordinateur pendant la sauvegarde
+	2c) Le fichier existe déjà dans les sauvegardes
+		3c1) Ecraser l'ancien, le cas d'utilisation se termine par un succès.
+		3c2) Annuler le nouveau, le cas d'utilisation se termine par un echec.
+		3c3) Rennomer l'un des deux, le cas d'utilisation se termine par un succès.

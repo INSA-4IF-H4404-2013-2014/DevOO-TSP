@@ -9,7 +9,6 @@
 
 #JAVA
 *.class
-*.jar
 *.idea
 *.iml
 *.java.orig
